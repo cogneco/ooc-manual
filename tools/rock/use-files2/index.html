@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<title> Use-files 2 &middot; The OOC Manual </title>
+	
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/reset.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/text.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/color.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/layout.css">
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://oocmanual.cogneco.com/apple-touch-icon-144-precomposed.png">
+	<link rel="shortcut icon" href="http://oocmanual.cogneco.com/favicon.ico">
+	
+	<link href="" rel="alternate" type="application/rss+xml" title="The OOC Manual" />
+</head>
+
+	<body>
+		<header>
+  <h1><a href="http://oocmanual.cogneco.com">The OOC Manual</a></h1>
+  <p></p>
+</header>
+
+		<nav>
+	<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/introduction">Introduction</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language">Language</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/modules">Modules</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/values">Values</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/tuples">Tuples</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/control-structures">Control Structures</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/collections">Collections</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/functions">Functions</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/first-class-functions">First-class Functions</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/classes">Classes</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/constructors">Constructors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/properties">Properties</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/operators">Operators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers">Covers</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers-vs-classes">Covers vs Classes</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/enumerations">Enumerations</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics">Generics</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics2">Generics 2</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/exceptions">Exceptions</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/preprocessor">Preprocessor</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/version-blocks">Version</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools">Tools</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock">Rock</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/basic">Basic Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/drivers">Drivers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/advanced">Advanced Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files">Use-files</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files2">Use-files 2</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/gc">Garbage Collection</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/debug">Debugging</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/packaging">Packaging</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/sam">Sam</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/editors">Editors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/troubleshooting">Troubleshooting</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk">sdk</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang">lang</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/types">types</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/string">string</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/numbers">numbers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/iterators">iterators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/exceptions">exception</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/memory">memory</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/structs">structs</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/io">io</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/math">math</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os">os</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/process">process</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/jobpool">jobpool</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/coro">coro</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/terminal">terminal</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/pipe">pipe</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/dynlib">dynlib</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/mmap">mmap</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/channel">channel</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/system">system</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/env">env</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/shellutils">shellutils</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/time">time</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/net">net</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/text">text</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/threading">threading</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/native">native</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+</nav>
+
+
+		<main>
+			<header>
+				<h1>Use-files 2</h1>
+			</header>
+			<nav id="TableOfContents">
+<ul>
+<li><a href="#toc_0">Use files</a>
+<ul>
+<li><a href="#toc_1">Intro</a></li>
+<li><a href="#toc_2">Libs search path</a></li>
+<li><a href="#toc_3">Syntax</a></li>
+<li><a href="#toc_4">Versioning</a></li>
+<li><a href="#toc_5">Top-level directives</a></li>
+<li><a href="#toc_6">Basic directives</a></li>
+<li><a href="#toc_7">pkg-config packages</a></li>
+<li><a href="#toc_8">pkg-config-like utilities</a></li>
+<li><a href="#toc_9">Custom linkers</a></li>
+<li><a href="#toc_10">OSX-specific directives</a></li>
+<li><a href="#toc_11">Android-specific directives</a></li>
+</ul></li>
+</ul>
+</nav>
+			<article>
+				
+
+<h1 id="toc_0">Use files</h1>
+
+<h2 id="toc_1">Intro</h2>
+
+<p>Use files specify the C and ooc dependencies of a library, along
+with some basic info like its name, description.</p>
+
+<p>They are useful for package managers (see <a href="https://github.com/nddrylliog/sam">sam</a>),
+but also for the rock compile, to import required ooc libraries, and
+to know which flags and libraries to pass to the C compiler.</p>
+
+<p>A few well-written .use files make using libraries very easy,
+without having to worry about writing a Makefile of some sort, and
+it makes compiling programs on various platforms a no-brainer.</p>
+
+<p>.use files are generally located at the root of an ooc app or library.</p>
+
+<p>For a language binding, the tree structure is usually:</p>
+
+<pre><code>ooc-gtk
+  README.md
+  gtk.use
+  source
+    gtk
+  samples
+</code></pre>
+
+<p>For a pure ooc library or application, the tree structure is usually:</p>
+
+<pre><code>deadlogger
+  README.md
+  deadlogger.use
+  source
+    deadlogger
+  samples
+</code></pre>
+
+<h2 id="toc_2">Libs search path</h2>
+
+<p>Using a third-party ooc library is as easy as doing <code>use library</code> in an .ooc file</p>
+
+<p>When doing so, the ooc compiler will look for a <code>library.use</code> file in your lib folders.</p>
+
+<p>The <code>$OOC_LIBS</code> environment variable defines the lib folders, separated by <code>:</code> on *nix,
+and &lsquo;;&rsquo; on Windows.</p>
+
+<p>A simple setup is to have all your ooc libraries sitting in the same folder, for example
+<code>$HOME/Dev/</code>, with the following structure:</p>
+
+<pre><code>someproject
+  someproject.use
+ooc-gtk
+  gtk.use
+rock
+  rock.use
+  sdk.use
+  math.use
+  pcre.use
+</code></pre>
+
+<p>Note that the standard ooc sdk is a library like any other - it has a .use file with
+standard directives as defined below.</p>
+
+<h2 id="toc_3">Syntax</h2>
+
+<p>The file is composed of key-value pairs, formatted like this:</p>
+
+<pre><code>Key1: Value1
+Key2: Value2
+</code></pre>
+
+<p>Whitespace around the colon <code>:</code> doesn&rsquo;t matter. For keys that accept multiple
+directives like <code>Libs</code> or <code>IncludePaths</code>, values should be separated by commas
+(and whitespace is accepted).</p>
+
+<p>For example, this is wrong:</p>
+
+<pre><code>Libs: -lGLU -lGL
+</code></pre>
+
+<p>And this is right:</p>
+
+<pre><code>Libs: -lGLU, -lGL
+</code></pre>
+
+<h2 id="toc_4">Versioning</h2>
+
+<p>A use file might be versioned using version blocks, however, only some directives
+are valid in a version block.</p>
+
+<p>Here&rsquo;s an example:</p>
+
+<pre><code>Name: SDL 2.0 OpenGL support
+
+version (linux) {
+  Libs: -lGL
+}
+
+version (apple) {
+  Frameworks: Carbon, OpenGL
+}
+</code></pre>
+
+<p>Version blocks have the same syntax as in .ooc files. For more details, see the
+version chapter.</p>
+
+<h2 id="toc_5">Top-level directives</h2>
+
+<p>Those directives cannot be versioned and must appear at the top level of
+a use file.</p>
+
+<pre><code># Short description
+Name: llama
+
+# Longer description
+Description: A lib to deal with llamas
+
+# The version of the library
+Version: 0.1.3
+
+# Modules that are automatically imported when 'use'-ing this library
+Imports: llama/beast, llama/human
+
+# For programs, the main ooc file to compile when rock is called without arguments
+Main: llama/program
+
+# This will be added to the list of folders the ooc compiler looks for .ooc files
+SourcePath: source
+
+# Dependencies - the 'use' of .use files
+Requires: spit
+</code></pre>
+
+<h2 id="toc_6">Basic directives</h2>
+
+<pre><code># gcc's -I
+IncludePaths: /some/weird/place/include
+
+# will be included in all files using this .use file
+Includes: someheader.h, someother.h
+
+# gcc's -L
+LibPaths: /some/weird/place/include
+
+# will be linked with the final executable
+Libs: -lsomething, -lotherthing
+
+# additional .c files to compile and link into the library/executable
+Additionals: source/somefile.c
+</code></pre>
+
+<h2 id="toc_7">pkg-config packages</h2>
+
+<p>For many packages, there is already a pkg-config <code>.pc</code> file with the information
+needed to make it compile right. What&rsquo;s more, that file is often customized depending
+on what system you install the library on, which makes version blocks unnecessary.</p>
+
+<p>Whenever a package has a pkg-config file, it is imperative to use <code>Pkgs</code> instead
+of specifying manually <code>IncludePaths</code>, <code>Includes</code>, <code>LibPaths</code>, and <code>Libs</code>.</p>
+
+<p>For example, the <code>cairo.use</code> file would probably contain:</p>
+
+<pre><code>Pkgs: cairo
+</code></pre>
+
+<h2 id="toc_8">pkg-config-like utilities</h2>
+
+<p>Sometimes, libraries ship with pkg-config-like utilities. <code>imlib2-config</code>,
+<code>sdl2-config</code>, <code>llvm-config</code>. Those are often used similarly as pkg-config,
+except without specifying a package.</p>
+
+<p>When this is the case, a simple form of <code>CustomPkg</code> does the trick:</p>
+
+<pre><code>CustomPkg: sdl2-config
+</code></pre>
+
+<p>However, others have more complex options. For those, the full power of
+<code>CustomPkg</code> is required, with 4 arguments:</p>
+
+<ul>
+<li>The name of the utility to run</li>
+<li>A list of arguments space-separated, always passed to the utility</li>
+<li>Equivalent to pkg-config <code>--cflags</code> option</li>
+<li>Equivalent to pkg-config <code>--libs</code> option</li>
+</ul>
+
+<p>For llvm-config, this boils down to:</p>
+
+<pre><code>CustomPkg: llvm-config, core executionengine jit, --cflags, --libs --ldflags
+</code></pre>
+
+<h2 id="toc_9">Custom linkers</h2>
+
+<p>Some C++ libraries will required a C++ linker in order to work. LLVM does.</p>
+
+<p>Hence, the <code>Linker</code> directive:</p>
+
+<pre><code>Linker: g++
+</code></pre>
+
+<p>Otherwise, the ooc compiler uses the same linker as your specified C compiler.</p>
+
+<h2 id="toc_10">OSX-specific directives</h2>
+
+<p>OSX has some libraries packaged in <code>frameworks</code> instead of unix-y libs. For example,
+on OSX, <code>-lGL</code> doesn&rsquo;t exist. For those cases, the <code>Frameworks</code> directive can be used:</p>
+
+<pre><code>Frameworks: Carbon, OpenGL
+</code></pre>
+
+<p>This directive has no effect on other platforms, even outside version blocks.</p>
+
+<h2 id="toc_11">Android-specific directives</h2>
+
+<p>The android build process has some intricacies, which is why .use files can contain
+android-specific directives:</p>
+
+<pre><code>AndroidLibs: SDL2
+AndroidIncludes: ../SDL/
+</code></pre>
+
+<p>These really depend on the setup of your android project but it makes sense.</p>
+
+<p><code>AndroidLibs</code> are mk dependencies that need to be built, and <code>AndroidIncludes</code> are
+include paths, relative to the subfolder of your app/library.</p>
+
+<p>These directives have no effect on other platforms, even outside version blocks.</p>
+
+			</article>
+		</main>
+		<footer>
+  <p></p>
+</footer>
+
+	</body>
+</html>

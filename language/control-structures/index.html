@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<title> Control Structures &middot; The OOC Manual </title>
+	
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/reset.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/text.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/color.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/layout.css">
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://oocmanual.cogneco.com/apple-touch-icon-144-precomposed.png">
+	<link rel="shortcut icon" href="http://oocmanual.cogneco.com/favicon.ico">
+	
+	<link href="" rel="alternate" type="application/rss+xml" title="The OOC Manual" />
+</head>
+
+	<body>
+		<header>
+  <h1><a href="http://oocmanual.cogneco.com">The OOC Manual</a></h1>
+  <p></p>
+</header>
+
+		<nav>
+	<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/introduction">Introduction</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language">Language</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/modules">Modules</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/values">Values</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/tuples">Tuples</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/control-structures">Control Structures</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/collections">Collections</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/functions">Functions</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/first-class-functions">First-class Functions</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/classes">Classes</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/constructors">Constructors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/properties">Properties</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/operators">Operators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers">Covers</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers-vs-classes">Covers vs Classes</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/enumerations">Enumerations</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics">Generics</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics2">Generics 2</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/exceptions">Exceptions</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/preprocessor">Preprocessor</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/version-blocks">Version</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools">Tools</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock">Rock</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/basic">Basic Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/drivers">Drivers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/advanced">Advanced Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files">Use-files</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files2">Use-files 2</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/gc">Garbage Collection</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/debug">Debugging</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/packaging">Packaging</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/sam">Sam</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/editors">Editors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/troubleshooting">Troubleshooting</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk">sdk</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang">lang</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/types">types</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/string">string</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/numbers">numbers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/iterators">iterators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/exceptions">exception</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/memory">memory</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/structs">structs</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/io">io</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/math">math</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os">os</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/process">process</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/jobpool">jobpool</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/coro">coro</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/terminal">terminal</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/pipe">pipe</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/dynlib">dynlib</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/mmap">mmap</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/channel">channel</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/system">system</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/env">env</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/shellutils">shellutils</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/time">time</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/net">net</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/text">text</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/threading">threading</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/native">native</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+</nav>
+
+
+		<main>
+			<header>
+				<h1>Control Structures</h1>
+			</header>
+			<nav id="TableOfContents">
+<ul>
+<li><a href="#toc_0">Conditionals</a>
+<ul>
+<li><a href="#toc_1">if / else</a></li>
+<li><a href="#toc_2">match / case</a></li>
+</ul></li>
+<li><a href="#toc_3">Loops</a>
+<ul>
+<li><a href="#toc_4">break / continue</a></li>
+<li><a href="#toc_5">while</a></li>
+<li><a href="#toc_6">for</a></li>
+</ul></li>
+</ul>
+</nav>
+			<article>
+				
+
+<h1 id="toc_0">Conditionals</h1>
+
+<h2 id="toc_1">if / else</h2>
+
+<p>There&rsquo;s your traditional if, else if, else structure. The body should be either
+a single statement, or a scope.</p>
+
+<pre><code>#!ooc
+if (off) turnOn()
+
+if (stressed) {
+    breatheIn()
+    breatheOut()
+} else if (tired) {
+    rest()
+} else {
+    allGood()
+}
+</code></pre>
+
+<p>The condition can be of type <code>Bool</code> or a Pointer, in which case it will evaluate to
+<code>true</code> if it is non-null.</p>
+
+<h2 id="toc_2">match / case</h2>
+
+<p><code>match</code> is ooc&rsquo;s <code>switch</code>, loosely modelled after Scala&rsquo;s. In its simplest form, it tests for equality between an expression and several values:</p>
+
+<pre><code>#!ooc
+match (numFeets) {
+    case 1 =&gt; &quot;Ouch&quot;
+    case 2 =&gt; &quot;Normal&quot;
+    case =&gt;
+        // what?
+        raise(&quot;Too many feet&quot;)
+}
+</code></pre>
+
+<p>Each case is a scope of its own - it doesn&rsquo;t require braces. A case with no
+expression is a catch-all.</p>
+
+<p><code>match</code> also works with any class T that implements the method <code>matches?: func
+-&gt; (other: T) -&gt; Bool</code>. Another way to get complex types to work in matches
+is simply to override the <code>==</code> operator. Hence, Strings work:</p>
+
+<pre><code>#!ooc
+match keyword {
+    case &quot;if&quot; =&gt;
+        Keyword IF
+    case &quot;match&quot; =&gt;
+        Keyword MATCH
+    case =&gt;
+        Keyword UNKNOWN
+}
+</code></pre>
+
+<p><code>match</code> is also a good way to avoid explicit casting, by matching an object
+against variable declarations, one can use its specific form directly:</p>
+
+<pre><code>#!ooc
+result := match (op) {
+    case plus: Plus =&gt;
+        plus lhs + plus rhs
+    case minus: Minus =&gt;
+        minus lhs - minus rhs
+}
+</code></pre>
+
+<p>A <code>match</code> is an expression, if every case ends with an expression. Hence, a
+match can be used as a return value, or in a function call, on the right hand
+side of a declaration-assignment (<code>:=</code>), as demonstrated above.</p>
+
+<h1 id="toc_3">Loops</h1>
+
+<p>Loops are structures that control the repetition of a body of code.</p>
+
+<h2 id="toc_4">break / continue</h2>
+
+<p>Two particular keywords are of interest when writing loops:</p>
+
+<ul>
+<li><code>break</code> immediately exits the loop, skipping the rest of the body
+and not executing any further iteration</li>
+<li><code>continue</code> skips over the rest of the body and begins the next
+iteration immediately</li>
+</ul>
+
+<h2 id="toc_5">while</h2>
+
+<p>Checks the condition - if false, skips the body. If true, runs the body,
+then checks the condition again, etc.</p>
+
+<pre><code>#!ooc
+while (!satisfied) {
+    buyStuff()
+}
+</code></pre>
+
+<h2 id="toc_6">for</h2>
+
+<p>There is no C-like <code>for</code> in ooc, only a foreach. It can iterate through
+values like ranges:</p>
+
+<pre><code>#!ooc
+for (i in 1..10) {
+    &quot;Counting to %d&quot; printfln(i)
+}
+</code></pre>
+
+<p>Or more complex data structures:</p>
+
+<pre><code>#!ooc
+for (element in list) {
+    &quot;Element = %s&quot; printfln(element toString())
+}
+</code></pre>
+
+<p>For an object to be iterable, it has to implement the
+<code>iterator: func &lt;T&gt; -&gt; Iterator&lt;T&gt;</code> method.</p>
+
+<p>A variant of foreach allows one to get the index of the current element:</p>
+
+<pre><code>#!ooc
+for ((index, element) in list) {
+    &quot;list[%d] = %s&quot; printfln(index, element toString())
+}
+</code></pre>
+
+			</article>
+		</main>
+		<footer>
+  <p></p>
+</footer>
+
+	</body>
+</html>

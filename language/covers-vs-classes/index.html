@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<title> Covers vs Classes &middot; The OOC Manual </title>
+	
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/reset.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/text.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/color.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/layout.css">
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://oocmanual.cogneco.com/apple-touch-icon-144-precomposed.png">
+	<link rel="shortcut icon" href="http://oocmanual.cogneco.com/favicon.ico">
+	
+	<link href="" rel="alternate" type="application/rss+xml" title="The OOC Manual" />
+</head>
+
+	<body>
+		<header>
+  <h1><a href="http://oocmanual.cogneco.com">The OOC Manual</a></h1>
+  <p></p>
+</header>
+
+		<nav>
+	<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/introduction">Introduction</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language">Language</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/modules">Modules</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/values">Values</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/tuples">Tuples</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/control-structures">Control Structures</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/collections">Collections</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/functions">Functions</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/first-class-functions">First-class Functions</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/classes">Classes</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/constructors">Constructors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/properties">Properties</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/operators">Operators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers">Covers</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers-vs-classes">Covers vs Classes</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/enumerations">Enumerations</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics">Generics</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics2">Generics 2</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/exceptions">Exceptions</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/preprocessor">Preprocessor</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/version-blocks">Version</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools">Tools</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock">Rock</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/basic">Basic Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/drivers">Drivers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/advanced">Advanced Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files">Use-files</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files2">Use-files 2</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/gc">Garbage Collection</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/debug">Debugging</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/packaging">Packaging</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/sam">Sam</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/editors">Editors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/troubleshooting">Troubleshooting</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk">sdk</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang">lang</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/types">types</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/string">string</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/numbers">numbers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/iterators">iterators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/exceptions">exception</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/memory">memory</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/structs">structs</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/io">io</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/math">math</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os">os</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/process">process</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/jobpool">jobpool</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/coro">coro</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/terminal">terminal</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/pipe">pipe</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/dynlib">dynlib</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/mmap">mmap</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/channel">channel</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/system">system</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/env">env</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/shellutils">shellutils</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/time">time</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/net">net</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/text">text</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/threading">threading</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/native">native</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+</nav>
+
+
+		<main>
+			<header>
+				<h1>Covers vs Classes</h1>
+			</header>
+			<nav id="TableOfContents">
+<ul>
+<li><a href="#toc_0">When to use covers and classes</a>
+<ul>
+<li><a href="#toc_1">Intro</a></li>
+<li><a href="#toc_2">By-reference, by-value</a></li>
+<li><a href="#toc_3">Classes</a></li>
+<li><a href="#toc_4">Covers</a></li>
+<li><a href="#toc_5">Heap allocation, stack allocation</a></li>
+<li><a href="#toc_6">Why stack allocation isn&rsquo;t a silver bullet</a></li>
+<li><a href="#toc_7">Stack and scope</a></li>
+<li><a href="#toc_8">When to use stack allocation</a></li>
+</ul></li>
+</ul>
+</nav>
+			<article>
+				
+
+<h1 id="toc_0">When to use covers and classes</h1>
+
+<h2 id="toc_1">Intro</h2>
+
+<p>Whenever possible, use classes.</p>
+
+<p>If you&rsquo;re new to ooc, don&rsquo;t use covers because you&rsquo;ve heard they
+are &ldquo;faster&rdquo;. Covers are powerful. Great power comes with great responsibility.
+The sword cut both ways</p>
+
+<h2 id="toc_2">By-reference, by-value</h2>
+
+<h2 id="toc_3">Classes</h2>
+
+<p>Classes are by-references. Which means every object is a reference. Doing that:</p>
+
+<pre><code>    Number: class {
+        value: Int
+        init: func (=value) {}
+    }
+
+    modifyRef: func (n: Number) {
+        n = Number new(-1)
+    }
+
+    modifyInside: func (n: Number) {
+        n value = -1
+    }
+
+    answer := Number new(42)
+    modifyRef(answer) // does nothing
+    modifyInside(answer)
+</code></pre>
+
+<p>What happens in &lsquo;modifyRef&rsquo; is that we change the value of the parameter &lsquo;n&rsquo;.
+The code does not modify what &lsquo;n&rsquo; was a reference to in the first place.
+In the example above the variable &lsquo;answer&rsquo; is given as the argument and &lsquo;modifyRef&rsquo; has
+no effect at all on &lsquo;answer&rsquo;.</p>
+
+<p>However, in &lsquo;modifyInside&rsquo;, we actually modify the content of what &lsquo;n&rsquo; refers to.
+Since &lsquo;n&rsquo; refers to &lsquo;answer&rsquo;, the code will modify its member &lsquo;value&rsquo; and set it to -1.</p>
+
+<h2 id="toc_4">Covers</h2>
+
+<p>Covers are trickier. There are two types of covers: primitive covers and compound covers</p>
+
+<p>Primitive covers allow to us to add methods to an existing underlying type. For implementations
+of ooc on top of C this means you can do stuff like:</p>
+
+<pre><code>    Int: cover from int
+</code></pre>
+
+<p>This is actually the way all C types are used within ooc.</p>
+
+<p>As a consequence, covers are by-value. Which means that</p>
+
+<pre><code>    modify: func (i: Int) {
+        i = -1
+    }
+
+    answer := 42
+    modify(answer)
+</code></pre>
+
+<p>Doesn&rsquo;t modify answer.</p>
+
+<p>But compound covers (you can think of them as structs) are also by value,
+which means that:</p>
+
+<pre><code>    Number: cover {
+        value: Int
+    }
+
+    modifyInside: func (n: Number) {
+        n value = -1
+    }
+
+    answer: Number
+    answer value = 42
+
+    modifyInside(answer)
+</code></pre>
+
+<p>Won&rsquo;t modify &lsquo;answer&rsquo; at all, but a <em>copy</em> of it that has been
+passed to &lsquo;modifyInside&rsquo;.</p>
+
+<p>As an interesting side effect, a &lsquo;clone&rsquo; method is futile for covers.</p>
+
+<p>It also means that this won&rsquo;t work:</p>
+
+<pre><code>    Number: cover {
+        value: Int
+        init: func (=value) {}
+    }
+</code></pre>
+
+<p>Because init will be working on a <em>copy</em> of the object, thus leaving
+the original object unmodified. That&rsquo;s why func@ exists, ie.:</p>
+
+<pre><code>    Number: cover {
+        value: Int
+        init: func@ (=value) {}
+    }
+</code></pre>
+
+<p>Where &lsquo;this&rsquo; will be passed by reference. Same goes for any cover method
+that modifies its content.</p>
+
+<h2 id="toc_5">Heap allocation, stack allocation</h2>
+
+<p>When you do</p>
+
+<pre><code>    NumberClass: class {}
+    n := NumberClass new()
+</code></pre>
+
+<p>n may be allocated on the heap or on the stack, however the compiler sees fit.</p>
+
+<p>However, with:</p>
+
+<pre><code>    NumberCover: cover {}
+    n: NumberCover
+</code></pre>
+
+<p>n is allocated on the stack.</p>
+
+<p>Choosing whether to allocate an object on the stack or on the heap is a
+non-trivial decision. In C++ for example, it is the role of the programmer
+to decide whether to allocate on the stack or on the heap.</p>
+
+<p>In ooc, it&rsquo;s the role of the compiler. Until the language is properly
+standardized and annotations are added for extern functions to allow
+escape analysis, the compiler may choose to only allocate on the heap.</p>
+
+<p>Allocating on the stack is much faster (since it only involves moving
+the stack pointer), and the stack is always hot, the memory you get when
+allocating is much more likely to be in cache than any far heap allocated
+memory.</p>
+
+<p>So why don&rsquo;t we always allocate on the stack? Why do we even bother about
+heap allocation, which involves all kinds of housekeeping to know which
+memory blocks are reserved and which are free?</p>
+
+<h2 id="toc_6">Why stack allocation isn&rsquo;t a silver bullet</h2>
+
+<p>A typical stack size for C programs on desktop OSes is between 1MB and 2MB.
+Therefore, if you need to allocate big objects, you may run out of stack space.</p>
+
+<p>Running out of stack space is really something to be avoided. It&rsquo;s a lot
+harder to debug than heap allocation failures. When heap allocation fails,
+you usually get back a null pointer, and tools (GDB, Valgrind) help figuring
+out the cause.</p>
+
+<p>However, when you run out of stack space, the program usually crashes violently
+with very little information about the situation that lead to the crash.
+Even worse, it could corrupt data without crashing.</p>
+
+<p>What&rsquo;s more, often, when a program crashes because of a stack allocation failure,
+the call stack is overwritten with random data, making it impossible to trace back
+the origin of the problem.</p>
+
+<p>To add insult to injury, as far as I know, there is no reliable and portable way
+to know how much free memory is left on the stack.</p>
+
+<p>For all those reasons, stack allocation is sometimes entirely avoided,
+because it&rsquo;s tricky to deal with manually.</p>
+
+<p>The following IBM DeveloperWorks article goes more in-depth into the issue:
+<a href="http://www.ibm.com/developerworks/java/library/j-jtp09275.html">http://www.ibm.com/developerworks/java/library/j-jtp09275.html</a></p>
+
+<h2 id="toc_7">Stack and scope</h2>
+
+<p>But wait, there&rsquo;s more! (assuming you&rsquo;re still reading at that point)</p>
+
+<p>Stack-allocated variables are deallocated when they go out of scope.</p>
+
+<p>What does that mean? It means that this code is wrong.</p>
+
+<pre><code>    getAnswer: func -&gt; Int* {
+        // answer is allocated on the stack
+        answer := 42
+        // we're returning the address of a local variable
+        // this is WRONG, don't do it.
+        answer&amp;
+        // when the function returns, 'answer' goes out of scope
+        // and is deallocated
+    }
+
+    answerPtr := getAnswer()
+    &quot;answer = %d&quot; printfln(answerPtr@)
+</code></pre>
+
+<p>Whereas this one will work perfectly:</p>
+
+<pre><code>    getAnswer: func -&gt; Int* {
+        // answer is allocated on the heap
+        answer := gc_malloc(Int size)
+        answer@ = 42
+        // we're returning the address of a heap-allocated variable
+        // no problem with that. the memory will be freed on a garbage
+        // collector sweep phase, when it will have detected that
+        // it's unused
+        answer
+    }
+
+    answerPtr := getAnswer()
+    &quot;answer = %d&quot; printfln(answerPtr@)
+</code></pre>
+
+<p>However, the first version (returning the address of a local variable)
+might work sometimes: don&rsquo;t be surprised. If the memory address (on the stack
+or in a register) where the local variable was stored isn&rsquo;t overwritten
+between the return from the function and the time when it&rsquo;s used, it might
+still contain the original value. But, again - it&rsquo;s wrong and unreliable.</p>
+
+<h2 id="toc_8">When to use stack allocation</h2>
+
+<p>For small objects for which you need by-value behavior and of which you use
+gazillions in your application.</p>
+
+<p>Each project is a unique situation - as a rule, I&rsquo;d always advise to begin
+with a class, and turn it into a cover later if the situation requires it.</p>
+
+<p>However, keep in mind that allocation is often not the first place to look
+if you want to optimize your application. Remember to always use a profiler
+(I find that valgrind + KCachegrind work particularly well with ooc code)
+to figure out where the hotspots are in your code.</p>
+
+			</article>
+		</main>
+		<footer>
+  <p></p>
+</footer>
+
+	</body>
+</html>

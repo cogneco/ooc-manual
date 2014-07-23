@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<title> Enumerations &middot; The OOC Manual </title>
+	
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/reset.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/text.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/color.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/layout.css">
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://oocmanual.cogneco.com/apple-touch-icon-144-precomposed.png">
+	<link rel="shortcut icon" href="http://oocmanual.cogneco.com/favicon.ico">
+	
+	<link href="" rel="alternate" type="application/rss+xml" title="The OOC Manual" />
+</head>
+
+	<body>
+		<header>
+  <h1><a href="http://oocmanual.cogneco.com">The OOC Manual</a></h1>
+  <p></p>
+</header>
+
+		<nav>
+	<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/introduction">Introduction</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language">Language</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/modules">Modules</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/values">Values</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/tuples">Tuples</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/control-structures">Control Structures</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/collections">Collections</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/functions">Functions</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/first-class-functions">First-class Functions</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/classes">Classes</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/constructors">Constructors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/properties">Properties</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/operators">Operators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers">Covers</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers-vs-classes">Covers vs Classes</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/enumerations">Enumerations</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics">Generics</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics2">Generics 2</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/exceptions">Exceptions</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/preprocessor">Preprocessor</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/version-blocks">Version</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools">Tools</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock">Rock</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/basic">Basic Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/drivers">Drivers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/advanced">Advanced Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files">Use-files</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files2">Use-files 2</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/gc">Garbage Collection</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/debug">Debugging</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/packaging">Packaging</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/sam">Sam</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/editors">Editors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/troubleshooting">Troubleshooting</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk">sdk</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang">lang</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/types">types</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/string">string</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/numbers">numbers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/iterators">iterators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/exceptions">exception</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/memory">memory</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/structs">structs</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/io">io</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/math">math</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os">os</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/process">process</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/jobpool">jobpool</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/coro">coro</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/terminal">terminal</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/pipe">pipe</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/dynlib">dynlib</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/mmap">mmap</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/channel">channel</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/system">system</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/env">env</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/shellutils">shellutils</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/time">time</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/net">net</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/text">text</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/threading">threading</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/native">native</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+</nav>
+
+
+		<main>
+			<header>
+				<h1>Enumerations</h1>
+			</header>
+			<nav id="TableOfContents">
+<ul>
+<li><a href="#toc_0">Enums</a>
+<ul>
+<li><a href="#toc_1">Members</a></li>
+<li><a href="#toc_2">Methods</a></li>
+</ul></li>
+<li><a href="#toc_3">Backing type</a>
+<ul>
+<li><a href="#toc_4">Custom values</a></li>
+<li><a href="#toc_5">Custom increment</a></li>
+</ul></li>
+<li><a href="#toc_6">Extern enums</a></li>
+</ul>
+</nav>
+			<article>
+				
+
+<h1 id="toc_0">Enums</h1>
+
+<p>A set of values that a variable of that type can take. Useful when there are
+three values or more, so a <code>Bool</code> doesn&rsquo;t make sense.</p>
+
+<pre><code>#!ooc
+DoorState: enum {
+  OPEN
+  CLOSED
+  UNKNOWN
+}
+</code></pre>
+
+<p>One can think of enum values as static members. Enums have their own types.</p>
+
+<pre><code>#!ooc
+state: DoorState
+state = DoorState OPEN
+
+// or, simply
+state := DoorState OPEN
+
+match state {
+  case DoorState OPEN =&gt;
+    &quot;It's open!&quot;
+  case DoorState CLOSED =&gt;
+    &quot;It's closed.&quot;
+  case =&gt; &quot;Who knows...&quot;
+} println()
+</code></pre>
+
+<p>More example code:</p>
+
+<pre><code>#!ooc
+isOpen?: func (state: DoorState) -&gt; Bool {
+  state == DoorState OPEN
+}
+</code></pre>
+
+<h2 id="toc_1">Members</h2>
+
+<p>Enums can&rsquo;t have members - they are just values without any added metadata.</p>
+
+<h2 id="toc_2">Methods</h2>
+
+<p>Enums, however, can have methods:</p>
+
+<pre><code>#!ooc
+DoorState: enum {
+  OPEN
+  CLOSED
+  UNKNOWN
+
+  chance: func -&gt; Float {
+    match this {
+      case This OPEN =&gt; 1.0
+      case This CLOSED =&gt; 0.0
+      case =&gt; 0.5
+    }
+  }
+
+  random: static func -&gt; Float {
+    Random randInt(0, 3) as This
+  }
+}
+</code></pre>
+
+<p>They can be used like regular objects:</p>
+
+<pre><code>#!ooc
+state := DoorState random()
+
+&quot;Generated a random door.&quot; println()
+&quot;Chance we're passing through = %.2f&quot; printfln(state chance())
+</code></pre>
+
+<h1 id="toc_3">Backing type</h1>
+
+<p>By defaults, enums are backed by ints. That&rsquo;s why they can be cast to
+<code>Int</code>, and vice versa.</p>
+
+<h2 id="toc_4">Custom values</h2>
+
+<p>Custom values are specified with the assignment operator:</p>
+
+<pre><code>#!ooc
+Number: enum {
+  ONE
+  TWO
+  FOUR = 4
+  FIVE
+}
+</code></pre>
+
+<p>Values are computed like this:</p>
+
+<ul>
+<li>the first value is <code>increment(0)</code> if unspecified</li>
+<li>every value after that is <code>increment(previousValue)</code></li>
+<li>by default, the increment is <code>+1</code></li>
+</ul>
+
+<p>Read below for more on increments</p>
+
+<h2 id="toc_5">Custom increment</h2>
+
+<p>Custom increments can be specified after the <code>enum</code> keyword:</p>
+
+<pre><code>#!ooc
+Odds: enum (+2) {
+  ONE = 1
+  THREE
+  FIVE
+  SEVEN
+  NINE
+}
+</code></pre>
+
+<p>Multiplication increments are valid as well:</p>
+
+<pre><code>#!ooc
+Powers: enum (*2) {
+  ONE = 1
+  TWO
+  FOUR
+  EIGHT
+  SIXTEEN
+}
+</code></pre>
+
+<p>And multiplication increments are actually quite handy for things like bitsets.</p>
+
+<h1 id="toc_6">Extern enums</h1>
+
+<p>Enums can be extern, in which case every element will be a bare symbol, which should
+be defined externally, in C code for example:</p>
+
+<pre><code>#!ooc
+ShutdownParam: extern enum {
+  SHUT_RD    // generate C name SHUT_RD
+  SHUT_WR    // generate C name SHUT_WR
+  SHUT_RDWR  // generate C name SHUT_RDWR
+}
+</code></pre>
+
+<p>Or, each element can be aliased individually:</p>
+
+<pre><code>#!ooc
+ShutdownParam: extern enum {
+  extern(SHUT_RD) read
+  extern(SHUT_WR) write
+  extern(SHUT_RDWR) readWrite
+}
+</code></pre>
+
+			</article>
+		</main>
+		<footer>
+  <p></p>
+</footer>
+
+	</body>
+</html>

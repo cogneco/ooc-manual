@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<title> sdk &middot; The OOC Manual </title>
+	
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/reset.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/text.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/color.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/layout.css">
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://oocmanual.cogneco.com/apple-touch-icon-144-precomposed.png">
+	<link rel="shortcut icon" href="http://oocmanual.cogneco.com/favicon.ico">
+	
+	<link href="" rel="alternate" type="application/rss+xml" title="The OOC Manual" />
+</head>
+
+	<body>
+		<header>
+  <h1><a href="http://oocmanual.cogneco.com">The OOC Manual</a></h1>
+  <p></p>
+</header>
+
+		<nav>
+	<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/introduction">Introduction</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language">Language</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/modules">Modules</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/values">Values</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/tuples">Tuples</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/control-structures">Control Structures</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/collections">Collections</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/functions">Functions</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/first-class-functions">First-class Functions</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/classes">Classes</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/constructors">Constructors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/properties">Properties</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/operators">Operators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers">Covers</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers-vs-classes">Covers vs Classes</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/enumerations">Enumerations</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics">Generics</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics2">Generics 2</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/exceptions">Exceptions</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/preprocessor">Preprocessor</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/version-blocks">Version</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools">Tools</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock">Rock</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/basic">Basic Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/drivers">Drivers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/advanced">Advanced Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files">Use-files</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files2">Use-files 2</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/gc">Garbage Collection</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/debug">Debugging</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/packaging">Packaging</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/sam">Sam</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/editors">Editors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/troubleshooting">Troubleshooting</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk">sdk</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang">lang</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/types">types</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/string">string</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/numbers">numbers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/iterators">iterators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/exceptions">exception</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/memory">memory</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/structs">structs</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/io">io</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/math">math</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os">os</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/process">process</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/jobpool">jobpool</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/coro">coro</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/terminal">terminal</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/pipe">pipe</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/dynlib">dynlib</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/mmap">mmap</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/channel">channel</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/system">system</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/env">env</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/shellutils">shellutils</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/time">time</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/net">net</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/text">text</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/threading">threading</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/native">native</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+</nav>
+
+
+		<main>
+			<header>
+				<h1>sdk</h1>
+			</header>
+			<nav id="TableOfContents">
+<ul>
+<li><a href="#toc_0">An overview of the SDK&rsquo;s packages</a></li>
+</ul>
+</nav>
+			<article>
+				
+
+<h1 id="toc_0">An overview of the SDK&rsquo;s packages</h1>
+
+<p>These pages will give you an overview of what you can find in the SDK:</p>
+
+<ol>
+<li><p>The [lang](lang package is imported by default in any ooc file.
+It contains essentials usable without further ado in any .ooc program.</p></li>
+
+<li><p>The [structs](structs package contains useful containers like
+lists and hash maps, but also stacks, and more cornercase stuff like
+multimaps and bags.</p></li>
+
+<li><p>The [io](io package has modules for reading files, writing
+to files, and other input/output related matters.</p></li>
+
+<li><p>The [math](math package is the home to everything numbers.</p></li>
+
+<li><p>The [os](os package contains lots of goodies, from time
+management to terminal handling, to launching processes, reading from
+pipes, getting hardware information, manipulating environment variables,
+creating a parallel job pool, and even coroutines and channels!</p></li>
+
+<li><p>The [net](net package has modules for relatively low-level
+network operations such as creating TCP and UDP sockets, and making DNS
+requests.</p></li>
+
+<li><p>The [text](text package contains a Regexp class, a JSON encoder
+and decoder, a simple template engine, a string tokenizer, an option
+parser, and a helper classes for escape sequences.</p></li>
+
+<li><p>The <a href="threading package contains all things threads.
+(Shocker, I know!">threading</a></p></li>
+
+<li><p>The [native](native package should not be imported directly -
+it contains platform-specific specific implementations of certain features.</p></li>
+</ol>
+
+			</article>
+		</main>
+		<footer>
+  <p></p>
+</footer>
+
+	</body>
+</html>

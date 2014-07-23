@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<title> Packaging &middot; The OOC Manual </title>
+	
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/reset.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/text.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/color.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/layout.css">
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://oocmanual.cogneco.com/apple-touch-icon-144-precomposed.png">
+	<link rel="shortcut icon" href="http://oocmanual.cogneco.com/favicon.ico">
+	
+	<link href="" rel="alternate" type="application/rss+xml" title="The OOC Manual" />
+</head>
+
+	<body>
+		<header>
+  <h1><a href="http://oocmanual.cogneco.com">The OOC Manual</a></h1>
+  <p></p>
+</header>
+
+		<nav>
+	<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/introduction">Introduction</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language">Language</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/modules">Modules</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/values">Values</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/tuples">Tuples</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/control-structures">Control Structures</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/collections">Collections</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/functions">Functions</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/first-class-functions">First-class Functions</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/classes">Classes</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/constructors">Constructors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/properties">Properties</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/operators">Operators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers">Covers</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers-vs-classes">Covers vs Classes</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/enumerations">Enumerations</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics">Generics</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics2">Generics 2</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/exceptions">Exceptions</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/preprocessor">Preprocessor</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/version-blocks">Version</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools">Tools</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock">Rock</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/basic">Basic Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/drivers">Drivers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/advanced">Advanced Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files">Use-files</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files2">Use-files 2</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/gc">Garbage Collection</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/debug">Debugging</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/packaging">Packaging</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/sam">Sam</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/editors">Editors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/troubleshooting">Troubleshooting</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk">sdk</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang">lang</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/types">types</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/string">string</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/numbers">numbers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/iterators">iterators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/exceptions">exception</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/memory">memory</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/structs">structs</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/io">io</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/math">math</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os">os</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/process">process</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/jobpool">jobpool</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/coro">coro</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/terminal">terminal</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/pipe">pipe</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/dynlib">dynlib</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/mmap">mmap</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/channel">channel</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/system">system</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/env">env</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/shellutils">shellutils</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/time">time</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/net">net</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/text">text</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/threading">threading</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/native">native</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+</nav>
+
+
+		<main>
+			<header>
+				<h1>Packaging</h1>
+			</header>
+			<nav id="TableOfContents">
+<ul>
+<li><a href="#toc_0">Intro</a></li>
+<li><a href="#toc_1">Windows</a>
+<ul>
+<li><a href="#toc_2">Dynamic GC</a></li>
+<li><a href="#toc_3">Resource file</a></li>
+<li><a href="#toc_4">DLL dependencies</a></li>
+<li><a href="#toc_5">Final notes</a></li>
+</ul></li>
+<li><a href="#toc_6">OSX</a>
+<ul>
+<li><a href="#toc_7">dylibbundler</a></li>
+<li><a href="#toc_8">Info.pList</a></li>
+<li><a href="#toc_9">Launcher script</a></li>
+<li><a href="#toc_10">Troubleshooting</a></li>
+<li><a href="#toc_11">Final notes</a></li>
+</ul></li>
+<li><a href="#toc_12">Linux</a>
+<ul>
+<li><a href="#toc_13">Multiarch</a></li>
+<li><a href="#toc_14">Chroot</a></li>
+<li><a href="#toc_15">Copying libs</a></li>
+<li><a href="#toc_16">Launcher script</a></li>
+<li><a href="#toc_17">Final notes</a></li>
+</ul></li>
+</ul>
+</nav>
+			<article>
+				
+
+<h1 id="toc_0">Intro</h1>
+
+<p>While ooc provides facilities to write highly cross-platform applications, and
+makes it rather easy to develop on all these platforms, distributing standalone
+applications is another matter entirely.</p>
+
+<p>Until a tool comes along and in the darkness binds them, this chapter documents
+the manual process that goes into releasing neatly packaged software for
+Windows, OSX and Linux.</p>
+
+<h1 id="toc_1">Windows</h1>
+
+<p>Windows is surprisingly easy to package for — a 32-bit executable will happily
+run on both 32-bit and 64-bit systems, there is no library path headache if you
+include all the required DLLs in the same directory as the .exe, and the
+current working directory is always the one with the .exe file.</p>
+
+<h2 id="toc_2">Dynamic GC</h2>
+
+<p>If your application is multi-threaded, make sure to link with the GC
+dynamically as explained in <a href="/docs/tools/rock/gc/#threads">the Garbage Collection chapter</a>.</p>
+
+<p>If you link statically with the GC and use multiple threads, chances are you
+will run into very ugly memory corruption bugs that seemingly make no sense.
+So, make sure to double-check that first.</p>
+
+<p>Since you&rsquo;ll link dynamically with it, you&rsquo;ll need to include <code>libgc-1.dll</code>,
+and you might also need <code>pthreadGC2.dll</code>, which lives in <code>/mingw/bin/</code> under
+MinGW.</p>
+
+<h2 id="toc_3">Resource file</h2>
+
+<p>To bundle an icon with your executable, and add the full program name, author,
+etc, create a .rc file containing something like that:</p>
+
+<pre><code>id ICON &quot;art/foo.ico&quot;
+1 VERSIONINFO
+FILEVERSION     1,0,0,0
+PRODUCTVERSION  1,0,0,0
+BEGIN
+  BLOCK &quot;StringFileInfo&quot;
+  BEGIN
+    BLOCK &quot;040904E4&quot;
+    BEGIN
+      VALUE &quot;CompanyName&quot;, &quot;Company Name&quot;
+      VALUE &quot;FileDescription&quot;, &quot;Application Name&quot;
+      VALUE &quot;FileVersion&quot;, &quot;1.0&quot;
+      VALUE &quot;InternalName&quot;, &quot;applicationname&quot;
+      VALUE &quot;LegalCopyright&quot;, &quot;Author Name&quot;
+      VALUE &quot;OriginalFilename&quot;, &quot;foo.exe&quot;
+      VALUE &quot;ProductName&quot;, &quot;Application Name&quot;
+      VALUE &quot;ProductVersion&quot;, &quot;1.0&quot;
+    END
+  END
+
+  BLOCK &quot;VarFileInfo&quot;
+  BEGIN
+    VALUE &quot;Translation&quot;, 0x409, 1252
+  END
+END
+</code></pre>
+
+<p>Adjust these values as needed. To create a high-quality <code>.ico</code> file from a
+PNG image, the usage of a tool such as <a href="http://icofx.ro/">IcoFX</a> might be needed.</p>
+
+<p>Then, compile this <code>.rc</code> file with the <code>windres</code> command-line utility - if
+you have a Makefile you might want to add a target for this.</p>
+
+<pre><code>windres -i foo.rc -o foo.res -O coff
+</code></pre>
+
+<p>The final step to include these resources is to link them with your executable.
+This can be done easily if you already have a .use file, by adding a section in
+a <code>version(windows)</code> block. For example, in foo.use:</p>
+
+<pre><code>Name: foo
+Version: 1.0
+Description: Foo builds upon bar baz and does wonderful stuff
+SourcePath: source
+Requires: bar, baz
+Main: foo/foo
+
+# Add resources on Windows
+version (windows) {
+  Libs: ./foo.res
+}
+</code></pre>
+
+<p>Make sure to <code>use foo</code> in the main file of your application so that rock takes
+these into account. The resulting executable should have the icon built-in,
+along with the author and product information you have specified in the
+<code>foo.rc</code> file.</p>
+
+<p>Note that every time <code>foo.rc</code> changes, it needs to be recompiled to <code>foo.res</code>.
+You don&rsquo;t need to distribute either the <code>.rc</code> or the <code>.res</code> file with the
+executable, it&rsquo;s all baked in!</p>
+
+<h2 id="toc_4">DLL dependencies</h2>
+
+<p>To figure out which libraries someone will need to run your application, you can use
+<a href="http://www.dependencywalker.com/">Dependency Walker</a>, also known as <code>depends.exe</code>.</p>
+
+<p>Loading your .exe in it, with the right working directory, will allow you to
+see which DLLs it loads and from where. Then, all you need is to copy those
+DLLs to the directory of your application and distribute them along.</p>
+
+<p>Be warned: there may be several versions of a given library on your system.
+Make sure to pick the right one.</p>
+
+<p>If your program can be launched by double-clicking on it in the Windows GUI
+(instead of running it from the command-line), it&rsquo;s a good sign - but it might
+not be enough. Some open-source programs install libraries to system paths, and
+your application may be relying on that.</p>
+
+<p>To make sure the application runs everywhere, testing it on a &ldquo;virgin&rdquo; install
+of Windows is recommended. If there was a time to use a virtual machine, that
+would be it.</p>
+
+<h2 id="toc_5">Final notes</h2>
+
+<p>You can choose to generate an installer of course, but a .zip file is fine as
+well.  Windows systems usually have facilities to extract .zip files without
+the need for an external program.</p>
+
+<p>Creating a zip file can be done with the command line GNU zip utility:</p>
+
+<pre><code>zip -r Foo-1.0-Windows.zip Foo-1.0-Windows
+</code></pre>
+
+<p>..or by using a graphical tool, for example, <a href="http://www.7-zip.org/">7-Zip</a></p>
+
+<h1 id="toc_6">OSX</h1>
+
+<p>Releasing an app on OSX is relatively easy, as tools exist to make it easier.
+64-bit executables are the norm for recent versions of Mac OS X, so there is no
+pain there either.</p>
+
+<p>The only part where it needs a little hand holding is when creating the app
+bundle.</p>
+
+<h2 id="toc_7">dylibbundler</h2>
+
+<p>We need to distribute libraries inside the app bundle - however, so that the
+paths are resolve correctly, we&rsquo;ll need to use <a href="http://macdylibbundler.sourceforge.net/">dylibbundler</a> to modify
+the executable and &lsquo;fix&rsquo; the paths to these libraries.</p>
+
+<p>With <a href="http://brew.sh/">Homebrew</a>, installing dylibbundler is as simple as doing:</p>
+
+<pre><code>brew install dylibbundler
+</code></pre>
+
+<p>The first step is to tell the C compiler to reserve enough room to modify the
+library paths later:</p>
+
+<pre><code>rock +-headerpad_max_install_names
+</code></pre>
+
+<p>Then, we&rsquo;ll have to create a folder that will be our app bundle, such as
+<code>Foo.app</code>, with the following directory structure:</p>
+
+<pre><code>Foo.app/
+  Contents/
+    Info.pList
+    MacOS/
+      foo
+      wrapper
+    Resources/
+      foo.icns
+    libs/
+</code></pre>
+
+<p><code>Contents/MacOS/foo</code> is our executable that we have copied from before, and
+<code>Contents/MacOS/wrapper</code> will be our launcher script (described in a further
+section).</p>
+
+<p>The <code>Contents/MacOS</code> directory should also contain any files the executable
+expects to find in the current working directory when launched (e.g. for game
+that would be the graphics, sounds, etc.)</p>
+
+<p>The next step is to dylibbundler on the executable so that libs are copied and
+the paths are fixed:</p>
+
+<pre><code>dylibbundler -od -b -x ./Foo.app/Contents/MacOS/helloworld -d ./Foo.app/Contents/libs/
+</code></pre>
+
+<h2 id="toc_8">Info.pList</h2>
+
+<p>The <code>Info.pList</code> file is similar to the <code>foo.rc</code> file we discussed in the
+Windows section. A stock plist file looks something like:</p>
+
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE plist PUBLIC &quot;-//Apple Computer//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
+&lt;plist version=&quot;1.0&quot;&gt;
+&lt;dict&gt;
+  &lt;key&gt;CFBundleGetInfoString&lt;/key&gt;
+  &lt;string&gt;Application Name&lt;/string&gt;
+  &lt;key&gt;CFBundleExecutable&lt;/key&gt;
+  &lt;string&gt;wrapper&lt;/string&gt;
+  &lt;key&gt;CFBundleIdentifier&lt;/key&gt;
+  &lt;string&gt;com.yourdomain.www&lt;/string&gt;
+  &lt;key&gt;CFBundleName&lt;/key&gt;
+  &lt;string&gt;applicationname&lt;/string&gt;
+  &lt;key&gt;CFBundleIconFile&lt;/key&gt;
+  &lt;string&gt;foo.icns&lt;/string&gt;
+  &lt;!-- Don't modify those! --&gt;
+  &lt;key&gt;CFBundleShortVersionString&lt;/key&gt;
+  &lt;string&gt;1.0&lt;/string&gt;
+  &lt;key&gt;CFBundleInfoDictionaryVersion&lt;/key&gt;
+  &lt;string&gt;6.0&lt;/string&gt;
+  &lt;key&gt;CFBundlePackageType&lt;/key&gt;
+  &lt;string&gt;APPL&lt;/string&gt;
+  &lt;key&gt;IFMajorVersion&lt;/key&gt;
+  &lt;integer&gt;0&lt;/integer&gt;
+  &lt;key&gt;IFMinorVersion&lt;/key&gt;
+  &lt;integer&gt;1&lt;/integer&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
+</code></pre>
+
+<p>It should live in <code>Foo.app/Contents/Info.pList</code>. Just like a Windows RC file,
+it references a <code>foo.icns</code> file. A tool like <a href="http://www.img2icnsapp.com/">img2icns</a> can be used
+to convert a high-resolution PNG image to a Mac OSX icon.</p>
+
+<h2 id="toc_9">Launcher script</h2>
+
+<p>Finally, we have to use a launcher script so that the current working
+directory of the app will be correct.</p>
+
+<pre><code>#!bash
+#!/bin/bash
+cd &quot;${0%/*}&quot;
+./foo
+</code></pre>
+
+<h2 id="toc_10">Troubleshooting</h2>
+
+<p>It&rsquo;s not uncommon to encounter an error if an app Bundle is malformed or
+otherwise problematic. Instead of double-clicking on the .app bundle to
+launch it, one can open it from the command line:</p>
+
+<pre><code>open Foo.app
+</code></pre>
+
+<p>If you get an &ldquo;error -10180&rdquo;, it means something went wrong while launching
+the app. Make sure the files inside <code>Contents/MacOS/</code> are executable, and
+that the wrapper is trying to launch the correct executable.</p>
+
+<p>In doubt, running <code>plutil</code> can help proofread the <code>pList</code> file:</p>
+
+<pre><code>plutil Foo.app/Contents/Info.pList
+</code></pre>
+
+<h2 id="toc_11">Final notes</h2>
+
+<p>OSX apps are sometimes encountered as <code>.dmg</code> files in the wild, which are
+image files that contain partitions, which can be mounted and read from.
+This allows a nice &ldquo;drag and drop&rdquo; window to be displayed.</p>
+
+<p>However, distributing an OSX application by just zipping up the <code>.app</code>
+bundle is acceptable. It can be done either on the command line:</p>
+
+<pre><code>zip -r Foo.OSX.zip Foo.app
+</code></pre>
+
+<p>&hellip;or in the graphical interface (Right Click -&gt; Compress Foo.app).</p>
+
+<h1 id="toc_12">Linux</h1>
+
+<p>Linux may be one of the comfiest platform for ooc development, but ironically,
+it is one of the most painful to package standalone applications for. As a rule
+of thumb, do not assume that your users will want to install libraries
+themselves — always package them with the software.</p>
+
+<h2 id="toc_13">Multiarch</h2>
+
+<p>64-bit installs of Linux that aren&rsquo;t multi-arch will complaing about missing
+32-bit libraries, and conversely, 32-bit installs won&rsquo;t be able to run a 64-bit
+application at all. Which leaves us with the only option of providing both a
+32-bit and a 64-bit executable.</p>
+
+<p>An example folder hierarchy is:</p>
+
+<pre><code>foo-1.0-linux/
+  bin/
+    foo32
+    foo64
+    libs32/
+    libs64/
+  foo.sh
+</code></pre>
+
+<p>Since we are going to ship dynamic libraries with the app, we should specify
+the path where they are with the <code>-rpath</code> linker option. The rock command looks
+a little bit like this:</p>
+
+<pre><code>rock +-Wl,-rpath=bin/libs32 -o=foo32
+</code></pre>
+
+<p>&hellip;for the 32-bit version, and similarly for the 64-bit version.</p>
+
+<h2 id="toc_14">Chroot</h2>
+
+<p>One of the easiest ways to build both a 32-bit and a 64-bit executable is to
+have a 64-bit VM of Ubuntu, and set up a 32-bit chroot inside of it, then copy
+files out of the chroot to retrieve the binaries and associated libraries.</p>
+
+<p>Setting up a chroot with debootstrap is <a href="https://wiki.ubuntu.com/DebootstrapChroot">documented on the Ubuntu website</a>.</p>
+
+<h2 id="toc_15">Copying libs</h2>
+
+<p>To figure out the libraries you need to copy to <code>libs32</code> or <code>libs64</code>, the <code>ldd</code>
+command line utility can be used. Filtering its output to remove a few
+libraries always present on Linux systems can help:</p>
+
+<pre><code>#!bash
+ldd foo64 | egrep &quot;(/usr/lib/)|(prefix64)&quot; | cut -d ' ' -f 3 | egrep -v &quot;lib(X|x|GL|gl|drm)&quot;
+</code></pre>
+
+<p>The example above works for an OpenGL-based application. Copying these files
+automatically can be done with a shell script such as:</p>
+
+<pre><code>#!bash
+for l in $(ldd foo64 | egrep &quot;(/usr/lib/)|(prefix64)&quot; | cut -d ' ' -f 3 | egrep -v &quot;lib(X|x|GL|gl|drm)&quot; | tr '\n' ' '); do
+  cp $l libs64/
+done
+</code></pre>
+
+<p>Checking that it well can be done by running <code>ldd bin/foo64</code> in the release
+directory.  Here&rsquo;s some example output that shows the libs are resolved to
+their relative paths:</p>
+
+<pre><code>$ ldd bin/foo64
+libSDL2-2.0.so.0 =&gt; bin/libs64/libSDL2-2.0.so.0 (0x00007fc6fa615000)
+libSDL2_mixer-2.0.so.0 =&gt; bin/libs64/libSDL2_mixer-2.0.so.0 (0x00007fc6f9ee0000)
+libmxml.so.1 =&gt; bin/libs64/libmxml.so.1 (0x00007fc6f9cd3000)
+libfreetype.so.6 =&gt; bin/libs64/libfreetype.so.6 (0x00007fc6f9a37000)
+libyaml-0.so.2 =&gt; bin/libs64/libyaml-0.so.2 (0x00007fc6f9815000)
+</code></pre>
+
+<h2 id="toc_16">Launcher script</h2>
+
+<p>Courtesy of <a href="https://twitter.com/flibitijibibo">Ethan Lee</a>, such a launcher script will detect the architecture
+of the machine it&rsquo;s running on and launch the right executable:</p>
+
+<pre><code>#!bash
+#!/bin/bash
+# Move to the script's directory
+cd &quot;`dirname &quot;$0&quot;`&quot;
+
+# Get the kernel/architecture information
+UNAME=`uname`
+ARCH=`uname -m`
+
+# Pick the proper executable
+if [ &quot;$ARCH&quot; == &quot;x86_64&quot; ]; then
+  ./bin/foo64
+else
+  ./bin/foo32
+fi
+</code></pre>
+
+<h2 id="toc_17">Final notes</h2>
+
+<p>The <code>.tar.gz</code> or <code>.tar.bz2</code> archive formats is well-suited to distribute
+applications for Linux, but <code>.zip</code> works just as well, and <code>.tar.xz</code> is usually
+a little smaller.</p>
+
+<p>To create a <code>.tar.gz</code>, do:</p>
+
+<pre><code>tar czvf foo-1.0-linux.tar.gz foo-1.0-linux
+</code></pre>
+
+<p>To create a <code>.tar.bz2</code>, use <code>cjvf</code> instead.</p>
+
+<p>To create a <code>.tar.xz</code>:</p>
+
+<pre><code>tar cf --xz foo-1.0-linux.tar.xz foo-1.0-linux
+</code></pre>
+
+<p>To create a <code>.zip</code>, do:</p>
+
+<pre><code>zip -r foo-1.0-linux.tar.zip foo-1.0-linux
+</code></pre>
+
+			</article>
+		</main>
+		<footer>
+  <p></p>
+</footer>
+
+	</body>
+</html>

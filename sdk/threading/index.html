@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<title> threading &middot; The OOC Manual </title>
+	
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/reset.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/text.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/color.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/layout.css">
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://oocmanual.cogneco.com/apple-touch-icon-144-precomposed.png">
+	<link rel="shortcut icon" href="http://oocmanual.cogneco.com/favicon.ico">
+	
+	<link href="" rel="alternate" type="application/rss+xml" title="The OOC Manual" />
+</head>
+
+	<body>
+		<header>
+  <h1><a href="http://oocmanual.cogneco.com">The OOC Manual</a></h1>
+  <p></p>
+</header>
+
+		<nav>
+	<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/introduction">Introduction</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language">Language</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/modules">Modules</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/values">Values</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/tuples">Tuples</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/control-structures">Control Structures</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/collections">Collections</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/functions">Functions</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/first-class-functions">First-class Functions</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/classes">Classes</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/constructors">Constructors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/properties">Properties</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/operators">Operators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers">Covers</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers-vs-classes">Covers vs Classes</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/enumerations">Enumerations</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics">Generics</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics2">Generics 2</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/exceptions">Exceptions</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/preprocessor">Preprocessor</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/version-blocks">Version</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools">Tools</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock">Rock</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/basic">Basic Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/drivers">Drivers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/advanced">Advanced Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files">Use-files</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files2">Use-files 2</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/gc">Garbage Collection</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/debug">Debugging</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/packaging">Packaging</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/sam">Sam</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/editors">Editors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/troubleshooting">Troubleshooting</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk">sdk</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang">lang</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/types">types</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/string">string</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/numbers">numbers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/iterators">iterators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/exceptions">exception</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/memory">memory</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/structs">structs</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/io">io</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/math">math</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os">os</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/process">process</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/jobpool">jobpool</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/coro">coro</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/terminal">terminal</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/pipe">pipe</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/dynlib">dynlib</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/mmap">mmap</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/channel">channel</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/system">system</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/env">env</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/shellutils">shellutils</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/time">time</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/net">net</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/text">text</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/threading">threading</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/native">native</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+</nav>
+
+
+		<main>
+			<header>
+				<h1>threading</h1>
+			</header>
+			<nav id="TableOfContents">
+<ul>
+<li><a href="#toc_0">The threading package</a></li>
+<li><a href="#toc_1">Thread</a>
+<ul>
+<li><a href="#toc_2">Creating, starting, and waiting</a></li>
+<li><a href="#toc_3">Check if a thread is still running</a></li>
+<li><a href="#toc_4">Timed wait</a></li>
+<li><a href="#toc_5">Retrieve the current thread</a></li>
+<li><a href="#toc_6">Yielding to other threads</a></li>
+</ul></li>
+<li><a href="#toc_7">ThreadLocal</a></li>
+<li><a href="#toc_8">Mutex</a></li>
+<li><a href="#toc_9">RecursiveMutex</a></li>
+</ul>
+</nav>
+			<article>
+				
+
+<h1 id="toc_0">The threading package</h1>
+
+<p>As far as concurrency goes, threads are usually lighter than processes,
+but heavier than coroutines.</p>
+
+<p>Programming with threads is subjecting yourself to preemptive multithreading,
+which means any thread might give up control to another thread (e.g. be
+pre-empted) at any time.</p>
+
+<p>Threads also imply shared memory - a variable might be accessed by several
+threads concurrently at the same time. Either seemingly, on single processor
+machines, or actually in parallel, on multicore machines.</p>
+
+<p>For that reason, threads have a reputation to be tricky - one has to be
+careful what is accessed, from where, and when. To prevent the same data
+being accessed by multiple threads, one can use a mutex - but those also
+tend to open other cans of worms.</p>
+
+<h1 id="toc_1">Thread</h1>
+
+<p>The following section describes how to create threads, wait on them, and
+how to wait for them to finish, or just for a little while. You&rsquo;ll also
+learn how to check if a thread is still alive, and how to retrieve the
+current thread.</p>
+
+<h2 id="toc_2">Creating, starting, and waiting</h2>
+
+<p>Creating a thread is as simple as calling <code>Thread new</code> and passing a closure -
+the code that will get executed in the new thread.</p>
+
+<pre><code>#!ooc
+import threading/Thread, os/Time
+
+thread := Thread new(||
+  &quot;Doing some long work...&quot; println()
+  Time sleepSec(2)
+  &quot;Done!&quot; println()
+)
+</code></pre>
+
+<p>Start the thread with <code>start()</code>:</p>
+
+<pre><code>#!ooc
+thread start()
+</code></pre>
+
+<p>And wait for it to finish with <code>wait()</code> (which will block until the
+thread terminates):</p>
+
+<pre><code>#!ooc
+&quot;Waiting for thread to finish...&quot; println() 
+thread wait()
+&quot;All done!&quot; println() 
+</code></pre>
+
+<h2 id="toc_3">Check if a thread is still running</h2>
+
+<p>Instead of calling wait, one can poll for a thread&rsquo;s existence with
+<code>alive?()</code></p>
+
+<pre><code>#!ooc
+&quot;Waiting for thread to finish...&quot; println()
+while (thread alive?()) {
+  &quot;Waiting...&quot; println()
+  Time sleepSec(1)
+}
+&quot;All done!&quot; println()
+</code></pre>
+
+<h2 id="toc_4">Timed wait</h2>
+
+<p>And instead of polling to see if a thread is still a live, one can
+wait for the thread to terminate for a certain maximum amount of time:</p>
+
+<pre><code>#!ooc
+while (!thread wait(1.0)) {
+  &quot;Waiting...&quot; println()
+}
+</code></pre>
+
+<p>This is pretty much equivalent to the <code>alive?()</code> version, except more
+elegant.</p>
+
+<h2 id="toc_5">Retrieve the current thread</h2>
+
+<p>The current thread can be retrieved with <code>Thread currentThread()</code>:</p>
+
+<pre><code>#!ooc
+thread := Thread currentThread()
+match (thread alive?()) {
+  case true =&gt; &quot;Good!&quot;
+  case =&gt; &quot;Wait, what?&quot;
+} println()
+</code></pre>
+
+<h2 id="toc_6">Yielding to other threads</h2>
+
+<p>In some situations it might be useful to give a hint to the operating
+system&rsquo;s scheduler, and let it know that the current thread is ready
+to be preempted right now - and that the next thread in line can become
+active now.</p>
+
+<p>Typically, the following code will usually print <code>ABCABC</code>:</p>
+
+<pre><code>#!ooc
+create: func -&gt; Thread {
+  Thread new(||
+    for (letter in &quot;ABC&quot;) {
+      letter print()
+    }
+  )
+}
+
+(t1, t2) := (create(), create())
+t1 start(); t2 start()
+t1 wait(); t2 wait()
+</code></pre>
+
+<p>Whereas adding <code>Thread yield</code> in the for loop, like this:</p>
+
+<pre><code>#!ooc
+create: func -&gt; Thread {
+  Thread new(||
+    for (letter in &quot;ABC&quot;) {
+      letter print()
+      Thread yield()
+    }
+  )
+}
+</code></pre>
+
+<p>Might produce something more along the lines of <code>AABBCC</code>. Then again,
+the problem with preemptive multitasking is that it is impossible to
+predict exactly what will happen, so seeing <code>AABCBC</code>, <code>ABABCC</code>, and even
+<code>ABCABC</code> happen are not out of the question either.</p>
+
+<h1 id="toc_7">ThreadLocal</h1>
+
+<p>By default, global variables are shared among all threads. To make a global
+that is specific to each thread, use ThreadLocal:</p>
+
+<pre><code>#!ooc
+val := ThreadLocal&lt;Int&gt; new(42)
+
+threads := ArrayList&lt;Thread&gt; new()
+for (i in 1..3) {
+    threads add(Thread new(||
+        val set(i) 
+    ))
+}
+
+for (t in threads) t start()
+for (t in threads) t wait()
+
+// prints val = 42
+&quot;val = %d&quot; printfln(val get())
+</code></pre>
+
+<p>In this case, val is initialized from the main application thread, then set by
+three other OS threads, and yet the value is still 42 at the end of the program,
+in the main thread.</p>
+
+<p>Inside each of these threads, though, the value is still 1 and 2 respectively.</p>
+
+<h1 id="toc_8">Mutex</h1>
+
+<p>A mutex allows to control access to resources that are shared between threads,
+to avoid two threads modifying the same resource, which could potentially result
+in invalid state.</p>
+
+<pre><code>#!ooc
+counter := 0
+
+threads := ArrayList&lt;Thread&gt; new()
+for (i in 0..10) {
+    threads add(Thread new(||
+        for (i in 0..1000) {
+            counter += 1   
+            Thread yield()
+        }
+    ))
+}
+
+for (t in threads) t start()
+for (t in threads) t wait()
+
+// prints counter = ???
+&quot;counter = %d&quot; printfln(counter)
+</code></pre>
+
+<p>The code above has a problem - many threads may access the counter at the same time,
+hence the resulting counter value isn&rsquo;t reliably 10000. In actual testing, it gave
+values such as 7064, 6111, 5986, etc.</p>
+
+<p>This happens because a thread might be reading the value of counter, then another
+thread runs and increments it, then the thread who read the value sets the counter
+to the value it reads plus one, resulting in &ldquo;lost iterations&rdquo;.</p>
+
+<p>To alleviate that problem, we can use a mutex:</p>
+
+<pre><code>#!ooc
+counter := 0
+
+mutex := Mutex new()
+
+threads := ArrayList&lt;Thread&gt; new()
+for (i in 0..10) {
+    threads add(Thread new(||
+        for (i in 0..1000) {
+            mutex lock()
+            counter += 1   
+            mutex unlock()
+            Thread yield()
+        }
+    ))
+}
+
+for (t in threads) t start()
+for (t in threads) t wait()
+
+// prints counter = ???
+&quot;counter = %d&quot; printfln(counter)
+</code></pre>
+
+<p>Here, we have protected the counter incrementation with <code>mutex lock()</code> and
+<code>mutex unlock()</code> calls. This is known as a critical section. In there, only one
+thread can execute at a time - the other threads will block on the <code>lock</code> call,
+waiting to be able to acquire it exclusively.</p>
+
+<p>Instead of using <code>lock</code> and <code>unlock</code> by hand, one might want to use the <code>with</code>
+method, that takes a block:</p>
+
+<pre><code>#!ooc
+for (i in 0..1000) {
+    mutex with(||
+        counter += 1
+    )
+}
+</code></pre>
+
+<p>With any of these last two versions, the counter is reliably set to 10000
+at the end of every run.</p>
+
+<p>For more information about this problem, read the <a href="http://en.wikipedia.org/wiki/Mutual_exclusion">Mutual exclusion</a>
+Wikipedia page.</p>
+
+<h1 id="toc_9">RecursiveMutex</h1>
+
+<p>With a regular mutex, locking multiple times from the same thread results in
+undefined behaviour on some platforms (e.g. pthreads).</p>
+
+<p>A recursive mutex, on the other hand, can be locked multiple times, as long
+as it&rsquo;s unlocked a corresponding number of times, all by the same thread.</p>
+
+<p>A trivial (non-useful) test might look like:</p>
+
+<pre><code>#!ooc
+threads := ArrayList&lt;Thread&gt; new()
+
+mutex := RecursiveMutex new()
+counter := 0
+
+for (i in 0..42) {
+    threads add(Thread new(||
+        for (i in 0..10) mutex lock()
+        counter += 1
+        for (i in 0..10) mutex unlock()
+    ))
+}
+
+for (t in threads) t start()
+for (t in threads) t wait()
+
+// prints counter = 42
+&quot;counter = %d&quot; printfln(counter)
+</code></pre>
+
+<p>This program correctly prints <code>counter = 42</code> at the end. If we weren&rsquo;t using
+a recursive mutex, more funky behaviour could happen. For example, on OSX, the
+program enters an infinite waiting loop, as we are trying to lock an already
+locked non-recursive mutex acquired by the current thread, resulting in a
+deadlock.</p>
+
+			</article>
+		</main>
+		<footer>
+  <p></p>
+</footer>
+
+	</body>
+</html>

@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<title> math &middot; The OOC Manual </title>
+	
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/reset.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/text.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/color.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/layout.css">
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://oocmanual.cogneco.com/apple-touch-icon-144-precomposed.png">
+	<link rel="shortcut icon" href="http://oocmanual.cogneco.com/favicon.ico">
+	
+	<link href="" rel="alternate" type="application/rss+xml" title="The OOC Manual" />
+</head>
+
+	<body>
+		<header>
+  <h1><a href="http://oocmanual.cogneco.com">The OOC Manual</a></h1>
+  <p></p>
+</header>
+
+		<nav>
+	<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/introduction">Introduction</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language">Language</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/modules">Modules</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/values">Values</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/tuples">Tuples</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/control-structures">Control Structures</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/collections">Collections</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/functions">Functions</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/first-class-functions">First-class Functions</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/classes">Classes</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/constructors">Constructors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/properties">Properties</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/operators">Operators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers">Covers</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers-vs-classes">Covers vs Classes</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/enumerations">Enumerations</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics">Generics</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics2">Generics 2</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/exceptions">Exceptions</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/preprocessor">Preprocessor</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/version-blocks">Version</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools">Tools</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock">Rock</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/basic">Basic Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/drivers">Drivers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/advanced">Advanced Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files">Use-files</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files2">Use-files 2</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/gc">Garbage Collection</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/debug">Debugging</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/packaging">Packaging</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/sam">Sam</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/editors">Editors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/troubleshooting">Troubleshooting</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk">sdk</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang">lang</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/types">types</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/string">string</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/numbers">numbers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/iterators">iterators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/exceptions">exception</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/memory">memory</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/structs">structs</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/io">io</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/math">math</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os">os</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/process">process</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/jobpool">jobpool</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/coro">coro</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/terminal">terminal</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/pipe">pipe</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/dynlib">dynlib</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/mmap">mmap</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/channel">channel</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/system">system</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/env">env</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/shellutils">shellutils</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/time">time</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/net">net</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/text">text</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/threading">threading</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/native">native</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+</nav>
+
+
+		<main>
+			<header>
+				<h1>math</h1>
+			</header>
+			<nav id="TableOfContents">
+<ul>
+<li><a href="#toc_0">The math package</a></li>
+<li><a href="#toc_1">math</a>
+<ul>
+<li><a href="#toc_2">Powers and roots</a></li>
+<li><a href="#toc_3">Trigonometry</a></li>
+<li><a href="#toc_4">Logarithms</a></li>
+<li><a href="#toc_5">Rounding and truncation</a></li>
+<li><a href="#toc_6">Floating-point remainder</a></li>
+<li><a href="#toc_7">Various</a></li>
+</ul></li>
+<li><a href="#toc_8">Random</a>
+<ul>
+<li><a href="#toc_9">libc generator</a></li>
+<li><a href="#toc_10">fast prng</a></li>
+</ul></li>
+</ul>
+</nav>
+			<article>
+				
+
+<h1 id="toc_0">The math package</h1>
+
+<p>The math package piggybacks on libc for basic mathematical operations with
+standard integer and floating point types.</p>
+
+<h1 id="toc_1">math</h1>
+
+<p>By simply importing <code>math</code>, a most of the math functions from libc will get
+imported.</p>
+
+<p>Often, math operations are available both in function form and in method form.
+The function form would be similar to C, e.g.:</p>
+
+<pre><code>#!ooc
+sin(2 * PI)
+</code></pre>
+
+<p>Whereas the method form would be more.. object-oriented-ish:</p>
+
+<pre><code>#!ooc
+2 pow(16)
+</code></pre>
+
+<h2 id="toc_2">Powers and roots</h2>
+
+<p><code>pow</code> elevates the first argument to the power of the second:</p>
+
+<pre><code>#!ooc
+2 pow(8) // 256
+</code></pre>
+
+<p><code>exp</code> returns the value of e (the base of natural logarithms) raised to the
+power of x:</p>
+
+<pre><code>#!ooc
+exp(2) // approx. 7.389
+</code></pre>
+
+<p><code>sqrt</code> returns the square root of a number:</p>
+
+<pre><code>#!ooc
+144 sqrt() // 12
+</code></pre>
+
+<p><code>cbrt</code> returns the cube root of a number:</p>
+
+<pre><code>#!ooc
+8 cbrt() // 2
+</code></pre>
+
+<h2 id="toc_3">Trigonometry</h2>
+
+<p><code>PI</code> is a constant defined in math as:</p>
+
+<pre><code>#!ooc
+PI := 3.14159_26535_89793_23846_26433_83279
+</code></pre>
+
+<p><code>sin</code>, <code>cos</code>, and <code>tan</code>, are available, both in method and function form:</p>
+
+<pre><code>#!ooc
+sin(2 * PI) // 0
+cos(- (3 / 4) * PI) // -0.707, etc.
+tan(PI / 4) // 1
+</code></pre>
+
+<p>As are their arc equivalents, <code>asin</code>, <code>acos</code>, <code>atan</code>, their hyperbolic
+variants, <code>sinh</code>, <code>cosh</code>, <code>tanh</code>, and their arc hyperbolic tandems,
+<code>asinh</code>, <code>acosh</code>, <code>atanh</code>.</p>
+
+<p>As for <code>atan2</code>, straight from Wikipedia:</p>
+
+<pre><code>In a variety of computer languages, the function atan2 is the arctangent
+function with two arguments. The purpose of using two arguments instead of
+one, is to gather information of the signs of the inputs in order to return
+the appropriate quadrant of the computed angle, which is not possible for
+the single-argument arctangent function.
+
+For any real number (e.g., floating point) arguments x and y not both equal
+to zero, atan2(y, x) is the angle in radians between the positive x-axis of
+a plane and the point given by the coordinates (x, y) on it. The angle is
+positive for counter-clockwise angles (upper half-plane, y &gt; 0), and
+negative for clockwise angles (lower half-plane, y &lt; 0).
+</code></pre>
+
+<p>Source: <a href="http://en.wikipedia.org/wiki/Atan2">http://en.wikipedia.org/wiki/Atan2</a></p>
+
+<h2 id="toc_4">Logarithms</h2>
+
+<p>The <code>log</code> function returns the natural logarithm of x:</p>
+
+<pre><code>#!ooc
+log(2) // about 0.69
+</code></pre>
+
+<p>The <code>log10</code> function returns the base 10 logarithm of x:</p>
+
+<pre><code>#!ooc
+log10(4000) // about 3.6
+</code></pre>
+
+<h2 id="toc_5">Rounding and truncation</h2>
+
+<p>The <code>round</code>, <code>roundLong</code> and <code>roundLLong</code> are methods that will round to the
+nearest integer:</p>
+
+<pre><code>3.14 round() // 3.00
+4.78 roundLong() // 5
+0.92 roundLLong() // 1
+</code></pre>
+
+<p>The <code>ceil</code> and <code>floor</code> methods will round to the nearest upper and lower
+integer, respectively:</p>
+
+<pre><code>3.14 ceil() // 4.00
+8.92 floor() // 8.00
+</code></pre>
+
+<h2 id="toc_6">Floating-point remainder</h2>
+
+<p>The <code>mod</code> function computes the floating-point remainder of dividing x by y.
+The return value is x - n * y, where n is the quotient of x / y, rounded toward
+zero to an integer.</p>
+
+<pre><code>12 mod(5) // 2
+</code></pre>
+
+<h2 id="toc_7">Various</h2>
+
+<p>To get the absolute value of a number, use <code>abs()</code>:</p>
+
+<pre><code>#!ooc
+(-4) abs() // 4
+</code></pre>
+
+<h1 id="toc_8">Random</h1>
+
+<p>By importing <code>math/Random</code>, one can generate random numbers.</p>
+
+<p><strong>Disclaimer: neither the libc random number generator or the fast prng
+exposed by math/Random are suitable for cryptographic usage. Find a library
+that does it right, this was not planned for it.</strong></p>
+
+<p>When the module is loaded (probably at program start-up), the libc random
+number generator will be seeded with the current time in microseconds.</p>
+
+<p>Then, various functions can be used to get random numbers.</p>
+
+<h2 id="toc_9">libc generator</h2>
+
+<p>To get any number between <code>INT_MIN</code> and <code>INT_MAX</code>, call:</p>
+
+<pre><code>#!ooc
+number := Random random()
+</code></pre>
+
+<p>To get any number within a range, use either:</p>
+
+<pre><code>#!ooc
+// gives a number between 0 (included) and 10 (included)
+number := Random randInt(0, 10)
+
+// gives a number between 0 (included) and 9 (included)
+number = Random randRange(0, 10)
+</code></pre>
+
+<p>Those both have variants to get a number in a range, excluding any
+number already contained in a list:</p>
+
+<pre><code>#!ooc
+// get 10 unique numbers between 0 and 100
+list := ArrayList&lt;Int&gt; new()
+
+10 times(||
+    list add(Random randInt(0, 100, list))
+)
+</code></pre>
+
+<p>To pick out a random element ouf ot a list, use <code>choice</code>:</p>
+
+<pre><code>#!ooc
+// get one of those 10 unique numbers we just generated:
+num := Random choice(list)
+</code></pre>
+
+<p>Note that <code>choice</code> is generic, so it will work with lists of any
+type of element.</p>
+
+<h2 id="toc_10">fast prng</h2>
+
+<p>Most of the methods above have a <code>fast</code> variant, working from a PRNG (<a href="http://en.wikipedia.org/wiki/Pseudorandom_number_generator">pseudorandom
+number generator</a>) coded directly into the Random class.</p>
+
+<pre><code>#!ooc
+// all these are documented above, they work in a similar fashion
+Random fastRandom()
+
+Random fastRandInt(0, 10)
+Random fastRandRange(0, 10)
+
+Random fastRandInt(0, 10, list)
+Random fastRandRange(0, 10, list)
+
+Random fastChoice(list)
+</code></pre>
+
+<p>The <code>fast</code> variants are meant to be faster, as the name implies, but they&rsquo;re even
+less guaranteed to have good random qualities - the numbers it generates might be
+less even / repeat more easily.</p>
+
+			</article>
+		</main>
+		<footer>
+  <p></p>
+</footer>
+
+	</body>
+</html>

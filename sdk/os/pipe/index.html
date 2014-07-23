@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<title> pipe &middot; The OOC Manual </title>
+	
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/reset.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/text.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/color.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/layout.css">
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://oocmanual.cogneco.com/apple-touch-icon-144-precomposed.png">
+	<link rel="shortcut icon" href="http://oocmanual.cogneco.com/favicon.ico">
+	
+	<link href="" rel="alternate" type="application/rss+xml" title="The OOC Manual" />
+</head>
+
+	<body>
+		<header>
+  <h1><a href="http://oocmanual.cogneco.com">The OOC Manual</a></h1>
+  <p></p>
+</header>
+
+		<nav>
+	<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/introduction">Introduction</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language">Language</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/modules">Modules</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/values">Values</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/tuples">Tuples</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/control-structures">Control Structures</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/collections">Collections</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/functions">Functions</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/first-class-functions">First-class Functions</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/classes">Classes</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/constructors">Constructors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/properties">Properties</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/operators">Operators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers">Covers</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers-vs-classes">Covers vs Classes</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/enumerations">Enumerations</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics">Generics</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics2">Generics 2</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/exceptions">Exceptions</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/preprocessor">Preprocessor</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/version-blocks">Version</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools">Tools</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock">Rock</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/basic">Basic Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/drivers">Drivers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/advanced">Advanced Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files">Use-files</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files2">Use-files 2</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/gc">Garbage Collection</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/debug">Debugging</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/packaging">Packaging</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/sam">Sam</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/editors">Editors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/troubleshooting">Troubleshooting</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk">sdk</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang">lang</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/types">types</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/string">string</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/numbers">numbers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/iterators">iterators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/exceptions">exception</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/memory">memory</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/structs">structs</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/io">io</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/math">math</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os">os</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/process">process</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/jobpool">jobpool</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/coro">coro</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/terminal">terminal</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/pipe">pipe</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/dynlib">dynlib</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/mmap">mmap</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/channel">channel</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/system">system</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/env">env</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/shellutils">shellutils</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/time">time</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/net">net</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/text">text</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/threading">threading</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/native">native</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+</nav>
+
+
+		<main>
+			<header>
+				<h1>pipe</h1>
+			</header>
+			<nav id="TableOfContents">
+<ul>
+<li><a href="#toc_0">The os/Pipe module</a>
+<ul>
+<li><a href="#toc_1">Reading</a></li>
+<li><a href="#toc_2">Writing</a></li>
+<li><a href="#toc_3">Buffering considerations</a></li>
+</ul></li>
+<li><a href="#toc_4">Basic usage</a></li>
+<li><a href="#toc_5">Communication</a>
+<ul>
+<li><a href="#toc_6">Inter-thread communication</a></li>
+<li><a href="#toc_7">Inter-process communication</a></li>
+<li><a href="#toc_8">Non-blocking I/O</a></li>
+</ul></li>
+<li><a href="#toc_9">Pipes disclaimer</a></li>
+</ul>
+</nav>
+			<article>
+				
+
+<h1 id="toc_0">The os/Pipe module</h1>
+
+<p>The Pipe module allows one to deal with pipes. Pipes are basically a pair of
+read and write file descriptors.</p>
+
+<p>The writer writes into the write file descriptor and the reader reads into the
+read file descriptor.</p>
+
+<h2 id="toc_1">Reading</h2>
+
+<p>A read call may either:</p>
+
+<ul>
+<li>successfully read, if there&rsquo;s data in the pipe</li>
+<li>block to wait for some more data (in blocking mode)</li>
+<li>return immediately with no data (in non-blocking mode)</li>
+</ul>
+
+<p>In non-blocking mode, one has to be careful to distinguish between the &lsquo;no
+data&rsquo; condition and the &lsquo;end of pipe&rsquo; condition. OS pipes don&rsquo;t have a proper
+&lsquo;eof&rsquo; marker, but reading from a closed pipe will mark the Pipe class as eof
+anyway, accessible with <code>Pipe eof?()</code>.</p>
+
+<p>The <code>os/Pipe</code> package contains a <code>PipeReader</code> class, which extends the
+<code>io/Reader</code> class, for convenience.</p>
+
+<h2 id="toc_2">Writing</h2>
+
+<p>A write call may either:</p>
+
+<ul>
+<li>return immediately if there&rsquo;s room in the pipe</li>
+<li>block to wait for some data to be read, making room to write something (in
+blocking mode)</li>
+<li>return immediately, having written as much as it can (in non-blocking mode)</li>
+</ul>
+
+<p>The <code>os/Pipe</code> package contains a <code>PipeWriter</code> class, which extends the
+<code>io/Writer</code> class, for convenience.</p>
+
+<h2 id="toc_3">Buffering considerations</h2>
+
+<p>Note that a pipe&rsquo;s user has to do its own buffering when writing: in blocking
+mode, writing something too large will hang forever, and in non-blocking mode,
+only the part that fits will be written, leaving the rest unwritten.</p>
+
+<p>As a result, using a <code>PipeReader</code> or a <code>PipeReader</code> in non-blocking mode is
+unreliable.  Instead, using blocking mode inside a thread is preferrable.</p>
+
+<h1 id="toc_4">Basic usage</h1>
+
+<p>Here&rsquo;s a not so useful pipe:</p>
+
+<pre><code>#!ooc
+pipe := Pipe new()
+</code></pre>
+
+<p>We can write a string into it:</p>
+
+<pre><code>#!ooc
+pipe write(&quot;Hello&quot;)
+</code></pre>
+
+<p>And then read the result back:</p>
+
+<pre><code>#!ooc
+str := pipe read(128)
+str println()
+</code></pre>
+
+<p>Even though we requested 128 bytes from the pipe, only 5 bytes have been written,
+so we the call immediately returns with a String of size 5.</p>
+
+<p>We could have also read into our own buffer:</p>
+
+<pre><code>#!ooc
+b := Buffer new(128)
+pipe read(b)
+b println()
+</code></pre>
+
+<p>Same here, the buffer has 128 bytes capacity, but only 5 bytes have been read, and
+the buffer&rsquo;s length has been set accordingly. Using a buffer is more efficient
+because fewer allocations are being done.</p>
+
+<p>Then, we shouldn&rsquo;t forget to close both the reading and the writing end of the pipe</p>
+
+<pre><code>#!ooc
+pipe close('r')
+pipe close('w')
+</code></pre>
+
+<p>Or simply:</p>
+
+<pre><code>#!ooc
+pipe close()
+</code></pre>
+
+<h1 id="toc_5">Communication</h1>
+
+<h2 id="toc_6">Inter-thread communication</h2>
+
+<p>Pipes can be used to communicate between threads.</p>
+
+<p>Let&rsquo;s create a pipe:</p>
+
+<pre><code>#!ooc
+pipe := Pipe new()
+</code></pre>
+
+<p>Then a thread that is going to read out of it until it&rsquo;s closed:</p>
+
+<pre><code>#!ooc
+reader := Thread new(||
+    while (!pipe eof?()) {
+        result := pipe read(128)
+        if (result) result print()
+    }
+    pipe close('r')
+)
+</code></pre>
+
+<p>Then a writer path which is going to write ten hellos, one every 100
+milliseconds:</p>
+
+<pre><code>#!ooc
+writer := Thread new(||
+    for (i in 0..10) {
+        pipe write(&quot;Hello %d\n&quot; format(i))
+        Time sleepMilli(100)
+    }
+    pipe close('w')
+)
+</code></pre>
+
+<p>Let&rsquo;s start them both:</p>
+
+<pre><code>#!ooc
+reader start(); writer start()
+reader wait();  writer wait()
+</code></pre>
+
+<h2 id="toc_7">Inter-process communication</h2>
+
+<p>Similarly, pipes can be (and are mostly) used to communicate with other
+processes. This is covered in the <a href="/docs/sdk/os/process/">Process</a> section.</p>
+
+<h2 id="toc_8">Non-blocking I/O</h2>
+
+<p>A pipe can be set to non-blocking mode to use non-blocking read operations.
+This is used in the streaming example in the <a href="/docs/sdk/os/process/">Process</a> section.</p>
+
+<p>Let&rsquo;s create a pipe in non-blocking mode for reading only:</p>
+
+<pre><code>#!ooc
+pipe := Pipe new()
+pipe setNonBlocking('r')
+</code></pre>
+
+<p>Then a state variable that&rsquo;ll be shared by both threads:</p>
+
+<pre><code>#!ooc
+done := false
+</code></pre>
+
+<p>Then we&rsquo;ll make a writer thread that never closes the pipe itself (much like a
+process launched in the background that you never blockingly wait on):</p>
+
+<pre><code>#!ooc
+t := Thread new(||
+  for (i in 0..10) {
+    Time sleepSec(1)
+    pipe write(&quot;Hello %d&quot; format(i))
+  }
+  done = true
+)
+
+t start()
+</code></pre>
+
+<p>It does set done to true after it&rsquo;s done, though - much like you could know if
+a background process is still running with <code>waitNoHang</code>.</p>
+
+<p>Then we&rsquo;ll read, from the main thread, as much as we can, and when we don&rsquo;t receive
+anything, we&rsquo;ll check if we&rsquo;re done:</p>
+
+<pre><code>#!ooc
+while (true) {
+  res := pipe read(128)
+  if (res) {
+    &quot;Received: %s&quot; printfln(res)
+  } else if (done) break
+}
+</code></pre>
+
+<p>And let&rsquo;s not forget to clean up:</p>
+
+<pre><code>#!ooc
+pipe close()
+t wait()
+</code></pre>
+
+<p>That behaves as expected. Note that in the main thread loop we could be doing anything
+really, without blocking on the read.</p>
+
+<h1 id="toc_9">Pipes disclaimer</h1>
+
+<p>If you have read all the way down, and you&rsquo;re thinking of doing some complex
+stuff with pipes, you probably want some queuing library instead of using raw
+pipes, both for cross-platform support, performance, and ease of use.
+<a href="http://zeromq.org/">zeromq</a> is an interesting library and it has <a href="https://github.com/nddrylliog/ooc-zeromq">ooc bindings</a>.</p>
+
+			</article>
+		</main>
+		<footer>
+  <p></p>
+</footer>
+
+	</body>
+</html>

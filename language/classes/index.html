@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<title> Classes &middot; The OOC Manual </title>
+	
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/reset.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/text.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/color.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/layout.css">
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://oocmanual.cogneco.com/apple-touch-icon-144-precomposed.png">
+	<link rel="shortcut icon" href="http://oocmanual.cogneco.com/favicon.ico">
+	
+	<link href="" rel="alternate" type="application/rss+xml" title="The OOC Manual" />
+</head>
+
+	<body>
+		<header>
+  <h1><a href="http://oocmanual.cogneco.com">The OOC Manual</a></h1>
+  <p></p>
+</header>
+
+		<nav>
+	<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/introduction">Introduction</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language">Language</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/modules">Modules</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/values">Values</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/tuples">Tuples</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/control-structures">Control Structures</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/collections">Collections</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/functions">Functions</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/first-class-functions">First-class Functions</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/classes">Classes</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/constructors">Constructors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/properties">Properties</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/operators">Operators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers">Covers</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers-vs-classes">Covers vs Classes</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/enumerations">Enumerations</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics">Generics</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics2">Generics 2</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/exceptions">Exceptions</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/preprocessor">Preprocessor</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/version-blocks">Version</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools">Tools</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock">Rock</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/basic">Basic Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/drivers">Drivers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/advanced">Advanced Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files">Use-files</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files2">Use-files 2</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/gc">Garbage Collection</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/debug">Debugging</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/packaging">Packaging</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/sam">Sam</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/editors">Editors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/troubleshooting">Troubleshooting</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk">sdk</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang">lang</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/types">types</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/string">string</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/numbers">numbers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/iterators">iterators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/exceptions">exception</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/memory">memory</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/structs">structs</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/io">io</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/math">math</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os">os</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/process">process</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/jobpool">jobpool</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/coro">coro</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/terminal">terminal</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/pipe">pipe</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/dynlib">dynlib</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/mmap">mmap</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/channel">channel</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/system">system</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/env">env</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/shellutils">shellutils</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/time">time</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/net">net</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/text">text</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/threading">threading</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/native">native</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+</nav>
+
+
+		<main>
+			<header>
+				<h1>Classes</h1>
+			</header>
+			<nav id="TableOfContents">
+<ul>
+<li><a href="#toc_0">Classes</a></li>
+<li><a href="#toc_1">Members</a>
+<ul>
+<li><a href="#toc_2">Built-in members</a></li>
+<li><a href="#toc_3">Static members</a></li>
+<li><a href="#toc_4">Properties</a></li>
+</ul></li>
+<li><a href="#toc_5">Methods</a>
+<ul>
+<li><a href="#toc_6">this and This</a></li>
+<li><a href="#toc_7">Static methods</a></li>
+</ul></li>
+<li><a href="#toc_8">Constructors</a>
+<ul>
+<li><a href="#toc_9">Initializers</a></li>
+</ul></li>
+<li><a href="#toc_10">Inheritance</a>
+<ul>
+<li><a href="#toc_11">Extends</a></li>
+<li><a href="#toc_12">Super</a></li>
+<li><a href="#toc_13">Class hierarchy</a></li>
+</ul></li>
+<li><a href="#toc_14">Adding methods after definition</a></li>
+</ul>
+</nav>
+			<article>
+				
+
+<h1 id="toc_0">Classes</h1>
+
+<p>Define classes with the <code>class</code> keyword:</p>
+
+<pre><code>#!ooc
+Dog: class {
+  name: String
+  race: Race
+
+  init: func (=name, =race)
+  bark: func { &quot;Woof!&quot; println() }
+}
+</code></pre>
+
+<p>Then, call <code>new</code> on it to make an instance of it:</p>
+
+<pre><code>#!ooc
+dog := Dog new()
+</code></pre>
+
+<p>An instance of a class is also called an object.</p>
+
+<h1 id="toc_1">Members</h1>
+
+<p>Members are variables tied to an instance:</p>
+
+<pre><code>#!ooc
+Dog: class {
+  // declare a field named 'name'
+  name: String
+
+  init: func (=name)
+}
+
+d1 := Dog new(&quot;Pluty&quot;)
+d2 := Dog new(&quot;Snoopo&quot;)
+
+&quot;d1's name is = %s&quot; printfln(d1 name)
+&quot;d2's name is = %s&quot; printfln(d2 name)
+</code></pre>
+
+<h2 id="toc_2">Built-in members</h2>
+
+<p>There are a few members always available on classes. You can access the
+class of any object via the <code>class</code> member. For example:</p>
+
+<pre><code>#!ooc
+// will be equal to 'Dog'
+dog class name
+
+// since objects are reference, will be the size of a pointer
+dog class size
+
+// the actual size of a dog object, including members
+dog class instanceSize
+</code></pre>
+
+<h2 id="toc_3">Static members</h2>
+
+<p>Static members belong to a class, rather than to an instance.</p>
+
+<pre><code>#!ooc
+Node: class {
+  count: static Int = 0
+
+  init: func {
+    This count += 1
+  }
+}
+
+for (i in 0..10) {
+  Node new()
+}
+&quot;Number of nodes: %d&quot; printfln(Node count)
+</code></pre>
+
+<p>In the code above, <code>count</code> is &ldquo;shared&rdquo; among all instances of node - hence,
+incrementing it in the constructor will be &ldquo;remembered&rdquo; the next time a node
+is created. So, we really are counting the number of nodes being created.</p>
+
+<p>Static fields can also be accessed without explicitly referring to <code>This</code>.
+The declare-assignment operator, <code>:=</code>, also works with the <code>static</code> keyword before
+the right-hand-side value:</p>
+
+<pre><code>#!ooc
+Node: class {
+  count := static 0
+
+  init: func {
+    count += 1
+  }
+}
+
+// etc.
+</code></pre>
+
+<h2 id="toc_4">Properties</h2>
+
+<p>The shortest and sweetest way to define a property is to use the <code>::=</code> operator:</p>
+
+<pre><code>#!ooc
+Rectangle: class {
+  width, height: Int
+  area ::= width * height
+}
+</code></pre>
+
+<p>Contrary to a variable declaration, the value of <code>area</code> will be
+recomputed every time it is being accessed. Contrary to a function
+call, one does not need parenthesis to call its getter, nor can it
+pass any argument.</p>
+
+<p>Properties are mostly useful as shorthands for an expression that
+is often computed, but that would be overkill as a method.</p>
+
+<p>In the technical jargon, we say that properties are, <code>virtual</code>
+members that exist as read-only, write-only, or read-write behind
+getters and setters.</p>
+
+<p>Here&rsquo;s an example of long-form, read-only property:</p>
+
+<pre><code>#!ooc
+Person: class {
+  lastName, firstName: String
+
+  fullName: String {
+    get {
+      &quot;%s %s&quot; format(lastName, firstName)
+    }
+  }
+}
+</code></pre>
+
+<p>Note that when specifying a getter, one does not need a return type,
+as it is the type of the property itself.</p>
+
+<p>Similarly, when specifying a setter, one only needs an argument name
+not its type:</p>
+
+<pre><code>#!ooc
+Person: class {
+  lastName, firstName: String
+
+  name: String {
+    set (name) {
+      tokens := name split(&quot; &quot;)
+      assert(tokens size == 2)
+      (firstName, lastName) = (tokens[0], tokens[1])
+    }
+  }
+}
+</code></pre>
+
+<p>Empty getters and setters are valid as well, for a simple read-write property:</p>
+
+<pre><code>#!ooc
+Person: class {
+  name: String { get set }
+}
+</code></pre>
+
+<p>The advantage is the following - since a property is only accessed via its
+getters and setters, which are methods, changing the structure of the <code>Person</code>
+class will not necessarily trigger a recompile on the modules which use it,
+nor will they need to explicitly import that module, if they get a <code>Person</code> instance
+from somewhere else.</p>
+
+<p>This is a way to work around what is known as the <a href="fragile">Fragile Base Class Problem</a>.</p>
+
+<h1 id="toc_5">Methods</h1>
+
+<p>Methods are function declarations in the class body, that are called
+on a particular instance:</p>
+
+<pre><code>#!ooc
+Dog: class {
+  bark: func {
+    &quot;Woof!&quot; println()
+  }
+}
+
+dog := Dog new()
+dog bark()
+</code></pre>
+
+<h2 id="toc_6">this and This</h2>
+
+<p>In a method, the special variable <code>this</code> is accessible, and refers to the object
+the method is being called on.</p>
+
+<p>Example usage of <code>this</code></p>
+
+<pre><code>#!ooc
+Building: class {
+  height: Int
+
+  // argument name shadows member name
+  setHeight: func (height: Int) {
+    if (height &lt; 0 || height &gt; 300) return
+
+    // using `this` explicitly to differenciate them
+    this height = height
+  }
+}
+</code></pre>
+
+<p><code>This</code>, on the other hand, refers to the type currently being defined:</p>
+
+<pre><code>#!ooc
+Engine: class {
+  logger := Log getLogger(This name)
+}
+</code></pre>
+
+<p>In the example above, we are using the name of the class we are currently defining,
+instead of typing out <code>&quot;Engine&quot;</code> directly — that way, if we rename the class, the
+code will still be valid. It&rsquo;s a good way to <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">avoid repeating yourself</a>.</p>
+
+<h2 id="toc_7">Static methods</h2>
+
+<p>Static methods also belong to a specific class, but they&rsquo;re not tied to
+a particular instance. Hence, you don&rsquo;t have access to <code>this</code> in a static
+method because it&rsquo;s not called on an instance:</p>
+
+<pre><code>#!ooc
+Map: class {
+  tiles := Map&lt;Tile&gt; new()
+
+  generate: static func (width, height: Int) -&gt; This {
+    m := This new()
+    for (y in 0..height) for (x in 0..width) {
+      m addTile(x, y)
+    }
+    m
+  }
+
+  addTile: func (x, y: Int) { /* ... */ }
+}
+</code></pre>
+
+<p>In some languages, <code>new</code> is a keyword used to create objects. In ooc,
+it&rsquo;s just a static method doing some allocation and initialization, and
+returning a new instance. See &ldquo;Constructors&rdquo; for more details.</p>
+
+<h1 id="toc_8">Constructors</h1>
+
+<p>Define the <code>init</code> method (with a suffix to have different constructors), and
+a <code>new</code> static method will get defined automatically.</p>
+
+<pre><code>#!ooc
+Dog: class {
+  name: String
+
+  init: func (=name)
+  init: func ~default { name = &quot;Fido&quot; }
+}
+</code></pre>
+
+<p>For alternative instanciation strategies, defining a custom, static <code>new</code>
+method, returning an instance of type <code>This</code>, works just as well:</p>
+
+<pre><code>#!ooc
+Dog: class {
+  pool := static Stack&lt;This&gt; new()
+
+  new: static func -&gt; This {
+    if (pool empty?()) {
+      obj := This alloc()
+      obj __defaults__()
+      obj
+    } else {
+      pool pop()
+    }
+  }
+
+  free: func {
+    pool push(this)
+  }
+}
+</code></pre>
+
+<p>We can clearly see that the <code>alloc</code> static method here does memory allocation
+for the object, but what about <code>__defaults__</code>? It contains initializers, discussed
+in the next section.</p>
+
+<h2 id="toc_9">Initializers</h2>
+
+<p>We&rsquo;ve discussed methods, but not all code that belong to a class is in an explicit
+method. For example, in this code, declaration and initialization are clearly separate:</p>
+
+<pre><code>#!ooc
+Group: class {
+  number: Int
+
+  init: func {
+    number = 42
+  }
+}
+</code></pre>
+
+<p>But what happens with the following code?</p>
+
+<pre><code>#!ooc
+Group: class {
+  number := 42
+
+  init: func {
+  }
+}
+</code></pre>
+
+<p>The resulting executable does the same. The class contains a field
+of type Int, initially equal to 0, but there&rsquo;s an implicit <code>__defaults__</code>
+method that contains all code outside of a method, that gets executed before
+the <code>init</code> method is called.</p>
+
+<p>Above, the example is a pattern you&rsquo;ll see often - however, one can put
+any amount of code directly in the class declaration:</p>
+
+<pre><code>#!ooc
+Dog: class {
+    &quot;You made a dog!&quot; println()
+    init: func
+}
+</code></pre>
+
+<p>Every time <code>Dog new()</code> is called, the <code>&quot;You made a dog!&quot;</code> string will get
+printed.</p>
+
+<h1 id="toc_10">Inheritance</h1>
+
+<h2 id="toc_11">Extends</h2>
+
+<p>Simple inheritance is achieved through the <code>extends</code> keyword:</p>
+
+<pre><code>#!ooc
+Animal: class {}
+Dog: class extends Animal {}
+</code></pre>
+
+<p>In this case, an instance of <code>Dog</code> will also be an instance of <code>Animal</code>,
+and it inherits all its methods and members.</p>
+
+<p>For example, a function expecting an <code>Animal</code> can be passed a <code>Dog</code> instead.
+That is, if your code is designed correctly. For some encyclopedic knowledge
+on the matter, check out the <a href="http://en.wikipedia.org/wiki/Liskov_substitution_principle">Liskov Substition Principle</a></p>
+
+<h2 id="toc_12">Super</h2>
+
+<p>Calling <code>super</code> will call the definition of a method in the super-class.</p>
+
+<pre><code>#!ooc
+SimpleApp: class {
+  init: func {
+    loadConfig()
+  }
+
+  // ...
+}
+
+NetworkedApp: class extends SimpleApp {
+  init: func {
+    super()
+    initNetworking()
+  }
+}
+</code></pre>
+
+<p>When one just wants to relay a constructor, one can use <code>super func</code>:</p>
+
+<pre><code>#!ooc
+MyException: class extends Exception {
+  init: super func
+}
+</code></pre>
+
+<p>Which is equivalent to the following:</p>
+
+<pre><code>#!ooc
+MyException: class extends Exception {
+  init: func {
+    super()
+  }
+}
+</code></pre>
+
+<p><code>super func</code> can take a suffix, and it relays argument as well. It is useful
+when you really don&rsquo;t have much more to do in the constructor of the sub-class.</p>
+
+<p>Please bear in mind that <code>super func</code> is relatively hackish - it is documented
+here for completeness&rsquo; sake, but it is more of a rapid coding trick than a good
+practice, really.</p>
+
+<h2 id="toc_13">Class hierarchy</h2>
+
+<p>The class hierarchy can be explored via built-in members and methods on objects
+and classes:</p>
+
+<pre><code>#!ooc
+// in this case, the Object class - otherwise, whatever super class it has
+dog class super
+
+// evaluates to true
+dog instanceOf?(Dog)
+
+// also evaluates to true
+dog instanceOf?(Object)
+
+// evaluates to false
+dog instanceOf?(Cat)
+</code></pre>
+
+<p>The equivalent of <code>instanceOf?</code> called on classes, is <code>inheritsFrom?</code></p>
+
+<pre><code>#!ooc
+// true
+Dog inheritsFrom?(Dog)
+
+// true
+Dog inheritsFrom?(Object)
+
+// false
+Dog inheritsFrom?(Cat)
+</code></pre>
+
+<h1 id="toc_14">Adding methods after definition</h1>
+
+<p>This applies to classes, covers, and enums alike. The <code>extend</code>
+keyword can add superficial methods to any type, even if it is
+defined in another module.</p>
+
+<p>It is useful to add convenience methods of your own without having
+to modify the original library.</p>
+
+<pre><code>#!ooc
+extend Float {
+  negated: func -&gt; This { -this }
+}
+
+if (-3.14 == 3.14 negated()) {
+  &quot;Everything is fine&quot; println()
+}
+</code></pre>
+
+<p>Virtual properties (that do not correspond to a real instance variable,
+but rather compute their value from other information everytime) can also
+be added in an <code>extend</code> block:</p>
+
+<pre><code>#!ooc
+extend Int {
+  plusFive: This { get {
+    this + 5
+  } }
+}
+</code></pre>
+
+<p>See the <a href="#properties">Properties</a> section for more info on properties.</p>
+
+			</article>
+		</main>
+		<footer>
+  <p></p>
+</footer>
+
+	</body>
+</html>

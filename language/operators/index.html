@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<title> Operators &middot; The OOC Manual </title>
+	
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/reset.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/text.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/color.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/layout.css">
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://oocmanual.cogneco.com/apple-touch-icon-144-precomposed.png">
+	<link rel="shortcut icon" href="http://oocmanual.cogneco.com/favicon.ico">
+	
+	<link href="" rel="alternate" type="application/rss+xml" title="The OOC Manual" />
+</head>
+
+	<body>
+		<header>
+  <h1><a href="http://oocmanual.cogneco.com">The OOC Manual</a></h1>
+  <p></p>
+</header>
+
+		<nav>
+	<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/introduction">Introduction</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language">Language</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/modules">Modules</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/values">Values</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/tuples">Tuples</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/control-structures">Control Structures</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/collections">Collections</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/functions">Functions</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/first-class-functions">First-class Functions</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/classes">Classes</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/constructors">Constructors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/properties">Properties</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/operators">Operators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers">Covers</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers-vs-classes">Covers vs Classes</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/enumerations">Enumerations</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics">Generics</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics2">Generics 2</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/exceptions">Exceptions</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/preprocessor">Preprocessor</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/version-blocks">Version</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools">Tools</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock">Rock</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/basic">Basic Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/drivers">Drivers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/advanced">Advanced Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files">Use-files</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files2">Use-files 2</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/gc">Garbage Collection</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/debug">Debugging</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/packaging">Packaging</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/sam">Sam</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/editors">Editors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/troubleshooting">Troubleshooting</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk">sdk</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang">lang</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/types">types</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/string">string</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/numbers">numbers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/iterators">iterators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/exceptions">exception</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/memory">memory</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/structs">structs</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/io">io</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/math">math</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os">os</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/process">process</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/jobpool">jobpool</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/coro">coro</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/terminal">terminal</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/pipe">pipe</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/dynlib">dynlib</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/mmap">mmap</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/channel">channel</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/system">system</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/env">env</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/shellutils">shellutils</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/time">time</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/net">net</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/text">text</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/threading">threading</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/native">native</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+</nav>
+
+
+		<main>
+			<header>
+				<h1>Operators</h1>
+			</header>
+			<nav id="TableOfContents">
+<ul>
+<li><a href="#toc_0">Foreword</a></li>
+<li><a href="#toc_1">Access</a>
+<ul>
+<li><a href="#toc_2">Array access</a></li>
+<li><a href="#toc_3">Pointers</a></li>
+<li><a href="#toc_4">Call</a></li>
+<li><a href="#toc_5">Member access</a></li>
+<li><a href="#toc_6">Casting</a></li>
+</ul></li>
+<li><a href="#toc_7">Product</a>
+<ul>
+<li><a href="#toc_8">Binary operators</a></li>
+<li><a href="#toc_9">Unary operators</a></li>
+</ul></li>
+<li><a href="#toc_10">Sum</a></li>
+<li><a href="#toc_11">Shift</a></li>
+<li><a href="#toc_12">Inequality</a></li>
+<li><a href="#toc_13">Equality</a></li>
+<li><a href="#toc_14">Binary and boolean operations</a></li>
+<li><a href="#toc_15">Ternary</a></li>
+<li><a href="#toc_16">Assignment</a></li>
+<li><a href="#toc_17">Double arrow</a></li>
+<li><a href="#toc_18">Operator overloading</a></li>
+</ul>
+</nav>
+			<article>
+				
+
+<h1 id="toc_0">Foreword</h1>
+
+<p>This lists all ooc operators, from highest precendence to lowest precedence</p>
+
+<h1 id="toc_1">Access</h1>
+
+<h2 id="toc_2">Array access</h2>
+
+<p>The array-index operator is <code>[]</code>, the array-modify operator&rsquo;s short form is <code>[]=</code></p>
+
+<p>Examples:</p>
+
+<pre><code>#!ooc
+arr[0] = '\n'
+return arr[0]
+</code></pre>
+
+<h2 id="toc_3">Pointers</h2>
+
+<p>The address-of operator is a post-fix <code>&amp;</code>, the dereference operator is a post-fix
+<code>@</code>:</p>
+
+<pre><code>#!ooc
+a := 42
+aPtr := a&amp;
+aToo := aPtr@
+</code></pre>
+
+<h2 id="toc_4">Call</h2>
+
+<p>Technically not an operator, but call is in that priority level:</p>
+
+<pre><code>#!ooc
+a := func -&gt; Int { 42 }
+a()
+</code></pre>
+
+<h2 id="toc_5">Member access</h2>
+
+<p>Also technically not an operator. Simply two identifiers side by side,
+not using dot, unlike some other programming languages:</p>
+
+<pre><code>#!ooc
+dog name
+dog race
+</code></pre>
+
+<h2 id="toc_6">Casting</h2>
+
+<p>The <code>as</code> operator is used to cast from one type to the other:</p>
+
+<pre><code>#!ooc
+pi := 3.14
+roughlyPi := pi as Int
+</code></pre>
+
+<h1 id="toc_7">Product</h1>
+
+<h2 id="toc_8">Binary operators</h2>
+
+<p>The exponent operator is <code>**</code>, the multiplication operator is <code>*</code>,
+and the division operator is <code>/</code>.</p>
+
+<h2 id="toc_9">Unary operators</h2>
+
+<p>Logical not is a prefixed <code>!</code>, binary not is a prefixed <code>~</code>.</p>
+
+<h1 id="toc_10">Sum</h1>
+
+<p>The addition operator is <code>+</code>, subtraction is <code>-</code>,
+modulo is <code>%</code></p>
+
+<h1 id="toc_11">Shift</h1>
+
+<p>Right shift is <code>&gt;&gt;</code>, left shift is <code>&lt;&lt;</code></p>
+
+<h1 id="toc_12">Inequality</h1>
+
+<p>You have your regular less than <code>&lt;</code>, greater than <code>&gt;</code>,
+less than or equal <code>&lt;=</code>, more than or equal <code>&gt;=</code>,
+but also the comparison operator <code>&lt;=&gt;</code> (evaluates to -1
+if less than, 0 if equal, 1 if greater than).</p>
+
+<h1 id="toc_13">Equality</h1>
+
+<p>Equality operator is <code>==</code>, inequality operator is <code>!=</code></p>
+
+<h1 id="toc_14">Binary and boolean operations</h1>
+
+<p>Binary and is <code>&amp;</code>, xor is <code>^</code>, or is <code>|</code>.</p>
+
+<p>Logical and is <code>&amp;&amp;</code>, logical or is <code>||</code>.</p>
+
+<h1 id="toc_15">Ternary</h1>
+
+<p>The ternary operator is <code>?:</code> as in <code>condition ? ifTrue : ifFalse</code>.</p>
+
+<h1 id="toc_16">Assignment</h1>
+
+<p>The assignment operator is <code>=</code>, the following variants exist:
+<code>+=</code>, <code>-=</code>, <code>*=</code>, <code>**=</code>, <code>/=</code>, <code>&gt;&gt;=</code>, <code>&lt;&lt;=</code>, <code>^=</code>, <code>|=</code>, <code>&amp;=</code>.</p>
+
+<p>The declare-assignment operator is <code>:=</code>. And the declare-property-assignment
+operator is <code>::=</code>. For more details on these, see the <a href="/docs/lang/values/#variables">Variables</a> and
+<a href="/docs/lang/classes/#properties">Properties</a> pages.</p>
+
+<h1 id="toc_17">Double arrow</h1>
+
+<p>The double arrow operator <code>=&gt;</code> - it must be overloaded.</p>
+
+<h1 id="toc_18">Operator overloading</h1>
+
+<p>Overloading an operator can be done as a function-like, using the
+<code>operator</code> keyword:</p>
+
+<pre><code>#!ooc
+operator + (v1, v2: Vec2) -&gt; Vec2 { v1 add(v2) }
+</code></pre>
+
+<p>However, if the operator is linked to a type, it&rsquo;s better to declare
+it in the type itself, so that it&rsquo;ll be usable even if the module containing
+the type declaration isn&rsquo;t explicitly imported:</p>
+
+<pre><code>#!ooc
+Vec2: class {
+  // other stuff
+
+  operator + (v: This) -&gt; This { add(v) }
+}
+</code></pre>
+
+			</article>
+		</main>
+		<footer>
+  <p></p>
+</footer>
+
+	</body>
+</html>

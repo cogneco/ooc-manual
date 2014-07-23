@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<title> Generics &middot; The OOC Manual </title>
+	
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/reset.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/text.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/color.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/layout.css">
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://oocmanual.cogneco.com/apple-touch-icon-144-precomposed.png">
+	<link rel="shortcut icon" href="http://oocmanual.cogneco.com/favicon.ico">
+	
+	<link href="" rel="alternate" type="application/rss+xml" title="The OOC Manual" />
+</head>
+
+	<body>
+		<header>
+  <h1><a href="http://oocmanual.cogneco.com">The OOC Manual</a></h1>
+  <p></p>
+</header>
+
+		<nav>
+	<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/introduction">Introduction</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language">Language</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/modules">Modules</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/values">Values</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/tuples">Tuples</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/control-structures">Control Structures</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/collections">Collections</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/functions">Functions</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/first-class-functions">First-class Functions</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/classes">Classes</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/constructors">Constructors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/properties">Properties</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/operators">Operators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers">Covers</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers-vs-classes">Covers vs Classes</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/enumerations">Enumerations</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics">Generics</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics2">Generics 2</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/exceptions">Exceptions</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/preprocessor">Preprocessor</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/version-blocks">Version</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools">Tools</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock">Rock</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/basic">Basic Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/drivers">Drivers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/advanced">Advanced Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files">Use-files</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files2">Use-files 2</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/gc">Garbage Collection</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/debug">Debugging</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/packaging">Packaging</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/sam">Sam</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/editors">Editors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/troubleshooting">Troubleshooting</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk">sdk</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang">lang</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/types">types</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/string">string</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/numbers">numbers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/iterators">iterators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/exceptions">exception</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/memory">memory</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/structs">structs</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/io">io</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/math">math</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os">os</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/process">process</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/jobpool">jobpool</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/coro">coro</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/terminal">terminal</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/pipe">pipe</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/dynlib">dynlib</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/mmap">mmap</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/channel">channel</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/system">system</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/env">env</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/shellutils">shellutils</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/time">time</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/net">net</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/text">text</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/threading">threading</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/native">native</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+</nav>
+
+
+		<main>
+			<header>
+				<h1>Generics</h1>
+			</header>
+			<nav id="TableOfContents">
+<ul>
+<li><a href="#toc_0">Generic functions</a>
+<ul>
+<li><a href="#toc_1">Inference</a></li>
+</ul></li>
+<li><a href="#toc_2">Generic classes</a>
+<ul>
+<li><a href="#toc_3">Inheritance</a></li>
+<li><a href="#toc_4">Specialization</a></li>
+</ul></li>
+</ul>
+</nav>
+			<article>
+				
+
+<h1 id="toc_0">Generic functions</h1>
+
+<p>Since ooc is strongly typed, usually when definining a function,
+it will only accept one type of argument:</p>
+
+<pre><code>#!ooc
+printInt: func (value: Int) {
+  value toString() println()
+}
+</code></pre>
+
+<p>But what if a function is meant to accept various types and react
+accordingly? Generics can be used for that:</p>
+
+<pre><code>#!ooc
+printAnything: func &lt;T&gt; (value: T) {
+  value toString() println()
+}
+</code></pre>
+
+<p>Well, that&rsquo;s a step in the right direction. But it won&rsquo;t work, because
+you can&rsquo;t call methods on generics types. Since <code>T</code> could be anything,
+from a String to an array to an Int, we can&rsquo;t make sure it even has a
+<code>toString</code> method.</p>
+
+<p>What we can do is match on <code>T</code>:</p>
+
+<pre><code>#!ooc
+printAnything: func &lt;T&gt; (value: T) {
+  match T {
+    case Int =&gt;
+      value as Int toString() println()
+    case =&gt;
+      &quot;&lt;unknown&gt;&quot; println()
+  }
+}
+</code></pre>
+
+<p>That&rsquo;s not very convenient - here&rsquo;s another way to write it:</p>
+
+<pre><code>#!ooc
+printAnything: func &lt;T&gt; (value: T) {
+  match value {
+    case i: Int =&gt;
+      i toString()
+    case =&gt;
+      &quot;&lt;unknown&gt;&quot;
+  } println()
+}
+</code></pre>
+
+<h2 id="toc_1">Inference</h2>
+
+<p>Notice how we didn&rsquo;t have to specify <code>T</code> when calling <code>printAnything</code>,
+above? That&rsquo;s because the type of <code>T</code> is inferred. More complex inference
+is supported as well:</p>
+
+<pre><code>#!ooc
+map := HashMap&lt;String, Int&gt; new()
+map put(&quot;one&quot;, 1)
+printMap(map)
+
+printMap: func &lt;K, V&gt; (list: HashMap&lt;K, V&gt;) {
+  // when called from above, K == String, and V == Int
+}
+</code></pre>
+
+<p>It works for closures as well:</p>
+
+<pre><code>#!ooc
+import structs/[ArrayList, List]
+
+map: func &lt;T, U&gt; (list: List&lt;T&gt;, f: Func (T) -&gt; U) -&gt; List&lt;U&gt; {
+  copy := ArrayList&lt;U&gt; new()
+  for (elem in list) {
+    copy add(f(elem))
+  }
+  copy
+}
+
+a := [1, 2, 3] as ArrayList&lt;Int&gt;
+b := map(a, |i| i toString())
+b join(&quot;, &quot;) println()
+</code></pre>
+
+<p>Here, <code>U</code> is inferred from the return type of the closure.</p>
+
+<h1 id="toc_2">Generic classes</h1>
+
+<p>Above, we have used generic types, such as <code>ArrayList&lt;T&gt;</code> and
+<code>HashMap&lt;K, V&gt;</code> - how can they be defined? Just like functions, by
+putting generic type arguments in-between chevrons (<code>&lt;Type1, Type2&gt;</code>)
+in the class definition:</p>
+
+<pre><code>#!ooc
+Container: class &lt;T&gt; {
+  t: T
+
+  init: func (=t)
+  get: func -&gt; T { t }
+  set: func (=t)
+}
+
+c := Container&lt;Int&gt; new(24)
+c set(12)
+c get() toString() println()
+</code></pre>
+
+<p>Note that inference works here too - since we are passing
+a <code>T</code> to the constructor, the instanciation part could be
+simply rewritten as:</p>
+
+<pre><code>#!ooc
+c := Container new(24)
+</code></pre>
+
+<h2 id="toc_3">Inheritance</h2>
+
+<p>Generic types can have subtypes:</p>
+
+<pre><code>#!ooc
+ContainerToo: class &lt;T&gt; extends Container&lt;T&gt; {
+  print: func {
+    match t {
+      case i: Int =&gt; i toString()
+      case =&gt; &quot;&lt;unknown&gt;&quot;
+    } print()
+  }
+}
+
+c := ContainerToo new(24)
+c print()
+</code></pre>
+
+<h2 id="toc_4">Specialization</h2>
+
+<p>Specialization happens when a sub-type has fewer type parameters
+than its super-type:</p>
+
+<pre><code>#!ooc
+IntContainer: class extends Container&lt;Int&gt; {
+  print: func {
+    get() toString() println()
+  }
+}
+</code></pre>
+
+			</article>
+		</main>
+		<footer>
+  <p></p>
+</footer>
+
+	</body>
+</html>

@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<title> Constructors &middot; The OOC Manual </title>
+	
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/reset.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/text.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/color.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/layout.css">
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://oocmanual.cogneco.com/apple-touch-icon-144-precomposed.png">
+	<link rel="shortcut icon" href="http://oocmanual.cogneco.com/favicon.ico">
+	
+	<link href="" rel="alternate" type="application/rss+xml" title="The OOC Manual" />
+</head>
+
+	<body>
+		<header>
+  <h1><a href="http://oocmanual.cogneco.com">The OOC Manual</a></h1>
+  <p></p>
+</header>
+
+		<nav>
+	<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/introduction">Introduction</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language">Language</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/modules">Modules</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/values">Values</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/tuples">Tuples</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/control-structures">Control Structures</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/collections">Collections</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/functions">Functions</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/first-class-functions">First-class Functions</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/classes">Classes</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/constructors">Constructors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/properties">Properties</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/operators">Operators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers">Covers</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers-vs-classes">Covers vs Classes</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/enumerations">Enumerations</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics">Generics</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics2">Generics 2</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/exceptions">Exceptions</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/preprocessor">Preprocessor</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/version-blocks">Version</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools">Tools</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock">Rock</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/basic">Basic Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/drivers">Drivers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/advanced">Advanced Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files">Use-files</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files2">Use-files 2</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/gc">Garbage Collection</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/debug">Debugging</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/packaging">Packaging</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/sam">Sam</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/editors">Editors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/troubleshooting">Troubleshooting</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk">sdk</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang">lang</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/types">types</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/string">string</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/numbers">numbers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/iterators">iterators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/exceptions">exception</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/memory">memory</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/structs">structs</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/io">io</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/math">math</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os">os</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/process">process</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/jobpool">jobpool</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/coro">coro</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/terminal">terminal</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/pipe">pipe</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/dynlib">dynlib</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/mmap">mmap</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/channel">channel</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/system">system</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/env">env</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/shellutils">shellutils</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/time">time</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/net">net</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/text">text</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/threading">threading</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/native">native</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+</nav>
+
+
+		<main>
+			<header>
+				<h1>Constructors</h1>
+			</header>
+			<nav id="TableOfContents">
+<ul>
+<li><a href="#toc_0">Constructors</a>
+<ul>
+<li><a href="#toc_1">Reminder: member-arguments and assign-arguments</a></li>
+<li><a href="#toc_2">Multiple constructors</a></li>
+<li><a href="#toc_3">Inheritance</a></li>
+<li><a href="#toc_4">Super func (and beyond)</a></li>
+</ul></li>
+</ul>
+</nav>
+			<article>
+				
+
+<h1 id="toc_0">Constructors</h1>
+
+<p>In ooc, unlike Java/Scala/C++/C#, &lsquo;new&rsquo; isn&rsquo;t a keyword, but a static method.</p>
+
+<p>For example:</p>
+
+<pre><code>    dog := Dog new(&quot;Pif&quot;)
+</code></pre>
+
+<p>However it&rsquo;s uncommon to directly define a new method. Instead, an init method is
+defined, like this:</p>
+
+<pre><code>    Dog: class {
+
+        name: String
+
+        init: func (=name) {}
+
+    }
+</code></pre>
+
+<p>When an &lsquo;init&rsquo; method is defined, a corresponding &lsquo;new&rsquo; static method is defined, in our case,
+the code above is equivalent to:</p>
+
+<pre><code>    Dog: class {
+
+        name: String
+
+        init: func (name: String) {
+            this name = name
+        }
+
+        new: static func (name: String) -&gt; This {
+            this := This alloc() as This
+            this init()
+            this
+        }
+
+    }
+</code></pre>
+
+<p>&lsquo;alloc&rsquo; is a method of Class, which can be defined like this, for example:</p>
+
+<pre><code>    /// Create a new instance of the object of type defined by this class
+    alloc: final func ~_class -&gt; Object {
+        object := gc_malloc(instanceSize) as Object
+        if(object) {
+            object class = this
+        }
+        return object
+    }
+</code></pre>
+
+<p>In ooc implementations, Object and Class are often classes defined in .ooc source
+files, so you can easily study their source code. You can typically find their definitions
+in sdk/lang/ (because everything in the lang/ package is automatically imported)</p>
+
+<h2 id="toc_1">Reminder: member-arguments and assign-arguments</h2>
+
+<p>This:</p>
+
+<pre><code>    DiceRoll: class {
+        value: Int
+
+        init: func (=value) {}
+    }
+</code></pre>
+
+<p>is the equivalent of this:</p>
+
+<pre><code>    DiceRoll: class {
+        value: Int
+
+        init: func (.value) {
+            this value = value
+        }
+    }
+</code></pre>
+
+<p>which is the equivalent of this:</p>
+
+<pre><code>    DiceRoll: class {
+        value: Int
+
+        init: func (value: Int) {
+            this value = value
+        }
+    }
+</code></pre>
+
+<p>Ie &lsquo;.&rsquo; allows &lsquo;value&rsquo;s type to be inferred from the member variable
+of the same name, and &lsquo;=&rsquo; does the same plus assigns it in the constructor.</p>
+
+<p>This works for any method, not only for constructors. However, if you&rsquo;re using
+it for setters, you probably want to use properties instead.</p>
+
+<h2 id="toc_2">Multiple constructors</h2>
+
+<p>As any method, constructors can be overloaded with suffixes.</p>
+
+<p>Suffixes may seem annoying at first, seen as a sort of &lsquo;manual name mangling&rsquo;,
+but aside from helping to debug, they&rsquo;re also a way to document the purpose of your
+different constructors. For that reason, it&rsquo;s always a good idea to give meaningful
+suffixes that lets one hint the reason for existence of a constructor.</p>
+
+<p>From a constructor, you can call another constructor with init(), just like a regular
+method.</p>
+
+<p>You can also call a super-constructor with super()</p>
+
+<pre><code>    Dog: class {
+
+        name: String
+
+        init: func ~defaultName {
+            init(&quot;The Man&quot;)
+        }
+
+        init: func (=name) {}
+
+    }
+</code></pre>
+
+<h2 id="toc_3">Inheritance</h2>
+
+<p>A common mistake is to think that constructor are inherited, because they are standard
+methods. However, this behavior would be harmful, as explained in the following example:</p>
+
+<pre><code>    Logger: class {
+        prefix: String
+
+        init: func (=prefix) {}
+
+        log: func (msg: String) {
+            &quot;%s%s&quot; printfln(prefix, msg)
+        }
+    }
+
+    FileLogger: class extends Logger {
+        output: FileWriter
+
+        init: func ~withPath (path: String) {
+            super(prefix)
+            output = FileWriter new(path)
+        }
+
+        log: func (msg: String) {
+            output write(prefix). write(msg). write('\n')
+        }
+    }
+</code></pre>
+
+<p>What would happen if the first constructor defined in Logger was available
+for FileLogger? Let&rsquo;s find out</p>
+
+<pre><code>    warn := FileLogger new(&quot;WARN&quot;)
+    warn log(&quot;Somebody set us up the stacktrace&quot;)
+</code></pre>
+
+<p>The constructor call, if it was valid, would either return a Logger, which is
+not what we want, or by some miracle trick, return a FileLogger - but one
+that wouldn&rsquo;t be properly initialized, so that log() would crash.</p>
+
+<h2 id="toc_4">Super func (and beyond)</h2>
+
+<p>However, there are times when one truly wants to relay a constructor
+in an inherited class, such as:</p>
+
+<pre><code>    Expression: abstract class {
+        eval: abstract func -&gt; Int
+    }
+
+    BinaryOp: abstract class extends Expression {
+        left, right: Expression
+
+        init: func ~lr (=left, =right) {}
+    }
+
+    Add: class extends BinaryOp {
+        init: func ~lr (=left, =right) {}
+    }
+</code></pre>
+
+<p>Repeating the &lsquo;init~lr&rsquo; definition in Add violates the Don&rsquo;t Repeat Yourself (DRY)
+principle. Besides, if functionality is added to the base BinaryOp init~lr, it
+wouldn&rsquo;t be replicated in Add init~lr.</p>
+
+<p>For this precise case, the &lsquo;super func&rsquo; construct exists:</p>
+
+<pre><code>    Add: class extends BinaryOp {
+        init: super func ~lr
+    }
+</code></pre>
+
+<p>This behaves exactly as if we had written:</p>
+
+<pre><code>    Add: class extends BinaryOp {
+        init: func ~lr (.left, .right) {
+            super(left, right)
+        }
+    }
+</code></pre>
+
+			</article>
+		</main>
+		<footer>
+  <p></p>
+</footer>
+
+	</body>
+</html>

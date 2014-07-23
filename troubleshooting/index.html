@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<title> Troubleshooting &middot; The OOC Manual </title>
+	
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/reset.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/text.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/color.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/layout.css">
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://oocmanual.cogneco.com/apple-touch-icon-144-precomposed.png">
+	<link rel="shortcut icon" href="http://oocmanual.cogneco.com/favicon.ico">
+	
+	<link href="" rel="alternate" type="application/rss+xml" title="The OOC Manual" />
+</head>
+
+	<body>
+		<header>
+  <h1><a href="http://oocmanual.cogneco.com">The OOC Manual</a></h1>
+  <p></p>
+</header>
+
+		<nav>
+	<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/introduction">Introduction</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language">Language</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/modules">Modules</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/values">Values</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/tuples">Tuples</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/control-structures">Control Structures</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/collections">Collections</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/functions">Functions</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/first-class-functions">First-class Functions</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/classes">Classes</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/constructors">Constructors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/properties">Properties</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/operators">Operators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers">Covers</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers-vs-classes">Covers vs Classes</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/enumerations">Enumerations</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics">Generics</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics2">Generics 2</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/exceptions">Exceptions</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/preprocessor">Preprocessor</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/version-blocks">Version</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools">Tools</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock">Rock</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/basic">Basic Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/drivers">Drivers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/advanced">Advanced Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files">Use-files</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files2">Use-files 2</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/gc">Garbage Collection</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/debug">Debugging</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/packaging">Packaging</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/sam">Sam</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/editors">Editors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/troubleshooting">Troubleshooting</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk">sdk</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang">lang</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/types">types</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/string">string</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/numbers">numbers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/iterators">iterators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/exceptions">exception</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/memory">memory</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/structs">structs</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/io">io</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/math">math</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os">os</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/process">process</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/jobpool">jobpool</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/coro">coro</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/terminal">terminal</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/pipe">pipe</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/dynlib">dynlib</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/mmap">mmap</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/channel">channel</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/system">system</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/env">env</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/shellutils">shellutils</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/time">time</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/net">net</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/text">text</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/threading">threading</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/native">native</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+</nav>
+
+
+		<main>
+			<header>
+				<h1>Troubleshooting</h1>
+			</header>
+			<nav id="TableOfContents">
+<ul>
+<li><a href="#toc_0">Stuck? Stranded on a desert island?</a></li>
+<li><a href="#toc_1">rock fails at ooc compilation stage</a></li>
+<li><a href="#toc_2">Use not found in the ooc library path</a></li>
+<li><a href="#toc_3">ERROR Expected include, import, statement or declaration</a></li>
+<li><a href="#toc_4">rock fails at C compilation stage</a></li>
+<li><a href="#toc_5">gcc error: dereferencing pointer to incomplete type</a></li>
+</ul>
+</nav>
+			<article>
+				
+
+<h1 id="toc_0">Stuck? Stranded on a desert island?</h1>
+
+<p>Chances are, this page might help. If you&rsquo;re actually on a desert island right now
+you probably have better things to read though. However, if your problems are
+ooc-related, read on - who knows, maybe it&rsquo;s a common problem.</p>
+
+<h1 id="toc_1">rock fails at ooc compilation stage</h1>
+
+<p>In most cases, rock gives a helpful error message, along with the exact location
+of the problem (file name, line and column). When possible, the troublesome part
+of your code is underlined.</p>
+
+<p>Here&rsquo;s an example:</p>
+
+<pre><code>#!text
+tests/trouble1.ooc:5:1 ERROR No such function display(String)
+display(&quot;Huhu&quot;)
+~~~~~~~
+</code></pre>
+
+<p>In this case, the <code>display</code> function either:</p>
+
+<ul>
+<li>Isn&rsquo;t defined anywhere</li>
+<li>Is defined, but in another module that has not been imported
+in the current scope.</li>
+<li>Is defined and in scope, but we are passing arguments of incompatible
+types, or too many or too few arguments.</li>
+</ul>
+
+<p>Some errors are more cryptic. However, if it fails at the ooc stage, you&rsquo;re
+still in a good place - those are usually easy to fix.</p>
+
+<p>A few typical &ldquo;ooc compilation stage&rdquo; errors are listed below.</p>
+
+<h1 id="toc_2">Use not found in the ooc library path</h1>
+
+<p>An ooc library is missing, or can&rsquo;t be found by rock. Explanation: ooc libraries are
+just folders with a .use file of a given name, and most often, a set of <code>.ooc</code>
+source files.</p>
+
+<p>The recommended way to install ooc libraries is to set your <code>$OOC_LIBS</code> environment
+variable to a folder of your choice, and clone/extract/copy the libraries you need
+in there.</p>
+
+<p>Tools like <a href="/tools/sam">sam</a> can do that for you. Installing a library is as easy
+as <code>sam clone curl</code>, but most of the time, you&rsquo;ll just want to run <code>sam get</code> to get
+all the dependencies of the current project.</p>
+
+<h1 id="toc_3">ERROR Expected include, import, statement or declaration</h1>
+
+<p>This happens during the parsing stage. It is one of the most opaque errors you can
+come across from rock - it usually means something is wrong with your syntax. Let us
+take a look at one practical example:</p>
+
+<pre><code>tests/syntax.ooc:2:2 ERROR Expected include, import, statement or declaration
+
+a: (b, c: Int) -&gt; Int {
+~
+[FAIL]
+</code></pre>
+
+<p>In this case, the code seems to be trying to define a function - however, the
+<code>func</code> keyword is missing. As a result, rock&rsquo;s parser gets confused, and said it
+encountered something it wasn&rsquo;t expecting.</p>
+
+<p>While it is not smart enough to guess that you meant to declare a function, it
+is still kind enough to indicate the place that needs fixing. In this case, simply
+turning it into <code>a: func (b, c: Int) -&gt; Int {</code> is enough.</p>
+
+<p>Similar messages can be caused by syntax errors in other contexts. In this piece of
+code:</p>
+
+<pre><code>#!ooc
+match input {
+    case % 2 == 0 =&gt; &quot;even&quot;
+    case =&gt; &quot;odd&quot;
+}
+</code></pre>
+
+<p>&hellip;the case statement on the second line is incorrect. As is, it will prompt an error
+that looks like:</p>
+
+<pre><code>tests/syntax.ooc:4:9 ERROR Expected case in match
+        case % 2 == 0 =&gt; even
+        ~
+[FAIL]
+</code></pre>
+
+<p>A correct way to write it would be:</p>
+
+<pre><code>#!ooc
+match (input % 2) {
+  case 0 =&gt; &quot;even&quot;
+  case =&gt; &quot;odd&quot;
+}
+</code></pre>
+
+<p>Or even:</p>
+
+<pre><code>#!ooc
+match {
+  case (input % 2 == 0) =&gt;
+    &quot;even&quot;
+  case =&gt;
+    &quot;odd&quot;
+}
+</code></pre>
+
+<p>Although in that particular case, an if-else would probably do the job better.</p>
+
+<h1 id="toc_4">rock fails at C compilation stage</h1>
+
+<p>These are more delicate. To investigate the causes of a failure during the C
+compilation phase (to be clear: that&rsquo;s when gcc, clang, or whatever C compiler
+you are using is being launched on each ooc module), you should try to run
+<code>rock -g -v -j0</code> (enable debug, verbose, compiles using only 1 thread).</p>
+
+<p>When using <code>-g</code>, the source of the error indicated by the C compiler should
+refer to the ooc file, like in this example:</p>
+
+<pre><code>gcc -std=gnu99 -Wall -g -I.libs -D__OOC_USE_GC__ -DGC_NO_THREAD_REDIRECTS -I/Users/amos/Dev/rock/libs/headers/ -c rock_tmp/ooc/a/b.c -o .libs/ooc/a/b.o
+/Users/amos/Dev/tests/membe/a.ooc: In function ‘a_load’:
+/Users/amos/Dev/tests/membe/a.ooc:3: error: dereferencing pointer to incomplete type
+C compiler failed (got code 1), aborting compilation process
+[FAIL]
+</code></pre>
+
+<p>If working out the problem from the location in the .ooc file is not helpful
+enough, you can use rock&rsquo;s <code>--nolines</code> command line option to get the location
+of the error in the generated C file instead, for example:</p>
+
+<pre><code>gcc -std=gnu99 -Wall -g -I.libs -D__OOC_USE_GC__ -DGC_NO_THREAD_REDIRECTS -I/Users/amos/Dev/rock/libs/headers/ -c rock_tmp/ooc/a/b.c -o .libs/ooc/a/b.o
+rock_tmp/ooc/a/a.c: In function ‘a_load’:
+rock_tmp/ooc/a/a.c:39: error: dereferencing pointer to incomplete type
+C compiler failed (got code 1), aborting compilation process
+[FAIL]
+</code></pre>
+
+<p>In this case, the offending line is:</p>
+
+<pre><code>#!c
+lang_String__String_println(b__getC()-&gt;name);
+</code></pre>
+
+<p>Still, gcc errors are seldom self-explanatory. Using another compiler, such as clang,
+could help. Adding the <code>--cc=clang</code> flag gives us (provided that we have clang installed
+on the system, obviously):</p>
+
+<pre><code>clang -std=gnu99 -Wall -g -I.libs -D__OOC_USE_GC__ -DGC_NO_THREAD_REDIRECTS -I/Users/amos/Dev/rock/libs/headers/ -c rock_tmp/ooc/a/b.c -o .libs/ooc/a/b.o
+rock_tmp/ooc/a/a.c:39:46: error: incomplete definition of type 'struct _c__C'
+        lang_String__String_println(b__getC()-&gt;name);
+                                    ~~~~~~~~~^
+.libs/ooc/a/c-fwd.h:7:8: note: forward declaration of 'struct _c__C'
+struct _c__C;
+      ^
+1 error generated.
+C compiler failed (got code 1), aborting compilation process
+[FAIL]
+</code></pre>
+
+<p>Which is a little more helpful. Still, to learn more about that kind of errors and other
+(hopefully not too) frequently encountered errors in the C compilation stage, read
+the others section below</p>
+
+<h1 id="toc_5">gcc error: dereferencing pointer to incomplete type</h1>
+
+<p>The corresponding clang error is <code>error: incomplete definition of type 'struct something'</code></p>
+
+<p>This happens in the following scenario. You have a module, <code>a.ooc</code>, that accesses
+some member of an object, like this:</p>
+
+<pre><code>#!ooc
+import b
+
+getC() name println()
+</code></pre>
+
+<p>In module <code>b.ooc</code>, you have some way to access an object of type <code>C</code>:</p>
+
+<pre><code>#!ooc
+import c
+
+getC: func -&gt; C { C new(&quot;ohum&quot;) }
+</code></pre>
+
+<p>And in module <code>c.ooc</code>, you have the actual definition of type <code>C</code>:</p>
+
+<pre><code>#!ooc
+C: class {
+  name: String
+  init: func (=name)
+}
+</code></pre>
+
+<p>In that particular case, due to implementation details, and for the time being,
+it will result in a compilation error during the C phase. The fix is simply to
+include module c from module a.</p>
+
+			</article>
+		</main>
+		<footer>
+  <p></p>
+</footer>
+
+	</body>
+</html>

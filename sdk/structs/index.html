@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<title> structs &middot; The OOC Manual </title>
+	
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/reset.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/text.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/color.css">
+	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/layout.css">
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://oocmanual.cogneco.com/apple-touch-icon-144-precomposed.png">
+	<link rel="shortcut icon" href="http://oocmanual.cogneco.com/favicon.ico">
+	
+	<link href="" rel="alternate" type="application/rss+xml" title="The OOC Manual" />
+</head>
+
+	<body>
+		<header>
+  <h1><a href="http://oocmanual.cogneco.com">The OOC Manual</a></h1>
+  <p></p>
+</header>
+
+		<nav>
+	<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/introduction">Introduction</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language">Language</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/modules">Modules</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/values">Values</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/tuples">Tuples</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/control-structures">Control Structures</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/collections">Collections</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/functions">Functions</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/first-class-functions">First-class Functions</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/classes">Classes</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/constructors">Constructors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/properties">Properties</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/operators">Operators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers">Covers</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/covers-vs-classes">Covers vs Classes</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/enumerations">Enumerations</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics">Generics</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/generics2">Generics 2</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/exceptions">Exceptions</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/preprocessor">Preprocessor</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/language/version-blocks">Version</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools">Tools</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock">Rock</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/basic">Basic Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/drivers">Drivers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/advanced">Advanced Usage</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files">Use-files</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/use-files2">Use-files 2</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/gc">Garbage Collection</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/debug">Debugging</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/rock/packaging">Packaging</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/sam">Sam</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/tools/editors">Editors</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/troubleshooting">Troubleshooting</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk">sdk</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang">lang</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/types">types</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/string">string</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/numbers">numbers</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/iterators">iterators</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/exceptions">exception</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/lang/memory">memory</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/structs">structs</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/io">io</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/math">math</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os">os</a>
+		
+		<ul>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/process">process</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/jobpool">jobpool</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/coro">coro</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/terminal">terminal</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/pipe">pipe</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/dynlib">dynlib</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/mmap">mmap</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/channel">channel</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/system">system</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/env">env</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/shellutils">shellutils</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/os/time">time</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/net">net</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/text">text</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/threading">threading</a>
+		
+	</li>
+	
+	<li>
+		<a href="http://oocmanual.cogneco.com/sdk/native">native</a>
+		
+	</li>
+	
+</ul>
+
+
+		
+	</li>
+	
+</ul>
+
+
+</nav>
+
+
+		<main>
+			<header>
+				<h1>structs</h1>
+			</header>
+			<nav id="TableOfContents">
+<ul>
+<li><a href="#toc_0">The structs package</a></li>
+<li><a href="#toc_1">Lists</a>
+<ul>
+<li><a href="#toc_2">ArrayList</a></li>
+<li><a href="#toc_3">LinkedList</a></li>
+</ul></li>
+<li><a href="#toc_4">Maps</a>
+<ul>
+<li><a href="#toc_5">HashMap</a></li>
+<li><a href="#toc_6">MultiMap</a></li>
+<li><a href="#toc_7">OrderedMultiMap</a></li>
+</ul></li>
+<li><a href="#toc_8">Bag variants</a>
+<ul>
+<li><a href="#toc_9">Cell</a></li>
+<li><a href="#toc_10">Bag</a></li>
+<li><a href="#toc_11">HashBag</a></li>
+</ul></li>
+<li><a href="#toc_12">Stacks</a>
+<ul>
+<li><a href="#toc_13">Stick</a></li>
+</ul></li>
+</ul>
+</nav>
+			<article>
+				
+
+<h1 id="toc_0">The structs package</h1>
+
+<p>A few frequently used data structures ship with the SDK.</p>
+
+<h1 id="toc_1">Lists</h1>
+
+<p><code>structs/List</code> contains the generic interface for lists, which are ordered, indexed
+collections of elements of any type <code>T</code>.</p>
+
+<pre><code>#!ooc
+list: List&lt;String&gt; = // something
+</code></pre>
+
+<p>Elements can be added to or removed from anywhere in the list</p>
+
+<pre><code>#!ooc
+list add(&quot;hi&quot;) // append &quot;hi&quot; to the list
+list add(0, &quot;hoe&quot;) // prepend &quot;ho&quot; to the list
+list remove(&quot;hi&quot;) // remove the first element equal to &quot;hi&quot;
+list removeAt(0) // remove the first element
+
+list addAll(otherList) // append all elements from other list
+</code></pre>
+
+<p>They can also be retrieved from anywhere in the list:</p>
+
+<pre><code>#!ooc
+list get(24) == list[24] // get the 24th element
+list first() // get the first element
+list last() // get the last element
+</code></pre>
+
+<p>The number of elements in a list is available as the <code>size</code> property:</p>
+
+<pre><code>#!ooc
+&quot;There are %d elements in this list.&quot; printfln(list size)
+</code></pre>
+
+<p>Going through each element is easy as well, either using a foreach:</p>
+
+<pre><code>#!ooc
+for (elem in list) {
+  elem println()
+}
+</code></pre>
+
+<p>Or by passing a closure:</p>
+
+<pre><code>#!ooc
+list each(|elem|
+  elem println()
+)
+</code></pre>
+
+<p>Removing all elements can be done via <code>clear</code>:</p>
+
+<pre><code>#!ooc
+list clear()
+</code></pre>
+
+<h2 id="toc_2">ArrayList</h2>
+
+<p>An array list is backed by an array, which it grows or shrinks depending
+on how many elements are in there.</p>
+
+<p>Removing or adding an element in the middle of an ArrayList is expensive, as
+it shifts all elements after it.</p>
+
+<pre><code>#!ooc
+// constructed through successive add() calls:
+a1 := ArrayList&lt;Int&gt; new()
+a1 add(1); a1 add(2); a2 add(3)
+
+// constructed from an array literal
+a1 := [1, 2, 3] as ArrayList&lt;Int&gt;
+</code></pre>
+
+<p>An ArrayList can be easily converted to an array:</p>
+
+<pre><code>#!ooc
+printArray(list toArray())
+</code></pre>
+
+<h2 id="toc_3">LinkedList</h2>
+
+<p>A <code>LinkedList</code> is a doubly linked list, ie. each element points to the
+element after it and the element before it.</p>
+
+<p>Unlike the ArrayList, removing or adding an element in the middle of a linked list
+is inexpensive.</p>
+
+<h1 id="toc_4">Maps</h1>
+
+<p>Maps are associative objects, ie. they associate keys to values.</p>
+
+<h2 id="toc_5">HashMap</h2>
+
+<p>The most oftenly used map collection is <code>structs/HashMap</code>. It can only associate
+a given key to one value. E.g. there cannot be duplicate keys.</p>
+
+<pre><code>#!ooc
+map := HashMap&lt;String, Int&gt; new()
+</code></pre>
+
+<p>Key-&gt;value pairs are added to a HashMap using <code>put</code>:</p>
+
+<pre><code>#!ooc
+map put(&quot;one&quot;, 1)
+map put(&quot;two&quot;, 2)
+map put(&quot;three&quot;, 3)
+</code></pre>
+
+<p>..and retrieved using <code>get</code>. Key presence is tested with <code>containsKey?</code>:</p>
+
+<pre><code>#!ooc
+map get(&quot;two&quot;) == 2 // true
+map containsKey?(&quot;two&quot;) // true
+</code></pre>
+
+<p>The whole point of a HashMap is that checking for presence or finding the
+value corresponding to a key is faster than storing values in a list and
+iterating through it entirely every time.</p>
+
+<p>To remove pairs, one has to specify the key:</p>
+
+<pre><code>#!ooc
+map remove(&quot;two&quot;)
+</code></pre>
+
+<p>A HashMap can be iterated through:</p>
+
+<pre><code>#!ooc
+map each(|key, value|
+  &quot;%s =&gt; %s&quot; printfln(key, value)
+)
+</code></pre>
+
+<p>It&rsquo;s possible to get a list of all keys contained in a map:</p>
+
+<pre><code>#!ooc
+map getKeys()
+</code></pre>
+
+<p>Note that in a HashMap, iteration order is not guaranteed to be equivalent to
+insertion order - due to the hashing done, keys might get reordered for efficiency.</p>
+
+<h2 id="toc_6">MultiMap</h2>
+
+<p>MultiMap is a HashMap variant that can contain multiple values for a given key.</p>
+
+<h2 id="toc_7">OrderedMultiMap</h2>
+
+<p>OrderedMultiMap is a MultiMap variant that will maintain the order in which keys
+were inserted, for iteration.</p>
+
+<h1 id="toc_8">Bag variants</h1>
+
+<p>In the structures presenting above, all elements must have the same type in a given
+collection. Bags are different: each element can be a different type.</p>
+
+<h2 id="toc_9">Cell</h2>
+
+<p>Actually defined in <code>lang/types</code>, Cell can contain anything:</p>
+
+<pre><code>#!ooc
+intCell := Cell new(42)
+stringCell := Cell new(&quot;turtle&quot;)
+// and so on
+</code></pre>
+
+<p>Unwrapping a cell can be done via the indexing operator <code>[]</code>:</p>
+
+<pre><code>#!ooc
+number := cell[Int]
+</code></pre>
+
+<p>Note that unwrapping a cell with an incompatible type will throw an error.</p>
+
+<h2 id="toc_10">Bag</h2>
+
+<p>Technically, a Bag can be seen as a list of cells, with convenience methods to
+deal directly with the values contained inside the cells.</p>
+
+<pre><code>#!ooc
+bag := Bag new()
+bag add(93) // add an Int
+bag add(&quot;seaside&quot;) // add a String
+bag add(bag) // add itself! the fun never ends.
+</code></pre>
+
+<p>To retrieve elements from a bag, one has to specify the type:</p>
+
+<pre><code>#!ooc
+number := bag get(0, Int)
+title := bag get(1, String)
+// and so on
+</code></pre>
+
+<h2 id="toc_11">HashBag</h2>
+
+<p>A HashBag maps string values to any type of value.</p>
+
+<pre><code>#!ooc
+hash := HashBag new()
+hash put(&quot;number&quot;, 93)
+hash put(&quot;title&quot;, &quot;seaside&quot;)
+hash put(&quot;ourselves&quot;, hash)
+</code></pre>
+
+<p>To retrieve elements from a <code>HashBag</code>, one has to specify both the string key
+and the type:</p>
+
+<pre><code>#!ooc
+number := hash get(&quot;number&quot;, Int)
+title := hash get(&quot;title&quot;, String)
+// etc.
+</code></pre>
+
+<p>HashBags are particularly useful to represent a tree-like document, that was originally
+encoded as JSON or YAML, for example.</p>
+
+<p>The <code>getPath</code> method allows one to retrieve an element of a tree of <code>HashBag</code>s and <code>Bag</code>s.</p>
+
+<p>Let&rsquo;s say the original JSON looked like this:</p>
+
+<pre><code>#!json
+{&quot;elements&quot;: {
+  &quot;house&quot;: {},
+  &quot;car&quot;: {
+    &quot;wheels&quot;: [
+      { &quot;diameter&quot;: 2 }
+    ]}}}
+</code></pre>
+
+<p>One could use the following code to retrieve the diameter of the first wheel:</p>
+
+<pre><code>#!ooc
+data: HashBag = // read from JSON
+diameter := data getPath(&quot;elements/car/wheels#0/diameter&quot;, Int)
+</code></pre>
+
+<h1 id="toc_12">Stacks</h1>
+
+<p>Stacks are list-like data structures, except their primary purpose is to have elements
+pushed on top of them and popped from the top, in a LIFO (last-in, first-out) fashion.</p>
+
+<pre><code>#!ooc
+stack := Stack&lt;Int&gt; new()
+stack push(1). push(2). push(3)
+
+stack pop() == 3 // true
+stack pop() == 2 // also true
+stack pop() == 1 // left as an exercise to the reader
+</code></pre>
+
+<h2 id="toc_13">Stick</h2>
+
+<p>The ill-named <code>Stick</code> data structure can be thought of as a bag stack - e.g. a Stack
+that can contain any type of element.</p>
+
+<p>Example usage:</p>
+
+<pre><code>#!ooc
+stick := Stick new(Float size + Object size)
+stick push(1.23)
+stick push(&quot;Hi!&quot;)
+
+stick pop(String) == &quot;Hi!&quot; // true
+stick pop(Float) == 1.23 // truthful
+</code></pre>
+
+<p><code>Stick</code> is quite low-level - it doesn&rsquo;t resize automatically, it does no
+bounds checking, no type checking at all. To be used when you absolutely,
+positively need to squeeze bytes together as close as possible and don&rsquo;t care
+about safety at all.</p>
+
+			</article>
+		</main>
+		<footer>
+  <p></p>
+</footer>
+
+	</body>
+</html>

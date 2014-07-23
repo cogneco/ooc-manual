@@ -1,0 +1,53 @@
+@media screen {
+	html > body > header > h1,
+	html > body > main > header > h1,
+	html > body > main > nav > ul,
+	html > body > main > article {
+		margin: 0 auto;
+		max-width: 576px;
+		min-width: 288px;
+		padding-left: 16px;
+		padding-right: 16px;
+	}
+	html > body > header {
+		position: fixed;
+		left: 0;
+		top: 0;
+		width: 100%
+	}
+	html > body > header > h1 {
+		padding-top: 0.5em;
+		padding-bottom: 0.5em;
+		font-size: 1em;
+	}
+	html > body > header > p {
+		display: none;
+	}
+	html > body > main {
+		margin-top: 35px;
+	}
+	html > body > main > header > h1 {
+		padding-top: 0.5em;
+		padding-bottom: 0.5em;
+		font-size: 1.8em;
+	}
+	html > body > main > nav > ul {
+		padding-top: 0.5em;
+		padding-bottom: 0.5em;
+	}
+	@media (max-width: 979px) {
+		html > body > nav {
+			display: none;
+		}
+	}
+	@media (min-width: 980px) {
+		html > body > nav {
+			float: right;
+		}
+	}
+	@media (min-width: 980px) {
+		html > body > main > nav {
+			float: left;
+		}
+	}
+}
