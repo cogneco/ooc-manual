@@ -10,6 +10,539 @@
     <updated>Tue, 01 Jan 2008 00:00:00 UTC</updated>
     
     <item>
+      <title>Control Structures</title>
+      <link>http://oocmanual.cogneco.com/language/control-structures</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/language/control-structures</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Conditionals&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;if / else&lt;/h2&gt;
+
+&lt;p&gt;There&amp;rsquo;s your traditional if, else if, else structure. The body should be either
+a single statement, or a scope.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+if (off) turnOn()
+
+if (stressed) {
+    breatheIn()
+    breatheOut()
+} else if (tired) {
+    rest()
+} else {
+    allGood()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The condition can be of type &lt;code&gt;Bool&lt;/code&gt; or a Pointer, in which case it will evaluate to
+&lt;code&gt;true&lt;/code&gt; if it is non-null.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;match / case&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;match&lt;/code&gt; is ooc&amp;rsquo;s &lt;code&gt;switch&lt;/code&gt;, loosely modelled after Scala&amp;rsquo;s. In its simplest form, it tests for equality between an expression and several values:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+match (numFeets) {
+    case 1 =&amp;gt; &amp;quot;Ouch&amp;quot;
+    case 2 =&amp;gt; &amp;quot;Normal&amp;quot;
+    case =&amp;gt;
+        // what?
+        raise(&amp;quot;Too many feet&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Each case is a scope of its own - it doesn&amp;rsquo;t require braces. A case with no
+expression is a catch-all.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;match&lt;/code&gt; also works with any class T that implements the method &lt;code&gt;matches?: func
+-&amp;gt; (other: T) -&amp;gt; Bool&lt;/code&gt;. Another way to get complex types to work in matches
+is simply to override the &lt;code&gt;==&lt;/code&gt; operator. Hence, Strings work:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+match keyword {
+    case &amp;quot;if&amp;quot; =&amp;gt;
+        Keyword IF
+    case &amp;quot;match&amp;quot; =&amp;gt;
+        Keyword MATCH
+    case =&amp;gt;
+        Keyword UNKNOWN
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;match&lt;/code&gt; is also a good way to avoid explicit casting, by matching an object
+against variable declarations, one can use its specific form directly:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+result := match (op) {
+    case plus: Plus =&amp;gt;
+        plus lhs + plus rhs
+    case minus: Minus =&amp;gt;
+        minus lhs - minus rhs
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A &lt;code&gt;match&lt;/code&gt; is an expression, if every case ends with an expression. Hence, a
+match can be used as a return value, or in a function call, on the right hand
+side of a declaration-assignment (&lt;code&gt;:=&lt;/code&gt;), as demonstrated above.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_3&#34;&gt;Loops&lt;/h1&gt;
+
+&lt;p&gt;Loops are structures that control the repetition of a body of code.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;break / continue&lt;/h2&gt;
+
+&lt;p&gt;Two particular keywords are of interest when writing loops:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;break&lt;/code&gt; immediately exits the loop, skipping the rest of the body
+and not executing any further iteration&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;continue&lt;/code&gt; skips over the rest of the body and begins the next
+iteration immediately&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;while&lt;/h2&gt;
+
+&lt;p&gt;Checks the condition - if false, skips the body. If true, runs the body,
+then checks the condition again, etc.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+while (!satisfied) {
+    buyStuff()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;for&lt;/h2&gt;
+
+&lt;p&gt;There is no C-like &lt;code&gt;for&lt;/code&gt; in ooc, only a foreach. It can iterate through
+values like ranges:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+for (i in 1..10) {
+    &amp;quot;Counting to %d&amp;quot; printfln(i)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or more complex data structures:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+for (element in list) {
+    &amp;quot;Element = %s&amp;quot; printfln(element toString())
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For an object to be iterable, it has to implement the
+&lt;code&gt;iterator: func &amp;lt;T&amp;gt; -&amp;gt; Iterator&amp;lt;T&amp;gt;&lt;/code&gt; method.&lt;/p&gt;
+
+&lt;p&gt;A variant of foreach allows one to get the index of the current element:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+for ((index, element) in list) {
+    &amp;quot;list[%d] = %s&amp;quot; printfln(index, element toString())
+}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Exceptions</title>
+      <link>http://oocmanual.cogneco.com/language/exceptions</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/language/exceptions</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Error handling&lt;/h1&gt;
+
+&lt;p&gt;The C way to do error handling is usually via return codes:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+openFile: (path: String) -&amp;gt; Int {
+  if (error) {
+    return -1
+  }
+  return someFileDescriptor
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;However, it relies on the user correctly checking the return value:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+fd := openFile(&amp;quot;/etc/hosts&amp;quot;)
+doSomethingWithFile(fd) // forgot to check, things might go bad!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;Exceptions&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;raise&lt;/h2&gt;
+
+&lt;p&gt;Another way to handle that would be with exceptions&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+openFile: (path: String) -&amp;gt; File {
+  if (error) {
+    raise(&amp;quot;Could not open %s&amp;quot; format(path))
+  }
+  return someFile
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That way, even if the user doesn&amp;rsquo;t explicitly check for the error, it&amp;rsquo;ll
+still interrupt the flow of the program:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;file := openFile(&amp;quot;/dev/does/not/exist&amp;quot;)
+doSomethingWithFile(file) // we are never even going to reach there
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Throwing&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;raise&lt;/code&gt; function above is a quick method to raise an exception. What
+it really does is this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+Exception new(message) throw()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;There is no special keyword to throw exceptions, it&amp;rsquo;s just a method on the
+&lt;code&gt;Exception&lt;/code&gt; class.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Catching exceptions&lt;/h2&gt;
+
+&lt;p&gt;Catching exceptions is done through the &lt;code&gt;try&lt;/code&gt; / &lt;code&gt;catch&lt;/code&gt; syntax:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+try {
+  openFile(&amp;quot;dev/does/not/exist&amp;quot;)
+} catch (e: Exception) {
+  // something wrong happened
+  &amp;quot;Error: %s&amp;quot; printfln(e message)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Exception sub-classes&lt;/h2&gt;
+
+&lt;p&gt;It is possible to sub-class exceptions to have several exception types.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+FileNotFoundException: class extends Exception {
+  init: func (path: String) {
+    super(&amp;quot;File not found: %s&amp;quot; format(path))
+  }
+}
+
+openFile: func (path: String) {
+  if (error) {
+    FileNotFoundException new(path) throw()
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Which makes it easy to catch a specific type of exception:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+try {
+  file := openFile(&amp;quot;/dev/does/not/exist&amp;quot;)
+  doSomethingWithFile(file)
+} catch (e1: FileNotFoundException) {
+  // The file wasn&#39;t found
+} catch (e2: Exception) {
+  // Something else went wrong.
+}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Version</title>
+      <link>http://oocmanual.cogneco.com/language/version-blocks</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/language/version-blocks</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Version blocks&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Syntax&lt;/h2&gt;
+
+&lt;p&gt;Version blocks use the following syntax:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    version (&amp;lt;version expression&amp;gt;) {
+        &amp;lt;body&amp;gt;
+    } else {
+        &amp;lt;alternative body&amp;gt;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Where &lt;version expression&gt; can be any of:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    &amp;lt;version name&amp;gt;
+    !&amp;lt;version expression&amp;gt;
+    &amp;lt;version expression&amp;gt; &amp;amp;&amp;amp; &amp;lt;version expression&amp;gt;
+    &amp;lt;version expression&amp;gt; || &amp;lt;version expression&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Semantics&lt;/h2&gt;
+
+&lt;p&gt;Version blocks aren&amp;rsquo;t if-else blocks - they aren&amp;rsquo;t evaluated at runtime.
+In rock, version blocks aren&amp;rsquo;t evaluated at ooc-compile-time either.
+They&amp;rsquo;re evaluated at C compile time. Which means the C code generated by rock
+should be the same on any platform.&lt;/p&gt;
+
+&lt;p&gt;Practically, in rock, version blocks are an abstraction for #ifdef / #endif blocks.
+The syntax makes it harder to forget to close a version block than an #ifdef / #endif block,
+and a few handy aliases (listed below) for commonly used version names are standard, so that developers
+don&amp;rsquo;t have to remember the convoluted corresponding C defines.&lt;/p&gt;
+
+&lt;p&gt;For other compilers not based on the C language, version block handling may happen at any
+stage of the compilation (if any), as long as the version expressions are correctly evaluated
+and have the correct meaning (for example, a &amp;lsquo;windows&amp;rsquo; version block should be ignored on OSX)&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Built-in version names&lt;/h2&gt;
+
+&lt;p&gt;C defines are included here for completeness, but are only relevant for people who want
+to implement ooc on top of C.&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;Name&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;corresponding C define&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;windows&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;WIN32&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;linux&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;linux&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;solaris&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;__sun&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;unix&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;unix&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;beos&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;BEOS&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;haiku&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;HAIKU&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;apple&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;APPLE&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;gnuc&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;GNUC&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;i386&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;i386&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;x86&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;X86&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;x86_64&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;x86_64&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;ppc&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;ppc&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;ppc64&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;ppc64&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;64&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;x86_64&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;gc&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;OOC_USE_GC&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Custom version names&lt;/h2&gt;
+
+&lt;p&gt;Most of the standard version names above depend on your building environment, and the &amp;lsquo;gc&amp;rsquo; name depends
+on the compiler setting -gc=[off,static,dynamic].&lt;/p&gt;
+
+&lt;p&gt;Custom version names can be used, and turned on/off with the -D and -U compiler flags, for example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    version(debug) {
+        &amp;quot;[%d] Saving database %s&amp;quot; println(timestamp(), db name)
+    }
+    db save()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The code inside the version(debug) block will be compiled if -Ddebug is used. It is common practise for ooc developers
+to use the -Ddebug switch to debug their applications.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Semantics continued&lt;/h2&gt;
+
+&lt;p&gt;Version blocks can be used in function bodies, to make certain parts of the code OS-specific, or
+they can be used at the mdule-level to make functions or types OS-specific.&lt;/p&gt;
+
+&lt;p&gt;If different types are defined in different version blocks, make sure they expose the same interface.
+It&amp;rsquo;s not necessary for them to have the exact same class layout, but they should at least have all the
+methods/fields that are used in every OS.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;Examples&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;    version(windows) {
+        &amp;quot;Hi, Bill!&amp;quot; println()
+    }
+    version(apple) {
+        &amp;quot;Hi, Steve!&amp;quot; println()
+    }
+    version(linux) {
+        &amp;quot;Hi, Linus!&amp;quot; println()
+    }
+    version(!windows &amp;amp;&amp;amp; !apple &amp;amp;&amp;amp; !linux) {
+        &amp;quot;Who are you, and what did you do to my OS?&amp;quot;
+    }
+
+    version(apple) {
+        &amp;quot;Nice Hardware!&amp;quot; println()
+    } else {
+        &amp;quot;So you like your computer made of plastic then!&amp;quot; println()
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;See also io/File and os/Time in the SDK for real-world examples of heavily versioned code.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;Pattern for OS-specific classes&lt;/h2&gt;
+
+&lt;p&gt;In ooc, &amp;lsquo;new&amp;rsquo; isn&amp;rsquo;t a keyword but a static method. As a result, you can define new yourself.
+This allows an interesting pattern for OS-specific classes in ooc:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    // io/File
+    import io/[FileUnix, FileWin32]
+    
+    File: class {
+        path: String
+    
+        new: static func (.path) -&amp;gt; This {
+            version(windows) { return FileWin32 new(path) }
+            version(unix)    { return FileUnix  new(path) }
+            Exception new(This, &amp;quot;Unsupported platform&amp;quot;) throw()
+        }
+        
+        // abstract methods
+    }
+
+    // io/FileUnix
+    FileUnix: class extends File {
+        init: func (=path) {}
+        
+        // implement abstract methods for unix
+    }
+    
+    // io/FileWin32
+    FileWin32: class extends File {
+        init: func (=path) {}
+        
+        // implement abstract methods for Win32
+    }
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Language</title>
+      <link>http://oocmanual.cogneco.com/language</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/language</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The OOC Language&lt;/h1&gt;
+
+&lt;p&gt;The language has grown over the years, but it&amp;rsquo;s still relatively tidy.
+Here&amp;rsquo;s a list of sections of the language documentation:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;modules&#34;&gt;Modules&lt;/a&gt; chapter discusses &lt;code&gt;.ooc&lt;/code&gt; files, what
+a module is, what a package is, how imports and includes work.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;values&#34;&gt;Values&lt;/a&gt; chapter talks number literals, string
+literals, operators, variable declarations, and a few built-in types.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;control-structures&#34;&gt;Control Structures&lt;/a&gt; chapter describes
+mundane constructs like if, else, for, while, break, continue, but also
+match.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;collections&#34;&gt;Collections&lt;/a&gt; chapter talks about
+arrays and maps, among other things.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;functions&#34;&gt;Functions&lt;/a&gt; chapter will teach you anything
+from declaring function to calling them, to using external functions
+(from a C library, for example), but also variable arguments, default
+arguments, first-class functions and a nice syntax for closures.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;classes&#34;&gt;Classes&lt;/a&gt; chapter is here to help you realize
+that ooc classes are a lot like Java classes, except when they are not.
+Constructors, inheritance, abstract methods, initializers, and even
+interfaces have found their way in here.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;operators&#34;&gt;Operators&lt;/a&gt; chapter lists various mathematic
+and logic operators, their priorities, how to overload them, etc.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;covers&#34;&gt;Covers&lt;/a&gt; chapter discusses a construct halfway
+between C structs and ooc classes, that is a major actor in making C
+libraries easier to use.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;enumerations&#34;&gt;Enumerations&lt;/a&gt; chapter goes over the last kind of ooc
+types - an enumeration of things. How to define them, use them, you
+name it. (No, seriously, anonymous enums don&amp;rsquo;t exist)&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;tuples&#34;&gt;Tuples&lt;/a&gt; chapter explains what tuples are and
+what they aren&amp;rsquo;t. It covers multi-return, multi-declaration, variable
+swapping, and cover literals.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;generics&#34;&gt;Generics&lt;/a&gt; chapter talks about parameterized
+types, how to define them, how to use them, what are their strong points
+and their shortcomings.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;exceptions&#34;&gt;Exceptions&lt;/a&gt; chapter talks about error
+handling, how to throw and catch Exceptions, and how to create your own
+exception types.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;preprocessor&#34;&gt;Preprocessor&lt;/a&gt; describes what happens to
+the code before it is even compiled.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Constructors</title>
       <link>http://oocmanual.cogneco.com/language/constructors</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
@@ -223,6 +756,402 @@ wouldn&amp;rsquo;t be replicated in Add init~lr.&lt;/p&gt;
     </item>
     
     <item>
+      <title>Generics 2</title>
+      <link>http://oocmanual.cogneco.com/language/generics2</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/language/generics2</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Generics&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;Generics are one of the most commonly misunderstood features of ooc.&lt;/p&gt;
+
+&lt;p&gt;Many people attempt confuse them with templates (like in C++ or D) and are
+surprised when things like this don&amp;rsquo;t work:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Vector2: class &amp;lt;T&amp;gt; {
+        x, y: T
+    init: func(=x, =y) {}
+        add: func (r: This&amp;lt;T&amp;gt;) {
+            new(x + r x, y + r y)
+        }
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;(Don&amp;rsquo;t worry about the syntax for now, I&amp;rsquo;ll get to it later)&lt;/p&gt;
+
+&lt;p&gt;Why doesn&amp;rsquo;t this work? It&amp;rsquo;s because you can&amp;rsquo;t do much with generic variables.
+The whole point is that &lt;em&gt;we don&amp;rsquo;t know which type they are&lt;/em&gt; until we run the
+program.&lt;/p&gt;
+
+&lt;p&gt;One might instanciate a Vector2&amp;lt;Int&amp;gt; - in which case the + operator
+makes sense - but they could also instanciate a Vector2&amp;lt;Carrot&amp;gt;, where Carrot
+wouldn&amp;rsquo;t necessarily have a + operator.&lt;/p&gt;
+
+&lt;p&gt;Besides, since ooc is statically typed, we wouldn&amp;rsquo;t know which + operator
+to use - they&amp;rsquo;re not all the same! We don&amp;rsquo;t add two ints the same manner that
+we add two floats, and so on.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Generic functions and type parameters&lt;/h2&gt;
+
+&lt;p&gt;So, if we can&amp;rsquo;t use any operator on generic variables - nor can we call
+methods on them, then what are they good for? Sure looks useless from here.&lt;/p&gt;
+
+&lt;p&gt;Well, here&amp;rsquo;s one thing we can do, for example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    identity: func &amp;lt;T&amp;gt; (val: T) -&amp;gt; T {
+        val
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Woha. What just happened here? Let&amp;rsquo;s recap line by line.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    identity: func &amp;lt;T&amp;gt; (val: T) -&amp;gt; T
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here, we declare a function named &amp;lsquo;identity&amp;rsquo;, with one type parameter named T,
+taking one parameter named &amp;lsquo;val&amp;rsquo;, and returning a value of type T.&lt;/p&gt;
+
+&lt;p&gt;Type parameters are the names listed between the angular brackets &amp;lt; and &amp;gt;. You
+can have as many as you want (although if you have more than few of them,
+you&amp;rsquo;re probably doing it wrong)&lt;/p&gt;
+
+&lt;p&gt;When you declare a type parameter, it tells the compiler about a new type,
+that we know nothing about at compile-time. Well, not nothing. Remember
+classes? Here&amp;rsquo;s how we access the class of an object:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    object class
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And if object was of type Carrot, that amounts exactly to doing just:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Carrot
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;What is that, exactly? It&amp;rsquo;s an access to a class. What is a class? An instance
+of Class, which is declared in lang/CoreTypes.ooc If you actually go on and open
+CoreTypes, here is a simplified version of what you will find:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Class: class {
+        name: String
+        size, instanceSize: SizeT
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;(Reminder: SizeT can be used to store the size of something. On 32-bits
+platforms, it&amp;rsquo;s 32-bits wide. On 64-bits platforms, it&amp;rsquo;s 64-bits wide, and so
+on. Basically, it&amp;rsquo;s an integer type that is as wide as a Pointer)&lt;/p&gt;
+
+&lt;p&gt;So back to our generic stuff. I said we knew nothing about generic types. And
+in fact, it was a downright lie. Please accept my apologies. The reality is -
+we know all that matters! If you try to execute the following piece of code:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    test: func &amp;lt;T&amp;gt; (t: T) { T class name println() }
+    test(42)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You&amp;rsquo;ll find out something very strange and puzzling.. it prints &amp;ldquo;Class&amp;rdquo; !&lt;/p&gt;
+
+&lt;p&gt;We just discovered that we can access type parameters just like any other
+variable. And since T is a class, and we can access various fields of a class,
+here&amp;rsquo;s what we can do:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    test2: func &amp;lt;T&amp;gt; (t: T) {
+        &amp;quot;name = %s, size = %zd, instanceSize = %zd&amp;quot; printfln(
+        T name, T size, T instanceSize)
+    }
+    test2(42)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will likely print something like &amp;ldquo;name = Int, size = 4, instanceSize =
+4&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;Then you must wonder why is there &amp;lsquo;size&amp;rsquo; and &amp;lsquo;instanceSize&amp;rsquo;, if they&amp;rsquo;re equal?
+Well, they&amp;rsquo;re not equal in all cases. Most importantly, for objects (which are
+references, remember), &amp;lsquo;object class size&amp;rsquo; is equal to &amp;lsquo;Pointer size&amp;rsquo;, but
+&amp;lsquo;object class instanceSize&amp;rsquo; is equal to the actual number of bytes we should
+allocate when we create an object of this class.&lt;/p&gt;
+
+&lt;p&gt;But I digress. (Then again, you&amp;rsquo;re the curious one - not me.)&lt;/p&gt;
+
+&lt;p&gt;So let&amp;rsquo;s analyze the second line of our &amp;lsquo;identity&amp;rsquo; function above:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    val
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let&amp;rsquo;s see. It&amp;rsquo;s the last line of a non-void function, so it means it&amp;rsquo;s
+returned. &amp;lsquo;val&amp;rsquo; refers to a variable declaration which happens to be a
+function argument, of a generic type. (&lt;em&gt;phew&lt;/em&gt; - at this point, repeat that
+last line to yourself two or three times to impreign it into your brain)&lt;/p&gt;
+
+&lt;p&gt;So basically what our function does is&amp;hellip; just pass through what we give it as
+an argument! Let&amp;rsquo;s try that&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    42 toString() println() // just to be sure
+    identity(42) toString() println() // still a little trivial
+    identity(identity(identity(identity(42)))) toString() println() // whoa.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Yup, it prints 42 alright.&lt;/p&gt;
+
+&lt;p&gt;But wait! I just said above that the compiler &lt;em&gt;couldn&amp;rsquo;t do anything useful
+with a generic variable&lt;/em&gt;, that is, either use an operator on it or call a
+function on it, because it doesn&amp;rsquo;t know its type. And in our example, we
+clearly see that the &amp;lsquo;identity&amp;rsquo; function has return type T, which is a generic
+type! (Because it&amp;rsquo;s between the &amp;lt; and &amp;gt;, remember?)&lt;/p&gt;
+
+&lt;p&gt;Have I lied again? Let&amp;rsquo;s find out.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Generic type inference&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;rsquo;s do a little experiment:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    a := 42
+    b := identity(42)
+    &amp;quot;%s and %s&amp;quot; printfln(a class name, b class name)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;What did you get? Int and Int, right? But - but the return type of &amp;lsquo;identity&amp;rsquo;
+is T! Shouldn&amp;rsquo;t b&amp;rsquo;s type be T too?&lt;/p&gt;
+
+&lt;p&gt;Well, no.&lt;/p&gt;
+
+&lt;p&gt;And thank God for that.&lt;/p&gt;
+
+&lt;p&gt;In fact, if it was so, generics would be pretty much useless (heh, they&amp;rsquo;re limited enough already!)&lt;/p&gt;
+
+&lt;p&gt;So what kind of magic is going on? White magic. Which really isn&amp;rsquo;t magic at
+all.&lt;/p&gt;
+
+&lt;p&gt;You see, when you call:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    identity(42)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And the definition of identity is&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    identity: func &amp;lt;T&amp;gt; (val: T) -&amp;gt; T
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here&amp;rsquo;s what the compiler figures out: well, we have one unknown type (that
+is, generic type), called &amp;rsquo;T&amp;rsquo;. Also, the first (and only) argument is of that
+type. Hey - let&amp;rsquo;s infer what &amp;rsquo;T&amp;rsquo; is from the type of this argument!&lt;/p&gt;
+
+&lt;p&gt;And that&amp;rsquo;s exactly what it does. As a result, it figures the type of b to be
+Int - since we can know all that at compile-time. It makes b easier to use,
+avoid tons of cast, and is good for your karma.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s another example.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    printTypeName: func &amp;lt;T&amp;gt; (T: Class) { T name println() }
+    printTypeName(Object)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then it prints &amp;ldquo;Object&amp;rdquo;. Did we find a way to print strings without having to
+enclose them between quotes? Hopefully not. That would be messy, man. Talk
+about Perl :/&lt;/p&gt;
+
+&lt;p&gt;However, we have just discovered that we can pass types as arguments to
+functions. Of course, because types are just instances of &amp;lsquo;Class&amp;rsquo;, right? So
+they&amp;rsquo;re objects. So they&amp;rsquo;re values. So we can pass them around.&lt;/p&gt;
+
+&lt;p&gt;So here, the compiler figures that, well - we give it the solution to &amp;lsquo;what is
+T&amp;rsquo;. It is then not too big a challenge for the compiler to go from here.&lt;/p&gt;
+
+&lt;p&gt;Then again, we could have done:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    dumbPrintTypeName: func (T: Class) { T name println() }
+    dumbPrintTypeName(Object)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Since we don&amp;rsquo;t use T as a type anywhere. So why even bother with this &amp;lt;T&amp;gt;
+thing, hmm? Why does the compiler even allow it? Read on if you want to find out.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Generic return types&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;rsquo;s a little riddle for you. How does the compiler figure out the real return
+type of this function:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    sackOfUnknown: func &amp;lt;T&amp;gt; -&amp;gt; T { 42 }
+    sackOfUnknown()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Anyone? Ah, I see a hand in the back. What do you say? The type of the return
+expression? WRONG. But that was an honest try. One point for effort.&lt;/p&gt;
+
+&lt;p&gt;So what&amp;rsquo;s the solution? &amp;ldquo;It doesn&amp;rsquo;t.&amp;rdquo; That&amp;rsquo;s right. The compiler doesn&amp;rsquo;t even
+bother. We give absolutely no clue as to the type of T when we&amp;rsquo;re calling it -
+and the compiler never tries to infer a generic type from the return
+expression (that&amp;rsquo;s useless, I mean - why even make a generic function in the
+first place? Too lazy to type out &amp;lsquo;Int&amp;rsquo;? Yeah. Call me back when you have ABI
+incompatibilities because you changed a return expression. Or rather - don&amp;rsquo;t.)&lt;/p&gt;
+
+&lt;p&gt;So how do we make a function that&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;has a generic return type, let&amp;rsquo;s say &amp;rsquo;T&amp;rsquo;&lt;/li&gt;
+&lt;li&gt;doesn&amp;rsquo;t take an argument of type T ?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Well, that&amp;rsquo;s precisely where that useless thing presented in the previous
+section comes in very handy:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    theAnswer: func &amp;lt;T&amp;gt; (T: Class) -&amp;gt; T {
+        match T {
+            case Int    =&amp;gt; 42
+            case Float  =&amp;gt; 42.0
+            case String =&amp;gt; &amp;quot;forty-two&amp;quot;
+            case        =&amp;gt; Exception new(&amp;quot;You&#39;re not worthy.&amp;quot;) throw(); 0
+        }
+    }
+   rational := theAnswer(Int)
+   real     := theAnswer(Float)
+   text     := theAnswer(String)
+   theAnswer(Object) // ka-boom!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;What just happened? We used a match on &amp;rsquo;T&amp;rsquo;, which means we&amp;rsquo;re comparing it.
+We&amp;rsquo;re comparing it with the types &amp;lsquo;Int&amp;rsquo;, &amp;lsquo;Float&amp;rsquo;, &amp;lsquo;String&amp;rsquo;, trying to return
+expressions. And if it&amp;rsquo;s none of these types, it just blows up.&lt;/p&gt;
+
+&lt;p&gt;Note: in that case, our theAnswer function is pretty useless&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Generic classes&lt;/h2&gt;
+
+&lt;p&gt;Now that&amp;rsquo;s all good and fancy - but generic functions aren&amp;rsquo;t actually that
+useful. If we can&amp;rsquo;t use operators nor functions on generic types, what can we
+do? Well - store them! That&amp;rsquo;s the way all collections work.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s start with a simple one:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Slot: class &amp;lt;T&amp;gt; {
+        element: T
+        init: func (.element) { set(element) }
+        set: func (=element) {}
+        get: func -&amp;gt; T { element }
+    }
+
+    s := Slot new(3.14)
+    s get() toString() println()
+    s T name println()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Not that bad, eh? (It should print 3.14 and Float - or some other type, if
+you&amp;rsquo;re in the future and ooc has a proper number tower)&lt;/p&gt;
+
+&lt;p&gt;But wait - get is defined like that:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    get: func -&amp;gt; T { element }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And clearly T is a generic type, ie. it could be anything at runtime, and
+&lt;em&gt;yet&lt;/em&gt; the compiler figures it out right.&lt;/p&gt;
+
+&lt;p&gt;So what happens here? Let&amp;rsquo;s look at the call, since it&amp;rsquo;s the info from which
+the compiler works to infer generic types:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    s get()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Hmmph. Not many types there - except maybe.. the type of s. Which is what
+exactly?&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    s := Slot new(3.14)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Well it turns out that Slot new is just a regular method call, the generic
+type T is inferred to &amp;lsquo;Float&amp;rsquo;, and so &amp;rsquo;s&amp;rsquo; becomes a Slot&amp;lt;Float&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;Hence, the compiler sees the get() call as:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Slot&amp;lt;Float&amp;gt; get()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And it sees the get definition as&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Sloat&amp;lt;T&amp;gt; get: func {}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;From here, inferring that T = Float is trivial.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;Advanced type inference&lt;/h2&gt;
+
+&lt;p&gt;One of the most advanced example of type inference in the whole SDK
+is probably the List map() function. Here is its signature (ie.
+definition without the body) :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    map: func &amp;lt;K&amp;gt; (f: Func (T) -&amp;gt; K) -&amp;gt; This&amp;lt;K&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So basically it turns a List&amp;lt;T&amp;gt; into a List&amp;lt;K&amp;gt;, by calling f to turn
+every T into a K. Makes sense.&lt;/p&gt;
+
+&lt;p&gt;The question is now - how does the compiler infer K? The only info we have
+about it, is that it&amp;rsquo;s the return type of function we pass as an argument
+to the function.&lt;/p&gt;
+
+&lt;p&gt;Well - no big deal then, if we do:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    intToString: func (i: Int) -&amp;gt; String { i toString() }
+    strings := numbers map(intToString)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then we know that K = String from the definition of intToString.&lt;/p&gt;
+
+&lt;p&gt;But wait, there&amp;rsquo;s a nice infers-everything syntax for closures, ie.:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    stringsToo := numbers map(|x| x toString())
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And here, we&amp;rsquo;re doomed. The closure insides attempts to infers its whole
+signature (argument types, return type, etc.) from the type of the
+corresponding argmuent in the map definition. But map doesn&amp;rsquo;t provide
+a definitive answer, since the return type is generic.&lt;/p&gt;
+
+&lt;p&gt;Hence, the compiler falls back to the only possible resolution of this
+madness: it infers K from the return expression inside the closure.&lt;/p&gt;
+
+&lt;p&gt;This case is the &lt;em&gt;only case&lt;/em&gt; where rock considers the return expression
+inside functions to infer any type at all.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;Under the hood&lt;/h2&gt;
+
+&lt;p&gt;How does it work under the hood?&lt;/p&gt;
+
+&lt;p&gt;Here is the naive implementation: generic type arguments as passed
+as function arguments, ie a call to:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    ArrayList&amp;lt;Int&amp;gt; new()
+    identity(42)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;becomes (without mangling):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    ArrayList_new(Int_class());
+    identity()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Type arguments in classes become variables:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    ArrayList: class &amp;lt;T&amp;gt; {}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;is&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    ArrayList: class {
+        T: Class
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Class type arguments are assigned in the constructor to the appropriate
+values.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Covers</title>
       <link>http://oocmanual.cogneco.com/language/covers</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
@@ -322,685 +1251,167 @@ context doSomething()
     </item>
     
     <item>
-      <title>Values</title>
-      <link>http://oocmanual.cogneco.com/language/values</link>
+      <title>Enumerations</title>
+      <link>http://oocmanual.cogneco.com/language/enumerations</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/language/values</guid>
+      <guid>http://oocmanual.cogneco.com/language/enumerations</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;Values&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;Enums&lt;/h1&gt;
 
-&lt;p&gt;Values are just a fancy term for data - in fact, most of what programs
-do is to manipulate data, to compute numbers from other numbers, to process
-strings, etc.&lt;/p&gt;
-
-&lt;p&gt;The type of nothing is &lt;code&gt;Void&lt;/code&gt;, based on C&amp;rsquo;s &lt;code&gt;void&lt;/code&gt; type.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;Numbers&lt;/h1&gt;
-
-&lt;p&gt;There are two classes of numbers built into the language. Integers, like &lt;code&gt;3&lt;/code&gt;,
-&lt;code&gt;-45&lt;/code&gt; or &lt;code&gt;124_500&lt;/code&gt;, and reals, like &lt;code&gt;3.14&lt;/code&gt; or &lt;code&gt;-0.124_325_963&lt;/code&gt;. Underscores
-in number literals are ignored, thus they are purely cosmetic, allowing numbers
-to be expressed in code in a more human-friendly way.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Integer types&lt;/h2&gt;
-
-&lt;p&gt;There are fixed-length integer types, like:&lt;/p&gt;
-
-&lt;table class=&#34;pretty&#34;&gt;
-&lt;tbody&gt;
-
-&lt;tr&gt;
-&lt;td&gt;ooc types&lt;/td&gt;
-&lt;td&gt;Width&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;Int8, UInt8&lt;/td&gt;
-&lt;td&gt;8&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;Int16, UInt16&lt;/td&gt;
-&lt;td&gt;16&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;Int32, UInt32&lt;/td&gt;
-&lt;td&gt;32&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;Int64, UInt64&lt;/td&gt;
-&lt;td&gt;64&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;And others, mapped on C types:&lt;/p&gt;
-
-&lt;table class=&#34;pretty&#34;&gt;
-&lt;tbody&gt;
-
-&lt;tr&gt;
-&lt;td&gt;ooc types&lt;/td&gt;
-&lt;td&gt;C types&lt;/td&gt;
-&lt;td&gt;Width&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;Char, UChar&lt;/td&gt;
-&lt;td&gt;signed char, unsigned char&lt;/td&gt;
-&lt;td&gt;8&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;Short, UShort&lt;/td&gt;
-&lt;td&gt;signed short, unsigned short&lt;/td&gt;
-&lt;td&gt;at least 16&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;Int, UInt&lt;/td&gt;
-&lt;td&gt;signed int, unsigned int&lt;/td&gt;
-&lt;td&gt;at least 16&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;Long, ULong&lt;/td&gt;
-&lt;td&gt;signed long, unsigned long&lt;/td&gt;
-&lt;td&gt;at least 32&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;LLong, ULLong&lt;/td&gt;
-&lt;td&gt;signed long long, unsigned long long&lt;/td&gt;
-&lt;td&gt;at least 32&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;There are several type of integer literals. Decimal literals are the most
-common, but octal, hexadecimal, and binary literals exist as well, for
-example:&lt;/p&gt;
+&lt;p&gt;A set of values that a variable of that type can take. Useful when there are
+three values or more, so a &lt;code&gt;Bool&lt;/code&gt; doesn&amp;rsquo;t make sense.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-75 // decimal
-0c113 // octal
-0x4b // hexadecimal
-0b1001011 // binary
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Floating point types&lt;/h2&gt;
-
-&lt;p&gt;Similarly, real number types are based on C types:&lt;/p&gt;
-
-&lt;table class=&#34;pretty&#34;&gt;
-&lt;tbody&gt;
-
-&lt;tr&gt;
-&lt;td&gt;ooc types&lt;/td&gt;
-&lt;td&gt;C types&lt;/td&gt;
-&lt;td&gt;Width&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;Float&lt;/td&gt;
-&lt;td&gt;float&lt;/td&gt;
-&lt;td&gt;32&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;Double&lt;/td&gt;
-&lt;td&gt;double&lt;/td&gt;
-&lt;td&gt;64&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;Double&lt;/td&gt;
-&lt;td&gt;double&lt;/td&gt;
-&lt;td&gt;64&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;LDouble&lt;/td&gt;
-&lt;td&gt;long double&lt;/td&gt;
-&lt;td&gt;64, 80, 96&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Integer Ranges&lt;/h2&gt;
-
-&lt;p&gt;Any two values of integer type separated by two dots is a range. For example,
-this prints &amp;ldquo;Hello&amp;rdquo; ten times:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-for (i in 0..10) {
-    // i takes values from 0 to 9
-    &amp;quot;Hello&amp;quot; println()
+DoorState: enum {
+  OPEN
+  CLOSED
+  UNKNOWN
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;toc_5&#34;&gt;Text&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;Characters&lt;/h2&gt;
-
-&lt;p&gt;A character in ooc is akin to a byte, it&amp;rsquo;s not a Unicode character. A character literal
-is enclosed in single quotes, and supports the following escape codes:&lt;/p&gt;
+&lt;p&gt;One can think of enum values as static members. Enums have their own types.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-&#39;a&#39; // regular character
-&#39;\\&#39; // literal backslash
-&#39;\&#39;&#39; // single quote
-&#39;\n&#39; // new line
-&#39;\r&#39; // carriage return
-&#39;\b&#39; // backspace
-&#39;\t&#39; // horizontal tab
-&#39;\f&#39; // form feed
-&#39;\a&#39; // alert (bell)
-&#39;\v&#39; // vertical tab
-&#39;\nnn&#39; // character with octal value nnn
-&#39;\xhh&#39; // character with hexadecimal value hh
+state: DoorState
+state = DoorState OPEN
+
+// or, simply
+state := DoorState OPEN
+
+match state {
+  case DoorState OPEN =&amp;gt;
+    &amp;quot;It&#39;s open!&amp;quot;
+  case DoorState CLOSED =&amp;gt;
+    &amp;quot;It&#39;s closed.&amp;quot;
+  case =&amp;gt; &amp;quot;Who knows...&amp;quot;
+} println()
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Multi-character literals are syntax errors, e.g. &lt;code&gt;&#39;abcd&#39;&lt;/code&gt; is invalid.&lt;/p&gt;
-
-&lt;p&gt;The ooc type &lt;code&gt;Char&lt;/code&gt; is based on the C type &lt;code&gt;char&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;Strings&lt;/h2&gt;
-
-&lt;p&gt;There are two types of strings in ooc. &lt;code&gt;CString&lt;/code&gt; is a cover from &lt;code&gt;Char*&lt;/code&gt; and
-is a vanilla C string, null-terminated. &lt;code&gt;String&lt;/code&gt; is a class that contains a
-length and may be implemented however the implementor chooses.&lt;/p&gt;
-
-&lt;p&gt;A string literal is enclosed in double quotes, gives an ooc &lt;code&gt;String&lt;/code&gt;, and supports
-the following escape codes:&lt;/p&gt;
+&lt;p&gt;More example code:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;a&amp;quot; // regular character
-&amp;quot;\\&amp;quot; // literal backslash
-&amp;quot;\&amp;quot;&amp;quot; // double quote
-&amp;quot;\n&amp;quot; // new line
-&amp;quot;\r&amp;quot; // carriage return
-&amp;quot;\b&amp;quot; // backspace
-&amp;quot;\t&amp;quot; // horizontal tab
-&amp;quot;\f&amp;quot; // form feed
-&amp;quot;\a&amp;quot; // alert (bell)
-&amp;quot;\v&amp;quot; // vertical tab
-&amp;quot;\nnn&amp;quot; // character with octal value nnn
-&amp;quot;\xhh&amp;quot; // character with hexadecimal value hh
+isOpen?: func (state: DoorState) -&amp;gt; Bool {
+  state == DoorState OPEN
+}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;toc_8&#34;&gt;String interpolation&lt;/h2&gt;
+&lt;h2 id=&#34;toc_1&#34;&gt;Members&lt;/h2&gt;
 
-&lt;p&gt;ooc&amp;rsquo;s string interpolation syntax is inspired by Ruby&amp;rsquo;s:&lt;/p&gt;
+&lt;p&gt;Enums can&amp;rsquo;t have members - they are just values without any added metadata.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;Hello, my name is #{name} and I am #{age} years old.&amp;quot; println()
-&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;toc_2&#34;&gt;Methods&lt;/h2&gt;
 
-&lt;p&gt;Numeric and stringy types are handled correctly by interpolated strings. For
-all other types, a &lt;code&gt;toString()&lt;/code&gt; call is added. Object types that do not have
-a &lt;code&gt;toString()&lt;/code&gt; method, when used in an interpolated string, will trigger a
-compile error.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_9&#34;&gt;Raw strings&lt;/h2&gt;
-
-&lt;p&gt;A raw string literal is enclosed in double quotes and preceded by &lt;code&gt;c&lt;/code&gt; without spaces,
-for example this will be of type &lt;code&gt;CString&lt;/code&gt;, not &lt;code&gt;String&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;Enums, however, can have methods:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-puts(c&amp;quot;Some like em raw.&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
+DoorState: enum {
+  OPEN
+  CLOSED
+  UNKNOWN
 
-&lt;p&gt;Raw strings can be used to avoid extra allocations. One would hope that one day compilers
-would be smart enough to avoid that on their own, but in the meantime, one could roll
-their own implementations using only raw strings.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_10&#34;&gt;Variables&lt;/h1&gt;
-
-&lt;p&gt;A value can also be simply a variable declaration or a variable access, for example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-a := &amp;quot;Hello&amp;quot; // this evaluates to &amp;quot;Hello&amp;quot;
-a // so does this
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The &lt;code&gt;:=&lt;/code&gt; operator is the declare-assign operator. It creates a new variable slot, infers
-its type from the right-hand-side value, and assigns the value to the variable. The same
-code can be rewritten like so:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-a: String = &amp;quot;Hello&amp;quot; // this evaluates to &amp;quot;Hello&amp;quot;
-a // this too
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Or, in even longer form:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-a: String
-a = &amp;quot;Hello&amp;quot; // this evaluates to &amp;quot;Hello&amp;quot;
-a // this too
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The same applies inside a class declaration:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Dog: class {
-  age := 23
-
-  init: func {
-    age // this evalutes to 23
+  chance: func -&amp;gt; Float {
+    match this {
+      case This OPEN =&amp;gt; 1.0
+      case This CLOSED =&amp;gt; 0.0
+      case =&amp;gt; 0.5
+    }
   }
-}
 
-dog := Dog new()
-dog age // this evalutes to 23 as well
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_11&#34;&gt;Functions&lt;/h1&gt;
-
-&lt;p&gt;Functions are values as well. For example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Dog: class {
-  bark: func { &amp;quot;Woof!&amp;quot; println() }
-}
-
-Dog bark // this is a value
-a := func { &amp;quot;Waf&amp;quot; println() } // this is a value as well
-a // and so is this
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Functions are of type &lt;code&gt;Func&lt;/code&gt;. Its syntax resembles a function definition.
-For example, &lt;code&gt;Func (Int, Int) -&amp;gt; Int&lt;/code&gt; is the type of a function that takes
-two integers and returns an integer. Both the argument list and the return
-type are optional.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_12&#34;&gt;Pointers&lt;/h1&gt;
-
-&lt;p&gt;Pointers are references to a region of memory. For example,&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Dog: class {
-  age := 23
-}
-
-dog := Dog new()
-age := dog age
-age = 23 // `dog age` is still 23
-
-agePtr := dog age&amp;amp;
-agePtr@ = 42 // `dog age` is now 42
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Post-fixing with &lt;code&gt;&amp;amp;&lt;/code&gt; takes the address of something. Post-fixing
-with &lt;code&gt;@&lt;/code&gt; returns the value a pointer points to.&lt;/p&gt;
-
-&lt;p&gt;The type of a pointer is &lt;code&gt;Type*&lt;/code&gt; where Type is the underlying type, for
-example, &lt;code&gt;Int*&lt;/code&gt; is a pointer to an Int. To accept or return any kind of
-pointer, the catch-all &lt;code&gt;Pointer&lt;/code&gt; type can be used.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_13&#34;&gt;References&lt;/h1&gt;
-
-&lt;p&gt;References are a variant of pointers especially useful in functions.&lt;/p&gt;
-
-&lt;p&gt;Here&amp;rsquo;s a &lt;code&gt;mul2&lt;/code&gt; function with pointers:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-mul2: func (var: Int*) {
-  var@ *= 2
-}
-
-a := 12
-mul2(a&amp;amp;)
-a // now evalutes to 24
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And here&amp;rsquo;s the same with references:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-mul2: func (var: Int@) {
-  var *= 2
-}
-
-a := 12
-mul2(a&amp;amp;)
-a // now evalutes to 24
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Notice that the function still neds to be called with a pointer, in this
-case &lt;code&gt;a&amp;amp;&lt;/code&gt;. This is so that the caller is aware that the variable being
-passed might be modified by the function.&lt;/p&gt;
-
-&lt;p&gt;However, inside the body of a function using a by-reference parameter, there
-is no need to dereference it (postfix it &lt;code&gt;@&lt;/code&gt;) every time it is being accessed
-or assigned.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_14&#34;&gt;Covers vs Classes&lt;/h1&gt;
-
-&lt;p&gt;Objects are references, like in Java. For example, the following:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Container: class {
-  value := 19
-}
-
-modify: func (c: Container) {
-  c value = 23
-}
-
-c := Container new()
-modify(c)
-c value // now evalutes to 23
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;However, covers are passed by value, see:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Container: cover {
-  value: Int
-}
-
-modify: func (c: Container) {
-  // woops, we&#39;re modifying a copy of the original
-  c value = 23
-}
-
-c: Container
-c value = 19
-modify(c)
-c value // still evalutes to 19
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The same applies inside methods of covers - by default,
-they apply to a copy of the cover. To be able to modify
-the content of a cover, use &lt;code&gt;func@&lt;/code&gt; instead.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Container: cover {
-  value: Int
-  setValue: func@ (.value) {
-    // since we&#39;re using `func@`, `this` is a reference
-    this value = value
+  random: static func -&amp;gt; Float {
+    Random randInt(0, 3) as This
   }
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Hence, any cover constructor should be defined with &lt;code&gt;func@&lt;/code&gt;,
-like so:&lt;/p&gt;
+&lt;p&gt;They can be used like regular objects:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-Container: cover {
-  value: Int
-  init: func@ (=value)
-}
+state := DoorState random()
+
+&amp;quot;Generated a random door.&amp;quot; println()
+&amp;quot;Chance we&#39;re passing through = %.2f&amp;quot; printfln(state chance())
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;toc_15&#34;&gt;Enums&lt;/h1&gt;
+&lt;h1 id=&#34;toc_3&#34;&gt;Backing type&lt;/h1&gt;
 
-&lt;p&gt;By default, enums are backed by &lt;code&gt;Int&lt;/code&gt;s. However, that&amp;rsquo;s transparent.
-A value from an enum will be of the type of the enum. See:&lt;/p&gt;
+&lt;p&gt;By defaults, enums are backed by ints. That&amp;rsquo;s why they can be cast to
+&lt;code&gt;Int&lt;/code&gt;, and vice versa.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Custom values&lt;/h2&gt;
+
+&lt;p&gt;Custom values are specified with the assignment operator:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-// defining a new type named &#39;State&#39;
-State: enum {
-  // .. with two possible values
-  AWAKE
-  ASLEEP
-}
-
-// currentState is of type &#39;State&#39;
-currentState := State AWAKE
-
-// only accepts values of type &#39;State&#39;
-isAsleep?: func (s: State) -&amp;gt; Bool {
-  (s == State ASLEEP)
+Number: enum {
+  ONE
+  TWO
+  FOUR = 4
+  FIVE
 }
 &lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Covers vs Classes</title>
-      <link>http://oocmanual.cogneco.com/language/covers-vs-classes</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/language/covers-vs-classes</guid>
-      <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;When to use covers and classes&lt;/h1&gt;
+&lt;p&gt;Values are computed like this:&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_1&#34;&gt;Intro&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;the first value is &lt;code&gt;increment(0)&lt;/code&gt; if unspecified&lt;/li&gt;
+&lt;li&gt;every value after that is &lt;code&gt;increment(previousValue)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;by default, the increment is &lt;code&gt;+1&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;Whenever possible, use classes.&lt;/p&gt;
+&lt;p&gt;Read below for more on increments&lt;/p&gt;
 
-&lt;p&gt;If you&amp;rsquo;re new to ooc, don&amp;rsquo;t use covers because you&amp;rsquo;ve heard they
-are &amp;ldquo;faster&amp;rdquo;. Covers are powerful. Great power comes with great responsibility.
-The sword cut both ways&lt;/p&gt;
+&lt;h2 id=&#34;toc_5&#34;&gt;Custom increment&lt;/h2&gt;
 
-&lt;h2 id=&#34;toc_2&#34;&gt;By-reference, by-value&lt;/h2&gt;
+&lt;p&gt;Custom increments can be specified after the &lt;code&gt;enum&lt;/code&gt; keyword:&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_3&#34;&gt;Classes&lt;/h2&gt;
-
-&lt;p&gt;Classes are by-references. Which means every object is a reference. Doing that:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Number: class {
-        value: Int
-        init: func (=value) {}
-    }
-
-    modifyRef: func (n: Number) {
-        n = Number new(-1)
-    }
-
-    modifyInside: func (n: Number) {
-        n value = -1
-    }
-
-    answer := Number new(42)
-    modifyRef(answer) // does nothing
-    modifyInside(answer)
+&lt;pre&gt;&lt;code&gt;#!ooc
+Odds: enum (+2) {
+  ONE = 1
+  THREE
+  FIVE
+  SEVEN
+  NINE
+}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;What happens in &amp;lsquo;modifyRef&amp;rsquo; is that we change the value of the parameter &amp;lsquo;n&amp;rsquo;.
-The code does not modify what &amp;lsquo;n&amp;rsquo; was a reference to in the first place.
-In the example above the variable &amp;lsquo;answer&amp;rsquo; is given as the argument and &amp;lsquo;modifyRef&amp;rsquo; has
-no effect at all on &amp;lsquo;answer&amp;rsquo;.&lt;/p&gt;
+&lt;p&gt;Multiplication increments are valid as well:&lt;/p&gt;
 
-&lt;p&gt;However, in &amp;lsquo;modifyInside&amp;rsquo;, we actually modify the content of what &amp;lsquo;n&amp;rsquo; refers to.
-Since &amp;lsquo;n&amp;rsquo; refers to &amp;lsquo;answer&amp;rsquo;, the code will modify its member &amp;lsquo;value&amp;rsquo; and set it to -1.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Covers&lt;/h2&gt;
-
-&lt;p&gt;Covers are trickier. There are two types of covers: primitive covers and compound covers&lt;/p&gt;
-
-&lt;p&gt;Primitive covers allow to us to add methods to an existing underlying type. For implementations
-of ooc on top of C this means you can do stuff like:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Int: cover from int
+&lt;pre&gt;&lt;code&gt;#!ooc
+Powers: enum (*2) {
+  ONE = 1
+  TWO
+  FOUR
+  EIGHT
+  SIXTEEN
+}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;This is actually the way all C types are used within ooc.&lt;/p&gt;
+&lt;p&gt;And multiplication increments are actually quite handy for things like bitsets.&lt;/p&gt;
 
-&lt;p&gt;As a consequence, covers are by-value. Which means that&lt;/p&gt;
+&lt;h1 id=&#34;toc_6&#34;&gt;Extern enums&lt;/h1&gt;
 
-&lt;pre&gt;&lt;code&gt;    modify: func (i: Int) {
-        i = -1
-    }
+&lt;p&gt;Enums can be extern, in which case every element will be a bare symbol, which should
+be defined externally, in C code for example:&lt;/p&gt;
 
-    answer := 42
-    modify(answer)
+&lt;pre&gt;&lt;code&gt;#!ooc
+ShutdownParam: extern enum {
+  SHUT_RD    // generate C name SHUT_RD
+  SHUT_WR    // generate C name SHUT_WR
+  SHUT_RDWR  // generate C name SHUT_RDWR
+}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Doesn&amp;rsquo;t modify answer.&lt;/p&gt;
+&lt;p&gt;Or, each element can be aliased individually:&lt;/p&gt;
 
-&lt;p&gt;But compound covers (you can think of them as structs) are also by value,
-which means that:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Number: cover {
-        value: Int
-    }
-
-    modifyInside: func (n: Number) {
-        n value = -1
-    }
-
-    answer: Number
-    answer value = 42
-
-    modifyInside(answer)
+&lt;pre&gt;&lt;code&gt;#!ooc
+ShutdownParam: extern enum {
+  extern(SHUT_RD) read
+  extern(SHUT_WR) write
+  extern(SHUT_RDWR) readWrite
+}
 &lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Won&amp;rsquo;t modify &amp;lsquo;answer&amp;rsquo; at all, but a &lt;em&gt;copy&lt;/em&gt; of it that has been
-passed to &amp;lsquo;modifyInside&amp;rsquo;.&lt;/p&gt;
-
-&lt;p&gt;As an interesting side effect, a &amp;lsquo;clone&amp;rsquo; method is futile for covers.&lt;/p&gt;
-
-&lt;p&gt;It also means that this won&amp;rsquo;t work:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Number: cover {
-        value: Int
-        init: func (=value) {}
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Because init will be working on a &lt;em&gt;copy&lt;/em&gt; of the object, thus leaving
-the original object unmodified. That&amp;rsquo;s why func@ exists, ie.:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Number: cover {
-        value: Int
-        init: func@ (=value) {}
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Where &amp;lsquo;this&amp;rsquo; will be passed by reference. Same goes for any cover method
-that modifies its content.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Heap allocation, stack allocation&lt;/h2&gt;
-
-&lt;p&gt;When you do&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    NumberClass: class {}
-    n := NumberClass new()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;n may be allocated on the heap or on the stack, however the compiler sees fit.&lt;/p&gt;
-
-&lt;p&gt;However, with:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    NumberCover: cover {}
-    n: NumberCover
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;n is allocated on the stack.&lt;/p&gt;
-
-&lt;p&gt;Choosing whether to allocate an object on the stack or on the heap is a
-non-trivial decision. In C++ for example, it is the role of the programmer
-to decide whether to allocate on the stack or on the heap.&lt;/p&gt;
-
-&lt;p&gt;In ooc, it&amp;rsquo;s the role of the compiler. Until the language is properly
-standardized and annotations are added for extern functions to allow
-escape analysis, the compiler may choose to only allocate on the heap.&lt;/p&gt;
-
-&lt;p&gt;Allocating on the stack is much faster (since it only involves moving
-the stack pointer), and the stack is always hot, the memory you get when
-allocating is much more likely to be in cache than any far heap allocated
-memory.&lt;/p&gt;
-
-&lt;p&gt;So why don&amp;rsquo;t we always allocate on the stack? Why do we even bother about
-heap allocation, which involves all kinds of housekeeping to know which
-memory blocks are reserved and which are free?&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;Why stack allocation isn&amp;rsquo;t a silver bullet&lt;/h2&gt;
-
-&lt;p&gt;A typical stack size for C programs on desktop OSes is between 1MB and 2MB.
-Therefore, if you need to allocate big objects, you may run out of stack space.&lt;/p&gt;
-
-&lt;p&gt;Running out of stack space is really something to be avoided. It&amp;rsquo;s a lot
-harder to debug than heap allocation failures. When heap allocation fails,
-you usually get back a null pointer, and tools (GDB, Valgrind) help figuring
-out the cause.&lt;/p&gt;
-
-&lt;p&gt;However, when you run out of stack space, the program usually crashes violently
-with very little information about the situation that lead to the crash.
-Even worse, it could corrupt data without crashing.&lt;/p&gt;
-
-&lt;p&gt;What&amp;rsquo;s more, often, when a program crashes because of a stack allocation failure,
-the call stack is overwritten with random data, making it impossible to trace back
-the origin of the problem.&lt;/p&gt;
-
-&lt;p&gt;To add insult to injury, as far as I know, there is no reliable and portable way
-to know how much free memory is left on the stack.&lt;/p&gt;
-
-&lt;p&gt;For all those reasons, stack allocation is sometimes entirely avoided,
-because it&amp;rsquo;s tricky to deal with manually.&lt;/p&gt;
-
-&lt;p&gt;The following IBM DeveloperWorks article goes more in-depth into the issue:
-&lt;a href=&#34;http://www.ibm.com/developerworks/java/library/j-jtp09275.html&#34;&gt;http://www.ibm.com/developerworks/java/library/j-jtp09275.html&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;Stack and scope&lt;/h2&gt;
-
-&lt;p&gt;But wait, there&amp;rsquo;s more! (assuming you&amp;rsquo;re still reading at that point)&lt;/p&gt;
-
-&lt;p&gt;Stack-allocated variables are deallocated when they go out of scope.&lt;/p&gt;
-
-&lt;p&gt;What does that mean? It means that this code is wrong.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    getAnswer: func -&amp;gt; Int* {
-        // answer is allocated on the stack
-        answer := 42
-        // we&#39;re returning the address of a local variable
-        // this is WRONG, don&#39;t do it.
-        answer&amp;amp;
-        // when the function returns, &#39;answer&#39; goes out of scope
-        // and is deallocated
-    }
-
-    answerPtr := getAnswer()
-    &amp;quot;answer = %d&amp;quot; printfln(answerPtr@)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Whereas this one will work perfectly:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    getAnswer: func -&amp;gt; Int* {
-        // answer is allocated on the heap
-        answer := gc_malloc(Int size)
-        answer@ = 42
-        // we&#39;re returning the address of a heap-allocated variable
-        // no problem with that. the memory will be freed on a garbage
-        // collector sweep phase, when it will have detected that
-        // it&#39;s unused
-        answer
-    }
-
-    answerPtr := getAnswer()
-    &amp;quot;answer = %d&amp;quot; printfln(answerPtr@)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;However, the first version (returning the address of a local variable)
-might work sometimes: don&amp;rsquo;t be surprised. If the memory address (on the stack
-or in a register) where the local variable was stored isn&amp;rsquo;t overwritten
-between the return from the function and the time when it&amp;rsquo;s used, it might
-still contain the original value. But, again - it&amp;rsquo;s wrong and unreliable.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;When to use stack allocation&lt;/h2&gt;
-
-&lt;p&gt;For small objects for which you need by-value behavior and of which you use
-gazillions in your application.&lt;/p&gt;
-
-&lt;p&gt;Each project is a unique situation - as a rule, I&amp;rsquo;d always advise to begin
-with a class, and turn it into a cover later if the situation requires it.&lt;/p&gt;
-
-&lt;p&gt;However, keep in mind that allocation is often not the first place to look
-if you want to optimize your application. Remember to always use a profiler
-(I find that valgrind + KCachegrind work particularly well with ooc code)
-to figure out where the hotspots are in your code.&lt;/p&gt;
 </description>
     </item>
     
@@ -1473,1657 +1884,957 @@ extend Int {
     </item>
     
     <item>
-      <title>Language</title>
-      <link>http://oocmanual.cogneco.com/language</link>
+      <title>Tuples</title>
+      <link>http://oocmanual.cogneco.com/language/tuples</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/language</guid>
+      <guid>http://oocmanual.cogneco.com/language/tuples</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;The OOC Language&lt;/h1&gt;
-
-&lt;p&gt;The language has grown over the years, but it&amp;rsquo;s still relatively tidy.
-Here&amp;rsquo;s a list of sections of the language documentation:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;modules&#34;&gt;Modules&lt;/a&gt; chapter discusses &lt;code&gt;.ooc&lt;/code&gt; files, what
-a module is, what a package is, how imports and includes work.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;values&#34;&gt;Values&lt;/a&gt; chapter talks number literals, string
-literals, operators, variable declarations, and a few built-in types.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;control-structures&#34;&gt;Control Structures&lt;/a&gt; chapter describes
-mundane constructs like if, else, for, while, break, continue, but also
-match.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;collections&#34;&gt;Collections&lt;/a&gt; chapter talks about
-arrays and maps, among other things.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;functions&#34;&gt;Functions&lt;/a&gt; chapter will teach you anything
-from declaring function to calling them, to using external functions
-(from a C library, for example), but also variable arguments, default
-arguments, first-class functions and a nice syntax for closures.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;classes&#34;&gt;Classes&lt;/a&gt; chapter is here to help you realize
-that ooc classes are a lot like Java classes, except when they are not.
-Constructors, inheritance, abstract methods, initializers, and even
-interfaces have found their way in here.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;operators&#34;&gt;Operators&lt;/a&gt; chapter lists various mathematic
-and logic operators, their priorities, how to overload them, etc.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;covers&#34;&gt;Covers&lt;/a&gt; chapter discusses a construct halfway
-between C structs and ooc classes, that is a major actor in making C
-libraries easier to use.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;enumerations&#34;&gt;Enumerations&lt;/a&gt; chapter goes over the last kind of ooc
-types - an enumeration of things. How to define them, use them, you
-name it. (No, seriously, anonymous enums don&amp;rsquo;t exist)&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;tuples&#34;&gt;Tuples&lt;/a&gt; chapter explains what tuples are and
-what they aren&amp;rsquo;t. It covers multi-return, multi-declaration, variable
-swapping, and cover literals.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;generics&#34;&gt;Generics&lt;/a&gt; chapter talks about parameterized
-types, how to define them, how to use them, what are their strong points
-and their shortcomings.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;exceptions&#34;&gt;Exceptions&lt;/a&gt; chapter talks about error
-handling, how to throw and catch Exceptions, and how to create your own
-exception types.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;preprocessor&#34;&gt;Preprocessor&lt;/a&gt; describes what happens to
-the code before it is even compiled.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Generics 2</title>
-      <link>http://oocmanual.cogneco.com/language/generics2</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/language/generics2</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Generics&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;Tuples&lt;/h1&gt;
 
 &lt;h2 id=&#34;toc_1&#34;&gt;Intro&lt;/h2&gt;
 
-&lt;p&gt;Generics are one of the most commonly misunderstood features of ooc.&lt;/p&gt;
+&lt;p&gt;This section is rather long, and begins with an explanation of the practical
+problem multi-return is supposed to solve.&lt;/p&gt;
 
-&lt;p&gt;Many people attempt confuse them with templates (like in C++ or D) and are
-surprised when things like this don&amp;rsquo;t work:&lt;/p&gt;
+&lt;p&gt;If you&amp;rsquo;re just looking for reference material, you may jump directly
+to the &amp;lsquo;Multi-return using Tuples&amp;rsquo; section.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;    Vector2: class &amp;lt;T&amp;gt; {
-        x, y: T
-    init: func(=x, =y) {}
-        add: func (r: This&amp;lt;T&amp;gt;) {
-            new(x + r x, y + r y)
+&lt;p&gt;Also, don&amp;rsquo;t miss the last section on multi-variable declaration and assignment.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;The problem&lt;/h2&gt;
+
+&lt;p&gt;How do we make a function that return several values?&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Using an array - minmax&lt;/h2&gt;
+
+&lt;p&gt;You can use an array:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    // counter-example: don&#39;t do that
+    minmax: func (list: List&amp;lt;Int&amp;gt;) -&amp;gt; Int[] {
+        min := INT_MAX
+        max := INT_MIN
+        for(i in list) {
+            if(i &amp;lt; min) min = i
+            if(i &amp;gt; max) max = i
+        }
+
+        [min, max]
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;But it&amp;rsquo;s not practical, ie. if you want to retrieve min and max, you have to do:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    // counter-example: don&#39;t do that
+    result := minmax(mylist)
+    min := result[0]
+    max := result[1]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We&amp;rsquo;re using three lines only to retrieve results from a function.&lt;/p&gt;
+
+&lt;p&gt;And what if minmax is changed to return only one value? The code will still
+compile but fail on result[1].&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Using a list of cells (ie. a Bag)&lt;/h2&gt;
+
+&lt;p&gt;Using an array doesn&amp;rsquo;t allow different types, so&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s try using a list of cells:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    // counter-example: don&#39;t do that
+    meanAndTotal: func (units: List&amp;lt;Unit&amp;gt;) -&amp;gt; List&amp;lt;Cell&amp;gt; {
+        total := 0
+        for(unit in units) total += unit weight
+        mean := total / units size() as Float
+
+        [Cell new(total), Cell new(mean)] as ArrayList&amp;lt;Cell&amp;gt;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And to retrieve the values:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    // counter-example: don&#39;t do that
+    result := meanAndTotal(units)
+    total  := result[0] get(Int)
+    mean   := result[1] get(Float)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Again, three lines, looks even uglier, no guarantees, not type-safe at
+compile-time. Don&amp;rsquo;t do that.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Using references&lt;/h2&gt;
+
+&lt;p&gt;And here&amp;rsquo;s the closest we&amp;rsquo;ll come to a tolerable solution without using
+tuples: out-parameters. Let&amp;rsquo;s rewrite the minmax example with it&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    // counter-example: don&#39;t do that
+    minmax: func (list: List&amp;lt;Int&amp;gt;, min, max: Int@) {
+        min = INT_MAX
+        max = INT_MIN
+        for(i in list) {
+            if(i &amp;lt; min) min = i
+            if(i &amp;gt; max) max = i
         }
     }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;(Don&amp;rsquo;t worry about the syntax for now, I&amp;rsquo;ll get to it later)&lt;/p&gt;
+&lt;p&gt;And to retrieve the values:&lt;/p&gt;
 
-&lt;p&gt;Why doesn&amp;rsquo;t this work? It&amp;rsquo;s because you can&amp;rsquo;t do much with generic variables.
-The whole point is that &lt;em&gt;we don&amp;rsquo;t know which type they are&lt;/em&gt; until we run the
-program.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    // counter-example: don&#39;t do that
+    min, max: Int
+    minmax(mylist, min&amp;amp;, max&amp;amp;)
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;One might instanciate a Vector2&amp;lt;Int&amp;gt; - in which case the + operator
-makes sense - but they could also instanciate a Vector2&amp;lt;Carrot&amp;gt;, where Carrot
-wouldn&amp;rsquo;t necessarily have a + operator.&lt;/p&gt;
+&lt;p&gt;Two lines is better, but what if we do:&lt;/p&gt;
 
-&lt;p&gt;Besides, since ooc is statically typed, we wouldn&amp;rsquo;t know which + operator
-to use - they&amp;rsquo;re not all the same! We don&amp;rsquo;t add two ints the same manner that
-we add two floats, and so on.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    minmax(mylist, null, null)
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;toc_2&#34;&gt;Generic functions and type parameters&lt;/h2&gt;
+&lt;p&gt;That&amp;rsquo;s valid ooc, won&amp;rsquo;t be caught at compile-time, and yet crash.
+So it&amp;rsquo;s not the perfect solution we&amp;rsquo;re looking for.&lt;/p&gt;
 
-&lt;p&gt;So, if we can&amp;rsquo;t use any operator on generic variables - nor can we call
-methods on them, then what are they good for? Sure looks useless from here.&lt;/p&gt;
+&lt;h2 id=&#34;toc_6&#34;&gt;Multi-return using tuples - the solution&lt;/h2&gt;
 
-&lt;p&gt;Well, here&amp;rsquo;s one thing we can do, for example:&lt;/p&gt;
+&lt;h2 id=&#34;toc_7&#34;&gt;Multiple return types&lt;/h2&gt;
 
-&lt;pre&gt;&lt;code&gt;    identity: func &amp;lt;T&amp;gt; (val: T) -&amp;gt; T {
-        val
+&lt;p&gt;Tuples can be used to return multiple values from a function. Let&amp;rsquo;s
+rewrite our minmax function using that.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    minmax: func (list: List&amp;lt;Int&amp;gt;) -&amp;gt; (Int, Int) {
+        (min, max) := (INT_MAX, INT_MIN)
+        list each(|i|
+            if(i &amp;lt; min) min = i
+            if(i &amp;gt; max) max = i
+        )
+        (min, max)
     }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Woha. What just happened here? Let&amp;rsquo;s recap line by line.&lt;/p&gt;
+&lt;p&gt;The returned tuple and the declared function return type must
+match exactly (e.g. same number and types of elements). Any mismatch
+will result in a compile error.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;    identity: func &amp;lt;T&amp;gt; (val: T) -&amp;gt; T
+&lt;h2 id=&#34;toc_8&#34;&gt;Retrieving all values - multi-variable declaration&lt;/h2&gt;
+
+&lt;p&gt;We can retrieve all values by using a decl-assign with a tuple
+on the left and a function call on the right&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    (min, max) := minmax(mylist)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Here, we declare a function named &amp;lsquo;identity&amp;rsquo;, with one type parameter named T,
-taking one parameter named &amp;lsquo;val&amp;rsquo;, and returning a value of type T.&lt;/p&gt;
+&lt;p&gt;The tuple and the return type of the function call must match exactly
+(same numbers of elements). Any mismatch will result in a compile error.&lt;/p&gt;
 
-&lt;p&gt;Type parameters are the names listed between the angular brackets &amp;lt; and &amp;gt;. You
-can have as many as you want (although if you have more than few of them,
-you&amp;rsquo;re probably doing it wrong)&lt;/p&gt;
+&lt;p&gt;The tuple should only contain variable accesses - any other expression
+will result in a compile error.&lt;/p&gt;
 
-&lt;p&gt;When you declare a type parameter, it tells the compiler about a new type,
-that we know nothing about at compile-time. Well, not nothing. Remember
-classes? Here&amp;rsquo;s how we access the class of an object:&lt;/p&gt;
+&lt;p&gt;The type of the variables declared inside the tuples are inferred
+from the return type of the called function, just like regular decl-assign.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;    object class
+&lt;p&gt;There are ways to ignore some values, that are described in other sections.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_9&#34;&gt;Ignoring all but the first value&lt;/h2&gt;
+
+&lt;p&gt;In the minmax example above, we can retrieve only min if we want:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    min := minmax(mylist)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;And if object was of type Carrot, that amounts exactly to doing just:&lt;/p&gt;
+&lt;p&gt;It can even be used as an expression:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;    Carrot
+&lt;pre&gt;&lt;code&gt;    &amp;quot;Minimum is %d&amp;quot; printfln(minmax(mylist))
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;What is that, exactly? It&amp;rsquo;s an access to a class. What is a class? An instance
-of Class, which is declared in lang/CoreTypes.ooc If you actually go on and open
-CoreTypes, here is a simplified version of what you will find:&lt;/p&gt;
+&lt;p&gt;Which leads to this rule: &lt;strong&gt;when a function returning multiple values
+is used as if it returned only one, the first value is used.&lt;/strong&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;    Class: class {
-        name: String
-        size, instanceSize: SizeT
-    }
+&lt;h2 id=&#34;toc_10&#34;&gt;Ignoring specific values - the &amp;lsquo;_&amp;rsquo; wildcard&lt;/h2&gt;
+
+&lt;p&gt;What if we want only max? We can use &amp;lsquo;_&amp;rsquo; in place of a name, in a
+multi-variable declaration:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    (_, max) := minmax(mylist)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;(Reminder: SizeT can be used to store the size of something. On 32-bits
-platforms, it&amp;rsquo;s 32-bits wide. On 64-bits platforms, it&amp;rsquo;s 64-bits wide, and so
-on. Basically, it&amp;rsquo;s an integer type that is as wide as a Pointer)&lt;/p&gt;
+&lt;p&gt;However, there is no way to use it as an expression, it has to be
+unwrapped first, with a multi-variable declaration.&lt;/p&gt;
 
-&lt;p&gt;So back to our generic stuff. I said we knew nothing about generic types. And
-in fact, it was a downright lie. Please accept my apologies. The reality is -
-we know all that matters! If you try to execute the following piece of code:&lt;/p&gt;
+&lt;p&gt;For that reason, &lt;strong&gt;it&amp;rsquo;s good design to declare return values from most
+interesting to least interesting&lt;/strong&gt;.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;    test: func &amp;lt;T&amp;gt; (t: T) { T class name println() }
-    test(42)
+&lt;h2 id=&#34;toc_11&#34;&gt;The importance of return values order&lt;/h2&gt;
+
+&lt;p&gt;Take for example Process getOutput() in the sdk:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    getOutput: func -&amp;gt; (String, Int) {}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;You&amp;rsquo;ll find out something very strange and puzzling.. it prints &amp;ldquo;Class&amp;rdquo; !&lt;/p&gt;
+&lt;p&gt;The first returned value is what the process wrote to stdout, and
+the second value is the exit code of the process.&lt;/p&gt;
 
-&lt;p&gt;We just discovered that we can access type parameters just like any other
-variable. And since T is a class, and we can access various fields of a class,
-here&amp;rsquo;s what we can do:&lt;/p&gt;
+&lt;p&gt;The function used to be declared like that&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;    test2: func &amp;lt;T&amp;gt; (t: T) {
-        &amp;quot;name = %s, size = %zd, instanceSize = %zd&amp;quot; printfln(
-        T name, T size, T instanceSize)
-    }
-    test2(42)
+&lt;pre&gt;&lt;code&gt;    getOutput: func -&amp;gt; String {}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;This will likely print something like &amp;ldquo;name = Int, size = 4, instanceSize =
-4&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;And didn&amp;rsquo;t allow to get the exit code. Adding functionality didn&amp;rsquo;t
+hurt compatibility at all though - no code broke, because of careful
+design.&lt;/p&gt;
 
-&lt;p&gt;Then you must wonder why is there &amp;lsquo;size&amp;rsquo; and &amp;lsquo;instanceSize&amp;rsquo;, if they&amp;rsquo;re equal?
-Well, they&amp;rsquo;re not equal in all cases. Most importantly, for objects (which are
-references, remember), &amp;lsquo;object class size&amp;rsquo; is equal to &amp;lsquo;Pointer size&amp;rsquo;, but
-&amp;lsquo;object class instanceSize&amp;rsquo; is equal to the actual number of bytes we should
-allocate when we create an object of this class.&lt;/p&gt;
+&lt;p&gt;Be careful when designing APIs. Plan for growth. Listen to Guy Steele
+(and his &amp;lsquo;Growing a Language&amp;rsquo; talk)&lt;/p&gt;
 
-&lt;p&gt;But I digress. (Then again, you&amp;rsquo;re the curious one - not me.)&lt;/p&gt;
+&lt;h2 id=&#34;toc_12&#34;&gt;The &amp;lsquo;_&amp;rsquo; wildcard in greedy mode&lt;/h2&gt;
 
-&lt;p&gt;So let&amp;rsquo;s analyze the second line of our &amp;lsquo;identity&amp;rsquo; function above:&lt;/p&gt;
+&lt;p&gt;We said above that the tuple and the return type of the function call
+on either side of a multi-variable decl-assign should match exactly.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;    val
+&lt;p&gt;For example, given this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    plainWhite: func -&amp;gt; (Int, Int, Int, Int) { (1, 2, 3, 4) }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Let&amp;rsquo;s see. It&amp;rsquo;s the last line of a non-void function, so it means it&amp;rsquo;s
-returned. &amp;lsquo;val&amp;rsquo; refers to a variable declaration which happens to be a
-function argument, of a generic type. (&lt;em&gt;phew&lt;/em&gt; - at this point, repeat that
-last line to yourself two or three times to impreign it into your brain)&lt;/p&gt;
+&lt;p&gt;The following lines are invalid:&lt;/p&gt;
 
-&lt;p&gt;So basically what our function does is&amp;hellip; just pass through what we give it as
-an argument! Let&amp;rsquo;s try that&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    42 toString() println() // just to be sure
-    identity(42) toString() println() // still a little trivial
-    identity(identity(identity(identity(42)))) toString() println() // whoa.
+&lt;pre&gt;&lt;code&gt;    (one, two) := plainWhite()
+    (_, two) := plainWhite()
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Yup, it prints 42 alright.&lt;/p&gt;
+&lt;p&gt;Why? So that when incompatible changes are made to an API, you&amp;rsquo;re
+aware of it at compile-time, not at run-time.&lt;/p&gt;
 
-&lt;p&gt;But wait! I just said above that the compiler &lt;em&gt;couldn&amp;rsquo;t do anything useful
-with a generic variable&lt;/em&gt;, that is, either use an operator on it or call a
-function on it, because it doesn&amp;rsquo;t know its type. And in our example, we
-clearly see that the &amp;lsquo;identity&amp;rsquo; function has return type T, which is a generic
-type! (Because it&amp;rsquo;s between the &amp;lt; and &amp;gt;, remember?)&lt;/p&gt;
+&lt;p&gt;However, both these lines are valid:&lt;/p&gt;
 
-&lt;p&gt;Have I lied again? Let&amp;rsquo;s find out.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Generic type inference&lt;/h2&gt;
-
-&lt;p&gt;Let&amp;rsquo;s do a little experiment:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    a := 42
-    b := identity(42)
-    &amp;quot;%s and %s&amp;quot; printfln(a class name, b class name)
+&lt;pre&gt;&lt;code&gt;    one := plainWhite() // as we&#39;ve seen before
+    (_, two, _) := plainWhite()
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;What did you get? Int and Int, right? But - but the return type of &amp;lsquo;identity&amp;rsquo;
-is T! Shouldn&amp;rsquo;t b&amp;rsquo;s type be T too?&lt;/p&gt;
+&lt;p&gt;Although plainWhite() returns 4 values, a tuple with only 3 elements
+works.&lt;/p&gt;
 
-&lt;p&gt;Well, no.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;A &amp;lsquo;_&amp;rsquo; used at the end of a tuple will ignore every remaining return value&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;And thank God for that.&lt;/p&gt;
+&lt;p&gt;So that&lt;/p&gt;
 
-&lt;p&gt;In fact, if it was so, generics would be pretty much useless (heh, they&amp;rsquo;re limited enough already!)&lt;/p&gt;
-
-&lt;p&gt;So what kind of magic is going on? White magic. Which really isn&amp;rsquo;t magic at
-all.&lt;/p&gt;
-
-&lt;p&gt;You see, when you call:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    identity(42)
+&lt;pre&gt;&lt;code&gt;    one := plainWhite()
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;And the definition of identity is&lt;/p&gt;
+&lt;p&gt;Is actually equivalent to:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;    identity: func &amp;lt;T&amp;gt; (val: T) -&amp;gt; T
+&lt;pre&gt;&lt;code&gt;    (one, _) := plainWhite()
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Here&amp;rsquo;s what the compiler figures out: well, we have one unknown type (that
-is, generic type), called &amp;rsquo;T&amp;rsquo;. Also, the first (and only) argument is of that
-type. Hey - let&amp;rsquo;s infer what &amp;rsquo;T&amp;rsquo; is from the type of this argument!&lt;/p&gt;
+&lt;h2 id=&#34;toc_13&#34;&gt;Tuples beyond return - multi-declaration and multi-assign&lt;/h2&gt;
 
-&lt;p&gt;And that&amp;rsquo;s exactly what it does. As a result, it figures the type of b to be
-Int - since we can know all that at compile-time. It makes b easier to use,
-avoid tons of cast, and is good for your karma.&lt;/p&gt;
+&lt;p&gt;Using tuples on both sides of the decl-assign operator (:=) or
+the assign operator (=) is valid.&lt;/p&gt;
 
-&lt;p&gt;Here&amp;rsquo;s another example.&lt;/p&gt;
+&lt;p&gt;Examples:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;    printTypeName: func &amp;lt;T&amp;gt; (T: Class) { T name println() }
-    printTypeName(Object)
+&lt;pre&gt;&lt;code&gt;    (x, y, z) := (1, 2, 3)
+
+    (a, b) = (b, a)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Then it prints &amp;ldquo;Object&amp;rdquo;. Did we find a way to print strings without having to
-enclose them between quotes? Hopefully not. That would be messy, man. Talk
-about Perl :/&lt;/p&gt;
-
-&lt;p&gt;However, we have just discovered that we can pass types as arguments to
-functions. Of course, because types are just instances of &amp;lsquo;Class&amp;rsquo;, right? So
-they&amp;rsquo;re objects. So they&amp;rsquo;re values. So we can pass them around.&lt;/p&gt;
-
-&lt;p&gt;So here, the compiler figures that, well - we give it the solution to &amp;lsquo;what is
-T&amp;rsquo;. It is then not too big a challenge for the compiler to go from here.&lt;/p&gt;
-
-&lt;p&gt;Then again, we could have done:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    dumbPrintTypeName: func (T: Class) { T name println() }
-    dumbPrintTypeName(Object)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Since we don&amp;rsquo;t use T as a type anywhere. So why even bother with this &amp;lt;T&amp;gt;
-thing, hmm? Why does the compiler even allow it? Read on if you want to find out.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Generic return types&lt;/h2&gt;
-
-&lt;p&gt;Here&amp;rsquo;s a little riddle for you. How does the compiler figure out the real return
-type of this function:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    sackOfUnknown: func &amp;lt;T&amp;gt; -&amp;gt; T { 42 }
-    sackOfUnknown()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Anyone? Ah, I see a hand in the back. What do you say? The type of the return
-expression? WRONG. But that was an honest try. One point for effort.&lt;/p&gt;
-
-&lt;p&gt;So what&amp;rsquo;s the solution? &amp;ldquo;It doesn&amp;rsquo;t.&amp;rdquo; That&amp;rsquo;s right. The compiler doesn&amp;rsquo;t even
-bother. We give absolutely no clue as to the type of T when we&amp;rsquo;re calling it -
-and the compiler never tries to infer a generic type from the return
-expression (that&amp;rsquo;s useless, I mean - why even make a generic function in the
-first place? Too lazy to type out &amp;lsquo;Int&amp;rsquo;? Yeah. Call me back when you have ABI
-incompatibilities because you changed a return expression. Or rather - don&amp;rsquo;t.)&lt;/p&gt;
-
-&lt;p&gt;So how do we make a function that&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;has a generic return type, let&amp;rsquo;s say &amp;rsquo;T&amp;rsquo;&lt;/li&gt;
-&lt;li&gt;doesn&amp;rsquo;t take an argument of type T ?&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Well, that&amp;rsquo;s precisely where that useless thing presented in the previous
-section comes in very handy:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    theAnswer: func &amp;lt;T&amp;gt; (T: Class) -&amp;gt; T {
-        match T {
-            case Int    =&amp;gt; 42
-            case Float  =&amp;gt; 42.0
-            case String =&amp;gt; &amp;quot;forty-two&amp;quot;
-            case        =&amp;gt; Exception new(&amp;quot;You&#39;re not worthy.&amp;quot;) throw(); 0
-        }
-    }
-   rational := theAnswer(Int)
-   real     := theAnswer(Float)
-   text     := theAnswer(String)
-   theAnswer(Object) // ka-boom!
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;What just happened? We used a match on &amp;rsquo;T&amp;rsquo;, which means we&amp;rsquo;re comparing it.
-We&amp;rsquo;re comparing it with the types &amp;lsquo;Int&amp;rsquo;, &amp;lsquo;Float&amp;rsquo;, &amp;lsquo;String&amp;rsquo;, trying to return
-expressions. And if it&amp;rsquo;s none of these types, it just blows up.&lt;/p&gt;
-
-&lt;p&gt;Note: in that case, our theAnswer function is pretty useless&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Generic classes&lt;/h2&gt;
-
-&lt;p&gt;Now that&amp;rsquo;s all good and fancy - but generic functions aren&amp;rsquo;t actually that
-useful. If we can&amp;rsquo;t use operators nor functions on generic types, what can we
-do? Well - store them! That&amp;rsquo;s the way all collections work.&lt;/p&gt;
-
-&lt;p&gt;Let&amp;rsquo;s start with a simple one:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Slot: class &amp;lt;T&amp;gt; {
-        element: T
-        init: func (.element) { set(element) }
-        set: func (=element) {}
-        get: func -&amp;gt; T { element }
-    }
-
-    s := Slot new(3.14)
-    s get() toString() println()
-    s T name println()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Not that bad, eh? (It should print 3.14 and Float - or some other type, if
-you&amp;rsquo;re in the future and ooc has a proper number tower)&lt;/p&gt;
-
-&lt;p&gt;But wait - get is defined like that:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    get: func -&amp;gt; T { element }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And clearly T is a generic type, ie. it could be anything at runtime, and
-&lt;em&gt;yet&lt;/em&gt; the compiler figures it out right.&lt;/p&gt;
-
-&lt;p&gt;So what happens here? Let&amp;rsquo;s look at the call, since it&amp;rsquo;s the info from which
-the compiler works to infer generic types:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    s get()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Hmmph. Not many types there - except maybe.. the type of s. Which is what
-exactly?&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    s := Slot new(3.14)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Well it turns out that Slot new is just a regular method call, the generic
-type T is inferred to &amp;lsquo;Float&amp;rsquo;, and so &amp;rsquo;s&amp;rsquo; becomes a Slot&amp;lt;Float&amp;gt;&lt;/p&gt;
-
-&lt;p&gt;Hence, the compiler sees the get() call as:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Slot&amp;lt;Float&amp;gt; get()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And it sees the get definition as&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Sloat&amp;lt;T&amp;gt; get: func {}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;From here, inferring that T = Float is trivial.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;Advanced type inference&lt;/h2&gt;
-
-&lt;p&gt;One of the most advanced example of type inference in the whole SDK
-is probably the List map() function. Here is its signature (ie.
-definition without the body) :&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    map: func &amp;lt;K&amp;gt; (f: Func (T) -&amp;gt; K) -&amp;gt; This&amp;lt;K&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;So basically it turns a List&amp;lt;T&amp;gt; into a List&amp;lt;K&amp;gt;, by calling f to turn
-every T into a K. Makes sense.&lt;/p&gt;
-
-&lt;p&gt;The question is now - how does the compiler infer K? The only info we have
-about it, is that it&amp;rsquo;s the return type of function we pass as an argument
-to the function.&lt;/p&gt;
-
-&lt;p&gt;Well - no big deal then, if we do:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    intToString: func (i: Int) -&amp;gt; String { i toString() }
-    strings := numbers map(intToString)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then we know that K = String from the definition of intToString.&lt;/p&gt;
-
-&lt;p&gt;But wait, there&amp;rsquo;s a nice infers-everything syntax for closures, ie.:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    stringsToo := numbers map(|x| x toString())
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And here, we&amp;rsquo;re doomed. The closure insides attempts to infers its whole
-signature (argument types, return type, etc.) from the type of the
-corresponding argmuent in the map definition. But map doesn&amp;rsquo;t provide
-a definitive answer, since the return type is generic.&lt;/p&gt;
-
-&lt;p&gt;Hence, the compiler falls back to the only possible resolution of this
-madness: it infers K from the return expression inside the closure.&lt;/p&gt;
-
-&lt;p&gt;This case is the &lt;em&gt;only case&lt;/em&gt; where rock considers the return expression
-inside functions to infer any type at all.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;Under the hood&lt;/h2&gt;
-
-&lt;p&gt;How does it work under the hood?&lt;/p&gt;
-
-&lt;p&gt;Here is the naive implementation: generic type arguments as passed
-as function arguments, ie a call to:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    ArrayList&amp;lt;Int&amp;gt; new()
-    identity(42)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;becomes (without mangling):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    ArrayList_new(Int_class());
-    identity()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Type arguments in classes become variables:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    ArrayList: class &amp;lt;T&amp;gt; {}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;is&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    ArrayList: class {
-        T: Class
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Class type arguments are assigned in the constructor to the appropriate
-values.&lt;/p&gt;
+&lt;p&gt;Swapping variables is valid, and should be supported by compliant
+ooc compilers/runtimes.&lt;/p&gt;
 </description>
     </item>
     
     <item>
-      <title>Control Structures</title>
-      <link>http://oocmanual.cogneco.com/language/control-structures</link>
+      <title>First-class Functions</title>
+      <link>http://oocmanual.cogneco.com/language/first-class-functions</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/language/control-structures</guid>
+      <guid>http://oocmanual.cogneco.com/language/first-class-functions</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;Conditionals&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;First-class functions&lt;/h1&gt;
 
-&lt;h2 id=&#34;toc_1&#34;&gt;if / else&lt;/h2&gt;
+&lt;h2 id=&#34;toc_1&#34;&gt;Intro&lt;/h2&gt;
 
-&lt;p&gt;There&amp;rsquo;s your traditional if, else if, else structure. The body should be either
-a single statement, or a scope.&lt;/p&gt;
+&lt;p&gt;Functions are pieces of code that can take arguments, and return values.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;#!ooc
-if (off) turnOn()
+&lt;p&gt;Named functions are declared with this syntax:&lt;/p&gt;
 
-if (stressed) {
-    breatheIn()
-    breatheOut()
-} else if (tired) {
-    rest()
-} else {
-    allGood()
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The condition can be of type &lt;code&gt;Bool&lt;/code&gt; or a Pointer, in which case it will evaluate to
-&lt;code&gt;true&lt;/code&gt; if it is non-null.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;match / case&lt;/h2&gt;
-
-&lt;p&gt;&lt;code&gt;match&lt;/code&gt; is ooc&amp;rsquo;s &lt;code&gt;switch&lt;/code&gt;, loosely modelled after Scala&amp;rsquo;s. In its simplest form, it tests for equality between an expression and several values:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-match (numFeets) {
-    case 1 =&amp;gt; &amp;quot;Ouch&amp;quot;
-    case 2 =&amp;gt; &amp;quot;Normal&amp;quot;
-    case =&amp;gt;
-        // what?
-        raise(&amp;quot;Too many feet&amp;quot;)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Each case is a scope of its own - it doesn&amp;rsquo;t require braces. A case with no
-expression is a catch-all.&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;match&lt;/code&gt; also works with any class T that implements the method &lt;code&gt;matches?: func
--&amp;gt; (other: T) -&amp;gt; Bool&lt;/code&gt;. Another way to get complex types to work in matches
-is simply to override the &lt;code&gt;==&lt;/code&gt; operator. Hence, Strings work:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-match keyword {
-    case &amp;quot;if&amp;quot; =&amp;gt;
-        Keyword IF
-    case &amp;quot;match&amp;quot; =&amp;gt;
-        Keyword MATCH
-    case =&amp;gt;
-        Keyword UNKNOWN
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;match&lt;/code&gt; is also a good way to avoid explicit casting, by matching an object
-against variable declarations, one can use its specific form directly:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-result := match (op) {
-    case plus: Plus =&amp;gt;
-        plus lhs + plus rhs
-    case minus: Minus =&amp;gt;
-        minus lhs - minus rhs
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;A &lt;code&gt;match&lt;/code&gt; is an expression, if every case ends with an expression. Hence, a
-match can be used as a return value, or in a function call, on the right hand
-side of a declaration-assignment (&lt;code&gt;:=&lt;/code&gt;), as demonstrated above.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_3&#34;&gt;Loops&lt;/h1&gt;
-
-&lt;p&gt;Loops are structures that control the repetition of a body of code.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;break / continue&lt;/h2&gt;
-
-&lt;p&gt;Two particular keywords are of interest when writing loops:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;break&lt;/code&gt; immediately exits the loop, skipping the rest of the body
-and not executing any further iteration&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;continue&lt;/code&gt; skips over the rest of the body and begins the next
-iteration immediately&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;while&lt;/h2&gt;
-
-&lt;p&gt;Checks the condition - if false, skips the body. If true, runs the body,
-then checks the condition again, etc.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-while (!satisfied) {
-    buyStuff()
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;for&lt;/h2&gt;
-
-&lt;p&gt;There is no C-like &lt;code&gt;for&lt;/code&gt; in ooc, only a foreach. It can iterate through
-values like ranges:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-for (i in 1..10) {
-    &amp;quot;Counting to %d&amp;quot; printfln(i)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Or more complex data structures:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-for (element in list) {
-    &amp;quot;Element = %s&amp;quot; printfln(element toString())
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;For an object to be iterable, it has to implement the
-&lt;code&gt;iterator: func &amp;lt;T&amp;gt; -&amp;gt; Iterator&amp;lt;T&amp;gt;&lt;/code&gt; method.&lt;/p&gt;
-
-&lt;p&gt;A variant of foreach allows one to get the index of the current element:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-for ((index, element) in list) {
-    &amp;quot;list[%d] = %s&amp;quot; printfln(index, element toString())
-}
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Exceptions</title>
-      <link>http://oocmanual.cogneco.com/language/exceptions</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/language/exceptions</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Error handling&lt;/h1&gt;
-
-&lt;p&gt;The C way to do error handling is usually via return codes:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-openFile: (path: String) -&amp;gt; Int {
-  if (error) {
-    return -1
-  }
-  return someFileDescriptor
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;However, it relies on the user correctly checking the return value:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-fd := openFile(&amp;quot;/etc/hosts&amp;quot;)
-doSomethingWithFile(fd) // forgot to check, things might go bad!
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;Exceptions&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;raise&lt;/h2&gt;
-
-&lt;p&gt;Another way to handle that would be with exceptions&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-openFile: (path: String) -&amp;gt; File {
-  if (error) {
-    raise(&amp;quot;Could not open %s&amp;quot; format(path))
-  }
-  return someFile
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;That way, even if the user doesn&amp;rsquo;t explicitly check for the error, it&amp;rsquo;ll
-still interrupt the flow of the program:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;file := openFile(&amp;quot;/dev/does/not/exist&amp;quot;)
-doSomethingWithFile(file) // we are never even going to reach there
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Throwing&lt;/h2&gt;
-
-&lt;p&gt;The &lt;code&gt;raise&lt;/code&gt; function above is a quick method to raise an exception. What
-it really does is this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Exception new(message) throw()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;There is no special keyword to throw exceptions, it&amp;rsquo;s just a method on the
-&lt;code&gt;Exception&lt;/code&gt; class.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Catching exceptions&lt;/h2&gt;
-
-&lt;p&gt;Catching exceptions is done through the &lt;code&gt;try&lt;/code&gt; / &lt;code&gt;catch&lt;/code&gt; syntax:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-try {
-  openFile(&amp;quot;dev/does/not/exist&amp;quot;)
-} catch (e: Exception) {
-  // something wrong happened
-  &amp;quot;Error: %s&amp;quot; printfln(e message)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Exception sub-classes&lt;/h2&gt;
-
-&lt;p&gt;It is possible to sub-class exceptions to have several exception types.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-FileNotFoundException: class extends Exception {
-  init: func (path: String) {
-    super(&amp;quot;File not found: %s&amp;quot; format(path))
-  }
-}
-
-openFile: func (path: String) {
-  if (error) {
-    FileNotFoundException new(path) throw()
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Which makes it easy to catch a specific type of exception:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-try {
-  file := openFile(&amp;quot;/dev/does/not/exist&amp;quot;)
-  doSomethingWithFile(file)
-} catch (e1: FileNotFoundException) {
-  // The file wasn&#39;t found
-} catch (e2: Exception) {
-  // Something else went wrong.
-}
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Version</title>
-      <link>http://oocmanual.cogneco.com/language/version-blocks</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/language/version-blocks</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Version blocks&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;Syntax&lt;/h2&gt;
-
-&lt;p&gt;Version blocks use the following syntax:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    version (&amp;lt;version expression&amp;gt;) {
+&lt;pre&gt;&lt;code&gt;    &amp;lt;name&amp;gt; : func &amp;lt;arguments&amp;gt; &amp;lt;return type&amp;gt; {
         &amp;lt;body&amp;gt;
-    } else {
-        &amp;lt;alternative body&amp;gt;
     }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Where &lt;version expression&gt; can be any of:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    &amp;lt;version name&amp;gt;
-    !&amp;lt;version expression&amp;gt;
-    &amp;lt;version expression&amp;gt; &amp;amp;&amp;amp; &amp;lt;version expression&amp;gt;
-    &amp;lt;version expression&amp;gt; || &amp;lt;version expression&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Semantics&lt;/h2&gt;
-
-&lt;p&gt;Version blocks aren&amp;rsquo;t if-else blocks - they aren&amp;rsquo;t evaluated at runtime.
-In rock, version blocks aren&amp;rsquo;t evaluated at ooc-compile-time either.
-They&amp;rsquo;re evaluated at C compile time. Which means the C code generated by rock
-should be the same on any platform.&lt;/p&gt;
-
-&lt;p&gt;Practically, in rock, version blocks are an abstraction for #ifdef / #endif blocks.
-The syntax makes it harder to forget to close a version block than an #ifdef / #endif block,
-and a few handy aliases (listed below) for commonly used version names are standard, so that developers
-don&amp;rsquo;t have to remember the convoluted corresponding C defines.&lt;/p&gt;
-
-&lt;p&gt;For other compilers not based on the C language, version block handling may happen at any
-stage of the compilation (if any), as long as the version expressions are correctly evaluated
-and have the correct meaning (for example, a &amp;lsquo;windows&amp;rsquo; version block should be ignored on OSX)&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Built-in version names&lt;/h2&gt;
-
-&lt;p&gt;C defines are included here for completeness, but are only relevant for people who want
-to implement ooc on top of C.&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;Name&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;corresponding C define&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;windows&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;WIN32&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;linux&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;linux&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;solaris&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;__sun&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;unix&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;unix&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;beos&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;BEOS&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;haiku&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;HAIKU&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;apple&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;APPLE&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;gnuc&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;GNUC&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;i386&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;i386&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;x86&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;X86&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;x86_64&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;x86_64&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;ppc&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;ppc&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;ppc64&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;ppc64&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;64&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;x86_64&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;gc&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;OOC_USE_GC&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Custom version names&lt;/h2&gt;
-
-&lt;p&gt;Most of the standard version names above depend on your building environment, and the &amp;lsquo;gc&amp;rsquo; name depends
-on the compiler setting -gc=[off,static,dynamic].&lt;/p&gt;
-
-&lt;p&gt;Custom version names can be used, and turned on/off with the -D and -U compiler flags, for example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    version(debug) {
-        &amp;quot;[%d] Saving database %s&amp;quot; println(timestamp(), db name)
-    }
-    db save()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The code inside the version(debug) block will be compiled if -Ddebug is used. It is common practise for ooc developers
-to use the -Ddebug switch to debug their applications.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Semantics continued&lt;/h2&gt;
-
-&lt;p&gt;Version blocks can be used in function bodies, to make certain parts of the code OS-specific, or
-they can be used at the mdule-level to make functions or types OS-specific.&lt;/p&gt;
-
-&lt;p&gt;If different types are defined in different version blocks, make sure they expose the same interface.
-It&amp;rsquo;s not necessary for them to have the exact same class layout, but they should at least have all the
-methods/fields that are used in every OS.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;Examples&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;    version(windows) {
-        &amp;quot;Hi, Bill!&amp;quot; println()
-    }
-    version(apple) {
-        &amp;quot;Hi, Steve!&amp;quot; println()
-    }
-    version(linux) {
-        &amp;quot;Hi, Linus!&amp;quot; println()
-    }
-    version(!windows &amp;amp;&amp;amp; !apple &amp;amp;&amp;amp; !linux) {
-        &amp;quot;Who are you, and what did you do to my OS?&amp;quot;
-    }
-
-    version(apple) {
-        &amp;quot;Nice Hardware!&amp;quot; println()
-    } else {
-        &amp;quot;So you like your computer made of plastic then!&amp;quot; println()
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;See also io/File and os/Time in the SDK for real-world examples of heavily versioned code.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;Pattern for OS-specific classes&lt;/h2&gt;
-
-&lt;p&gt;In ooc, &amp;lsquo;new&amp;rsquo; isn&amp;rsquo;t a keyword but a static method. As a result, you can define new yourself.
-This allows an interesting pattern for OS-specific classes in ooc:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    // io/File
-    import io/[FileUnix, FileWin32]
-    
-    File: class {
-        path: String
-    
-        new: static func (.path) -&amp;gt; This {
-            version(windows) { return FileWin32 new(path) }
-            version(unix)    { return FileUnix  new(path) }
-            Exception new(This, &amp;quot;Unsupported platform&amp;quot;) throw()
-        }
-        
-        // abstract methods
-    }
-
-    // io/FileUnix
-    FileUnix: class extends File {
-        init: func (=path) {}
-        
-        // implement abstract methods for unix
-    }
-    
-    // io/FileWin32
-    FileWin32: class extends File {
-        init: func (=path) {}
-        
-        // implement abstract methods for Win32
-    }
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Functions</title>
-      <link>http://oocmanual.cogneco.com/language/functions</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/language/functions</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Functions&lt;/h1&gt;
-
-&lt;p&gt;A parameterized piece of code is often packaged into a function.&lt;/p&gt;
-
-&lt;p&gt;Here&amp;rsquo;s an example function that adds two numbers:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-add: func (a: Int, b: Int) -&amp;gt; Int {
-  return a + b
-}
-
-add(1, 2)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The syntax for function signatures is &lt;code&gt;NAME: func (ARG1, ARG2, ...) -&amp;gt; RETURNTYPE&lt;/code&gt;.
-Both the argument definition list and the arrow return type parts are optional, in case
-a function takes no argument, or returns nothing. Hence, the following definitions are
-all perfectly equivalent:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-f: func () -&amp;gt; Void {}
-f: func -&amp;gt; Void {}
-f: func () {}
-f: func {}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Arguments of the same type may be listed in short form: &lt;code&gt;name1, name2, name3: Type&lt;/code&gt;.
-Also, the &lt;code&gt;return&lt;/code&gt; keyword is optional - it is only required to exit of the normal
-function flow early. Hence, the first example can be rewritten like so:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-add: func (a, b: Int) -&amp;gt; Int {
-  a + b
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;In the absence of a &lt;code&gt;return&lt;/code&gt; keyword in the body of a non-void function, the last
-expression will be returned. This works with ifs, matches, etc.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;Main&lt;/h1&gt;
-
-&lt;p&gt;Perhaps the most interesting function at first is the &lt;code&gt;main&lt;/code&gt; function, aka the
-entry point of a program. If not defined, one will be implicitly created. For
-example, the following is a valid ooc program:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;Hi, world!&amp;quot; println()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;If we don&amp;rsquo;t need to process command-line arguments, we can define the main function
-simply like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-main: func {
-  &amp;quot;Hi, world!&amp;quot; println()
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Note that any could outside the main function (and outside class definitions, etc.)
-will get executed before the code in the main function is. This gives a chance for
-module to run initialization code (e.g. C libraries that need some routine to be called
-before anything else, to set up stuff).&lt;/p&gt;
-
-&lt;p&gt;If we do want command-line arguments, we can do it the C way:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-main: func (argv: Int, argc: CString*) {
-  for (i in 0..argv) {
-    arg = argc[i]
-    &amp;quot;Got argument: %s&amp;quot; printfln(arg toString())
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Or, we can use an array of strings:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-main: func (args: String[]) {
-  // and so on..
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Or, we can use an ArrayList of Strings, if more convenient:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import structs/ArrayList
-main: func (args: ArrayList&amp;lt;String&amp;gt;) {
-  // etc.
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Note that command line arguments might not be relevant for all ooc implementations.
-One could imagine an ooc implementation that compiles down to JavaScript - in which
-case, running in a browser, the command line arguments would always be empty.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_2&#34;&gt;Suffixes / overloading&lt;/h1&gt;
-
-&lt;p&gt;Functions can have the same name, but different signatures (argument lists and
-return type), as long as they have different suffixes. They can be called without
-suffix, in which case the compiler will infer the right function to call, or
-explicitly by specifying the suffix by hand:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-add: func ~ints (a, b: Int) -&amp;gt; Int { a + b }
-add: func ~floats (a, b: Float) -&amp;gt; Float { a + b }
-
-add(1, 2) // calls ~ints variant
-add(3.14, 5.0) // calls ~floats variant
-add~floats(3, 5) // explicit call
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_3&#34;&gt;Variable arguments&lt;/h1&gt;
-
-&lt;p&gt;Special slot in the argument list, can only be at the end, purpose is to accept
-any number of arguments.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;ooc varargs&lt;/h2&gt;
-
-&lt;p&gt;Store the number of arguments, and the types of each argument. Syntax is as follows:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-f: func (args: ...) {
-  // body
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Access &lt;code&gt;args count&lt;/code&gt; to know how many arguments were passed.
-Use &lt;code&gt;args iterator()&lt;/code&gt; to be able to iterate through the arguments:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-printAll: func (things: ...) {
-  &amp;quot;Printing %d things&amp;quot; printfln(things count)
-  iter := things iterator()
-
-  while (iter hasNext?()) {
-    T := iter getNextType()
-    &amp;quot;The next argument is a %s&amp;quot; printfln(T name)
-
-    match T {
-      case Int =&amp;gt; &amp;quot;%d&amp;quot; printfln(iter next(Int))
-      case Float =&amp;gt; &amp;quot;%.2f&amp;quot; printfln(iter next(Float))
-      case =&amp;gt; &amp;quot;Unsupported type&amp;quot;
-    }
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;More simply, &lt;code&gt;each&lt;/code&gt; can be used on a &lt;code&gt;VarArgs&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-printAll: func (things: ...) {
-  things each(|thing|
-    match thing {
-      case i: Int =&amp;gt; &amp;quot;%d&amp;quot; printfln(i)
-      case f: Float =&amp;gt; &amp;quot;%.2f&amp;quot; printfln(f)
-      case =&amp;gt; &amp;quot;&amp;lt;unknown&amp;gt;&amp;quot;
-    }
-  )
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;C varargs&lt;/h2&gt;
-
-&lt;p&gt;Used by writing simply &lt;code&gt;...&lt;/code&gt; in the argument list, not &lt;code&gt;args: ...&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-f: func (firstArg: Type, ...) {
-  // body
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Only accessible through &lt;code&gt;va_start&lt;/code&gt;, &lt;code&gt;va_next&lt;/code&gt;, &lt;code&gt;va_end&lt;/code&gt;. See &lt;a href=&#34;http://en.wikipedia.org/wiki/Variadic_function&#34;&gt;Variadic
-function&lt;/a&gt; on Wikipedia.&lt;/p&gt;
-
-&lt;p&gt;Useful only to relay a variable number of arguments to an extern C function,
-since &lt;code&gt;va_arg&lt;/code&gt; couldn&amp;rsquo;t work (can&amp;rsquo;t quote raw C types in ooc).&lt;/p&gt;
+&lt;p&gt;Where arguments are comma-separated, enclosed between parenthesis, and return type
+is prefixed with a right arrow -&amp;gt;.&lt;/p&gt;
+
+&lt;p&gt;Arguments may be omitted if the function doesn&amp;rsquo;t take any, and return type
+may be omitted too, if the function is void.&lt;/p&gt;
 
 &lt;p&gt;Example:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;#!ooc
-vprintf: extern (s: CString, ...)
-
-printf: func (s: String, ...) -&amp;gt; This {
-  list: VaList
-  va_start(list, this)
-  vprintf(s toCString(), list)
-  va_end(list)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_6&#34;&gt;Extern functions&lt;/h1&gt;
-
-&lt;p&gt;To call a function defined elsewhere, for example in a C library, its prototype
-needs to be defined&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-exit: extern func (Int)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Lazy way: type-only args, thorough way: variable-decl-args.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-exit: extern func (exitCode: Int)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_7&#34;&gt;By-ref parameters&lt;/h1&gt;
-
-&lt;p&gt;Instead of having to dereference each time the parameter is accessed, just declare
-it as a reference type:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-increment: func (a: Int*) { a@ += 1 }
-// vs
-increment: func (a: Int@) { a += 1 }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Saves typing, saves error, clearer code. Can still access the address via &lt;code&gt;argument&amp;amp;&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_8&#34;&gt;Closures&lt;/h1&gt;
-
-&lt;p&gt;A very concise way to pass a function as an argument. &lt;code&gt;each&lt;/code&gt; is a typical
-example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-// definition
-List: class &amp;lt;T&amp;gt; {
-  each: func (f: Func (T)) { /* ... */ }
-}
-
-// usage
-list := List&amp;lt;Int&amp;gt; new()
-list each(|elem|
-  // do something with elem, of type Int
-)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Also works with several parameters:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-// definition
-Map: class &amp;lt;K, V&amp;gt; {
-  each: func (f: Func (K, V)) { /* ... */ }
-}
-
-// usage
-map := Map&amp;lt;String, Horse&amp;gt; new()
-map each(|key, value|
-  // key is of type String, value is of type Horse
-)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Argument types are inferred, hence, the code is very short.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Enumerations</title>
-      <link>http://oocmanual.cogneco.com/language/enumerations</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/language/enumerations</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Enums&lt;/h1&gt;
-
-&lt;p&gt;A set of values that a variable of that type can take. Useful when there are
-three values or more, so a &lt;code&gt;Bool&lt;/code&gt; doesn&amp;rsquo;t make sense.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-DoorState: enum {
-  OPEN
-  CLOSED
-  UNKNOWN
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;One can think of enum values as static members. Enums have their own types.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-state: DoorState
-state = DoorState OPEN
-
-// or, simply
-state := DoorState OPEN
-
-match state {
-  case DoorState OPEN =&amp;gt;
-    &amp;quot;It&#39;s open!&amp;quot;
-  case DoorState CLOSED =&amp;gt;
-    &amp;quot;It&#39;s closed.&amp;quot;
-  case =&amp;gt; &amp;quot;Who knows...&amp;quot;
-} println()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;More example code:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-isOpen?: func (state: DoorState) -&amp;gt; Bool {
-  state == DoorState OPEN
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;Members&lt;/h2&gt;
-
-&lt;p&gt;Enums can&amp;rsquo;t have members - they are just values without any added metadata.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Methods&lt;/h2&gt;
-
-&lt;p&gt;Enums, however, can have methods:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-DoorState: enum {
-  OPEN
-  CLOSED
-  UNKNOWN
-
-  chance: func -&amp;gt; Float {
-    match this {
-      case This OPEN =&amp;gt; 1.0
-      case This CLOSED =&amp;gt; 0.0
-      case =&amp;gt; 0.5
+&lt;pre&gt;&lt;code&gt;    max: func (a, b: Int) -&amp;gt; Int {
+        a &amp;gt; b ? a : b
     }
-  }
-
-  random: static func -&amp;gt; Float {
-    Random randInt(0, 3) as This
-  }
-}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;They can be used like regular objects:&lt;/p&gt;
+&lt;p&gt;But this is a valid expression too:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;#!ooc
-state := DoorState random()
-
-&amp;quot;Generated a random door.&amp;quot; println()
-&amp;quot;Chance we&#39;re passing through = %.2f&amp;quot; printfln(state chance())
+&lt;pre&gt;&lt;code&gt;    func &amp;lt;arguments&amp;gt; &amp;lt;return type&amp;gt; {
+        &amp;lt;body&amp;gt;
+    }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;toc_3&#34;&gt;Backing type&lt;/h1&gt;
+&lt;p&gt;And with decl-assign, we can declare a variable named &amp;lsquo;max&amp;rsquo;, equal
+to this expression. And then use it very much like a function&lt;/p&gt;
 
-&lt;p&gt;By defaults, enums are backed by ints. That&amp;rsquo;s why they can be cast to
-&lt;code&gt;Int&lt;/code&gt;, and vice versa.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Custom values&lt;/h2&gt;
-
-&lt;p&gt;Custom values are specified with the assignment operator:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Number: enum {
-  ONE
-  TWO
-  FOUR = 4
-  FIVE
-}
+&lt;pre&gt;&lt;code&gt;    max := func (a, b: Int) -&amp;gt; Int {
+        a &amp;gt; b ? a : b
+    }
+    answer := max(-1, 42)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Values are computed like this:&lt;/p&gt;
+&lt;h2 id=&#34;toc_2&#34;&gt;Differences between function and first-class functions&lt;/h2&gt;
 
-&lt;ul&gt;
-&lt;li&gt;the first value is &lt;code&gt;increment(0)&lt;/code&gt; if unspecified&lt;/li&gt;
-&lt;li&gt;every value after that is &lt;code&gt;increment(previousValue)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;by default, the increment is &lt;code&gt;+1&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;The first difference is: functions are immutable. First-class functions
+are variables, and thus can be overwritten by simple assignment.&lt;/p&gt;
 
-&lt;p&gt;Read below for more on increments&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    // this is invalid: don&#39;t do that.
+    someFunc: func {}
+    someFunc = someOtherFunc
 
-&lt;h2 id=&#34;toc_5&#34;&gt;Custom increment&lt;/h2&gt;
-
-&lt;p&gt;Custom increments can be specified after the &lt;code&gt;enum&lt;/code&gt; keyword:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Odds: enum (+2) {
-  ONE = 1
-  THREE
-  FIVE
-  SEVEN
-  NINE
-}
+    // this, on the other hand, is valid
+    someFunc := func {}
+    someFunc = someOtherFunc
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Multiplication increments are valid as well:&lt;/p&gt;
+&lt;p&gt;The second difference is: first-class functions can capture context.
+Closures are first-class functions that capture context.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;#!ooc
-Powers: enum (*2) {
-  ONE = 1
-  TWO
-  FOUR
-  EIGHT
-  SIXTEEN
-}
+&lt;pre&gt;&lt;code&gt;    // here&#39;s a normal function
+    clone: func (l: List&amp;lt;Int&amp;gt;) -&amp;gt; List&amp;lt;Int&amp;gt; {
+        copy := ArrayList&amp;lt;Int&amp;gt; new(l size())
+        l each(func(element: Int) {
+            copy add(element)
+        })
+        copy
+    }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;And multiplication increments are actually quite handy for things like bitsets.&lt;/p&gt;
+&lt;p&gt;Here, our anonymous, first-class function which also happens to be a closure, is&lt;/p&gt;
 
-&lt;h1 id=&#34;toc_6&#34;&gt;Extern enums&lt;/h1&gt;
-
-&lt;p&gt;Enums can be extern, in which case every element will be a bare symbol, which should
-be defined externally, in C code for example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-ShutdownParam: extern enum {
-  SHUT_RD    // generate C name SHUT_RD
-  SHUT_WR    // generate C name SHUT_WR
-  SHUT_RDWR  // generate C name SHUT_RDWR
-}
+&lt;pre&gt;&lt;code&gt;    func(element: Int) {
+        copy add(element)
+    }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Or, each element can be aliased individually:&lt;/p&gt;
+&lt;p&gt;It captures the context because we access &amp;lsquo;copy&amp;rsquo; in it - which isn&amp;rsquo;t an
+argument of the function, nor a variable declared inside the function.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;#!ooc
-ShutdownParam: extern enum {
-  extern(SHUT_RD) read
-  extern(SHUT_WR) write
-  extern(SHUT_RDWR) readWrite
-}
+&lt;p&gt;It&amp;rsquo;s declared outside, and still we can access it - that&amp;rsquo;s what capturing
+context is.&lt;/p&gt;
+
+&lt;p&gt;So let&amp;rsquo;s sum up: first-class functions may be overwritten by assignment,
+and may capture context.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;The type of first-class functions&lt;/h2&gt;
+
+&lt;p&gt;So, when we do:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    max := func (a, b: Int) -&amp;gt; Int {
+        a &amp;gt; b ? a : b
+    }
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;What exactly is the type of &amp;lsquo;max&amp;rsquo; ?&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s declare it in two steps  instead:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    max : Func (Int, Int) -&amp;gt; Int
+    max = func (a, b: Int) -&amp;gt; Int {
+        a &amp;gt; b ? a : b
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;Func&lt;/code&gt; is a type that has a special syntax:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Func &amp;lt;argument types&amp;gt; &amp;lt;return type&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As with regular functions declaration, both argument types and return types
+can be omitted.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Type inference - ACS&lt;/h2&gt;
+
+&lt;p&gt;Declaring the type of first-class functions is mostly useful in function arguments.&lt;/p&gt;
+
+&lt;p&gt;For example, in the SDK, the declaration of each goes like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    List: class &amp;lt;T&amp;gt; {
+        each: func(f: Func (T)) {
+            // ...
+        }
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So it takes a function that takes one argument of type T&lt;/p&gt;
+
+&lt;p&gt;Hence, clearly doing that in our clone function above:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    l each(func(element: Int) {
+        copy add(element)
+    })
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Is unnecessary. Since we know that l is a List&lt;Int&gt;, and that each takes
+a Func (T) then we know that element is of type Int.&lt;/p&gt;
+
+&lt;p&gt;And thus, we can write that:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    l each(|element|
+        copy add(elements)
+    )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The proper syntax for that is&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    call(|&amp;lt;name of arguments&amp;gt;|
+        &amp;lt;body&amp;gt;
+    )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If there are no arguments, this is valid:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    call(||
+        &amp;lt;body&amp;gt;
+    )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And is then equivalent to:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    call(func {
+        &amp;lt;body&amp;gt;
+    })
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The return type is inferred as well.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Other differences - member functions vs member first-class functions&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;    Dog: class {
+
+        shout: func {
+            &amp;quot;Woof woof&amp;quot; println()
+        }
+
+    }
+
+    d := Dog new()
+    d shout()
+
+    Dog shout = func {
+        &amp;quot;Ruff ruff&amp;quot; println()
+    }
+    d2 := Dog new()
+    d shout()
+    d2 shout()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Prints:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Woof woof
+    Ruff ruff
+    Ruff ruff
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;When assigning &amp;lsquo;Dog shout&amp;rsquo;, we change the member method of &lt;em&gt;all&lt;/em&gt; past and
+future Dog instances. This happens because &amp;lsquo;shout&amp;rsquo; is actually stored in the meta-class&lt;/p&gt;
+
+&lt;p&gt;Consider the differences with that instead:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Dog: class {
+
+        shout := func {
+            &amp;quot;Woof woof&amp;quot; println()
+        }
+
+    }
+
+    d := Dog new()
+    d shout()
+
+    d shout = func {
+        &amp;quot;Ruff ruff&amp;quot; println()
+    }
+    d2 := Dog new()
+    d shout()
+    d2 shout()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Prints:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Woof woof
+    Ruff ruff
+    Woof woof
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here, &amp;lsquo;shout&amp;rsquo; is a member variable. Assigning to &amp;rsquo;d shout&amp;rsquo; changes it
+only for that instance, so d2 shout isn&amp;rsquo;t changed.&lt;/p&gt;
 </description>
     </item>
     
     <item>
-      <title>Generics</title>
-      <link>http://oocmanual.cogneco.com/language/generics</link>
+      <title>Collections</title>
+      <link>http://oocmanual.cogneco.com/language/collections</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/language/generics</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Generic functions&lt;/h1&gt;
-
-&lt;p&gt;Since ooc is strongly typed, usually when definining a function,
-it will only accept one type of argument:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-printInt: func (value: Int) {
-  value toString() println()
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;But what if a function is meant to accept various types and react
-accordingly? Generics can be used for that:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-printAnything: func &amp;lt;T&amp;gt; (value: T) {
-  value toString() println()
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Well, that&amp;rsquo;s a step in the right direction. But it won&amp;rsquo;t work, because
-you can&amp;rsquo;t call methods on generics types. Since &lt;code&gt;T&lt;/code&gt; could be anything,
-from a String to an array to an Int, we can&amp;rsquo;t make sure it even has a
-&lt;code&gt;toString&lt;/code&gt; method.&lt;/p&gt;
-
-&lt;p&gt;What we can do is match on &lt;code&gt;T&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-printAnything: func &amp;lt;T&amp;gt; (value: T) {
-  match T {
-    case Int =&amp;gt;
-      value as Int toString() println()
-    case =&amp;gt;
-      &amp;quot;&amp;lt;unknown&amp;gt;&amp;quot; println()
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;That&amp;rsquo;s not very convenient - here&amp;rsquo;s another way to write it:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-printAnything: func &amp;lt;T&amp;gt; (value: T) {
-  match value {
-    case i: Int =&amp;gt;
-      i toString()
-    case =&amp;gt;
-      &amp;quot;&amp;lt;unknown&amp;gt;&amp;quot;
-  } println()
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;Inference&lt;/h2&gt;
-
-&lt;p&gt;Notice how we didn&amp;rsquo;t have to specify &lt;code&gt;T&lt;/code&gt; when calling &lt;code&gt;printAnything&lt;/code&gt;,
-above? That&amp;rsquo;s because the type of &lt;code&gt;T&lt;/code&gt; is inferred. More complex inference
-is supported as well:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-map := HashMap&amp;lt;String, Int&amp;gt; new()
-map put(&amp;quot;one&amp;quot;, 1)
-printMap(map)
-
-printMap: func &amp;lt;K, V&amp;gt; (list: HashMap&amp;lt;K, V&amp;gt;) {
-  // when called from above, K == String, and V == Int
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;It works for closures as well:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import structs/[ArrayList, List]
-
-map: func &amp;lt;T, U&amp;gt; (list: List&amp;lt;T&amp;gt;, f: Func (T) -&amp;gt; U) -&amp;gt; List&amp;lt;U&amp;gt; {
-  copy := ArrayList&amp;lt;U&amp;gt; new()
-  for (elem in list) {
-    copy add(f(elem))
-  }
-  copy
-}
-
-a := [1, 2, 3] as ArrayList&amp;lt;Int&amp;gt;
-b := map(a, |i| i toString())
-b join(&amp;quot;, &amp;quot;) println()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Here, &lt;code&gt;U&lt;/code&gt; is inferred from the return type of the closure.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_2&#34;&gt;Generic classes&lt;/h1&gt;
-
-&lt;p&gt;Above, we have used generic types, such as &lt;code&gt;ArrayList&amp;lt;T&amp;gt;&lt;/code&gt; and
-&lt;code&gt;HashMap&amp;lt;K, V&amp;gt;&lt;/code&gt; - how can they be defined? Just like functions, by
-putting generic type arguments in-between chevrons (&lt;code&gt;&amp;lt;Type1, Type2&amp;gt;&lt;/code&gt;)
-in the class definition:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Container: class &amp;lt;T&amp;gt; {
-  t: T
-
-  init: func (=t)
-  get: func -&amp;gt; T { t }
-  set: func (=t)
-}
-
-c := Container&amp;lt;Int&amp;gt; new(24)
-c set(12)
-c get() toString() println()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Note that inference works here too - since we are passing
-a &lt;code&gt;T&lt;/code&gt; to the constructor, the instanciation part could be
-simply rewritten as:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-c := Container new(24)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Inheritance&lt;/h2&gt;
-
-&lt;p&gt;Generic types can have subtypes:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-ContainerToo: class &amp;lt;T&amp;gt; extends Container&amp;lt;T&amp;gt; {
-  print: func {
-    match t {
-      case i: Int =&amp;gt; i toString()
-      case =&amp;gt; &amp;quot;&amp;lt;unknown&amp;gt;&amp;quot;
-    } print()
-  }
-}
-
-c := ContainerToo new(24)
-c print()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Specialization&lt;/h2&gt;
-
-&lt;p&gt;Specialization happens when a sub-type has fewer type parameters
-than its super-type:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-IntContainer: class extends Container&amp;lt;Int&amp;gt; {
-  print: func {
-    get() toString() println()
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Operators</title>
-      <link>http://oocmanual.cogneco.com/language/operators</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/language/operators</guid>
+      <guid>http://oocmanual.cogneco.com/language/collections</guid>
       <description>
 
 &lt;h1 id=&#34;toc_0&#34;&gt;Foreword&lt;/h1&gt;
 
-&lt;p&gt;This lists all ooc operators, from highest precendence to lowest precedence&lt;/p&gt;
+&lt;p&gt;The array situation in ooc is a bit delicate right now - while
+I (Amos) am definitely not happy with it, I am still going to
+document the current state of things, if only as a motivation to
+make it better.&lt;/p&gt;
 
-&lt;h1 id=&#34;toc_1&#34;&gt;Access&lt;/h1&gt;
+&lt;h1 id=&#34;toc_1&#34;&gt;C arrays&lt;/h1&gt;
 
-&lt;h2 id=&#34;toc_2&#34;&gt;Array access&lt;/h2&gt;
+&lt;h2 id=&#34;toc_2&#34;&gt;On the heap&lt;/h2&gt;
 
-&lt;p&gt;The array-index operator is &lt;code&gt;[]&lt;/code&gt;, the array-modify operator&amp;rsquo;s short form is &lt;code&gt;[]=&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Examples:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-arr[0] = &#39;\n&#39;
-return arr[0]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Pointers&lt;/h2&gt;
-
-&lt;p&gt;The address-of operator is a post-fix &lt;code&gt;&amp;amp;&lt;/code&gt;, the dereference operator is a post-fix
-&lt;code&gt;@&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;C arrays are really just pointers:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-a := 42
-aPtr := a&amp;amp;
-aToo := aPtr@
-&lt;/code&gt;&lt;/pre&gt;
+tenInts := gc_malloc(10 * Int size) as Int*
+for (i in 0..10) {
+  tenInts[i] = i
+}
+printInts(tenInts, 10)
 
-&lt;h2 id=&#34;toc_4&#34;&gt;Call&lt;/h2&gt;
-
-&lt;p&gt;Technically not an operator, but call is in that priority level:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-a := func -&amp;gt; Int { 42 }
-a()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Member access&lt;/h2&gt;
-
-&lt;p&gt;Also technically not an operator. Simply two identifiers side by side,
-not using dot, unlike some other programming languages:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-dog name
-dog race
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;Casting&lt;/h2&gt;
-
-&lt;p&gt;The &lt;code&gt;as&lt;/code&gt; operator is used to cast from one type to the other:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-pi := 3.14
-roughlyPi := pi as Int
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_7&#34;&gt;Product&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;Binary operators&lt;/h2&gt;
-
-&lt;p&gt;The exponent operator is &lt;code&gt;**&lt;/code&gt;, the multiplication operator is &lt;code&gt;*&lt;/code&gt;,
-and the division operator is &lt;code&gt;/&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_9&#34;&gt;Unary operators&lt;/h2&gt;
-
-&lt;p&gt;Logical not is a prefixed &lt;code&gt;!&lt;/code&gt;, binary not is a prefixed &lt;code&gt;~&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_10&#34;&gt;Sum&lt;/h1&gt;
-
-&lt;p&gt;The addition operator is &lt;code&gt;+&lt;/code&gt;, subtraction is &lt;code&gt;-&lt;/code&gt;,
-modulo is &lt;code&gt;%&lt;/code&gt;&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_11&#34;&gt;Shift&lt;/h1&gt;
-
-&lt;p&gt;Right shift is &lt;code&gt;&amp;gt;&amp;gt;&lt;/code&gt;, left shift is &lt;code&gt;&amp;lt;&amp;lt;&lt;/code&gt;&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_12&#34;&gt;Inequality&lt;/h1&gt;
-
-&lt;p&gt;You have your regular less than &lt;code&gt;&amp;lt;&lt;/code&gt;, greater than &lt;code&gt;&amp;gt;&lt;/code&gt;,
-less than or equal &lt;code&gt;&amp;lt;=&lt;/code&gt;, more than or equal &lt;code&gt;&amp;gt;=&lt;/code&gt;,
-but also the comparison operator &lt;code&gt;&amp;lt;=&amp;gt;&lt;/code&gt; (evaluates to -1
-if less than, 0 if equal, 1 if greater than).&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_13&#34;&gt;Equality&lt;/h1&gt;
-
-&lt;p&gt;Equality operator is &lt;code&gt;==&lt;/code&gt;, inequality operator is &lt;code&gt;!=&lt;/code&gt;&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_14&#34;&gt;Binary and boolean operations&lt;/h1&gt;
-
-&lt;p&gt;Binary and is &lt;code&gt;&amp;amp;&lt;/code&gt;, xor is &lt;code&gt;^&lt;/code&gt;, or is &lt;code&gt;|&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Logical and is &lt;code&gt;&amp;amp;&amp;amp;&lt;/code&gt;, logical or is &lt;code&gt;||&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_15&#34;&gt;Ternary&lt;/h1&gt;
-
-&lt;p&gt;The ternary operator is &lt;code&gt;?:&lt;/code&gt; as in &lt;code&gt;condition ? ifTrue : ifFalse&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_16&#34;&gt;Assignment&lt;/h1&gt;
-
-&lt;p&gt;The assignment operator is &lt;code&gt;=&lt;/code&gt;, the following variants exist:
-&lt;code&gt;+=&lt;/code&gt;, &lt;code&gt;-=&lt;/code&gt;, &lt;code&gt;*=&lt;/code&gt;, &lt;code&gt;**=&lt;/code&gt;, &lt;code&gt;/=&lt;/code&gt;, &lt;code&gt;&amp;gt;&amp;gt;=&lt;/code&gt;, &lt;code&gt;&amp;lt;&amp;lt;=&lt;/code&gt;, &lt;code&gt;^=&lt;/code&gt;, &lt;code&gt;|=&lt;/code&gt;, &lt;code&gt;&amp;amp;=&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;The declare-assignment operator is &lt;code&gt;:=&lt;/code&gt;. And the declare-property-assignment
-operator is &lt;code&gt;::=&lt;/code&gt;. For more details on these, see the &lt;a href=&#34;/docs/lang/values/#variables&#34;&gt;Variables&lt;/a&gt; and
-&lt;a href=&#34;/docs/lang/classes/#properties&#34;&gt;Properties&lt;/a&gt; pages.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_17&#34;&gt;Double arrow&lt;/h1&gt;
-
-&lt;p&gt;The double arrow operator &lt;code&gt;=&amp;gt;&lt;/code&gt; - it must be overloaded.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_18&#34;&gt;Operator overloading&lt;/h1&gt;
-
-&lt;p&gt;Overloading an operator can be done as a function-like, using the
-&lt;code&gt;operator&lt;/code&gt; keyword:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-operator + (v1, v2: Vec2) -&amp;gt; Vec2 { v1 add(v2) }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;However, if the operator is linked to a type, it&amp;rsquo;s better to declare
-it in the type itself, so that it&amp;rsquo;ll be usable even if the module containing
-the type declaration isn&amp;rsquo;t explicitly imported:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Vec2: class {
-  // other stuff
-
-  operator + (v: This) -&amp;gt; This { add(v) }
+printInts: func (arr: Int*, length: Int) {
+  for (i in 0..length) {
+    &amp;quot;%d&amp;quot; printfln(arr[i])
+  }
 }
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;On the stack&lt;/h2&gt;
+
+&lt;p&gt;Above, we are calling &lt;code&gt;gc_malloc&lt;/code&gt; to allocate a block of GC-managed
+memory on the heap. If for some reason a stack-allocated C array
+is desirable, this syntax will work:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+tenInts: Int[10]
+for (i in 0..10) {
+  tenInts[i] = i
+}
+printInts(tenInts[0]&amp;amp;, 10)
+
+printInts: func (arr: Int*, length: Int) {
+  for (i in 0..length) {
+    &amp;quot;%d&amp;quot; printfln(arr[i])
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;toc_4&#34;&gt;ooc arrays&lt;/h1&gt;
+
+&lt;p&gt;ooc arrays are more convenient / safer than C arrays because they:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;hold the length (number of elements)&lt;/li&gt;
+&lt;li&gt;do bounds checking when accessing / writing to them&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The syntax is as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+tenInts := Int[10] new()
+for (i in 0..10) {
+  tenInts[i] = i
+}
+printInts(tenInts)
+
+printInts: func (arr: Int[]) {
+  for (i in 0..arr length) {
+    &amp;quot;%d&amp;quot; printfln(arr[i])
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;toc_5&#34;&gt;ArrayList&lt;/h1&gt;
+
+&lt;p&gt;ArrayList is not technically part of the language - it is usually available in
+the ooc SDK. Its advantages over ooc arrays are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;you can accept an &lt;code&gt;ArrayList&amp;lt;T&amp;gt;&lt;/code&gt; for any &lt;code&gt;T&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;you can query the &lt;code&gt;T&lt;/code&gt; of an ArrayList (ie. match the type)&lt;/li&gt;
+&lt;li&gt;you can add and remove elements anywhere in the list
+(whereas arrays are fixed-length)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;Array-like usage&lt;/h2&gt;
+
+&lt;p&gt;They can be used with array-like operators:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import structs/ArrayList
+
+tenInts := ArrayList&amp;lt;Int&amp;gt; new()
+for (i in 0..10) {
+  tenInts add(i)
+}
+printInts(tenInts)
+
+printInts: func (list: ArrayList&amp;lt;Int&amp;gt;) {
+  for (i in 0..list size) {
+    &amp;quot;%d&amp;quot; printfln(list[i])
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;Foreach usage&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;printInts&lt;/code&gt; method above can be rewritten using a
+foreach to iterate over the list&amp;rsquo;s elements:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+printInts: func (list: ArrayList&amp;lt;Int&amp;gt;) {
+  for (i in list) {
+    &amp;quot;%d&amp;quot; printfln(i)
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_8&#34;&gt;Iterator usage&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;rsquo;s say we want to remove every odd number from the list.&lt;/p&gt;
+
+&lt;p&gt;Since we are modifying it while iterating through it, the best
+device for that is an iterator:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+removeOdds: func (list: ArrayList&amp;lt;Int&amp;gt;) {
+  iter := list iterator()
+  while (iter hasNext?()) {
+    if (iter next() % 2 == 1) {
+      // removes the element we just got.
+      // NOTE: we are calling it on the iterator,
+      // not on the list itself.
+      iter remove()
+    }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_9&#34;&gt;Generics usage&lt;/h2&gt;
+
+&lt;p&gt;Example usage of &lt;a href=&#34;/docs/lang/generics/&#34;&gt;generics&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import structs/ArrayList
+
+printList(ArrayList&amp;lt;Int&amp;gt; new())
+printList(ArrayList&amp;lt;String&amp;gt; new())
+
+printList: func &amp;lt;T&amp;gt; (list: ArrayList&amp;lt;T&amp;gt;) {
+  &amp;quot;Got a list of %s&amp;quot; printfln(list T name)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In this case, &lt;code&gt;list T&lt;/code&gt; is just a &lt;a href=&#34;/docs/lang/classes/#classes&#34;&gt;class&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_10&#34;&gt;Literals&lt;/h2&gt;
+
+&lt;p&gt;Simple array literals will give ooc arrays:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+tenInts := [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+printInts(tenInts)
+
+printInts: func (arr: Int[]) {
+  for (i in 0..arr length) {
+    &amp;quot;%d&amp;quot; printfln(arr[i])
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Specifying the type the array literal is supposed to be allows
+C array literals:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+tenInts := [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] as Int*
+printInts(tenInts, 10)
+
+printInts: func (arr: Int*, length: Int) {
+  for (i in 0..length) {
+    &amp;quot;%d&amp;quot; printfln(arr[i])
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the same fashion, ArrayList literals exist:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import structs/ArrayList
+
+tenInts := [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] as ArrayList&amp;lt;Int&amp;gt;
+printInts(tenInts)
+
+printInts: func (list: ArrayList&amp;lt;Int&amp;gt;) {
+  for (elem in list) {
+    &amp;quot;%d&amp;quot; printfln(elem)
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;toc_11&#34;&gt;Others&lt;/h1&gt;
+
+&lt;p&gt;The ooc sdk is full of other data structures, such as &lt;code&gt;LinkedList&lt;/code&gt;,
+&lt;code&gt;HashMap&lt;/code&gt; (an dictionary associating keys and values), etc.&lt;/p&gt;
+
+&lt;p&gt;For more information, read up on the &lt;a href=&#34;/docs/sdk/structs/&#34;&gt;structs package&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Modules</title>
+      <link>http://oocmanual.cogneco.com/language/modules</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/language/modules</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Modules&lt;/h1&gt;
+
+&lt;p&gt;Any &lt;code&gt;.ooc&lt;/code&gt; file is a module. Modules are organized in packages, relative
+to source path elements.&lt;/p&gt;
+
+&lt;p&gt;For example, for the following directory structure:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;source
+|-- czmq
+|   `-- extras
+|       `-- PipeSink.ooc
+`-- czmq.ooc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We have two modules, and their fully qualified names are &lt;code&gt;czmq&lt;/code&gt; and &lt;code&gt;czmq/extras/PipeSink&lt;/code&gt;.
+We&amp;rsquo;ll say that the &lt;code&gt;czmq&lt;/code&gt; module is in the root package, and that the &lt;code&gt;PipeSink&lt;/code&gt; module is
+in the &lt;code&gt;czmq/extras&lt;/code&gt; package.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Import&lt;/h2&gt;
+
+&lt;p&gt;The example modules above can be imported like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import czmq
+import czmq/extras/PipeSink
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or, on one single line:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import czmq, czmq/extras/PipeSink
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Import paths can be relative, so when in the &lt;code&gt;czmq.ooc&lt;/code&gt; module, one can import
+with the full path, &lt;code&gt;czmq/extras/PipeSink&lt;/code&gt;, or with the relative path, &lt;code&gt;extras/PipeSink&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Similarly, inside PipeSink, one could import another extra via &lt;code&gt;../KitchenSink&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;When importing several modules from the same package, one can use the multi-import
+syntax:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import os/[Process, Terminal, Env]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;By default, symbols imported another module are available in the global scope.  To import the symbols into a namespace, use &lt;code&gt;into&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import czmq/extras/PipeSink into PipeSink
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;toc_2&#34;&gt;Non-modules&lt;/h1&gt;
+
+&lt;p&gt;Other files may be involved in the compilation process, especially when using
+C libraries. Dynamic libraries and header paths will typically be specified
+in a &lt;a href=&#34;/docs/tools/rock/usefiles/&#34;&gt;usefile&lt;/a&gt;, whereas C headers can be directly included in .ooc files&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Include&lt;/h2&gt;
+
+&lt;p&gt;To include a standard header ssuch as &lt;code&gt;stdio.h&lt;/code&gt;, one can do:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+include stdio, stdlib
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note the absence of &lt;code&gt;.h&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Include with defines&lt;/h2&gt;
+
+&lt;p&gt;Some C header files&amp;rsquo; behaviour vary depending on what&amp;rsquo;s defined when including
+them. For example, to use functions such as &lt;code&gt;GetSystemInfo&lt;/code&gt; or &lt;code&gt;GetComputerNameEx&lt;/code&gt;
+from the Windows API, one needs to define a &lt;code&gt;_WIN32_WINNT&lt;/code&gt; constant to be equal
+or greater than &lt;code&gt;0x0500&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The following syntax achieves exactly this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+include windows | (_WIN32_WINNT=0x0500)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Relative include&lt;/h2&gt;
+
+&lt;p&gt;It might also be useful to include a header file bundled with an ooc library.
+Prefixing the path with &lt;code&gt;./&lt;/code&gt; will do just that:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+include ./stb-image
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The header file will get copied in the output directory with the other
+generated C files.&lt;/p&gt;
+
+&lt;p&gt;For a good example of relative import, and using additionals in &lt;a href=&#34;/docs/tools/rock/usefiles/&#34;&gt;usefiles&lt;/a&gt;,
+see the &lt;a href=&#34;https://github.com/nddrylliog/ooc-stb-image&#34;&gt;ooc-stb-image&lt;/a&gt; library.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Properties</title>
+      <link>http://oocmanual.cogneco.com/language/properties</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/language/properties</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Intro&lt;/h1&gt;
+
+&lt;p&gt;Properties are a handy way to get rid of getters and setters while retaining
+their advantages.&lt;/p&gt;
+
+&lt;p&gt;The justification for getters and setters, beyond relieving feelings of guilt
+for not being able to correctly apply object-oriented principles such as
+encapsulation, is to allow for computation to happen when a value is retrieved
+and/or set (besides the actual memory read/write).&lt;/p&gt;
+
+&lt;p&gt;However, this results in long-winded and hard-on-the-eyes code such as this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    setX(getX() + 1)
+    setY(getY() + 2)
+    setZ(getZ() + 3)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;When one come simply write, with regular variables&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    (x, y, z) += (1, 2, 3)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Which is much easier on the eyes.
+(Read on &amp;lsquo;tuples&amp;rsquo; for more information about multi-declaration / multi-assignment)&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;A dumb property&lt;/h1&gt;
+
+&lt;p&gt;Turning a regular variable declaration into a property is as simple
+as adding a pair of brackets {} after it.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Tree: class {
+        age: Int {}
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;At this point, &amp;lsquo;age&amp;rsquo; behaves exactly as a variable, except that instead
+of direct memory read/write, it&amp;rsquo;s now modified via automatically-generated
+getters and setters.&lt;/p&gt;
+
+&lt;p&gt;The above code is also equivalent to:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Tree: class {
+        age: Int { get set }
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or, if you prefer:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Tree: class {
+        age: Int {
+            get
+            set
+        }
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;toc_2&#34;&gt;Hooking on get and set&lt;/h1&gt;
+
+&lt;p&gt;There&amp;rsquo;s more to it. get and set can have a body, much like methods, except
+without specifying argument types or return types.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Tree: class {
+        age: Int {
+            get
+            set (newAge) {
+                if(newAge &amp;gt; 0) age = newAge
+            }
+        }
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In this example, validation is done within the property setter.
+It could be used to validate state transitions for a finite state machine,
+for example.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_3&#34;&gt;Virtual properties&lt;/h1&gt;
+
+&lt;p&gt;In the previous sections, we thought of properties as &amp;lsquo;variable declarations
+on steroids&amp;rsquo;. This is not exactly true. A property can exist without any
+variable of the same name existing.&lt;/p&gt;
+
+&lt;p&gt;For our tree class, we might define an &amp;lsquo;old&amp;rsquo; property that is computed from
+its &amp;lsquo;age&amp;rsquo; property.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    old: Bool {
+        get {
+            age &amp;gt; 100
+        }
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;NOTE: using undocumented &amp;lsquo;magic numbers&amp;rsquo; in code is bad practice: don&amp;rsquo;t do it.
+Use constants with meaningful names instead - or better yet, make it configurable.&lt;/p&gt;
+
+&lt;p&gt;Here, there is no real variable named &amp;lsquo;old&amp;rsquo; that can be modified. Only a read-only
+property that is computed on-demand. Note that virtual properties can have setters
+too.&lt;/p&gt;
+
+&lt;p&gt;Which leads us to the following definition: virtual properties are properties
+with custom getters and setters that don&amp;rsquo;t reference the name of the property.&lt;/p&gt;
+
+&lt;p&gt;In our case, when we define get, we don&amp;rsquo;t access &amp;lsquo;old&amp;rsquo;, which makes it a virtual
+property.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_4&#34;&gt;Foreign function interfacing&lt;/h1&gt;
+
+&lt;p&gt;Properties setters and getters can be extern functions (ie. functions defined
+outside ooc code). Let&amp;rsquo;s take an example for a well-known GTK widget:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    use gtk
+    import gtk/[Gtk, Widget]
+
+    Label: cover from GtkLabel* extends Widget {
+        new: extern(gtk_label_new) static func (text: GChar*) -&amp;gt; This
+
+        text: GChar* {
+            set: extern(gtk_label_set_text)
+            get: extern(gtk_label_get_text)
+        }
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once again, properties make code more readable and more straight-forward
+to write.&lt;/p&gt;
 </description>
     </item>
     

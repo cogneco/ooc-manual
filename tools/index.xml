@@ -10,240 +10,347 @@
     <updated>Tue, 01 Jan 2008 00:00:00 UTC</updated>
     
     <item>
-      <title>Use-files 2</title>
-      <link>http://oocmanual.cogneco.com/tools/rock/use-files2</link>
+      <title>Basic Usage</title>
+      <link>http://oocmanual.cogneco.com/tools/rock/basic</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/tools/rock/use-files2</guid>
+      <guid>http://oocmanual.cogneco.com/tools/rock/basic</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;Use files&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;Using rock, the basic way&lt;/h1&gt;
 
-&lt;h2 id=&#34;toc_1&#34;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;If you have a usefile, calling rock is pretty easy:&lt;/p&gt;
 
-&lt;p&gt;Use files specify the C and ooc dependencies of a library, along
-with some basic info like its name, description.&lt;/p&gt;
-
-&lt;p&gt;They are useful for package managers (see &lt;a href=&#34;https://github.com/nddrylliog/sam&#34;&gt;sam&lt;/a&gt;),
-but also for the rock compile, to import required ooc libraries, and
-to know which flags and libraries to pass to the C compiler.&lt;/p&gt;
-
-&lt;p&gt;A few well-written .use files make using libraries very easy,
-without having to worry about writing a Makefile of some sort, and
-it makes compiling programs on various platforms a no-brainer.&lt;/p&gt;
-
-&lt;p&gt;.use files are generally located at the root of an ooc app or library.&lt;/p&gt;
-
-&lt;p&gt;For a language binding, the tree structure is usually:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ooc-gtk
-  README.md
-  gtk.use
-  source
-    gtk
-  samples
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;For a pure ooc library or application, the tree structure is usually:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;deadlogger
-  README.md
-  deadlogger.use
-  source
-    deadlogger
-  samples
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Libs search path&lt;/h2&gt;
-
-&lt;p&gt;Using a third-party ooc library is as easy as doing &lt;code&gt;use library&lt;/code&gt; in an .ooc file&lt;/p&gt;
-
-&lt;p&gt;When doing so, the ooc compiler will look for a &lt;code&gt;library.use&lt;/code&gt; file in your lib folders.&lt;/p&gt;
-
-&lt;p&gt;The &lt;code&gt;$OOC_LIBS&lt;/code&gt; environment variable defines the lib folders, separated by &lt;code&gt;:&lt;/code&gt; on *nix,
-and &amp;lsquo;;&amp;rsquo; on Windows.&lt;/p&gt;
-
-&lt;p&gt;A simple setup is to have all your ooc libraries sitting in the same folder, for example
-&lt;code&gt;$HOME/Dev/&lt;/code&gt;, with the following structure:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;someproject
-  someproject.use
-ooc-gtk
-  gtk.use
+&lt;pre&gt;&lt;code&gt;#!bash
 rock
-  rock.use
-  sdk.use
-  math.use
-  pcre.use
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Note that the standard ooc sdk is a library like any other - it has a .use file with
-standard directives as defined below.&lt;/p&gt;
+&lt;p&gt;will look for usefiles in your current directory and, if possible, build them.&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_3&#34;&gt;Syntax&lt;/h2&gt;
+&lt;p&gt;Since the world is not always perfect, it&amp;rsquo;s also possible to pass an &lt;code&gt;.ooc&lt;/code&gt; file directly:&lt;/p&gt;
 
-&lt;p&gt;The file is composed of key-value pairs, formatted like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Key1: Value1
-Key2: Value2
+&lt;pre&gt;&lt;code&gt;#!bash
+rock mmorpg.ooc
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Whitespace around the colon &lt;code&gt;:&lt;/code&gt; doesn&amp;rsquo;t matter. For keys that accept multiple
-directives like &lt;code&gt;Libs&lt;/code&gt; or &lt;code&gt;IncludePaths&lt;/code&gt;, values should be separated by commas
-(and whitespace is accepted).&lt;/p&gt;
+&lt;p&gt;Sadly, it&amp;rsquo;s possible that rock thinks your ooc code is alright and passes the C files to your
+C compiler which then prints pages of errors and explodes subsequently.
+In that case, you&amp;rsquo;ll need to increase rock&amp;rsquo;s verbosity to see the compiler output:&lt;/p&gt;
 
-&lt;p&gt;For example, this is wrong:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Libs: -lGLU -lGL
+&lt;pre&gt;&lt;code&gt;#!bash
+rock -v ...
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;And this is right:&lt;/p&gt;
+&lt;p&gt;Building an executable and tired of typing &lt;code&gt;./mmorpg&lt;/code&gt; all over again?&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;Libs: -lGLU, -lGL
+&lt;pre&gt;&lt;code&gt;#!bash
+rock -r ...
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;toc_4&#34;&gt;Versioning&lt;/h2&gt;
+&lt;p&gt;will run your executable after having built it successfully.&lt;/p&gt;
 
-&lt;p&gt;A use file might be versioned using version blocks, however, only some directives
-are valid in a version block.&lt;/p&gt;
+&lt;p&gt;To speed up the compilation process and to save you some time, rock caches compiled dependencies
+in a hidden subdirectory called &lt;code&gt;.libs&lt;/code&gt;. In most cases, this is awesome, but sometimes, something
+goes wrong and you get pretty strange unexplainable error messages. Just to be sure, you can just&lt;/p&gt;
 
-&lt;p&gt;Here&amp;rsquo;s an example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Name: SDL 2.0 OpenGL support
-
-version (linux) {
-  Libs: -lGL
-}
-
-version (apple) {
-  Frameworks: Carbon, OpenGL
-}
+&lt;pre&gt;&lt;code&gt;#!bash
+rock -x
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Version blocks have the same syntax as in .ooc files. For more details, see the
-version chapter.&lt;/p&gt;
+&lt;p&gt;then, recompile and see if it works.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Rock</title>
+      <link>http://oocmanual.cogneco.com/tools/rock</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/tools/rock</guid>
+      <description>
 
-&lt;h2 id=&#34;toc_5&#34;&gt;Top-level directives&lt;/h2&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;About Rock&lt;/h1&gt;
 
-&lt;p&gt;Those directives cannot be versioned and must appear at the top level of
-a use file.&lt;/p&gt;
+&lt;p&gt;Rock is the main ooc compiler. It parses ooc files using nagaqueen, does some
+checking and inference, produces .c files, and then drives the C compilation process
+to produce either an executable or a library.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;# Short description
-Name: llama
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/basic/&#34;&gt;Basic usage&lt;/a&gt; section explains how to quickly get
+up and running, using rock to compile ooc projects.&lt;/p&gt;&lt;/li&gt;
 
-# Longer description
-Description: A lib to deal with llamas
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/drivers/&#34;&gt;Drivers&lt;/a&gt; section gives an overview of rock&amp;rsquo;s various
+drivers, akin to compiling strategies, like the sequence driver (default), the make
+driver, and the android driver.&lt;/p&gt;&lt;/li&gt;
 
-# The version of the library
-Version: 0.1.3
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/advanced/&#34;&gt;Advanced usage&lt;/a&gt; section covers some less-often used
+options like using a different C compiler, keeping source files, etc.&lt;/p&gt;&lt;/li&gt;
 
-# Modules that are automatically imported when &#39;use&#39;-ing this library
-Imports: llama/beast, llama/human
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/usefiles/&#34;&gt;Usefiles&lt;/a&gt; section describes the format of &lt;code&gt;.use&lt;/code&gt; files,
+which define the characteristics of an ooc app or library.&lt;/p&gt;&lt;/li&gt;
 
-# For programs, the main ooc file to compile when rock is called without arguments
-Main: llama/program
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/gc/&#34;&gt;Garbage Collection&lt;/a&gt; section talks about the Garbage Collection
+strategy in rock, how to make sure things work well on different plaforms, how the
+Boehm GC is bundled, etc.&lt;/p&gt;&lt;/li&gt;
 
-# This will be added to the list of folders the ooc compiler looks for .ooc files
-SourcePath: source
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/debug/&#34;&gt;Debugging&lt;/a&gt; section talks about what to do when a program
+doesn&amp;rsquo;t behave correctly. Debug symbols, stack traces, debugging on particularly painful
+platforms like Windows.&lt;/p&gt;&lt;/li&gt;
 
-# Dependencies - the &#39;use&#39; of .use files
-Requires: spit
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/packaging/&#34;&gt;Packaging&lt;/a&gt; section talks about releasing standalone
+applications coded in ooc, such as games — when you don&amp;rsquo;t want to have users install
+dependencies on their own, but would rather bundle everything together.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Tools</title>
+      <link>http://oocmanual.cogneco.com/tools</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/tools</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Frequently used ooc tools&lt;/h1&gt;
+
+&lt;p&gt;There are some tools you should know about when you start looking into ooc.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;rock&#34;&gt;Rock&lt;/a&gt; is the ooc compiler. In most cases,
+you will use it to generate C sources and executables from your ooc sources.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;sam&#34;&gt;Sam&lt;/a&gt; helps you to keep all your libraries together and up-to-date.
+It&amp;rsquo;s also able to resolve dependencies without any hassle.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;editors&#34;&gt;Editors&lt;/a&gt; - describes how to get syntax highlighting,
+program checking, indentation in vim, emacs, TextMate?&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Tools like autoconf, automake, even CMake, are irrelevant in the context of
+ooc, since rock drives the whole compilation process.&lt;/p&gt;
+
+&lt;p&gt;ooc libraries have one, standardized way to be built - as such, the ooc ecosystem
+is a lot more homogenous than, say, the C ecosystem. Complexity is dealt with
+through &lt;a href=&#34;rock/usefiles&#34;&gt;use files&lt;/a&gt; and the such.&lt;/p&gt;
+
+&lt;p&gt;Still, the ooc toolchain is quite flexible, working on major desktop OSes, and
+more constrained platform such as Android.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Drivers</title>
+      <link>http://oocmanual.cogneco.com/tools/rock/drivers</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/tools/rock/drivers</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Compilation strategy&lt;/h1&gt;
+
+&lt;p&gt;Unlike other compilers, rock takes care of building whole projects at
+a time, not just single modules. However, how much you want to let up
+to rock is your choice, thanks to different &lt;code&gt;drivers&lt;/code&gt;, or compilation strategies.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;Sequence driver&lt;/h1&gt;
+
+&lt;p&gt;This is the default driver. It&amp;rsquo;ll parse all relevant .ooc files, generate
+C files, and call the C compiler to produce object files, then link the result.&lt;/p&gt;
+
+&lt;p&gt;It can be customized using the following options:&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Parsing only&lt;/h2&gt;
+
+&lt;p&gt;If you only want rock to make sure there are no syntax errors, using
+the &lt;code&gt;--onlyparse&lt;/code&gt; option will work.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Checking only&lt;/h2&gt;
+
+&lt;p&gt;If you want rock to parse and make sure that the code is correct ooc
+(e.g. types correspond, all functions calls have corresponding definitions,
+etc.), the &lt;code&gt;--onlycheck&lt;/code&gt; option will do that.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Generation only&lt;/h2&gt;
+
+&lt;p&gt;If you just want rock to generate C files to look at what is being done
+under the hood, the &lt;code&gt;--onlygen&lt;/code&gt; option can be used. They will be output
+in the &lt;code&gt;rock_tmp&lt;/code&gt; (for .c files) and &lt;code&gt;.libs&lt;/code&gt; (for header files) folders by default.&lt;/p&gt;
+
+&lt;p&gt;If the goal is to tinker with the&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Parallelism&lt;/h2&gt;
+
+&lt;p&gt;By default, rock will attempt to max out your processors by launching C
+compiler jobs in parallel. One can adjust the level of parallelism by
+specifying &lt;code&gt;-jN&lt;/code&gt; to rock, where &lt;code&gt;N&lt;/code&gt; is an int. To completely disable
+parallelism (ie. behave in a purely sequential way), pass &lt;code&gt;-j0&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;Lib-caching&lt;/h2&gt;
+
+&lt;p&gt;Lib-caching is very convenient, yet at the same time it can cause unforeseen
+issues. The basic idea is that, between two compilations, only a portion of
+generated C code is affected by the changes, there is no reason to recompile
+what hasn&amp;rsquo;t changed.&lt;/p&gt;
+
+&lt;p&gt;It is active by default, which means that even though the first compilation
+might take some time, subsequent compilations will be shorter. If a compilation
+seems to fail because of the remainder of previous compilations, running &lt;code&gt;rock -x&lt;/code&gt;
+should fix it up.&lt;/p&gt;
+
+&lt;p&gt;To temporarily disable lib-caching, one can use the &lt;code&gt;--nolibcache&lt;/code&gt; compiler
+option.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_7&#34;&gt;Make driver&lt;/h1&gt;
+
+&lt;p&gt;The make driver is particularly useful when an ooc project is to be compiled
+on another platform lacking the ooc toolchain (for example, when bootstrapping
+rock), or when one wants to modify the C output of rock and recompile afterwards.&lt;/p&gt;
+
+&lt;p&gt;By using &lt;code&gt;--driver=make&lt;/code&gt;, the compile process looks something like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+# In project directory
+rock --driver=make
+cd build/
+make
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;toc_6&#34;&gt;Basic directives&lt;/h2&gt;
+&lt;p&gt;The &lt;code&gt;build&lt;/code&gt; directory which is generated and populated with C files and a
+stand-alone Makefile, can be packaged and distributed on other platforms.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;# gcc&#39;s -I
-IncludePaths: /some/weird/place/include
+&lt;p&gt;Note that the &lt;code&gt;$GC_PATH&lt;/code&gt; environment variable might need to be adjusted for
+the exported sources to build somewhere else. It could be as simple as
+installing the Boehm GC in &lt;code&gt;/usr&lt;/code&gt; and setting &lt;code&gt;GC_PATH&lt;/code&gt; to &lt;code&gt;-lgc&lt;/code&gt;.&lt;/p&gt;
 
-# will be included in all files using this .use file
-Includes: someheader.h, someother.h
+&lt;p&gt;One can use &lt;code&gt;make clean&lt;/code&gt; to clean the produced objects and binaries. Modifying
+sources and partial recompilation is possible. Make accepts parallelism options
+similar to rock, e.g. with 8 cores, one might want to use &lt;code&gt;make -j7&lt;/code&gt;.&lt;/p&gt;
 
-# gcc&#39;s -L
-LibPaths: /some/weird/place/include
+&lt;h1 id=&#34;toc_8&#34;&gt;Android driver&lt;/h1&gt;
 
-# will be linked with the final executable
-Libs: -lsomething, -lotherthing
+&lt;p&gt;In spirit, the Android driver (invoked with &lt;code&gt;--driver=android&lt;/code&gt;) is similar to
+the make driver, excepts that instead of generating Makefiles, it will generate
+&lt;code&gt;Android.mk&lt;/code&gt; files, suitable for usage with the &lt;code&gt;ndk-build&lt;/code&gt; utility from the
+Android NDK toolchain.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Garbage Collection</title>
+      <link>http://oocmanual.cogneco.com/tools/rock/gc</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/tools/rock/gc</guid>
+      <description>
 
-# additional .c files to compile and link into the library/executable
-Additionals: source/somefile.c
+&lt;h1 id=&#34;toc_0&#34;&gt;Garbage Collection in rock&lt;/h1&gt;
+
+&lt;p&gt;rock uses the &lt;a href=&#34;http://www.hpl.hp.com/personal/Hans_Boehm/gc/&#34;&gt;Boehm GC&lt;/a&gt;. It is a conservative garbage collector that
+tends to play well with C libraries, hence the choice for a &amp;ldquo;compile-to-C&amp;rdquo;
+implementation of ooc.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Distribution&lt;/h2&gt;
+
+&lt;p&gt;The Boehm GC (along with &lt;code&gt;lib_atomic_ops&lt;/code&gt;) is vendored in rock&amp;rsquo;s repository,
+under &lt;code&gt;libs/&lt;/code&gt;. When building the compiler, rock&amp;rsquo;s Makefile will check for an
+installed GC version and, if absent, it will compile its own.&lt;/p&gt;
+
+&lt;p&gt;Depending on your platform, the static version of the library compiled when
+building rock might be in the following places:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;* Linux: `rock/libs/linux32` or `rock/libs/linux64`, as `libgc.a`
+* OSX: `rock/libs/osx`
+* Windows: `rock/libs/win32`
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;toc_7&#34;&gt;pkg-config packages&lt;/h2&gt;
+&lt;p&gt;By default, rock links statically with the GC. However, for multithreaded
+applications on Windows, that might not be such a good idea. Read on for
+more details.&lt;/p&gt;
 
-&lt;p&gt;For many packages, there is already a pkg-config &lt;code&gt;.pc&lt;/code&gt; file with the information
-needed to make it compile right. What&amp;rsquo;s more, that file is often customized depending
-on what system you install the library on, which makes version blocks unnecessary.&lt;/p&gt;
+&lt;h2 id=&#34;toc_2&#34;&gt;Threads&lt;/h2&gt;
 
-&lt;p&gt;Whenever a package has a pkg-config file, it is imperative to use &lt;code&gt;Pkgs&lt;/code&gt; instead
-of specifying manually &lt;code&gt;IncludePaths&lt;/code&gt;, &lt;code&gt;Includes&lt;/code&gt;, &lt;code&gt;LibPaths&lt;/code&gt;, and &lt;code&gt;Libs&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;On Windows, for the GC to work correctly, it has to be linked dynamically,
+not statically. At some point, rock should handle that case itself, but for
+now here&amp;rsquo;s what you have to do.&lt;/p&gt;
 
-&lt;p&gt;For example, the &lt;code&gt;cairo.use&lt;/code&gt; file would probably contain:&lt;/p&gt;
+&lt;p&gt;The first step is to build your own copy of the GC. Thanks to &lt;a href=&#34;https://github.com/nddrylliog/winbrew&#34;&gt;winbrew&lt;/a&gt;,
+that is as easy as doing &lt;code&gt;brew install bdw-gc&lt;/code&gt;.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;Pkgs: cairo
+&lt;p&gt;You should now have Boehm-GC-related files in both &lt;code&gt;/usr/local/lib&lt;/code&gt; and
+&lt;code&gt;/usr/local/bin&lt;/code&gt; (&lt;code&gt;/usr/local&lt;/code&gt; being mapped to a Windows path like &lt;code&gt;C:\MinGW\msys\1.0\local&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;To make rock use that version, simply do:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rock --gc=dynamic -I/usr/local/include -L/usr/local/lib
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;toc_8&#34;&gt;pkg-config-like utilities&lt;/h2&gt;
+&lt;p&gt;&amp;hellip;and when distributing applications, include &lt;code&gt;libgc-1.dll&lt;/code&gt; with it. See the &lt;a href=&#34;/docs/tools/rock/packaging/&#34;&gt;Packaging&lt;/a&gt;
+chapter for more details.&lt;/p&gt;
 
-&lt;p&gt;Sometimes, libraries ship with pkg-config-like utilities. &lt;code&gt;imlib2-config&lt;/code&gt;,
-&lt;code&gt;sdl2-config&lt;/code&gt;, &lt;code&gt;llvm-config&lt;/code&gt;. Those are often used similarly as pkg-config,
-except without specifying a package.&lt;/p&gt;
+&lt;p&gt;Linking dynamically with the GC on other platforms is as simple as using &lt;code&gt;--gc=dynamic&lt;/code&gt; - the
+&lt;code&gt;-I&lt;/code&gt; and &lt;code&gt;-L&lt;/code&gt; options above are just to add include paths and library paths, since homebrew installs
+libraries in its own prefix.&lt;/p&gt;
 
-&lt;p&gt;When this is the case, a simple form of &lt;code&gt;CustomPkg&lt;/code&gt; does the trick:&lt;/p&gt;
+&lt;h2 id=&#34;toc_3&#34;&gt;Disabling the GC&lt;/h2&gt;
 
-&lt;pre&gt;&lt;code&gt;CustomPkg: sdl2-config
+&lt;p&gt;One can prevent rock from linking with the GC with the command line option &lt;code&gt;--gc=off&lt;/code&gt;. Keep in mind
+that the SDK was written with the GC in mind though.&lt;/p&gt;
+
+&lt;p&gt;When the GC is disabled, &lt;code&gt;version(gc)&lt;/code&gt; block will get discarded, and &lt;code&gt;version(!gc)&lt;/code&gt; blocks will be
+used. You can use this to write both GC and non-GC friendly code.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Advanced Usage</title>
+      <link>http://oocmanual.cogneco.com/tools/rock/advanced</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/tools/rock/advanced</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Using more Rock options&lt;/h1&gt;
+
+&lt;p&gt;Often, rock does the right thing by itself, but if it doesn&amp;rsquo;t, you can use some of these more
+advanced options and flags.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;Keep the C sources&lt;/h1&gt;
+
+&lt;p&gt;If rock somehow generates invalid C code and you want to know why, it can be helpful to actually
+take a look at all the C. Normally, rock deletes everything it has generated at exit, but you can
+tell rock to keep the sources for you:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+rock --noclean ...
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;However, others have more complex options. For those, the full power of
-&lt;code&gt;CustomPkg&lt;/code&gt; is required, with 4 arguments:&lt;/p&gt;
+&lt;p&gt;Afterwards, you&amp;rsquo;ll find the C source files in corresponding subdirectories of &lt;code&gt;rock_tmp&lt;/code&gt;. The header
+files reside in &lt;code&gt;.libs&lt;/code&gt;.&lt;/p&gt;
 
-&lt;ul&gt;
-&lt;li&gt;The name of the utility to run&lt;/li&gt;
-&lt;li&gt;A list of arguments space-separated, always passed to the utility&lt;/li&gt;
-&lt;li&gt;Equivalent to pkg-config &lt;code&gt;--cflags&lt;/code&gt; option&lt;/li&gt;
-&lt;li&gt;Equivalent to pkg-config &lt;code&gt;--libs&lt;/code&gt; option&lt;/li&gt;
-&lt;/ul&gt;
+&lt;h1 id=&#34;toc_2&#34;&gt;More information&lt;/h1&gt;
 
-&lt;p&gt;For llvm-config, this boils down to:&lt;/p&gt;
+&lt;p&gt;Also useful in these cases: Let rock tell its story of compilation. That means: print everything about
+all stages of symbol resolution and code generation. Invoke rock with:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;CustomPkg: llvm-config, core executionengine jit, --cflags, --libs --ldflags
+&lt;pre&gt;&lt;code&gt;#!bash
+rock -vv ...
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;toc_9&#34;&gt;Custom linkers&lt;/h2&gt;
+&lt;h1 id=&#34;toc_3&#34;&gt;Ditch gcc for your compiler of choice&lt;/h1&gt;
 
-&lt;p&gt;Some C++ libraries will required a C++ linker in order to work. LLVM does.&lt;/p&gt;
+&lt;p&gt;Since gcc is the evergreen of compilers, rock uses it by default. In case you want to use something else
+to turn your C sources into machine code, rock provides you with some alternatives:&lt;/p&gt;
 
-&lt;p&gt;Hence, the &lt;code&gt;Linker&lt;/code&gt; directive:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Linker: g++
+&lt;pre&gt;&lt;code&gt;#!bash
+rock --gcc # if you change your mind
+rock --tcc # the tiny c compiler
+rock --icc # the intel c compiler
+rock --clang # llvm&#39;s clang
+rock --onlygen # no compiler
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Otherwise, the ooc compiler uses the same linker as your specified C compiler.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_10&#34;&gt;OSX-specific directives&lt;/h2&gt;
-
-&lt;p&gt;OSX has some libraries packaged in &lt;code&gt;frameworks&lt;/code&gt; instead of unix-y libs. For example,
-on OSX, &lt;code&gt;-lGL&lt;/code&gt; doesn&amp;rsquo;t exist. For those cases, the &lt;code&gt;Frameworks&lt;/code&gt; directive can be used:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Frameworks: Carbon, OpenGL
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This directive has no effect on other platforms, even outside version blocks.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_11&#34;&gt;Android-specific directives&lt;/h2&gt;
-
-&lt;p&gt;The android build process has some intricacies, which is why .use files can contain
-android-specific directives:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;AndroidLibs: SDL2
-AndroidIncludes: ../SDL/
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;These really depend on the setup of your android project but it makes sense.&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;AndroidLibs&lt;/code&gt; are mk dependencies that need to be built, and &lt;code&gt;AndroidIncludes&lt;/code&gt; are
-include paths, relative to the subfolder of your app/library.&lt;/p&gt;
-
-&lt;p&gt;These directives have no effect on other platforms, even outside version blocks.&lt;/p&gt;
+&lt;p&gt;The latter is especially useful if you want to compile your C code to assembler by hand.&lt;/p&gt;
 </description>
     </item>
     
@@ -638,604 +745,6 @@ a little smaller.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;zip -r foo-1.0-linux.tar.zip foo-1.0-linux
 &lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Editors</title>
-      <link>http://oocmanual.cogneco.com/tools/editors</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/tools/editors</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;ooc support in text editors&lt;/h1&gt;
-
-&lt;p&gt;ooc has a varying level of support among different text editors.&lt;/p&gt;
-
-&lt;p&gt;Read on to find if your favourite flavor is supported. If you add
-support for a new editor, please open an issue on the &lt;a href=&#34;https://github.com/nddrylliog/ooc-lang.org&#34;&gt;ooc-lang.org repo&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;vim&lt;/h1&gt;
-
-&lt;p&gt;ooc support for vim is provided by the &lt;a href=&#34;https://github.com/nddrylliog/ooc.vim&#34;&gt;ooc.vim&lt;/a&gt; plug-in. It provides:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Syntax highlighting&lt;/li&gt;
-&lt;li&gt;Indentation support&lt;/li&gt;
-&lt;li&gt;A syntastic plug-in for use with &lt;a href=&#34;https://github.com/nddrylliog/sam&#34;&gt;sam&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;:make&lt;/code&gt; command support (launches &lt;code&gt;rock -v&lt;/code&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;You can read more at the &lt;a href=&#34;https://github.com/nddrylliog/ooc.vim&#34;&gt;project repository&lt;/a&gt;&amp;rsquo;s page.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_2&#34;&gt;emacs&lt;/h1&gt;
-
-&lt;p&gt;ooc support for emacs is provided by &lt;a href=&#34;https://github.com/nixeagle/ooc-mode&#34;&gt;ooc-mode&lt;/a&gt;. It provides:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Syntax highlighting&lt;/li&gt;
-&lt;li&gt;Indentation support&lt;/li&gt;
-&lt;li&gt;On the fly syntax check with flymake-ooc&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&#34;toc_3&#34;&gt;TextMate&lt;/h1&gt;
-
-&lt;p&gt;ooc support for TextMate is provided by &lt;a href=&#34;https://github.com/nilium/ooc.tmbundle&#34;&gt;ooc.tmbundle&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_4&#34;&gt;Atom&lt;/h1&gt;
-
-&lt;p&gt;The &lt;a href=&#34;https://atom.io/&#34;&gt;Atom editor&lt;/a&gt; can use converted TextMate bundles.&lt;/p&gt;
-
-&lt;p&gt;You can easily convert &lt;a href=&#34;https://github.com/nilium/ooc.tmbundle&#34;&gt;ooc.tmbundle&lt;/a&gt; for your own usage, like so:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;apm init --package ~/.atom/packages/language-ooc --convert https://github.com/nilium/ooc.tmbundle
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You might need to restart Atom to see the changes.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_5&#34;&gt;Brackets&lt;/h1&gt;
-
-&lt;p&gt;The &lt;a href=&#34;http://brackets.io/&#34;&gt;Brackets editor&lt;/a&gt; now has an extension for ooc syntax highlighting.
-It can be installed from the Extensions Manager by searching for &lt;code&gt;ooc syntax&lt;/code&gt;.
-The source is available &lt;a href=&#34;https://github.com/nddrylliog/brackets-ooc&#34;&gt;on GitHub&lt;/a&gt;&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_6&#34;&gt;gtksourceview&lt;/h1&gt;
-
-&lt;p&gt;gtksourceview-based tools such as gedit, meld, etc. have
-ooc support out of the box.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_7&#34;&gt;pygments&lt;/h1&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://pygments.org/&#34;&gt;pygments&lt;/a&gt; has relatively good ooc support built-in. It is a python
-solution for syntax highlighting used on GitHub and easy to integrate with
-static website generators such as &lt;a href=&#34;http://nanoc.ws/&#34;&gt;nanoc&lt;/a&gt;.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Sam</title>
-      <link>http://oocmanual.cogneco.com/tools/sam</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/tools/sam</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;About sam&lt;/h1&gt;
-
-&lt;p&gt;sam is a minimal package and dependency manager for ooc projects. It operates
-similarly to &lt;a href=&#34;https://brew.sh&#34;&gt;homebrew&lt;/a&gt; for OS X, but in a much more minimal way.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;Installation&lt;/h1&gt;
-
-&lt;p&gt;To use sam, apart from a working &lt;a href=&#34;/docs/tools/rock/&#34;&gt;rock&lt;/a&gt;, you need &lt;a href=&#34;http://git-scm.com/&#34;&gt;git&lt;/a&gt;.
-Also, you have to create a special directory that is writable for you, which will
-later contain all ooc packages cloned from their git repositories. This directory
-is called the ooc library path &amp;ndash; you also have to specify its location in the special
-&lt;code&gt;OOC_LIBS&lt;/code&gt; environment variable. On most unixes, you can do that like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-mkdir ~/development/ooc
-export OOC_LIBS=~/development/ooc
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;As a first step, you can use git to clone sam itself. You should clone sam into
-a subdirectory of the newly created directory. Since sam does not have any dependencies
-apart from rock, you can just go ahead and compile it &lt;a href=&#34;/docs/tools/rock/usefiles/&#34;&gt;from the usefile&lt;/a&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-cd $OOC_LIBS
-git clone https://github.com/nddrylliog/sam.git
-cd sam/
-rock -v
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This should proeduce a &lt;code&gt;sam&lt;/code&gt; executable. Just add it to the path:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-export PATH=$PATH:$OOC_LIBS/sam
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You should now be able to invoke sam just by typing&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-sam
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_2&#34;&gt;Concepts&lt;/h1&gt;
-
-&lt;p&gt;All ooc projects known to mankind are hosted on github. Therefore, building a
-package manager, it makes sense to focus on git as the primary way of code
-distribution.&lt;/p&gt;
-
-&lt;p&gt;In general, sam consists of a simple executable and a collection of package files:
-It keeps a &lt;a href=&#34;https://github.com/nddrylliog/sam/tree/master/library&#34;&gt;grimoire&lt;/a&gt; of
-package metadata, so-called formulas.
-In a way, this is ooc&amp;rsquo;s central package repository, similar to
-Python&amp;rsquo;s PyPI, but much simpler. Every package is represented by a single YAML file.
-For now, the only supported (and required) option is &lt;code&gt;Origin&lt;/code&gt; containing the URL
-of the corresponding git repository.&lt;/p&gt;
-
-&lt;p&gt;For example, the &lt;a href=&#34;https://github.com/nddrylliog/sam/blob/master/library/sdl2.yml&#34;&gt;SDL2 formula&lt;/a&gt;
-just says:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Origin: https://github.com/geckojsc/ooc-sdl2.git
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;which tells sam that it can find the current ooc-sdl2 code at the given git repository.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_3&#34;&gt;Getting serious&lt;/h1&gt;
-
-&lt;p&gt;sam assumes a few basic things about a package and its repository layout:&lt;/p&gt;
-
-&lt;p&gt;Every package has a unique name and a unique git repository, and every
-git repository contains a usefile named exactly like the package. This
-enables sam to identify a package by its unique name, clone the right git
-repository, find the correct &lt;a href=&#34;/docs/tools/rock/usefiles/&#34;&gt;usefile&lt;/a&gt; and build the package easily.&lt;/p&gt;
-
-&lt;p&gt;Say you are building an ooc project depending on
-&lt;a href=&#34;https://github.com/nddrylliog/deadlogger&#34;&gt;deadlogger&lt;/a&gt;
-and &lt;a href=&#34;https://github.com/geckojsc/ooc-mxml&#34;&gt;ooc-mxml&lt;/a&gt;. Looking into
-the &lt;a href=&#34;https://github.com/nddrylliog/sam/tree/master/library&#34;&gt;grimoire&lt;/a&gt;, you can figure out the package names and
-add the following to your usefile (called &lt;code&gt;toast.use&lt;/code&gt;):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Name: toast
-Description: open toaster firmware
-...
-Requires: deadlogger, mxml
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now, let sam do the hard work:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-sam get toast.use
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This will check if you already have deadlogger and mxml installed in your ooc library
-path and clone all missing dependencies. Afterwards, you can just type&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-rock -v
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;and rock will read your usefile, find all dependencies (sam just made sure we
-have them!) and compile your project.&lt;/p&gt;
-
-&lt;p&gt;Since the formulas reside in a git repository, your local clone will get out of
-date from time to time when new formulas are added in the origin repository.
-In that case, just run&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-sam update
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;to get the latest formulas and recompile sam automatically.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_4&#34;&gt;Developing a package?&lt;/h1&gt;
-
-&lt;p&gt;As mentioned above, the &lt;a href=&#34;https://github.com/nddrylliog/sam/tree/master/library&#34;&gt;grimoire&lt;/a&gt; can be seen as the ooc package index.
-Therefore, it is important to include as many packages as possible.&lt;/p&gt;
-
-&lt;p&gt;So, if you&amp;rsquo;re developing some open source ooc project, please go ahead, clone
-the &lt;a href=&#34;https://github.com/nddrylliog/sam&#34;&gt;sam repository&lt;/a&gt;, add a formula and file a
-&lt;a href=&#34;https://github.com/nddrylliog/sam/pulls&#34;&gt;pull request&lt;/a&gt;. Everybody wins!&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Advanced Usage</title>
-      <link>http://oocmanual.cogneco.com/tools/rock/advanced</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/tools/rock/advanced</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Using more Rock options&lt;/h1&gt;
-
-&lt;p&gt;Often, rock does the right thing by itself, but if it doesn&amp;rsquo;t, you can use some of these more
-advanced options and flags.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;Keep the C sources&lt;/h1&gt;
-
-&lt;p&gt;If rock somehow generates invalid C code and you want to know why, it can be helpful to actually
-take a look at all the C. Normally, rock deletes everything it has generated at exit, but you can
-tell rock to keep the sources for you:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-rock --noclean ...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Afterwards, you&amp;rsquo;ll find the C source files in corresponding subdirectories of &lt;code&gt;rock_tmp&lt;/code&gt;. The header
-files reside in &lt;code&gt;.libs&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_2&#34;&gt;More information&lt;/h1&gt;
-
-&lt;p&gt;Also useful in these cases: Let rock tell its story of compilation. That means: print everything about
-all stages of symbol resolution and code generation. Invoke rock with:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-rock -vv ...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_3&#34;&gt;Ditch gcc for your compiler of choice&lt;/h1&gt;
-
-&lt;p&gt;Since gcc is the evergreen of compilers, rock uses it by default. In case you want to use something else
-to turn your C sources into machine code, rock provides you with some alternatives:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-rock --gcc # if you change your mind
-rock --tcc # the tiny c compiler
-rock --icc # the intel c compiler
-rock --clang # llvm&#39;s clang
-rock --onlygen # no compiler
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The latter is especially useful if you want to compile your C code to assembler by hand.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Drivers</title>
-      <link>http://oocmanual.cogneco.com/tools/rock/drivers</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/tools/rock/drivers</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Compilation strategy&lt;/h1&gt;
-
-&lt;p&gt;Unlike other compilers, rock takes care of building whole projects at
-a time, not just single modules. However, how much you want to let up
-to rock is your choice, thanks to different &lt;code&gt;drivers&lt;/code&gt;, or compilation strategies.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;Sequence driver&lt;/h1&gt;
-
-&lt;p&gt;This is the default driver. It&amp;rsquo;ll parse all relevant .ooc files, generate
-C files, and call the C compiler to produce object files, then link the result.&lt;/p&gt;
-
-&lt;p&gt;It can be customized using the following options:&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Parsing only&lt;/h2&gt;
-
-&lt;p&gt;If you only want rock to make sure there are no syntax errors, using
-the &lt;code&gt;--onlyparse&lt;/code&gt; option will work.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Checking only&lt;/h2&gt;
-
-&lt;p&gt;If you want rock to parse and make sure that the code is correct ooc
-(e.g. types correspond, all functions calls have corresponding definitions,
-etc.), the &lt;code&gt;--onlycheck&lt;/code&gt; option will do that.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Generation only&lt;/h2&gt;
-
-&lt;p&gt;If you just want rock to generate C files to look at what is being done
-under the hood, the &lt;code&gt;--onlygen&lt;/code&gt; option can be used. They will be output
-in the &lt;code&gt;rock_tmp&lt;/code&gt; (for .c files) and &lt;code&gt;.libs&lt;/code&gt; (for header files) folders by default.&lt;/p&gt;
-
-&lt;p&gt;If the goal is to tinker with the&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Parallelism&lt;/h2&gt;
-
-&lt;p&gt;By default, rock will attempt to max out your processors by launching C
-compiler jobs in parallel. One can adjust the level of parallelism by
-specifying &lt;code&gt;-jN&lt;/code&gt; to rock, where &lt;code&gt;N&lt;/code&gt; is an int. To completely disable
-parallelism (ie. behave in a purely sequential way), pass &lt;code&gt;-j0&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;Lib-caching&lt;/h2&gt;
-
-&lt;p&gt;Lib-caching is very convenient, yet at the same time it can cause unforeseen
-issues. The basic idea is that, between two compilations, only a portion of
-generated C code is affected by the changes, there is no reason to recompile
-what hasn&amp;rsquo;t changed.&lt;/p&gt;
-
-&lt;p&gt;It is active by default, which means that even though the first compilation
-might take some time, subsequent compilations will be shorter. If a compilation
-seems to fail because of the remainder of previous compilations, running &lt;code&gt;rock -x&lt;/code&gt;
-should fix it up.&lt;/p&gt;
-
-&lt;p&gt;To temporarily disable lib-caching, one can use the &lt;code&gt;--nolibcache&lt;/code&gt; compiler
-option.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_7&#34;&gt;Make driver&lt;/h1&gt;
-
-&lt;p&gt;The make driver is particularly useful when an ooc project is to be compiled
-on another platform lacking the ooc toolchain (for example, when bootstrapping
-rock), or when one wants to modify the C output of rock and recompile afterwards.&lt;/p&gt;
-
-&lt;p&gt;By using &lt;code&gt;--driver=make&lt;/code&gt;, the compile process looks something like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-# In project directory
-rock --driver=make
-cd build/
-make
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The &lt;code&gt;build&lt;/code&gt; directory which is generated and populated with C files and a
-stand-alone Makefile, can be packaged and distributed on other platforms.&lt;/p&gt;
-
-&lt;p&gt;Note that the &lt;code&gt;$GC_PATH&lt;/code&gt; environment variable might need to be adjusted for
-the exported sources to build somewhere else. It could be as simple as
-installing the Boehm GC in &lt;code&gt;/usr&lt;/code&gt; and setting &lt;code&gt;GC_PATH&lt;/code&gt; to &lt;code&gt;-lgc&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;One can use &lt;code&gt;make clean&lt;/code&gt; to clean the produced objects and binaries. Modifying
-sources and partial recompilation is possible. Make accepts parallelism options
-similar to rock, e.g. with 8 cores, one might want to use &lt;code&gt;make -j7&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_8&#34;&gt;Android driver&lt;/h1&gt;
-
-&lt;p&gt;In spirit, the Android driver (invoked with &lt;code&gt;--driver=android&lt;/code&gt;) is similar to
-the make driver, excepts that instead of generating Makefiles, it will generate
-&lt;code&gt;Android.mk&lt;/code&gt; files, suitable for usage with the &lt;code&gt;ndk-build&lt;/code&gt; utility from the
-Android NDK toolchain.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Use-files</title>
-      <link>http://oocmanual.cogneco.com/tools/rock/use-files</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/tools/rock/use-files</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Usefiles explained&lt;/h1&gt;
-
-&lt;p&gt;A usefile describes an ooc package, ie. a collection of modules and contains information
-how to compile and link that specific collection of ooc files.
-It also denotes if the package should compile to an executable or a shared/static library.&lt;/p&gt;
-
-&lt;p&gt;Usefiles are not a totally novel concept. They are comparable to &lt;code&gt;pkg-config&lt;/code&gt; files or, to
-some degree, similar to build system files like CMake or SCons.&lt;/p&gt;
-
-&lt;p&gt;However, in ooc, (and this is a pretty new thing!),
-the compiler rock itself reads and handles these usefiles.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;Examples&lt;/h1&gt;
-
-&lt;p&gt;Let&amp;rsquo;s start off with some examples. Following is the repository structure of
-&lt;a href=&#34;https://github.com/nddrylliog/ooc-zeromq&#34;&gt;ooc-zeromq&lt;/a&gt;, a &lt;a href=&#34;http://zeromq.org&#34;&gt;zeromq&lt;/a&gt; binding
-for ooc:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;.
-├── LICENSE
-├── README.md
-├── samples
-│   ├── ...
-├── source
-│   └── zeromq.ooc
-└── zeromq.use
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Let&amp;rsquo;s assume that you cloned the repository into a subdirectory of your ooc library path
-(which consists of the paths in the &lt;code&gt;OOC_LIBS&lt;/code&gt; environment variable).&lt;/p&gt;
-
-&lt;p&gt;And here are the contents of &lt;code&gt;zeromq.use&lt;/code&gt; (shortened for brevity):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Name: zeromq
-Description: The 0MQ lightweight messaging kernel
-Version: 2010-06-16
-SourcePath: source
-Includes: zmq.h
-Libs: -lzmq
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;A usefile should always contain the name, description and version of its package.&lt;/p&gt;
-
-&lt;p&gt;In addition, this usefile tells rock that the actual ooc files reside in the subdirectory
-&lt;code&gt;source&lt;/code&gt; (which will be added to the so-called sourcepath).&lt;/p&gt;
-
-&lt;p&gt;Also, since this is a C library binding, the zeromq C header needs to be included,
-and the &lt;code&gt;-lzmq&lt;/code&gt; flag needs to be passed to the linker.&lt;/p&gt;
-
-&lt;p&gt;So far so good. But what are the benefits of writing such a file?&lt;/p&gt;
-
-&lt;p&gt;If you now want to use this package in any of your projects, you can just write:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-use zeromq
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;at the top of your ooc file, and rock will automatically look through your library path
-(the paths in the &lt;code&gt;OOC_LIBS&lt;/code&gt; environment variable) for a file called &lt;code&gt;zeromq.use&lt;/code&gt; and find
-the usefile above. Now it parses this usefile and instantly knows not only where it can
-find the ooc-zeromq ooc files, but also what C headers need to be included and
-what libraries need to be linked.&lt;/p&gt;
-
-&lt;p&gt;As a result, you can now just import the ooc-zeromq ooc file like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import zeromq
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;and hack away.&lt;/p&gt;
-
-&lt;p&gt;Another simpler example is the &lt;a href=&#34;https://github.com/nddrylliog/sam&#34;&gt;sam&lt;/a&gt; usefile. sam is
-different because it compiles to an executable file:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Name: sam
-Description: Sam keeps your ooc repos up to date
-SourcePath: source
-Main: sam.ooc
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Once again, the usefile contains name and description (no version here, though!) and
-the sourcepath.&lt;/p&gt;
-
-&lt;p&gt;The new thing: &lt;code&gt;Main&lt;/code&gt; denotes the entry point for the executable, e.g. the file
-containing the &lt;code&gt;main&lt;/code&gt; function. rock looks for a file named this in the source path,
-which here contains the subdirectory source/.&lt;/p&gt;
-
-&lt;p&gt;To build sam, you can now just run:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-rock -v
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;which will look for a usefile in your current directory and build the package. As a result,
-you get a &lt;code&gt;sam&lt;/code&gt; executable &amp;ndash; and all of that without using a third party build system!&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_2&#34;&gt;Fields&lt;/h1&gt;
-
-&lt;p&gt;A list of all currently supported fields in usefiles follows.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Name&lt;/code&gt;, &lt;code&gt;Description&lt;/code&gt; and &lt;code&gt;Version&lt;/code&gt; contain metadata about the package
-and version&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Pkgs&lt;/code&gt; contains a comma-separated list of &lt;code&gt;pkg-config&lt;/code&gt; packages this
-package depends on. rock will invoke &lt;code&gt;pkg-config&lt;/code&gt; with these packages
-and add the resulting C flags and linker flags to its pipeline&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;CustomPkg&lt;/code&gt; can be used to specify the name of a &lt;code&gt;pkg-config&lt;/code&gt;-like tool
-that should be used instead. For example, the ooc sdl2 binding sets
-this to &lt;code&gt;sdl2-config&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Libs&lt;/code&gt; contains a comma-separated list of linker flags like &lt;code&gt;-lSDL2_image&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Frameworks&lt;/code&gt;: OSX-only, specify Frameworks to be linked with (example: &lt;code&gt;OpenGL&lt;/code&gt;)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Includes&lt;/code&gt; can be used to specify C headers that should be included
-(as a comma-separated list)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;PreMains&lt;/code&gt;: List of compiler flags that, if specified from a .pc file or a .use file,
-(maybe conditioned by a version block), must appear before the main compilation unit.
-Example: &lt;code&gt;-lSDL2main&lt;/code&gt; on Windows.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Linker&lt;/code&gt; can be used to specify a &lt;code&gt;ld&lt;/code&gt; replacement&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;LibPaths&lt;/code&gt; and &lt;code&gt;IncludePaths&lt;/code&gt; are comma-separated lists and contain
-paths that should be added to the linker or C include paths&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;AndroidLibs&lt;/code&gt;, &lt;code&gt;AndroidIncludePaths&lt;/code&gt;: Android-specific properties that are
-only used with the Android driver.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Additionals&lt;/code&gt;: can be used to add &lt;code&gt;.c&lt;/code&gt; files to be compiled along with the .ooc code.
-Relative paths (starting with &lt;code&gt;./&lt;/code&gt;) will have the .c file be copied locally.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Requires&lt;/code&gt; can be used to specify requirements (denoted by usefile
-names), for example for sam&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;SourcePath&lt;/code&gt; can be used to add a path to the source path&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Imports&lt;/code&gt; contains a comma-separated list of modules that should be
-implicitly imported when &lt;code&gt;use yourusefile&lt;/code&gt; is used.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Origin&lt;/code&gt; is ignored by rock, but it traditionally specifies the
-git repository url of that package&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Main&lt;/code&gt; is the name of the entrypoint file&lt;/li&gt;
-&lt;li&gt;all fields starting with &lt;code&gt;_&lt;/code&gt; are ignored by rock&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&#34;toc_3&#34;&gt;Version blocks&lt;/h1&gt;
-
-&lt;p&gt;Similarily to ooc&amp;rsquo;s &lt;a href=&#34;/docs/lang/preprocessor/#version-blocks&#34;&gt;version blocks&lt;/a&gt;, usefile version blocks
-can be used to work with different requirements on different platforms.&lt;/p&gt;
-
-&lt;p&gt;The syntax is similar to version blocks in ooc. Here is an example from
-&lt;a href=&#34;https://github.com/nddrylliog/isaac-paper&#34;&gt;Paper Isaac&lt;/a&gt;&amp;rsquo;s usefile:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Name: isaac
-Version: 0.1
-Requires: dye, bleep, gnaar
-SourcePath: source
-Main: isaac
-
-version (windows) {
-  Libs: ./isaac.res
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Compiling under windows, the linker command line will contain the additional file
-&lt;code&gt;./isaac.res&lt;/code&gt;.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Rock</title>
-      <link>http://oocmanual.cogneco.com/tools/rock</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/tools/rock</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;About Rock&lt;/h1&gt;
-
-&lt;p&gt;Rock is the main ooc compiler. It parses ooc files using nagaqueen, does some
-checking and inference, produces .c files, and then drives the C compilation process
-to produce either an executable or a library.&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/basic/&#34;&gt;Basic usage&lt;/a&gt; section explains how to quickly get
-up and running, using rock to compile ooc projects.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/drivers/&#34;&gt;Drivers&lt;/a&gt; section gives an overview of rock&amp;rsquo;s various
-drivers, akin to compiling strategies, like the sequence driver (default), the make
-driver, and the android driver.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/advanced/&#34;&gt;Advanced usage&lt;/a&gt; section covers some less-often used
-options like using a different C compiler, keeping source files, etc.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/usefiles/&#34;&gt;Usefiles&lt;/a&gt; section describes the format of &lt;code&gt;.use&lt;/code&gt; files,
-which define the characteristics of an ooc app or library.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/gc/&#34;&gt;Garbage Collection&lt;/a&gt; section talks about the Garbage Collection
-strategy in rock, how to make sure things work well on different plaforms, how the
-Boehm GC is bundled, etc.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/debug/&#34;&gt;Debugging&lt;/a&gt; section talks about what to do when a program
-doesn&amp;rsquo;t behave correctly. Debug symbols, stack traces, debugging on particularly painful
-platforms like Windows.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/packaging/&#34;&gt;Packaging&lt;/a&gt; section talks about releasing standalone
-applications coded in ooc, such as games — when you don&amp;rsquo;t want to have users install
-dependencies on their own, but would rather bundle everything together.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Tools</title>
-      <link>http://oocmanual.cogneco.com/tools</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/tools</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Frequently used ooc tools&lt;/h1&gt;
-
-&lt;p&gt;There are some tools you should know about when you start looking into ooc.&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;rock&#34;&gt;Rock&lt;/a&gt; is the ooc compiler. In most cases,
-you will use it to generate C sources and executables from your ooc sources.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;sam&#34;&gt;Sam&lt;/a&gt; helps you to keep all your libraries together and up-to-date.
-It&amp;rsquo;s also able to resolve dependencies without any hassle.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;editors&#34;&gt;Editors&lt;/a&gt; - describes how to get syntax highlighting,
-program checking, indentation in vim, emacs, TextMate?&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Tools like autoconf, automake, even CMake, are irrelevant in the context of
-ooc, since rock drives the whole compilation process.&lt;/p&gt;
-
-&lt;p&gt;ooc libraries have one, standardized way to be built - as such, the ooc ecosystem
-is a lot more homogenous than, say, the C ecosystem. Complexity is dealt with
-through &lt;a href=&#34;rock/usefiles&#34;&gt;use files&lt;/a&gt; and the such.&lt;/p&gt;
-
-&lt;p&gt;Still, the ooc toolchain is quite flexible, working on major desktop OSes, and
-more constrained platform such as Android.&lt;/p&gt;
 </description>
     </item>
     
@@ -1714,120 +1223,611 @@ or if the ooc line numbers are messed up for some reason.&lt;/p&gt;
     </item>
     
     <item>
-      <title>Garbage Collection</title>
-      <link>http://oocmanual.cogneco.com/tools/rock/gc</link>
+      <title>Sam</title>
+      <link>http://oocmanual.cogneco.com/tools/sam</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/tools/rock/gc</guid>
+      <guid>http://oocmanual.cogneco.com/tools/sam</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;Garbage Collection in rock&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;About sam&lt;/h1&gt;
 
-&lt;p&gt;rock uses the &lt;a href=&#34;http://www.hpl.hp.com/personal/Hans_Boehm/gc/&#34;&gt;Boehm GC&lt;/a&gt;. It is a conservative garbage collector that
-tends to play well with C libraries, hence the choice for a &amp;ldquo;compile-to-C&amp;rdquo;
-implementation of ooc.&lt;/p&gt;
+&lt;p&gt;sam is a minimal package and dependency manager for ooc projects. It operates
+similarly to &lt;a href=&#34;https://brew.sh&#34;&gt;homebrew&lt;/a&gt; for OS X, but in a much more minimal way.&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_1&#34;&gt;Distribution&lt;/h2&gt;
+&lt;h1 id=&#34;toc_1&#34;&gt;Installation&lt;/h1&gt;
 
-&lt;p&gt;The Boehm GC (along with &lt;code&gt;lib_atomic_ops&lt;/code&gt;) is vendored in rock&amp;rsquo;s repository,
-under &lt;code&gt;libs/&lt;/code&gt;. When building the compiler, rock&amp;rsquo;s Makefile will check for an
-installed GC version and, if absent, it will compile its own.&lt;/p&gt;
+&lt;p&gt;To use sam, apart from a working &lt;a href=&#34;/docs/tools/rock/&#34;&gt;rock&lt;/a&gt;, you need &lt;a href=&#34;http://git-scm.com/&#34;&gt;git&lt;/a&gt;.
+Also, you have to create a special directory that is writable for you, which will
+later contain all ooc packages cloned from their git repositories. This directory
+is called the ooc library path &amp;ndash; you also have to specify its location in the special
+&lt;code&gt;OOC_LIBS&lt;/code&gt; environment variable. On most unixes, you can do that like this:&lt;/p&gt;
 
-&lt;p&gt;Depending on your platform, the static version of the library compiled when
-building rock might be in the following places:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;* Linux: `rock/libs/linux32` or `rock/libs/linux64`, as `libgc.a`
-* OSX: `rock/libs/osx`
-* Windows: `rock/libs/win32`
+&lt;pre&gt;&lt;code&gt;#!bash
+mkdir ~/development/ooc
+export OOC_LIBS=~/development/ooc
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;By default, rock links statically with the GC. However, for multithreaded
-applications on Windows, that might not be such a good idea. Read on for
-more details.&lt;/p&gt;
+&lt;p&gt;As a first step, you can use git to clone sam itself. You should clone sam into
+a subdirectory of the newly created directory. Since sam does not have any dependencies
+apart from rock, you can just go ahead and compile it &lt;a href=&#34;/docs/tools/rock/usefiles/&#34;&gt;from the usefile&lt;/a&gt;:&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_2&#34;&gt;Threads&lt;/h2&gt;
-
-&lt;p&gt;On Windows, for the GC to work correctly, it has to be linked dynamically,
-not statically. At some point, rock should handle that case itself, but for
-now here&amp;rsquo;s what you have to do.&lt;/p&gt;
-
-&lt;p&gt;The first step is to build your own copy of the GC. Thanks to &lt;a href=&#34;https://github.com/nddrylliog/winbrew&#34;&gt;winbrew&lt;/a&gt;,
-that is as easy as doing &lt;code&gt;brew install bdw-gc&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;You should now have Boehm-GC-related files in both &lt;code&gt;/usr/local/lib&lt;/code&gt; and
-&lt;code&gt;/usr/local/bin&lt;/code&gt; (&lt;code&gt;/usr/local&lt;/code&gt; being mapped to a Windows path like &lt;code&gt;C:\MinGW\msys\1.0\local&lt;/code&gt;).&lt;/p&gt;
-
-&lt;p&gt;To make rock use that version, simply do:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;rock --gc=dynamic -I/usr/local/include -L/usr/local/lib
+&lt;pre&gt;&lt;code&gt;#!bash
+cd $OOC_LIBS
+git clone https://github.com/nddrylliog/sam.git
+cd sam/
+rock -v
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&amp;hellip;and when distributing applications, include &lt;code&gt;libgc-1.dll&lt;/code&gt; with it. See the &lt;a href=&#34;/docs/tools/rock/packaging/&#34;&gt;Packaging&lt;/a&gt;
-chapter for more details.&lt;/p&gt;
+&lt;p&gt;This should proeduce a &lt;code&gt;sam&lt;/code&gt; executable. Just add it to the path:&lt;/p&gt;
 
-&lt;p&gt;Linking dynamically with the GC on other platforms is as simple as using &lt;code&gt;--gc=dynamic&lt;/code&gt; - the
-&lt;code&gt;-I&lt;/code&gt; and &lt;code&gt;-L&lt;/code&gt; options above are just to add include paths and library paths, since homebrew installs
-libraries in its own prefix.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#!bash
+export PATH=$PATH:$OOC_LIBS/sam
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;toc_3&#34;&gt;Disabling the GC&lt;/h2&gt;
+&lt;p&gt;You should now be able to invoke sam just by typing&lt;/p&gt;
 
-&lt;p&gt;One can prevent rock from linking with the GC with the command line option &lt;code&gt;--gc=off&lt;/code&gt;. Keep in mind
-that the SDK was written with the GC in mind though.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#!bash
+sam
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;When the GC is disabled, &lt;code&gt;version(gc)&lt;/code&gt; block will get discarded, and &lt;code&gt;version(!gc)&lt;/code&gt; blocks will be
-used. You can use this to write both GC and non-GC friendly code.&lt;/p&gt;
+&lt;h1 id=&#34;toc_2&#34;&gt;Concepts&lt;/h1&gt;
+
+&lt;p&gt;All ooc projects known to mankind are hosted on github. Therefore, building a
+package manager, it makes sense to focus on git as the primary way of code
+distribution.&lt;/p&gt;
+
+&lt;p&gt;In general, sam consists of a simple executable and a collection of package files:
+It keeps a &lt;a href=&#34;https://github.com/nddrylliog/sam/tree/master/library&#34;&gt;grimoire&lt;/a&gt; of
+package metadata, so-called formulas.
+In a way, this is ooc&amp;rsquo;s central package repository, similar to
+Python&amp;rsquo;s PyPI, but much simpler. Every package is represented by a single YAML file.
+For now, the only supported (and required) option is &lt;code&gt;Origin&lt;/code&gt; containing the URL
+of the corresponding git repository.&lt;/p&gt;
+
+&lt;p&gt;For example, the &lt;a href=&#34;https://github.com/nddrylliog/sam/blob/master/library/sdl2.yml&#34;&gt;SDL2 formula&lt;/a&gt;
+just says:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Origin: https://github.com/geckojsc/ooc-sdl2.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;which tells sam that it can find the current ooc-sdl2 code at the given git repository.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_3&#34;&gt;Getting serious&lt;/h1&gt;
+
+&lt;p&gt;sam assumes a few basic things about a package and its repository layout:&lt;/p&gt;
+
+&lt;p&gt;Every package has a unique name and a unique git repository, and every
+git repository contains a usefile named exactly like the package. This
+enables sam to identify a package by its unique name, clone the right git
+repository, find the correct &lt;a href=&#34;/docs/tools/rock/usefiles/&#34;&gt;usefile&lt;/a&gt; and build the package easily.&lt;/p&gt;
+
+&lt;p&gt;Say you are building an ooc project depending on
+&lt;a href=&#34;https://github.com/nddrylliog/deadlogger&#34;&gt;deadlogger&lt;/a&gt;
+and &lt;a href=&#34;https://github.com/geckojsc/ooc-mxml&#34;&gt;ooc-mxml&lt;/a&gt;. Looking into
+the &lt;a href=&#34;https://github.com/nddrylliog/sam/tree/master/library&#34;&gt;grimoire&lt;/a&gt;, you can figure out the package names and
+add the following to your usefile (called &lt;code&gt;toast.use&lt;/code&gt;):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+Name: toast
+Description: open toaster firmware
+...
+Requires: deadlogger, mxml
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, let sam do the hard work:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+sam get toast.use
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will check if you already have deadlogger and mxml installed in your ooc library
+path and clone all missing dependencies. Afterwards, you can just type&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+rock -v
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and rock will read your usefile, find all dependencies (sam just made sure we
+have them!) and compile your project.&lt;/p&gt;
+
+&lt;p&gt;Since the formulas reside in a git repository, your local clone will get out of
+date from time to time when new formulas are added in the origin repository.
+In that case, just run&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+sam update
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;to get the latest formulas and recompile sam automatically.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_4&#34;&gt;Developing a package?&lt;/h1&gt;
+
+&lt;p&gt;As mentioned above, the &lt;a href=&#34;https://github.com/nddrylliog/sam/tree/master/library&#34;&gt;grimoire&lt;/a&gt; can be seen as the ooc package index.
+Therefore, it is important to include as many packages as possible.&lt;/p&gt;
+
+&lt;p&gt;So, if you&amp;rsquo;re developing some open source ooc project, please go ahead, clone
+the &lt;a href=&#34;https://github.com/nddrylliog/sam&#34;&gt;sam repository&lt;/a&gt;, add a formula and file a
+&lt;a href=&#34;https://github.com/nddrylliog/sam/pulls&#34;&gt;pull request&lt;/a&gt;. Everybody wins!&lt;/p&gt;
 </description>
     </item>
     
     <item>
-      <title>Basic Usage</title>
-      <link>http://oocmanual.cogneco.com/tools/rock/basic</link>
+      <title>Use-files 2</title>
+      <link>http://oocmanual.cogneco.com/tools/rock/use-files2</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/tools/rock/basic</guid>
+      <guid>http://oocmanual.cogneco.com/tools/rock/use-files2</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;Using rock, the basic way&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;Use files&lt;/h1&gt;
 
-&lt;p&gt;If you have a usefile, calling rock is pretty easy:&lt;/p&gt;
+&lt;h2 id=&#34;toc_1&#34;&gt;Intro&lt;/h2&gt;
 
-&lt;pre&gt;&lt;code&gt;#!bash
+&lt;p&gt;Use files specify the C and ooc dependencies of a library, along
+with some basic info like its name, description.&lt;/p&gt;
+
+&lt;p&gt;They are useful for package managers (see &lt;a href=&#34;https://github.com/nddrylliog/sam&#34;&gt;sam&lt;/a&gt;),
+but also for the rock compile, to import required ooc libraries, and
+to know which flags and libraries to pass to the C compiler.&lt;/p&gt;
+
+&lt;p&gt;A few well-written .use files make using libraries very easy,
+without having to worry about writing a Makefile of some sort, and
+it makes compiling programs on various platforms a no-brainer.&lt;/p&gt;
+
+&lt;p&gt;.use files are generally located at the root of an ooc app or library.&lt;/p&gt;
+
+&lt;p&gt;For a language binding, the tree structure is usually:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ooc-gtk
+  README.md
+  gtk.use
+  source
+    gtk
+  samples
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For a pure ooc library or application, the tree structure is usually:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;deadlogger
+  README.md
+  deadlogger.use
+  source
+    deadlogger
+  samples
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Libs search path&lt;/h2&gt;
+
+&lt;p&gt;Using a third-party ooc library is as easy as doing &lt;code&gt;use library&lt;/code&gt; in an .ooc file&lt;/p&gt;
+
+&lt;p&gt;When doing so, the ooc compiler will look for a &lt;code&gt;library.use&lt;/code&gt; file in your lib folders.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;$OOC_LIBS&lt;/code&gt; environment variable defines the lib folders, separated by &lt;code&gt;:&lt;/code&gt; on *nix,
+and &amp;lsquo;;&amp;rsquo; on Windows.&lt;/p&gt;
+
+&lt;p&gt;A simple setup is to have all your ooc libraries sitting in the same folder, for example
+&lt;code&gt;$HOME/Dev/&lt;/code&gt;, with the following structure:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;someproject
+  someproject.use
+ooc-gtk
+  gtk.use
 rock
+  rock.use
+  sdk.use
+  math.use
+  pcre.use
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;will look for usefiles in your current directory and, if possible, build them.&lt;/p&gt;
+&lt;p&gt;Note that the standard ooc sdk is a library like any other - it has a .use file with
+standard directives as defined below.&lt;/p&gt;
 
-&lt;p&gt;Since the world is not always perfect, it&amp;rsquo;s also possible to pass an &lt;code&gt;.ooc&lt;/code&gt; file directly:&lt;/p&gt;
+&lt;h2 id=&#34;toc_3&#34;&gt;Syntax&lt;/h2&gt;
+
+&lt;p&gt;The file is composed of key-value pairs, formatted like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Key1: Value1
+Key2: Value2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Whitespace around the colon &lt;code&gt;:&lt;/code&gt; doesn&amp;rsquo;t matter. For keys that accept multiple
+directives like &lt;code&gt;Libs&lt;/code&gt; or &lt;code&gt;IncludePaths&lt;/code&gt;, values should be separated by commas
+(and whitespace is accepted).&lt;/p&gt;
+
+&lt;p&gt;For example, this is wrong:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Libs: -lGLU -lGL
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And this is right:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Libs: -lGLU, -lGL
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Versioning&lt;/h2&gt;
+
+&lt;p&gt;A use file might be versioned using version blocks, however, only some directives
+are valid in a version block.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s an example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Name: SDL 2.0 OpenGL support
+
+version (linux) {
+  Libs: -lGL
+}
+
+version (apple) {
+  Frameworks: Carbon, OpenGL
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Version blocks have the same syntax as in .ooc files. For more details, see the
+version chapter.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Top-level directives&lt;/h2&gt;
+
+&lt;p&gt;Those directives cannot be versioned and must appear at the top level of
+a use file.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Short description
+Name: llama
+
+# Longer description
+Description: A lib to deal with llamas
+
+# The version of the library
+Version: 0.1.3
+
+# Modules that are automatically imported when &#39;use&#39;-ing this library
+Imports: llama/beast, llama/human
+
+# For programs, the main ooc file to compile when rock is called without arguments
+Main: llama/program
+
+# This will be added to the list of folders the ooc compiler looks for .ooc files
+SourcePath: source
+
+# Dependencies - the &#39;use&#39; of .use files
+Requires: spit
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;Basic directives&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;# gcc&#39;s -I
+IncludePaths: /some/weird/place/include
+
+# will be included in all files using this .use file
+Includes: someheader.h, someother.h
+
+# gcc&#39;s -L
+LibPaths: /some/weird/place/include
+
+# will be linked with the final executable
+Libs: -lsomething, -lotherthing
+
+# additional .c files to compile and link into the library/executable
+Additionals: source/somefile.c
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;pkg-config packages&lt;/h2&gt;
+
+&lt;p&gt;For many packages, there is already a pkg-config &lt;code&gt;.pc&lt;/code&gt; file with the information
+needed to make it compile right. What&amp;rsquo;s more, that file is often customized depending
+on what system you install the library on, which makes version blocks unnecessary.&lt;/p&gt;
+
+&lt;p&gt;Whenever a package has a pkg-config file, it is imperative to use &lt;code&gt;Pkgs&lt;/code&gt; instead
+of specifying manually &lt;code&gt;IncludePaths&lt;/code&gt;, &lt;code&gt;Includes&lt;/code&gt;, &lt;code&gt;LibPaths&lt;/code&gt;, and &lt;code&gt;Libs&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;For example, the &lt;code&gt;cairo.use&lt;/code&gt; file would probably contain:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Pkgs: cairo
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_8&#34;&gt;pkg-config-like utilities&lt;/h2&gt;
+
+&lt;p&gt;Sometimes, libraries ship with pkg-config-like utilities. &lt;code&gt;imlib2-config&lt;/code&gt;,
+&lt;code&gt;sdl2-config&lt;/code&gt;, &lt;code&gt;llvm-config&lt;/code&gt;. Those are often used similarly as pkg-config,
+except without specifying a package.&lt;/p&gt;
+
+&lt;p&gt;When this is the case, a simple form of &lt;code&gt;CustomPkg&lt;/code&gt; does the trick:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CustomPkg: sdl2-config
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;However, others have more complex options. For those, the full power of
+&lt;code&gt;CustomPkg&lt;/code&gt; is required, with 4 arguments:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The name of the utility to run&lt;/li&gt;
+&lt;li&gt;A list of arguments space-separated, always passed to the utility&lt;/li&gt;
+&lt;li&gt;Equivalent to pkg-config &lt;code&gt;--cflags&lt;/code&gt; option&lt;/li&gt;
+&lt;li&gt;Equivalent to pkg-config &lt;code&gt;--libs&lt;/code&gt; option&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For llvm-config, this boils down to:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CustomPkg: llvm-config, core executionengine jit, --cflags, --libs --ldflags
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_9&#34;&gt;Custom linkers&lt;/h2&gt;
+
+&lt;p&gt;Some C++ libraries will required a C++ linker in order to work. LLVM does.&lt;/p&gt;
+
+&lt;p&gt;Hence, the &lt;code&gt;Linker&lt;/code&gt; directive:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Linker: g++
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Otherwise, the ooc compiler uses the same linker as your specified C compiler.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_10&#34;&gt;OSX-specific directives&lt;/h2&gt;
+
+&lt;p&gt;OSX has some libraries packaged in &lt;code&gt;frameworks&lt;/code&gt; instead of unix-y libs. For example,
+on OSX, &lt;code&gt;-lGL&lt;/code&gt; doesn&amp;rsquo;t exist. For those cases, the &lt;code&gt;Frameworks&lt;/code&gt; directive can be used:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Frameworks: Carbon, OpenGL
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This directive has no effect on other platforms, even outside version blocks.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_11&#34;&gt;Android-specific directives&lt;/h2&gt;
+
+&lt;p&gt;The android build process has some intricacies, which is why .use files can contain
+android-specific directives:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;AndroidLibs: SDL2
+AndroidIncludes: ../SDL/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;These really depend on the setup of your android project but it makes sense.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;AndroidLibs&lt;/code&gt; are mk dependencies that need to be built, and &lt;code&gt;AndroidIncludes&lt;/code&gt; are
+include paths, relative to the subfolder of your app/library.&lt;/p&gt;
+
+&lt;p&gt;These directives have no effect on other platforms, even outside version blocks.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Editors</title>
+      <link>http://oocmanual.cogneco.com/tools/editors</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/tools/editors</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;ooc support in text editors&lt;/h1&gt;
+
+&lt;p&gt;ooc has a varying level of support among different text editors.&lt;/p&gt;
+
+&lt;p&gt;Read on to find if your favourite flavor is supported. If you add
+support for a new editor, please open an issue on the &lt;a href=&#34;https://github.com/nddrylliog/ooc-lang.org&#34;&gt;ooc-lang.org repo&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;vim&lt;/h1&gt;
+
+&lt;p&gt;ooc support for vim is provided by the &lt;a href=&#34;https://github.com/nddrylliog/ooc.vim&#34;&gt;ooc.vim&lt;/a&gt; plug-in. It provides:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Syntax highlighting&lt;/li&gt;
+&lt;li&gt;Indentation support&lt;/li&gt;
+&lt;li&gt;A syntastic plug-in for use with &lt;a href=&#34;https://github.com/nddrylliog/sam&#34;&gt;sam&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;:make&lt;/code&gt; command support (launches &lt;code&gt;rock -v&lt;/code&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You can read more at the &lt;a href=&#34;https://github.com/nddrylliog/ooc.vim&#34;&gt;project repository&lt;/a&gt;&amp;rsquo;s page.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_2&#34;&gt;emacs&lt;/h1&gt;
+
+&lt;p&gt;ooc support for emacs is provided by &lt;a href=&#34;https://github.com/nixeagle/ooc-mode&#34;&gt;ooc-mode&lt;/a&gt;. It provides:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Syntax highlighting&lt;/li&gt;
+&lt;li&gt;Indentation support&lt;/li&gt;
+&lt;li&gt;On the fly syntax check with flymake-ooc&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;toc_3&#34;&gt;TextMate&lt;/h1&gt;
+
+&lt;p&gt;ooc support for TextMate is provided by &lt;a href=&#34;https://github.com/nilium/ooc.tmbundle&#34;&gt;ooc.tmbundle&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_4&#34;&gt;Atom&lt;/h1&gt;
+
+&lt;p&gt;The &lt;a href=&#34;https://atom.io/&#34;&gt;Atom editor&lt;/a&gt; can use converted TextMate bundles.&lt;/p&gt;
+
+&lt;p&gt;You can easily convert &lt;a href=&#34;https://github.com/nilium/ooc.tmbundle&#34;&gt;ooc.tmbundle&lt;/a&gt; for your own usage, like so:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;apm init --package ~/.atom/packages/language-ooc --convert https://github.com/nilium/ooc.tmbundle
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You might need to restart Atom to see the changes.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_5&#34;&gt;Brackets&lt;/h1&gt;
+
+&lt;p&gt;The &lt;a href=&#34;http://brackets.io/&#34;&gt;Brackets editor&lt;/a&gt; now has an extension for ooc syntax highlighting.
+It can be installed from the Extensions Manager by searching for &lt;code&gt;ooc syntax&lt;/code&gt;.
+The source is available &lt;a href=&#34;https://github.com/nddrylliog/brackets-ooc&#34;&gt;on GitHub&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_6&#34;&gt;gtksourceview&lt;/h1&gt;
+
+&lt;p&gt;gtksourceview-based tools such as gedit, meld, etc. have
+ooc support out of the box.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_7&#34;&gt;pygments&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://pygments.org/&#34;&gt;pygments&lt;/a&gt; has relatively good ooc support built-in. It is a python
+solution for syntax highlighting used on GitHub and easy to integrate with
+static website generators such as &lt;a href=&#34;http://nanoc.ws/&#34;&gt;nanoc&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Use-files</title>
+      <link>http://oocmanual.cogneco.com/tools/rock/use-files</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/tools/rock/use-files</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Usefiles explained&lt;/h1&gt;
+
+&lt;p&gt;A usefile describes an ooc package, ie. a collection of modules and contains information
+how to compile and link that specific collection of ooc files.
+It also denotes if the package should compile to an executable or a shared/static library.&lt;/p&gt;
+
+&lt;p&gt;Usefiles are not a totally novel concept. They are comparable to &lt;code&gt;pkg-config&lt;/code&gt; files or, to
+some degree, similar to build system files like CMake or SCons.&lt;/p&gt;
+
+&lt;p&gt;However, in ooc, (and this is a pretty new thing!),
+the compiler rock itself reads and handles these usefiles.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;Examples&lt;/h1&gt;
+
+&lt;p&gt;Let&amp;rsquo;s start off with some examples. Following is the repository structure of
+&lt;a href=&#34;https://github.com/nddrylliog/ooc-zeromq&#34;&gt;ooc-zeromq&lt;/a&gt;, a &lt;a href=&#34;http://zeromq.org&#34;&gt;zeromq&lt;/a&gt; binding
+for ooc:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.
+├── LICENSE
+├── README.md
+├── samples
+│   ├── ...
+├── source
+│   └── zeromq.ooc
+└── zeromq.use
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let&amp;rsquo;s assume that you cloned the repository into a subdirectory of your ooc library path
+(which consists of the paths in the &lt;code&gt;OOC_LIBS&lt;/code&gt; environment variable).&lt;/p&gt;
+
+&lt;p&gt;And here are the contents of &lt;code&gt;zeromq.use&lt;/code&gt; (shortened for brevity):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+Name: zeromq
+Description: The 0MQ lightweight messaging kernel
+Version: 2010-06-16
+SourcePath: source
+Includes: zmq.h
+Libs: -lzmq
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A usefile should always contain the name, description and version of its package.&lt;/p&gt;
+
+&lt;p&gt;In addition, this usefile tells rock that the actual ooc files reside in the subdirectory
+&lt;code&gt;source&lt;/code&gt; (which will be added to the so-called sourcepath).&lt;/p&gt;
+
+&lt;p&gt;Also, since this is a C library binding, the zeromq C header needs to be included,
+and the &lt;code&gt;-lzmq&lt;/code&gt; flag needs to be passed to the linker.&lt;/p&gt;
+
+&lt;p&gt;So far so good. But what are the benefits of writing such a file?&lt;/p&gt;
+
+&lt;p&gt;If you now want to use this package in any of your projects, you can just write:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+use zeromq
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;at the top of your ooc file, and rock will automatically look through your library path
+(the paths in the &lt;code&gt;OOC_LIBS&lt;/code&gt; environment variable) for a file called &lt;code&gt;zeromq.use&lt;/code&gt; and find
+the usefile above. Now it parses this usefile and instantly knows not only where it can
+find the ooc-zeromq ooc files, but also what C headers need to be included and
+what libraries need to be linked.&lt;/p&gt;
+
+&lt;p&gt;As a result, you can now just import the ooc-zeromq ooc file like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import zeromq
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and hack away.&lt;/p&gt;
+
+&lt;p&gt;Another simpler example is the &lt;a href=&#34;https://github.com/nddrylliog/sam&#34;&gt;sam&lt;/a&gt; usefile. sam is
+different because it compiles to an executable file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+Name: sam
+Description: Sam keeps your ooc repos up to date
+SourcePath: source
+Main: sam.ooc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once again, the usefile contains name and description (no version here, though!) and
+the sourcepath.&lt;/p&gt;
+
+&lt;p&gt;The new thing: &lt;code&gt;Main&lt;/code&gt; denotes the entry point for the executable, e.g. the file
+containing the &lt;code&gt;main&lt;/code&gt; function. rock looks for a file named this in the source path,
+which here contains the subdirectory source/.&lt;/p&gt;
+
+&lt;p&gt;To build sam, you can now just run:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!bash
-rock mmorpg.ooc
+rock -v
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Sadly, it&amp;rsquo;s possible that rock thinks your ooc code is alright and passes the C files to your
-C compiler which then prints pages of errors and explodes subsequently.
-In that case, you&amp;rsquo;ll need to increase rock&amp;rsquo;s verbosity to see the compiler output:&lt;/p&gt;
+&lt;p&gt;which will look for a usefile in your current directory and build the package. As a result,
+you get a &lt;code&gt;sam&lt;/code&gt; executable &amp;ndash; and all of that without using a third party build system!&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;#!bash
-rock -v ...
+&lt;h1 id=&#34;toc_2&#34;&gt;Fields&lt;/h1&gt;
+
+&lt;p&gt;A list of all currently supported fields in usefiles follows.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Name&lt;/code&gt;, &lt;code&gt;Description&lt;/code&gt; and &lt;code&gt;Version&lt;/code&gt; contain metadata about the package
+and version&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Pkgs&lt;/code&gt; contains a comma-separated list of &lt;code&gt;pkg-config&lt;/code&gt; packages this
+package depends on. rock will invoke &lt;code&gt;pkg-config&lt;/code&gt; with these packages
+and add the resulting C flags and linker flags to its pipeline&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;CustomPkg&lt;/code&gt; can be used to specify the name of a &lt;code&gt;pkg-config&lt;/code&gt;-like tool
+that should be used instead. For example, the ooc sdl2 binding sets
+this to &lt;code&gt;sdl2-config&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Libs&lt;/code&gt; contains a comma-separated list of linker flags like &lt;code&gt;-lSDL2_image&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Frameworks&lt;/code&gt;: OSX-only, specify Frameworks to be linked with (example: &lt;code&gt;OpenGL&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Includes&lt;/code&gt; can be used to specify C headers that should be included
+(as a comma-separated list)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;PreMains&lt;/code&gt;: List of compiler flags that, if specified from a .pc file or a .use file,
+(maybe conditioned by a version block), must appear before the main compilation unit.
+Example: &lt;code&gt;-lSDL2main&lt;/code&gt; on Windows.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Linker&lt;/code&gt; can be used to specify a &lt;code&gt;ld&lt;/code&gt; replacement&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;LibPaths&lt;/code&gt; and &lt;code&gt;IncludePaths&lt;/code&gt; are comma-separated lists and contain
+paths that should be added to the linker or C include paths&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;AndroidLibs&lt;/code&gt;, &lt;code&gt;AndroidIncludePaths&lt;/code&gt;: Android-specific properties that are
+only used with the Android driver.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Additionals&lt;/code&gt;: can be used to add &lt;code&gt;.c&lt;/code&gt; files to be compiled along with the .ooc code.
+Relative paths (starting with &lt;code&gt;./&lt;/code&gt;) will have the .c file be copied locally.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Requires&lt;/code&gt; can be used to specify requirements (denoted by usefile
+names), for example for sam&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;SourcePath&lt;/code&gt; can be used to add a path to the source path&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Imports&lt;/code&gt; contains a comma-separated list of modules that should be
+implicitly imported when &lt;code&gt;use yourusefile&lt;/code&gt; is used.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Origin&lt;/code&gt; is ignored by rock, but it traditionally specifies the
+git repository url of that package&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Main&lt;/code&gt; is the name of the entrypoint file&lt;/li&gt;
+&lt;li&gt;all fields starting with &lt;code&gt;_&lt;/code&gt; are ignored by rock&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;toc_3&#34;&gt;Version blocks&lt;/h1&gt;
+
+&lt;p&gt;Similarily to ooc&amp;rsquo;s &lt;a href=&#34;/docs/lang/preprocessor/#version-blocks&#34;&gt;version blocks&lt;/a&gt;, usefile version blocks
+can be used to work with different requirements on different platforms.&lt;/p&gt;
+
+&lt;p&gt;The syntax is similar to version blocks in ooc. Here is an example from
+&lt;a href=&#34;https://github.com/nddrylliog/isaac-paper&#34;&gt;Paper Isaac&lt;/a&gt;&amp;rsquo;s usefile:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+Name: isaac
+Version: 0.1
+Requires: dye, bleep, gnaar
+SourcePath: source
+Main: isaac
+
+version (windows) {
+  Libs: ./isaac.res
+}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Building an executable and tired of typing &lt;code&gt;./mmorpg&lt;/code&gt; all over again?&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-rock -r ...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;will run your executable after having built it successfully.&lt;/p&gt;
-
-&lt;p&gt;To speed up the compilation process and to save you some time, rock caches compiled dependencies
-in a hidden subdirectory called &lt;code&gt;.libs&lt;/code&gt;. In most cases, this is awesome, but sometimes, something
-goes wrong and you get pretty strange unexplainable error messages. Just to be sure, you can just&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-rock -x
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;then, recompile and see if it works.&lt;/p&gt;
+&lt;p&gt;Compiling under windows, the linker command line will contain the additional file
+&lt;code&gt;./isaac.res&lt;/code&gt;.&lt;/p&gt;
 </description>
     </item>
     

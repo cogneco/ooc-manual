@@ -66,469 +66,6 @@ solve, considering posting to the &lt;a href=&#34;https://groups.google.com/grou
     </item>
     
     <item>
-      <title>channel</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/channel</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/os/channel</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/Channel module&lt;/h1&gt;
-
-&lt;p&gt;Channels are another way to think about data flow in the program.
-Perhaps most famous in their Go implementation, &amp;lsquo;goroutines&amp;rsquo;, can
-communicate via channels.&lt;/p&gt;
-
-&lt;p&gt;The &lt;code&gt;os/Channel&lt;/code&gt; module contains a trivial implementation of channels
-which may be used like so:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import os/Channel
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;By importing this module, a scheduler is set to run before the program
-exits. Let&amp;rsquo;s start by making a channel by which Ints can travel:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-chan := make(Int)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then let&amp;rsquo;s make a data producer coroutine:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-go(||
-    for (i in 0..5) {
-        chan &amp;lt;&amp;lt; i
-        yield()
-    }
-)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And another one:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-go(||
-    for (i in 5..10) {
-        chan &amp;lt;&amp;lt; i
-        yield()
-    }
-    chan &amp;lt;&amp;lt; -1
-)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;-1 will be used as a stopping signal here. &lt;code&gt;go&lt;/code&gt; create a new
-coroutine, and &lt;code&gt;chan &amp;lt;&amp;lt; value&lt;/code&gt; sends a value down a channel.
-&lt;code&gt;yield&lt;/code&gt; switches from the current coroutine back to the scheduler.&lt;/p&gt;
-
-&lt;p&gt;Let&amp;rsquo;s now make a consumer channel:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-go(||
-    while (true) match (i := !chan) {
-        case -1 =&amp;gt; break
-        case =&amp;gt; &amp;quot;%d&amp;quot; printfln(i)
-    }
-)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;We&amp;rsquo;re reading from the channel with the not operator: &lt;code&gt;!chan&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;This will print 0, 5, 1, 6, 2, 7, 3, 8, 4, 9, and then exit, as
-expected.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>coro</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/coro</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/os/coro</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/Coro module&lt;/h1&gt;
-
-&lt;p&gt;That module was originally an ooc port of Steve Dekorte&amp;rsquo;s &lt;a href=&#34;https://github.com/stevedekorte/coroutine&#34;&gt;libcoroutine&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Coroutines help achieve cooperative multi-tasking, as opposed to threads, which
-achieve preemptive multitasking. In cooperative multi-tasking, each task (or
-&amp;lsquo;coroutine&amp;rsquo;) is responsible for handing the control to another coroutine.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;Basic usage&lt;/h1&gt;
-
-&lt;p&gt;First, we have to create a main coroutine:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import os/Coro
-
-mainCoro := Coro new()
-mainCoro initializeMainCoro
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;We can then create another coroutine, which we&amp;rsquo;ll here use as a generator&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-letter: Char
-
-coro1 := Coro new()
-mainCoro startCoro(coro1, ||
-    for (c in &amp;quot;LLAMACORE&amp;quot;) {
-        letter = c
-        coro1 switchTo(mainCoro)
-    }
-    exit(0)
-)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then we can retrieve those letters one by one:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-while (true) {
-    &amp;quot;%c&amp;quot; printfln(letter)
-    mainCoro switchTo(coro1)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This example is quite simple, just printing each letter that
-&lt;code&gt;coro1&lt;/code&gt; gives us on separate lines, but complex tasks can be
-broken down in various coroutines and be achieved in a much
-more lightweight fashion than threads or processes.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>dynlib</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/dynlib</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/os/dynlib</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/Dynlib module&lt;/h1&gt;
-
-&lt;p&gt;The &lt;code&gt;Dynlib&lt;/code&gt; module allows one to load dynamic libraries on all
-major platforms.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;Basic usage&lt;/h2&gt;
-
-&lt;p&gt;Let&amp;rsquo;s open a library:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import os/Dynlib
-
-lib := Dynlib load(&amp;quot;libm&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;We don&amp;rsquo;t need to specify the &lt;code&gt;.so&lt;/code&gt;, &lt;code&gt;.dynlib&lt;/code&gt;, or &lt;code&gt;.dll&lt;/code&gt; extension here, it is
-set automatically by platform, although the original path will be tested first,
-in case of non-standard file extension.&lt;/p&gt;
-
-&lt;p&gt;If the lib returned is null, it wasn&amp;rsquo;t found or couldn&amp;rsquo;t be opened:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-if (!lib) {
-    raise(&amp;quot;Couldn&#39;t load library!&amp;quot;)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;We can then retrieve a symbol:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-cosAddr := lib symbol(&amp;quot;cos&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And cast it to a more useful function. Since &lt;code&gt;Func&lt;/code&gt; is actually
-a function pointer and a context, we use a cover literal, passing
-null for the context:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-cos := (cosAddr, null) as Func (Double) -&amp;gt; Double
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Which we can then use!&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;cos(PI / 4) = %.3f&amp;quot; printfln(cos(3.14 * 0.25))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This prints &lt;code&gt;cos(PI / 4) = 0.707&lt;/code&gt;, as expected.&lt;/p&gt;
-
-&lt;p&gt;When we&amp;rsquo;re done with the library we can just close it:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-lib close()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Note: on Windows, failing to close a library may lead to a
-crash on application exit.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>os</title>
-      <link>http://oocmanual.cogneco.com/sdk/os</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/os</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The os package&lt;/h1&gt;
-
-&lt;p&gt;The os packages contains various modules pertaining to Operating System functionality such as:&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;Concurrency&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;process&#34;&gt;Process&lt;/a&gt;, to launch child processes&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;jobpool&#34;&gt;JobPool&lt;/a&gt;, to easily control a pool of child processes&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;[Coro](coro, which provides a basic coroutine implementation&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;I/O&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;terminal&#34;&gt;Terminal&lt;/a&gt;, used to control terminal text output (color, etc.)&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;pipe&#34;&gt;Pipe&lt;/a&gt;, to open, read from, and write to pipes&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;dynlib&#34;&gt;Dynlib&lt;/a&gt;, which deals with dynamic library loading&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;mmap&#34;&gt;mmap&lt;/a&gt;, which exposes memory mapping capabilities&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;channel&#34;&gt;Channel&lt;/a&gt;, which implements channels&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;System&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;system&#34;&gt;System&lt;/a&gt;, to get information such as the number of processors,
-the hostname, etc.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;env&#34;&gt;Env&lt;/a&gt;, to deal with environment variables&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;shellutils&#34;&gt;ShellUtils&lt;/a&gt;, used mostly to find executables&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;time&#34;&gt;Time&lt;/a&gt;, to get the current time and date, and sleep&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Constructors</title>
-      <link>http://oocmanual.cogneco.com/language/constructors</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/language/constructors</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Constructors&lt;/h1&gt;
-
-&lt;p&gt;In ooc, unlike Java/Scala/C++/C#, &amp;lsquo;new&amp;rsquo; isn&amp;rsquo;t a keyword, but a static method.&lt;/p&gt;
-
-&lt;p&gt;For example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    dog := Dog new(&amp;quot;Pif&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;However it&amp;rsquo;s uncommon to directly define a new method. Instead, an init method is
-defined, like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Dog: class {
-
-        name: String
-
-        init: func (=name) {}
-
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;When an &amp;lsquo;init&amp;rsquo; method is defined, a corresponding &amp;lsquo;new&amp;rsquo; static method is defined, in our case,
-the code above is equivalent to:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Dog: class {
-
-        name: String
-
-        init: func (name: String) {
-            this name = name
-        }
-
-        new: static func (name: String) -&amp;gt; This {
-            this := This alloc() as This
-            this init()
-            this
-        }
-
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&amp;lsquo;alloc&amp;rsquo; is a method of Class, which can be defined like this, for example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    /// Create a new instance of the object of type defined by this class
-    alloc: final func ~_class -&amp;gt; Object {
-        object := gc_malloc(instanceSize) as Object
-        if(object) {
-            object class = this
-        }
-        return object
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;In ooc implementations, Object and Class are often classes defined in .ooc source
-files, so you can easily study their source code. You can typically find their definitions
-in sdk/lang/ (because everything in the lang/ package is automatically imported)&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;Reminder: member-arguments and assign-arguments&lt;/h2&gt;
-
-&lt;p&gt;This:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    DiceRoll: class {
-        value: Int
-
-        init: func (=value) {}
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;is the equivalent of this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    DiceRoll: class {
-        value: Int
-
-        init: func (.value) {
-            this value = value
-        }
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;which is the equivalent of this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    DiceRoll: class {
-        value: Int
-
-        init: func (value: Int) {
-            this value = value
-        }
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Ie &amp;lsquo;.&amp;rsquo; allows &amp;lsquo;value&amp;rsquo;s type to be inferred from the member variable
-of the same name, and &amp;lsquo;=&amp;rsquo; does the same plus assigns it in the constructor.&lt;/p&gt;
-
-&lt;p&gt;This works for any method, not only for constructors. However, if you&amp;rsquo;re using
-it for setters, you probably want to use properties instead.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Multiple constructors&lt;/h2&gt;
-
-&lt;p&gt;As any method, constructors can be overloaded with suffixes.&lt;/p&gt;
-
-&lt;p&gt;Suffixes may seem annoying at first, seen as a sort of &amp;lsquo;manual name mangling&amp;rsquo;,
-but aside from helping to debug, they&amp;rsquo;re also a way to document the purpose of your
-different constructors. For that reason, it&amp;rsquo;s always a good idea to give meaningful
-suffixes that lets one hint the reason for existence of a constructor.&lt;/p&gt;
-
-&lt;p&gt;From a constructor, you can call another constructor with init(), just like a regular
-method.&lt;/p&gt;
-
-&lt;p&gt;You can also call a super-constructor with super()&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Dog: class {
-
-        name: String
-
-        init: func ~defaultName {
-            init(&amp;quot;The Man&amp;quot;)
-        }
-
-        init: func (=name) {}
-
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Inheritance&lt;/h2&gt;
-
-&lt;p&gt;A common mistake is to think that constructor are inherited, because they are standard
-methods. However, this behavior would be harmful, as explained in the following example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Logger: class {
-        prefix: String
-
-        init: func (=prefix) {}
-
-        log: func (msg: String) {
-            &amp;quot;%s%s&amp;quot; printfln(prefix, msg)
-        }
-    }
-
-    FileLogger: class extends Logger {
-        output: FileWriter
-
-        init: func ~withPath (path: String) {
-            super(prefix)
-            output = FileWriter new(path)
-        }
-
-        log: func (msg: String) {
-            output write(prefix). write(msg). write(&#39;\n&#39;)
-        }
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;What would happen if the first constructor defined in Logger was available
-for FileLogger? Let&amp;rsquo;s find out&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    warn := FileLogger new(&amp;quot;WARN&amp;quot;)
-    warn log(&amp;quot;Somebody set us up the stacktrace&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The constructor call, if it was valid, would either return a Logger, which is
-not what we want, or by some miracle trick, return a FileLogger - but one
-that wouldn&amp;rsquo;t be properly initialized, so that log() would crash.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Super func (and beyond)&lt;/h2&gt;
-
-&lt;p&gt;However, there are times when one truly wants to relay a constructor
-in an inherited class, such as:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Expression: abstract class {
-        eval: abstract func -&amp;gt; Int
-    }
-
-    BinaryOp: abstract class extends Expression {
-        left, right: Expression
-
-        init: func ~lr (=left, =right) {}
-    }
-
-    Add: class extends BinaryOp {
-        init: func ~lr (=left, =right) {}
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Repeating the &amp;lsquo;init~lr&amp;rsquo; definition in Add violates the Don&amp;rsquo;t Repeat Yourself (DRY)
-principle. Besides, if functionality is added to the base BinaryOp init~lr, it
-wouldn&amp;rsquo;t be replicated in Add init~lr.&lt;/p&gt;
-
-&lt;p&gt;For this precise case, the &amp;lsquo;super func&amp;rsquo; construct exists:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Add: class extends BinaryOp {
-        init: super func ~lr
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This behaves exactly as if we had written:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Add: class extends BinaryOp {
-        init: func ~lr (.left, .right) {
-            super(left, right)
-        }
-    }
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
       <title>mmap</title>
       <link>http://oocmanual.cogneco.com/sdk/os/mmap</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
@@ -565,134 +102,6 @@ bytecode at runtime and thus marking some memory regions as executable.&lt;/p&gt
     </item>
     
     <item>
-      <title>jobpool</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/jobpool</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/os/jobpool</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/JobPool module&lt;/h1&gt;
-
-&lt;p&gt;JobPool is useful when several background tasks have to be launched in
-parallel. It allows to control how many tasks are run in parallel, and to wait
-until all tasks have ended.&lt;/p&gt;
-
-&lt;p&gt;A good example of JobPool usage would be a build system, where multiple
-instances of a compiler have to be ran on different files, and the number of
-instances running in parallel should be limited.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;Basic usage&lt;/h1&gt;
-
-&lt;p&gt;Creating a job pool is trivial:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import os/JobPool
-pool := JobPool new()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then jobs should be added. Jobs are attached to processes, so the process
-must be launched beforehand.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-p := Process new([&amp;quot;find&amp;quot;, &amp;quot;./&amp;quot;, &amp;quot;-name&amp;quot;, &amp;quot;*.log&amp;quot;])
-p executeNoWait()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then an associated job can be created and added to the pool:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-job := Job new(p)
-pool add(job)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Note that the &lt;code&gt;pool add&lt;/code&gt; call might block, if there already is too many
-jobs running in parallel, waiting for at least one job to complete.&lt;/p&gt;
-
-&lt;p&gt;When all jobs have been added, one can wait for all jobs to finish.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-exitCode := pool waitAll()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;If at least one job failed (returned with a non-zero exit code),
-&lt;code&gt;waitAll&lt;/code&gt; will return its exit code. If they all succeeded, &lt;code&gt;waitAll&lt;/code&gt;
-will just return 0.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Proof of concept&lt;/h2&gt;
-
-&lt;p&gt;To demonstrate how it works, we can launch several &lt;code&gt;sleep&lt;/code&gt; commands
-in the background, and wait for them all to finish:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-pool := JobPool new()
-
-for (i in 0..pool parallelism) {
-    p := Process new([&amp;quot;sleep&amp;quot;, &amp;quot;1&amp;quot;])
-    p executeNoWait()
-    pool add(Job new(p))
-}
-
-pool waitAll()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This program wil take about 1 second to complete, no matter the level
-of parallelism. Instead of being executed sequentially (which would add
-up the time of execution), they&amp;rsquo;re being executed in parallel.&lt;/p&gt;
-
-&lt;p&gt;Note that this is a contrived example. In a real example, one would not
-adjust the total number of jobs from the &lt;code&gt;pool parallelism&lt;/code&gt; setting, but
-rather let the natural number of jobs be distributed by the job pool itself.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_3&#34;&gt;Customization&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Parallelism&lt;/h2&gt;
-
-&lt;p&gt;By default, &lt;code&gt;JobPool&lt;/code&gt; tries to have a level of parallelism (max jobs in
-parallel) equal to the number of cores on the machine it&amp;rsquo;s running on.&lt;/p&gt;
-
-&lt;p&gt;It can be adjusted by hand:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-// never run more that 2 jobs in parallel
-pool parallelism = 2
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Custom job&lt;/h2&gt;
-
-&lt;p&gt;In our examples above we&amp;rsquo;ve always used the default &lt;code&gt;Job&lt;/code&gt; class. But it can be
-extended as well. By making a subclass of it, we can override the &lt;code&gt;Job onExit&lt;/code&gt;
-method, allowing us to take action after each job is finished.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-CompilationJob: class extends Job {
-    init: func {
-        p := Process new([&amp;quot;gcc&amp;quot;, &amp;quot;-v&amp;quot;])
-        p executeNoWait()
-        super(p)
-    }
-
-    onExit: func (code: Int) {
-        if (code != 0) {
-            raise(&amp;quot;Compilation failed!&amp;quot;)
-        }
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Our new job type can then be used, like so:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-pool := Pool new()
-for (i in 0..10) {
-    pool add(CompilationJob new())
-}
-pool waitAll()
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
       <title>system</title>
       <link>http://oocmanual.cogneco.com/sdk/os/system</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
@@ -713,44 +122,6 @@ cores := System numProcessors()
 
 &lt;pre&gt;&lt;code&gt;#!ooc
 hostname := System hostname()
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>env</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/env</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/os/env</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/Env module&lt;/h1&gt;
-
-&lt;p&gt;The &lt;code&gt;Env&lt;/code&gt; module allows to get and set environment variables.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import os/Env
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Getting an environment variable:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-path := Env get(&amp;quot;PATH&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;get&lt;/code&gt; will return &lt;code&gt;null&lt;/code&gt; if the given environment variable is not set.&lt;/p&gt;
-
-&lt;p&gt;Setting an environment variable:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Env set(&amp;quot;CFLAGS&amp;quot;, &amp;quot;-Os&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Environment variables can be unset as well:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Env unset(&amp;quot;PKG_CONFIG_PATH&amp;quot;)
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
@@ -807,288 +178,490 @@ make := ShellUtils findExecutable(&amp;quot;make&amp;quot;, true)
     </item>
     
     <item>
-      <title>structs</title>
-      <link>http://oocmanual.cogneco.com/sdk/structs</link>
+      <title>pipe</title>
+      <link>http://oocmanual.cogneco.com/sdk/os/pipe</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/sdk/structs</guid>
+      <guid>http://oocmanual.cogneco.com/sdk/os/pipe</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;The structs package&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;The os/Pipe module&lt;/h1&gt;
 
-&lt;p&gt;A few frequently used data structures ship with the SDK.&lt;/p&gt;
+&lt;p&gt;The Pipe module allows one to deal with pipes. Pipes are basically a pair of
+read and write file descriptors.&lt;/p&gt;
 
-&lt;h1 id=&#34;toc_1&#34;&gt;Lists&lt;/h1&gt;
+&lt;p&gt;The writer writes into the write file descriptor and the reader reads into the
+read file descriptor.&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;structs/List&lt;/code&gt; contains the generic interface for lists, which are ordered, indexed
-collections of elements of any type &lt;code&gt;T&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;toc_1&#34;&gt;Reading&lt;/h2&gt;
+
+&lt;p&gt;A read call may either:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;successfully read, if there&amp;rsquo;s data in the pipe&lt;/li&gt;
+&lt;li&gt;block to wait for some more data (in blocking mode)&lt;/li&gt;
+&lt;li&gt;return immediately with no data (in non-blocking mode)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In non-blocking mode, one has to be careful to distinguish between the &amp;lsquo;no
+data&amp;rsquo; condition and the &amp;lsquo;end of pipe&amp;rsquo; condition. OS pipes don&amp;rsquo;t have a proper
+&amp;lsquo;eof&amp;rsquo; marker, but reading from a closed pipe will mark the Pipe class as eof
+anyway, accessible with &lt;code&gt;Pipe eof?()&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;os/Pipe&lt;/code&gt; package contains a &lt;code&gt;PipeReader&lt;/code&gt; class, which extends the
+&lt;code&gt;io/Reader&lt;/code&gt; class, for convenience.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Writing&lt;/h2&gt;
+
+&lt;p&gt;A write call may either:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;return immediately if there&amp;rsquo;s room in the pipe&lt;/li&gt;
+&lt;li&gt;block to wait for some data to be read, making room to write something (in
+blocking mode)&lt;/li&gt;
+&lt;li&gt;return immediately, having written as much as it can (in non-blocking mode)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The &lt;code&gt;os/Pipe&lt;/code&gt; package contains a &lt;code&gt;PipeWriter&lt;/code&gt; class, which extends the
+&lt;code&gt;io/Writer&lt;/code&gt; class, for convenience.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Buffering considerations&lt;/h2&gt;
+
+&lt;p&gt;Note that a pipe&amp;rsquo;s user has to do its own buffering when writing: in blocking
+mode, writing something too large will hang forever, and in non-blocking mode,
+only the part that fits will be written, leaving the rest unwritten.&lt;/p&gt;
+
+&lt;p&gt;As a result, using a &lt;code&gt;PipeReader&lt;/code&gt; or a &lt;code&gt;PipeReader&lt;/code&gt; in non-blocking mode is
+unreliable.  Instead, using blocking mode inside a thread is preferrable.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_4&#34;&gt;Basic usage&lt;/h1&gt;
+
+&lt;p&gt;Here&amp;rsquo;s a not so useful pipe:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-list: List&amp;lt;String&amp;gt; = // something
+pipe := Pipe new()
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Elements can be added to or removed from anywhere in the list&lt;/p&gt;
+&lt;p&gt;We can write a string into it:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-list add(&amp;quot;hi&amp;quot;) // append &amp;quot;hi&amp;quot; to the list
-list add(0, &amp;quot;hoe&amp;quot;) // prepend &amp;quot;ho&amp;quot; to the list
-list remove(&amp;quot;hi&amp;quot;) // remove the first element equal to &amp;quot;hi&amp;quot;
-list removeAt(0) // remove the first element
-
-list addAll(otherList) // append all elements from other list
+pipe write(&amp;quot;Hello&amp;quot;)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;They can also be retrieved from anywhere in the list:&lt;/p&gt;
+&lt;p&gt;And then read the result back:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-list get(24) == list[24] // get the 24th element
-list first() // get the first element
-list last() // get the last element
+str := pipe read(128)
+str println()
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;The number of elements in a list is available as the &lt;code&gt;size&lt;/code&gt; property:&lt;/p&gt;
+&lt;p&gt;Even though we requested 128 bytes from the pipe, only 5 bytes have been written,
+so we the call immediately returns with a String of size 5.&lt;/p&gt;
+
+&lt;p&gt;We could have also read into our own buffer:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;There are %d elements in this list.&amp;quot; printfln(list size)
+b := Buffer new(128)
+pipe read(b)
+b println()
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Going through each element is easy as well, either using a foreach:&lt;/p&gt;
+&lt;p&gt;Same here, the buffer has 128 bytes capacity, but only 5 bytes have been read, and
+the buffer&amp;rsquo;s length has been set accordingly. Using a buffer is more efficient
+because fewer allocations are being done.&lt;/p&gt;
+
+&lt;p&gt;Then, we shouldn&amp;rsquo;t forget to close both the reading and the writing end of the pipe&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-for (elem in list) {
-  elem println()
+pipe close(&#39;r&#39;)
+pipe close(&#39;w&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or simply:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+pipe close()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;toc_5&#34;&gt;Communication&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;Inter-thread communication&lt;/h2&gt;
+
+&lt;p&gt;Pipes can be used to communicate between threads.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s create a pipe:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+pipe := Pipe new()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then a thread that is going to read out of it until it&amp;rsquo;s closed:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+reader := Thread new(||
+    while (!pipe eof?()) {
+        result := pipe read(128)
+        if (result) result print()
+    }
+    pipe close(&#39;r&#39;)
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then a writer path which is going to write ten hellos, one every 100
+milliseconds:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+writer := Thread new(||
+    for (i in 0..10) {
+        pipe write(&amp;quot;Hello %d\n&amp;quot; format(i))
+        Time sleepMilli(100)
+    }
+    pipe close(&#39;w&#39;)
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let&amp;rsquo;s start them both:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+reader start(); writer start()
+reader wait();  writer wait()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;Inter-process communication&lt;/h2&gt;
+
+&lt;p&gt;Similarly, pipes can be (and are mostly) used to communicate with other
+processes. This is covered in the &lt;a href=&#34;/docs/sdk/os/process/&#34;&gt;Process&lt;/a&gt; section.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_8&#34;&gt;Non-blocking I/O&lt;/h2&gt;
+
+&lt;p&gt;A pipe can be set to non-blocking mode to use non-blocking read operations.
+This is used in the streaming example in the &lt;a href=&#34;/docs/sdk/os/process/&#34;&gt;Process&lt;/a&gt; section.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s create a pipe in non-blocking mode for reading only:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+pipe := Pipe new()
+pipe setNonBlocking(&#39;r&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then a state variable that&amp;rsquo;ll be shared by both threads:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+done := false
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then we&amp;rsquo;ll make a writer thread that never closes the pipe itself (much like a
+process launched in the background that you never blockingly wait on):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+t := Thread new(||
+  for (i in 0..10) {
+    Time sleepSec(1)
+    pipe write(&amp;quot;Hello %d&amp;quot; format(i))
+  }
+  done = true
+)
+
+t start()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It does set done to true after it&amp;rsquo;s done, though - much like you could know if
+a background process is still running with &lt;code&gt;waitNoHang&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Then we&amp;rsquo;ll read, from the main thread, as much as we can, and when we don&amp;rsquo;t receive
+anything, we&amp;rsquo;ll check if we&amp;rsquo;re done:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+while (true) {
+  res := pipe read(128)
+  if (res) {
+    &amp;quot;Received: %s&amp;quot; printfln(res)
+  } else if (done) break
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Or by passing a closure:&lt;/p&gt;
+&lt;p&gt;And let&amp;rsquo;s not forget to clean up:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-list each(|elem|
-  elem println()
-)
+pipe close()
+t wait()
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Removing all elements can be done via &lt;code&gt;clear&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;That behaves as expected. Note that in the main thread loop we could be doing anything
+really, without blocking on the read.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_9&#34;&gt;Pipes disclaimer&lt;/h1&gt;
+
+&lt;p&gt;If you have read all the way down, and you&amp;rsquo;re thinking of doing some complex
+stuff with pipes, you probably want some queuing library instead of using raw
+pipes, both for cross-platform support, performance, and ease of use.
+&lt;a href=&#34;http://zeromq.org/&#34;&gt;zeromq&lt;/a&gt; is an interesting library and it has &lt;a href=&#34;https://github.com/nddrylliog/ooc-zeromq&#34;&gt;ooc bindings&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>terminal</title>
+      <link>http://oocmanual.cogneco.com/sdk/os/terminal</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/os/terminal</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The os/Terminal module&lt;/h1&gt;
+
+&lt;p&gt;Terminal is used to control the terminal output, mostly by setting colors and
+attributes on there.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;Colors&lt;/h1&gt;
+
+&lt;p&gt;The &lt;code&gt;Color&lt;/code&gt; enum contains colors that are possible to set on the terminal:&lt;/p&gt;
+
+&lt;p&gt;To change the foreground color, use &lt;code&gt;setFgColor&lt;/code&gt;:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-list clear()
+Terminal setFgColor(Color black)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;toc_2&#34;&gt;ArrayList&lt;/h2&gt;
-
-&lt;p&gt;An array list is backed by an array, which it grows or shrinks depending
-on how many elements are in there.&lt;/p&gt;
-
-&lt;p&gt;Removing or adding an element in the middle of an ArrayList is expensive, as
-it shifts all elements after it.&lt;/p&gt;
+&lt;p&gt;To change the background color, use &lt;code&gt;setBgColor&lt;/code&gt;:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-// constructed through successive add() calls:
-a1 := ArrayList&amp;lt;Int&amp;gt; new()
-a1 add(1); a1 add(2); a2 add(3)
-
-// constructed from an array literal
-a1 := [1, 2, 3] as ArrayList&amp;lt;Int&amp;gt;
+Terminal setBgColor(Color white)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;An ArrayList can be easily converted to an array:&lt;/p&gt;
+&lt;h2 id=&#34;toc_2&#34;&gt;List of colors&lt;/h2&gt;
+
+&lt;p&gt;Here are the colors defined in the Color enum:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;black&lt;/li&gt;
+&lt;li&gt;red&lt;/li&gt;
+&lt;li&gt;green&lt;/li&gt;
+&lt;li&gt;yellow&lt;/li&gt;
+&lt;li&gt;blue&lt;/li&gt;
+&lt;li&gt;magenta&lt;/li&gt;
+&lt;li&gt;cyan&lt;/li&gt;
+&lt;li&gt;grey&lt;/li&gt;
+&lt;li&gt;white&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Note that depending on your terminal emulator, these colors
+might not map to their actual names.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_3&#34;&gt;Attributes&lt;/h1&gt;
+
+&lt;p&gt;Attributes can be set using &lt;code&gt;setAttr&lt;/code&gt;:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-printArray(list toArray())
+Terminal setAttr(Attr bright)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;toc_3&#34;&gt;LinkedList&lt;/h2&gt;
+&lt;h2 id=&#34;toc_4&#34;&gt;List of attributes&lt;/h2&gt;
 
-&lt;p&gt;A &lt;code&gt;LinkedList&lt;/code&gt; is a doubly linked list, ie. each element points to the
-element after it and the element before it.&lt;/p&gt;
+&lt;p&gt;Here are the attributes defined in the &lt;code&gt;Attr&lt;/code&gt; enum:&lt;/p&gt;
 
-&lt;p&gt;Unlike the ArrayList, removing or adding an element in the middle of a linked list
-is inexpensive.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;reset&lt;/li&gt;
+&lt;li&gt;bright&lt;/li&gt;
+&lt;li&gt;dim&lt;/li&gt;
+&lt;li&gt;under&lt;/li&gt;
+&lt;li&gt;blink&lt;/li&gt;
+&lt;li&gt;reverse&lt;/li&gt;
+&lt;li&gt;hidden&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;h1 id=&#34;toc_4&#34;&gt;Maps&lt;/h1&gt;
+&lt;h1 id=&#34;toc_5&#34;&gt;Resetting&lt;/h1&gt;
 
-&lt;p&gt;Maps are associative objects, ie. they associate keys to values.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;HashMap&lt;/h2&gt;
-
-&lt;p&gt;The most oftenly used map collection is &lt;code&gt;structs/HashMap&lt;/code&gt;. It can only associate
-a given key to one value. E.g. there cannot be duplicate keys.&lt;/p&gt;
+&lt;p&gt;Reset all color and attribute settings to default by using the
+&lt;code&gt;reset&lt;/code&gt; method:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-map := HashMap&amp;lt;String, Int&amp;gt; new()
+Terminal reset()
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Key-&amp;gt;value pairs are added to a HashMap using &lt;code&gt;put&lt;/code&gt;:&lt;/p&gt;
+&lt;h1 id=&#34;toc_6&#34;&gt;Cross-platform considerations&lt;/h1&gt;
+
+&lt;p&gt;On *nix platforms, all attributes are supposed. On Windows, only
+the &lt;code&gt;reset&lt;/code&gt; attribute is supported.&lt;/p&gt;
+
+&lt;p&gt;On *nix, the &lt;code&gt;Terminal&lt;/code&gt; module outputs ANSI escape sequences to
+stdout, whereas on Windows it uses the console text attribute API.&lt;/p&gt;
+
+&lt;p&gt;That&amp;rsquo;s why there is no cross-platform way to transform a string
+into a &amp;ldquo;colored string&amp;rdquo;, because it would make no sense on Windows.&lt;/p&gt;
+
+&lt;p&gt;Also, on *nix, color escapes will only be outputted if stdout is
+a terminal and not if it&amp;rsquo;s redirected to a file or a pipe.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>memory</title>
+      <link>http://oocmanual.cogneco.com/sdk/lang/memory</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/lang/memory</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Memory&lt;/h1&gt;
+
+&lt;p&gt;Sometimes, you just have to handle memory yourself. None of that class
+or cover stuff, just give me a raw block of memory any day.&lt;/p&gt;
+
+&lt;p&gt;You&amp;rsquo;ll see the &lt;code&gt;gc_&lt;/code&gt; prefix being used in the following page: that stands
+for Garbage Collection, which is enabled by default in ooc. However, when
+the GC is disabled, those will point to non-GC version of the functions.&lt;/p&gt;
+
+&lt;p&gt;So that your code remains flexible, do yourself a favor and use the &lt;code&gt;gc_&lt;/code&gt;
+variants regardless.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Allocating memory&lt;/h2&gt;
+
+&lt;p&gt;Use &lt;code&gt;gc_malloc&lt;/code&gt; to get a chunk of memory all to yourself.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-map put(&amp;quot;one&amp;quot;, 1)
-map put(&amp;quot;two&amp;quot;, 2)
-map put(&amp;quot;three&amp;quot;, 3)
+// get ourselves a slice of 4 bytes
+block := gc_malloc(4)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;..and retrieved using &lt;code&gt;get&lt;/code&gt;. Key presence is tested with &lt;code&gt;containsKey?&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;However, you&amp;rsquo;ll get a &lt;code&gt;Pointer&lt;/code&gt; back - which is a little bit pointless.
+Plus you&amp;rsquo;ll probably want to determine how much you are allocating as
+a function of the size of some other type instead:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-map get(&amp;quot;two&amp;quot;) == 2 // true
-map containsKey?(&amp;quot;two&amp;quot;) // true
+// get ourselves room to store 4 doubles.
+doubles := gc_malloc(4 * Double size) as Double*
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;The whole point of a HashMap is that checking for presence or finding the
-value corresponding to a key is faster than storing values in a list and
-iterating through it entirely every time.&lt;/p&gt;
-
-&lt;p&gt;To remove pairs, one has to specify the key:&lt;/p&gt;
+&lt;p&gt;That&amp;rsquo;s better. Now you can index that, like any pointer:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-map remove(&amp;quot;two&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;A HashMap can be iterated through:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-map each(|key, value|
-  &amp;quot;%s =&amp;gt; %s&amp;quot; printfln(key, value)
-)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;It&amp;rsquo;s possible to get a list of all keys contained in a map:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-map getKeys()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Note that in a HashMap, iteration order is not guaranteed to be equivalent to
-insertion order - due to the hashing done, keys might get reordered for efficiency.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;MultiMap&lt;/h2&gt;
-
-&lt;p&gt;MultiMap is a HashMap variant that can contain multiple values for a given key.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;OrderedMultiMap&lt;/h2&gt;
-
-&lt;p&gt;OrderedMultiMap is a MultiMap variant that will maintain the order in which keys
-were inserted, for iteration.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_8&#34;&gt;Bag variants&lt;/h1&gt;
-
-&lt;p&gt;In the structures presenting above, all elements must have the same type in a given
-collection. Bags are different: each element can be a different type.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_9&#34;&gt;Cell&lt;/h2&gt;
-
-&lt;p&gt;Actually defined in &lt;code&gt;lang/types&lt;/code&gt;, Cell can contain anything:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-intCell := Cell new(42)
-stringCell := Cell new(&amp;quot;turtle&amp;quot;)
-// and so on
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Unwrapping a cell can be done via the indexing operator &lt;code&gt;[]&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-number := cell[Int]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Note that unwrapping a cell with an incompatible type will throw an error.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_10&#34;&gt;Bag&lt;/h2&gt;
-
-&lt;p&gt;Technically, a Bag can be seen as a list of cells, with convenience methods to
-deal directly with the values contained inside the cells.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-bag := Bag new()
-bag add(93) // add an Int
-bag add(&amp;quot;seaside&amp;quot;) // add a String
-bag add(bag) // add itself! the fun never ends.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;To retrieve elements from a bag, one has to specify the type:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-number := bag get(0, Int)
-title := bag get(1, String)
-// and so on
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_11&#34;&gt;HashBag&lt;/h2&gt;
-
-&lt;p&gt;A HashBag maps string values to any type of value.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-hash := HashBag new()
-hash put(&amp;quot;number&amp;quot;, 93)
-hash put(&amp;quot;title&amp;quot;, &amp;quot;seaside&amp;quot;)
-hash put(&amp;quot;ourselves&amp;quot;, hash)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;To retrieve elements from a &lt;code&gt;HashBag&lt;/code&gt;, one has to specify both the string key
-and the type:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-number := hash get(&amp;quot;number&amp;quot;, Int)
-title := hash get(&amp;quot;title&amp;quot;, String)
+doubles[0] = 3.14    
+doubles[1] = 6.28    
 // etc.
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;HashBags are particularly useful to represent a tree-like document, that was originally
-encoded as JSON or YAML, for example.&lt;/p&gt;
-
-&lt;p&gt;The &lt;code&gt;getPath&lt;/code&gt; method allows one to retrieve an element of a tree of &lt;code&gt;HashBag&lt;/code&gt;s and &lt;code&gt;Bag&lt;/code&gt;s.&lt;/p&gt;
-
-&lt;p&gt;Let&amp;rsquo;s say the original JSON looked like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!json
-{&amp;quot;elements&amp;quot;: {
-  &amp;quot;house&amp;quot;: {},
-  &amp;quot;car&amp;quot;: {
-    &amp;quot;wheels&amp;quot;: [
-      { &amp;quot;diameter&amp;quot;: 2 }
-    ]}}}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;One could use the following code to retrieve the diameter of the first wheel:&lt;/p&gt;
+&lt;p&gt;Pointer arithmetic works:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-data: HashBag = // read from JSON
-diameter := data getPath(&amp;quot;elements/car/wheels#0/diameter&amp;quot;, Int)
+addressOfSecondDouble := doubles + 1
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;toc_12&#34;&gt;Stacks&lt;/h1&gt;
-
-&lt;p&gt;Stacks are list-like data structures, except their primary purpose is to have elements
-pushed on top of them and popped from the top, in a LIFO (last-in, first-out) fashion.&lt;/p&gt;
+&lt;p&gt;Then again, why not write it the explicit way:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-stack := Stack&amp;lt;Int&amp;gt; new()
-stack push(1). push(2). push(3)
-
-stack pop() == 3 // true
-stack pop() == 2 // also true
-stack pop() == 1 // left as an exercise to the reader
+addressOfSecondDouble := doubles[1]&amp;amp;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;toc_13&#34;&gt;Stick&lt;/h2&gt;
+&lt;p&gt;Note that &lt;code&gt;gc_malloc&lt;/code&gt; returns zeroed memory (even when the GC is disabled),
+just like the C function &lt;code&gt;calloc&lt;/code&gt; does. While a small performance hit, a
+little additional safety can&amp;rsquo;t hurt.&lt;/p&gt;
 
-&lt;p&gt;The ill-named &lt;code&gt;Stick&lt;/code&gt; data structure can be thought of as a bag stack - e.g. a Stack
-that can contain any type of element.&lt;/p&gt;
+&lt;h2 id=&#34;toc_2&#34;&gt;Allocating in bulks&lt;/h2&gt;
 
-&lt;p&gt;Example usage:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;calloc&lt;/code&gt; is typically used in C to get zeroed memory (e.g. all null bytes).
+This is unnecessary in ooc, since &lt;code&gt;gc_malloc&lt;/code&gt; returns zeroed memory anyway.&lt;/p&gt;
+
+&lt;p&gt;In the rare cases where you do mean to allocate &lt;code&gt;num&lt;/code&gt; members of size &lt;code&gt;size&lt;/code&gt;,
+use &lt;code&gt;gc_calloc&lt;/code&gt;:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-stick := Stick new(Float size + Object size)
-stick push(1.23)
-stick push(&amp;quot;Hi!&amp;quot;)
-
-stick pop(String) == &amp;quot;Hi!&amp;quot; // true
-stick pop(Float) == 1.23 // truthful
+members := gc_calloc(num, size)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;code&gt;Stick&lt;/code&gt; is quite low-level - it doesn&amp;rsquo;t resize automatically, it does no
-bounds checking, no type checking at all. To be used when you absolutely,
-positively need to squeeze bytes together as close as possible and don&amp;rsquo;t care
-about safety at all.&lt;/p&gt;
+&lt;h2 id=&#34;toc_3&#34;&gt;Re-allocating memory&lt;/h2&gt;
+
+&lt;p&gt;Didn&amp;rsquo;t get enough the first time around? Misjudged your budget needs?&lt;/p&gt;
+
+&lt;p&gt;Fear not, &lt;code&gt;gc_realloc&lt;/code&gt; is here:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+// get ourselves 4 bytes
+block := gc_malloc(4)
+
+// woops, make that 8
+block = gc_realloc(block, 8)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Duplicating memory&lt;/h2&gt;
+
+&lt;p&gt;In our family of memory-related functions, &lt;code&gt;gc_strdup&lt;/code&gt;, nostalgically
+named as if it was only used with strings, is here. It&amp;rsquo;ll make a copy of
+a block of memory so that the original may be disposed of.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+someCallback: func (word: CString) {
+  // CString is a pointer to a memory block that will get
+  // overriden sometimes after this function returns - hence,
+  // we want to make a copy so that the data we got doesn&#39;t
+  // get tampered with.
+  storeString(String new(gc_strdup(word)))
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The block of code above shows the typical use case, anyway.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Freeing memory&lt;/h2&gt;
+
+&lt;p&gt;Technically, since we are using a garbage collector, you don&amp;rsquo;t need to
+free explicitly. Should you feel the need to do so, however, &lt;code&gt;gc_free&lt;/code&gt; is
+here to do the job:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+// you know what, I&#39;m good for now, thanks.
+gc_free(block)
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Basic Usage</title>
+      <link>http://oocmanual.cogneco.com/tools/rock/basic</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/tools/rock/basic</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Using rock, the basic way&lt;/h1&gt;
+
+&lt;p&gt;If you have a usefile, calling rock is pretty easy:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+rock
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;will look for usefiles in your current directory and, if possible, build them.&lt;/p&gt;
+
+&lt;p&gt;Since the world is not always perfect, it&amp;rsquo;s also possible to pass an &lt;code&gt;.ooc&lt;/code&gt; file directly:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+rock mmorpg.ooc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Sadly, it&amp;rsquo;s possible that rock thinks your ooc code is alright and passes the C files to your
+C compiler which then prints pages of errors and explodes subsequently.
+In that case, you&amp;rsquo;ll need to increase rock&amp;rsquo;s verbosity to see the compiler output:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+rock -v ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Building an executable and tired of typing &lt;code&gt;./mmorpg&lt;/code&gt; all over again?&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+rock -r ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;will run your executable after having built it successfully.&lt;/p&gt;
+
+&lt;p&gt;To speed up the compilation process and to save you some time, rock caches compiled dependencies
+in a hidden subdirectory called &lt;code&gt;.libs&lt;/code&gt;. In most cases, this is awesome, but sometimes, something
+goes wrong and you get pretty strange unexplainable error messages. Just to be sure, you can just&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+rock -x
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;then, recompile and see if it works.&lt;/p&gt;
 </description>
     </item>
     
@@ -1364,100 +937,556 @@ as you want, and &lt;code&gt;array&lt;/code&gt; for JSON arrays.&lt;/p&gt;
     </item>
     
     <item>
-      <title>Covers</title>
-      <link>http://oocmanual.cogneco.com/language/covers</link>
+      <title>Control Structures</title>
+      <link>http://oocmanual.cogneco.com/language/control-structures</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/language/covers</guid>
+      <guid>http://oocmanual.cogneco.com/language/control-structures</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;Covers&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;Conditionals&lt;/h1&gt;
 
-&lt;p&gt;One selling point of ooc is that it makes it easy to use C libraries which
-design is object-oriented. Covers are one way to do that.&lt;/p&gt;
+&lt;h2 id=&#34;toc_1&#34;&gt;if / else&lt;/h2&gt;
 
-&lt;h1 id=&#34;toc_1&#34;&gt;Struct-like covers&lt;/h1&gt;
-
-&lt;p&gt;Covers are a by-value, lighter, lower-level alternative to classes.&lt;/p&gt;
+&lt;p&gt;There&amp;rsquo;s your traditional if, else if, else structure. The body should be either
+a single statement, or a scope.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-Vec2: cover {
-  x, y: Float
+if (off) turnOn()
 
-  norm: func -&amp;gt; Float {
-    sqrt(x * x + y * y)
+if (stressed) {
+    breatheIn()
+    breatheOut()
+} else if (tired) {
+    rest()
+} else {
+    allGood()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The condition can be of type &lt;code&gt;Bool&lt;/code&gt; or a Pointer, in which case it will evaluate to
+&lt;code&gt;true&lt;/code&gt; if it is non-null.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;match / case&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;match&lt;/code&gt; is ooc&amp;rsquo;s &lt;code&gt;switch&lt;/code&gt;, loosely modelled after Scala&amp;rsquo;s. In its simplest form, it tests for equality between an expression and several values:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+match (numFeets) {
+    case 1 =&amp;gt; &amp;quot;Ouch&amp;quot;
+    case 2 =&amp;gt; &amp;quot;Normal&amp;quot;
+    case =&amp;gt;
+        // what?
+        raise(&amp;quot;Too many feet&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Each case is a scope of its own - it doesn&amp;rsquo;t require braces. A case with no
+expression is a catch-all.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;match&lt;/code&gt; also works with any class T that implements the method &lt;code&gt;matches?: func
+-&amp;gt; (other: T) -&amp;gt; Bool&lt;/code&gt;. Another way to get complex types to work in matches
+is simply to override the &lt;code&gt;==&lt;/code&gt; operator. Hence, Strings work:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+match keyword {
+    case &amp;quot;if&amp;quot; =&amp;gt;
+        Keyword IF
+    case &amp;quot;match&amp;quot; =&amp;gt;
+        Keyword MATCH
+    case =&amp;gt;
+        Keyword UNKNOWN
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;match&lt;/code&gt; is also a good way to avoid explicit casting, by matching an object
+against variable declarations, one can use its specific form directly:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+result := match (op) {
+    case plus: Plus =&amp;gt;
+        plus lhs + plus rhs
+    case minus: Minus =&amp;gt;
+        minus lhs - minus rhs
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A &lt;code&gt;match&lt;/code&gt; is an expression, if every case ends with an expression. Hence, a
+match can be used as a return value, or in a function call, on the right hand
+side of a declaration-assignment (&lt;code&gt;:=&lt;/code&gt;), as demonstrated above.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_3&#34;&gt;Loops&lt;/h1&gt;
+
+&lt;p&gt;Loops are structures that control the repetition of a body of code.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;break / continue&lt;/h2&gt;
+
+&lt;p&gt;Two particular keywords are of interest when writing loops:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;break&lt;/code&gt; immediately exits the loop, skipping the rest of the body
+and not executing any further iteration&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;continue&lt;/code&gt; skips over the rest of the body and begins the next
+iteration immediately&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;while&lt;/h2&gt;
+
+&lt;p&gt;Checks the condition - if false, skips the body. If true, runs the body,
+then checks the condition again, etc.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+while (!satisfied) {
+    buyStuff()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;for&lt;/h2&gt;
+
+&lt;p&gt;There is no C-like &lt;code&gt;for&lt;/code&gt; in ooc, only a foreach. It can iterate through
+values like ranges:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+for (i in 1..10) {
+    &amp;quot;Counting to %d&amp;quot; printfln(i)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or more complex data structures:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+for (element in list) {
+    &amp;quot;Element = %s&amp;quot; printfln(element toString())
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For an object to be iterable, it has to implement the
+&lt;code&gt;iterator: func &amp;lt;T&amp;gt; -&amp;gt; Iterator&amp;lt;T&amp;gt;&lt;/code&gt; method.&lt;/p&gt;
+
+&lt;p&gt;A variant of foreach allows one to get the index of the current element:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+for ((index, element) in list) {
+    &amp;quot;list[%d] = %s&amp;quot; printfln(index, element toString())
+}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Rock</title>
+      <link>http://oocmanual.cogneco.com/tools/rock</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/tools/rock</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;About Rock&lt;/h1&gt;
+
+&lt;p&gt;Rock is the main ooc compiler. It parses ooc files using nagaqueen, does some
+checking and inference, produces .c files, and then drives the C compilation process
+to produce either an executable or a library.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/basic/&#34;&gt;Basic usage&lt;/a&gt; section explains how to quickly get
+up and running, using rock to compile ooc projects.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/drivers/&#34;&gt;Drivers&lt;/a&gt; section gives an overview of rock&amp;rsquo;s various
+drivers, akin to compiling strategies, like the sequence driver (default), the make
+driver, and the android driver.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/advanced/&#34;&gt;Advanced usage&lt;/a&gt; section covers some less-often used
+options like using a different C compiler, keeping source files, etc.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/usefiles/&#34;&gt;Usefiles&lt;/a&gt; section describes the format of &lt;code&gt;.use&lt;/code&gt; files,
+which define the characteristics of an ooc app or library.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/gc/&#34;&gt;Garbage Collection&lt;/a&gt; section talks about the Garbage Collection
+strategy in rock, how to make sure things work well on different plaforms, how the
+Boehm GC is bundled, etc.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/debug/&#34;&gt;Debugging&lt;/a&gt; section talks about what to do when a program
+doesn&amp;rsquo;t behave correctly. Debug symbols, stack traces, debugging on particularly painful
+platforms like Windows.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/packaging/&#34;&gt;Packaging&lt;/a&gt; section talks about releasing standalone
+applications coded in ooc, such as games — when you don&amp;rsquo;t want to have users install
+dependencies on their own, but would rather bundle everything together.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Exceptions</title>
+      <link>http://oocmanual.cogneco.com/language/exceptions</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/language/exceptions</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Error handling&lt;/h1&gt;
+
+&lt;p&gt;The C way to do error handling is usually via return codes:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+openFile: (path: String) -&amp;gt; Int {
+  if (error) {
+    return -1
+  }
+  return someFileDescriptor
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;However, it relies on the user correctly checking the return value:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+fd := openFile(&amp;quot;/etc/hosts&amp;quot;)
+doSomethingWithFile(fd) // forgot to check, things might go bad!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;Exceptions&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;raise&lt;/h2&gt;
+
+&lt;p&gt;Another way to handle that would be with exceptions&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+openFile: (path: String) -&amp;gt; File {
+  if (error) {
+    raise(&amp;quot;Could not open %s&amp;quot; format(path))
+  }
+  return someFile
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That way, even if the user doesn&amp;rsquo;t explicitly check for the error, it&amp;rsquo;ll
+still interrupt the flow of the program:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;file := openFile(&amp;quot;/dev/does/not/exist&amp;quot;)
+doSomethingWithFile(file) // we are never even going to reach there
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Throwing&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;raise&lt;/code&gt; function above is a quick method to raise an exception. What
+it really does is this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+Exception new(message) throw()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;There is no special keyword to throw exceptions, it&amp;rsquo;s just a method on the
+&lt;code&gt;Exception&lt;/code&gt; class.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Catching exceptions&lt;/h2&gt;
+
+&lt;p&gt;Catching exceptions is done through the &lt;code&gt;try&lt;/code&gt; / &lt;code&gt;catch&lt;/code&gt; syntax:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+try {
+  openFile(&amp;quot;dev/does/not/exist&amp;quot;)
+} catch (e: Exception) {
+  // something wrong happened
+  &amp;quot;Error: %s&amp;quot; printfln(e message)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Exception sub-classes&lt;/h2&gt;
+
+&lt;p&gt;It is possible to sub-class exceptions to have several exception types.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+FileNotFoundException: class extends Exception {
+  init: func (path: String) {
+    super(&amp;quot;File not found: %s&amp;quot; format(path))
   }
 }
 
-v: Vec2
-v x = 1.5
-v y = 4
-&amp;quot;Norm = %.2f&amp;quot; printfln(v norm())
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_2&#34;&gt;Covers from&lt;/h1&gt;
-
-&lt;p&gt;Covers from are based on an external, C type, and provide a way to access
-members of the external type (if it&amp;rsquo;s a struct), and to call methods on it -
-either existing, external functions, or adding whole new methods.&lt;/p&gt;
-
-&lt;p&gt;For example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Int: cover from int
-UInt8: cover from uint8_t
-LLong: cover from long long
-UInt: cover from unsigned int
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_3&#34;&gt;Members&lt;/h1&gt;
-
-&lt;p&gt;Members can be declared extern, like functions - which means they are defined
-somewhere else and need to be accessed from ooc code.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-CpFloat: cover from cpFloat
-
-CpVect: cover from cpVect {
-  x, y: extern CpFloat
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Members can be aliased by using the &lt;code&gt;extern(original_name)&lt;/code&gt; function.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Rectangle: cover from bar_rectangle_t {
-  width: extern(Width)
-  height: extern(Height)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_4&#34;&gt;Methods&lt;/h1&gt;
-
-&lt;p&gt;The &lt;code&gt;extern&lt;/code&gt; function can be used to describe cover methods as well. Aliasing is
-often good practice, as it allows to get rid of the unnecessary prefixes.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-FooContext: cover from foo_context_t {
-  // extern constructor
-  new: static extern(foo_context_new) func (CString, Int) -&amp;gt; This
-
-  // extern method
-  doSomething: extern(foo_context_do_something) -&amp;gt; CString
-
-  // additional method
-  doSomethingTwice: func {
-    doSomething()
-    doSomething()
+openFile: func (path: String) {
+  if (error) {
+    FileNotFoundException new(path) throw()
   }
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;And so, a properly covered C struct with methods can be used as if it was an object:&lt;/p&gt;
+&lt;p&gt;Which makes it easy to catch a specific type of exception:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-context := FooContext new()
-context doSomething()
+try {
+  file := openFile(&amp;quot;/dev/does/not/exist&amp;quot;)
+  doSomethingWithFile(file)
+} catch (e1: FileNotFoundException) {
+  // The file wasn&#39;t found
+} catch (e2: Exception) {
+  // Something else went wrong.
+}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>lang</title>
+      <link>http://oocmanual.cogneco.com/sdk/lang</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/lang</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The lang package&lt;/h1&gt;
+
+&lt;p&gt;The lang package is considered built-in: it is imported by default in ooc
+modules. There is a reason for that, however - the SDK is distributed as
+an ooc library itself, and as such, it has a .use file that specifies which
+modules should be imported.&lt;/p&gt;
+
+&lt;p&gt;Some of the lang package is essential, like &lt;code&gt;Object&lt;/code&gt; and &lt;code&gt;Class&lt;/code&gt;, which
+means that the compiler, &lt;a href=&#34;../tools/rock/&#34;&gt;rock&lt;/a&gt;, will expect them to be present,
+have certain names, fields and methods. However, using a custom sdk is
+possible, where the implementation for these can be swapped to something
+lighter, for example.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;types&#34;&gt;Types&lt;/a&gt; section describes how Object,
+ Class, and other types such as Void, Pointer, Bool, None,
+ Cell are defined. It also discusses variable arguments.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;string&#34;&gt;String&lt;/a&gt; section talks about string
+ handling, the mutable variant Buffer, and formatting&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;numbers&#34;&gt;Numbers&lt;/a&gt; section talks about number
+ types, either integers or floats, and the various functions available.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;iterators&#34;&gt;Iterators&lt;/a&gt; section discusses
+ how iterators are implemented, and what goes on behind a foreach.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;exceptions&#34;&gt;Exceptions&lt;/a&gt; section talks about
+ default properties of exceptions, and how to extend them.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;memory&#34;&gt;Memory&lt;/a&gt; section talks about memory
+ management, mostly just how to deal with blocks of memory rather
+ than more high-level data structures.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Version</title>
+      <link>http://oocmanual.cogneco.com/language/version-blocks</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/language/version-blocks</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Version blocks&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Syntax&lt;/h2&gt;
+
+&lt;p&gt;Version blocks use the following syntax:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    version (&amp;lt;version expression&amp;gt;) {
+        &amp;lt;body&amp;gt;
+    } else {
+        &amp;lt;alternative body&amp;gt;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Where &lt;version expression&gt; can be any of:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    &amp;lt;version name&amp;gt;
+    !&amp;lt;version expression&amp;gt;
+    &amp;lt;version expression&amp;gt; &amp;amp;&amp;amp; &amp;lt;version expression&amp;gt;
+    &amp;lt;version expression&amp;gt; || &amp;lt;version expression&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Semantics&lt;/h2&gt;
+
+&lt;p&gt;Version blocks aren&amp;rsquo;t if-else blocks - they aren&amp;rsquo;t evaluated at runtime.
+In rock, version blocks aren&amp;rsquo;t evaluated at ooc-compile-time either.
+They&amp;rsquo;re evaluated at C compile time. Which means the C code generated by rock
+should be the same on any platform.&lt;/p&gt;
+
+&lt;p&gt;Practically, in rock, version blocks are an abstraction for #ifdef / #endif blocks.
+The syntax makes it harder to forget to close a version block than an #ifdef / #endif block,
+and a few handy aliases (listed below) for commonly used version names are standard, so that developers
+don&amp;rsquo;t have to remember the convoluted corresponding C defines.&lt;/p&gt;
+
+&lt;p&gt;For other compilers not based on the C language, version block handling may happen at any
+stage of the compilation (if any), as long as the version expressions are correctly evaluated
+and have the correct meaning (for example, a &amp;lsquo;windows&amp;rsquo; version block should be ignored on OSX)&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Built-in version names&lt;/h2&gt;
+
+&lt;p&gt;C defines are included here for completeness, but are only relevant for people who want
+to implement ooc on top of C.&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;Name&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;corresponding C define&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;windows&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;WIN32&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;linux&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;linux&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;solaris&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;__sun&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;unix&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;unix&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;beos&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;BEOS&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;haiku&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;HAIKU&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;apple&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;APPLE&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;gnuc&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;GNUC&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;i386&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;i386&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;x86&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;X86&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;x86_64&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;x86_64&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;ppc&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;ppc&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;ppc64&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;ppc64&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;64&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;x86_64&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;gc&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;OOC_USE_GC&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Custom version names&lt;/h2&gt;
+
+&lt;p&gt;Most of the standard version names above depend on your building environment, and the &amp;lsquo;gc&amp;rsquo; name depends
+on the compiler setting -gc=[off,static,dynamic].&lt;/p&gt;
+
+&lt;p&gt;Custom version names can be used, and turned on/off with the -D and -U compiler flags, for example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    version(debug) {
+        &amp;quot;[%d] Saving database %s&amp;quot; println(timestamp(), db name)
+    }
+    db save()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The code inside the version(debug) block will be compiled if -Ddebug is used. It is common practise for ooc developers
+to use the -Ddebug switch to debug their applications.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Semantics continued&lt;/h2&gt;
+
+&lt;p&gt;Version blocks can be used in function bodies, to make certain parts of the code OS-specific, or
+they can be used at the mdule-level to make functions or types OS-specific.&lt;/p&gt;
+
+&lt;p&gt;If different types are defined in different version blocks, make sure they expose the same interface.
+It&amp;rsquo;s not necessary for them to have the exact same class layout, but they should at least have all the
+methods/fields that are used in every OS.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;Examples&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;    version(windows) {
+        &amp;quot;Hi, Bill!&amp;quot; println()
+    }
+    version(apple) {
+        &amp;quot;Hi, Steve!&amp;quot; println()
+    }
+    version(linux) {
+        &amp;quot;Hi, Linus!&amp;quot; println()
+    }
+    version(!windows &amp;amp;&amp;amp; !apple &amp;amp;&amp;amp; !linux) {
+        &amp;quot;Who are you, and what did you do to my OS?&amp;quot;
+    }
+
+    version(apple) {
+        &amp;quot;Nice Hardware!&amp;quot; println()
+    } else {
+        &amp;quot;So you like your computer made of plastic then!&amp;quot; println()
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;See also io/File and os/Time in the SDK for real-world examples of heavily versioned code.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;Pattern for OS-specific classes&lt;/h2&gt;
+
+&lt;p&gt;In ooc, &amp;lsquo;new&amp;rsquo; isn&amp;rsquo;t a keyword but a static method. As a result, you can define new yourself.
+This allows an interesting pattern for OS-specific classes in ooc:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    // io/File
+    import io/[FileUnix, FileWin32]
+    
+    File: class {
+        path: String
+    
+        new: static func (.path) -&amp;gt; This {
+            version(windows) { return FileWin32 new(path) }
+            version(unix)    { return FileUnix  new(path) }
+            Exception new(This, &amp;quot;Unsupported platform&amp;quot;) throw()
+        }
+        
+        // abstract methods
+    }
+
+    // io/FileUnix
+    FileUnix: class extends File {
+        init: func (=path) {}
+        
+        // implement abstract methods for unix
+    }
+    
+    // io/FileWin32
+    FileWin32: class extends File {
+        init: func (=path) {}
+        
+        // implement abstract methods for Win32
+    }
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
