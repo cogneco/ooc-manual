@@ -1,0 +1,4 @@
+baseurl = "http://oocmanual.cogneco.com"
+languageCode = "en-us"
+title = "The OOC Manual"
+footer = "© 2009-2014 Amos Wenger, 2014 Simon Mika. Content of this website is licensed under a CC BY-SA 3.0 License."

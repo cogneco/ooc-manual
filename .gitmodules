@@ -1,0 +1,7 @@
+[submodule "themes/html5"]
+	path = themes/html5
+	url = https://github.com/simonmika/hugo-theme-html5
+[submodule "public"]
+	path = public
+	url = https://github.com/cogneco/ooc-manual/
+	branch = gh-pages
