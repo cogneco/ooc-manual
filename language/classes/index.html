@@ -102,6 +102,11 @@
 	</li>
 	
 	<li>
+		<a href="http://oocmanual.cogneco.com/language/interfaces">Interfaces</a>
+		
+	</li>
+	
+	<li>
 		<a href="http://oocmanual.cogneco.com/language/covers">Covers</a>
 		
 		<ul>
@@ -412,7 +417,7 @@
 			</header>
 			<nav id="TableOfContents">
 <ul>
-<li><a href="#toc_0">Classes</a></li>
+<li><a href="#toc_0">Defining classes</a></li>
 <li><a href="#toc_1">Members</a>
 <ul>
 <li><a href="#toc_2">Built-in members</a></li>
@@ -440,25 +445,23 @@
 			<article>
 				
 
-<h1 id="toc_0">Classes</h1>
+<h1 id="toc_0">Defining classes</h1>
 
 <p>Define classes with the <code>class</code> keyword:</p>
 
-<pre><code>#!ooc
-Dog: class {
-  name: String
-  race: Race
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #a6e22e">Dog</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #f8f8f2">name:</span> <span style="color: #a6e22e">String</span>
+  <span style="color: #f8f8f2">race:</span> <span style="color: #a6e22e">Race</span>
 
-  init: func (=name, =race)
-  bark: func { &quot;Woof!&quot; println() }
-}
-</code></pre>
+  <span style="color: #f8f8f2">init:</span> <span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">(</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">name,</span> <span style="color: #f92672">=</span><span style="color: #f8f8f2">race)</span>
+  <span style="color: #f8f8f2">bark:</span> <span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">{</span> <span style="color: #e6db74">&quot;Woof!&quot;</span> <span style="color: #a6e22e">println</span><span style="color: #f8f8f2">()</span> <span style="color: #f8f8f2">}</span>
+<span style="color: #f8f8f2">}</span>
+</pre></div>
 
 <p>Then, call <code>new</code> on it to make an instance of it:</p>
 
-<pre><code>#!ooc
-dog := Dog new()
-</code></pre>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #f8f8f2">dog</span> <span style="color: #f92672">:=</span> <span style="color: #a6e22e">Dog</span> <span style="color: #66d9ef">new</span><span style="color: #f8f8f2">()</span>
+</pre></div>
 
 <p>An instance of a class is also called an object.</p>
 
@@ -466,55 +469,52 @@ dog := Dog new()
 
 <p>Members are variables tied to an instance:</p>
 
-<pre><code>#!ooc
-Dog: class {
-  // declare a field named 'name'
-  name: String
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #a6e22e">Dog</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #75715e">// declare a field named &#39;name&#39;</span>
+  <span style="color: #f8f8f2">name:</span> <span style="color: #a6e22e">String</span>
 
-  init: func (=name)
-}
+  <span style="color: #f8f8f2">init:</span> <span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">(</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">name)</span>
+<span style="color: #f8f8f2">}</span>
 
-d1 := Dog new(&quot;Pluty&quot;)
-d2 := Dog new(&quot;Snoopo&quot;)
+<span style="color: #f8f8f2">d1</span> <span style="color: #f92672">:=</span> <span style="color: #a6e22e">Dog</span> <span style="color: #66d9ef">new</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Pluty&quot;</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">d2</span> <span style="color: #f92672">:=</span> <span style="color: #a6e22e">Dog</span> <span style="color: #66d9ef">new</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Snoopo&quot;</span><span style="color: #f8f8f2">)</span>
 
-&quot;d1's name is = %s&quot; printfln(d1 name)
-&quot;d2's name is = %s&quot; printfln(d2 name)
-</code></pre>
+<span style="color: #e6db74">&quot;d1&#39;s name is = %s&quot;</span> <span style="color: #a6e22e">printfln</span><span style="color: #f8f8f2">(d1</span> <span style="color: #f8f8f2">name)</span>
+<span style="color: #e6db74">&quot;d2&#39;s name is = %s&quot;</span> <span style="color: #a6e22e">printfln</span><span style="color: #f8f8f2">(d2</span> <span style="color: #f8f8f2">name)</span>
+</pre></div>
 
 <h2 id="toc_2">Built-in members</h2>
 
 <p>There are a few members always available on classes. You can access the
 class of any object via the <code>class</code> member. For example:</p>
 
-<pre><code>#!ooc
-// will be equal to 'Dog'
-dog class name
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #75715e">// will be equal to &#39;Dog&#39;</span>
+<span style="color: #f8f8f2">dog</span> <span style="color: #66d9ef">class</span> <span style="color: #f8f8f2">name</span>
 
-// since objects are reference, will be the size of a pointer
-dog class size
+<span style="color: #75715e">// since objects are reference, will be the size of a pointer</span>
+<span style="color: #f8f8f2">dog</span> <span style="color: #66d9ef">class</span> <span style="color: #f8f8f2">size</span>
 
-// the actual size of a dog object, including members
-dog class instanceSize
-</code></pre>
+<span style="color: #75715e">// the actual size of a dog object, including members</span>
+<span style="color: #f8f8f2">dog</span> <span style="color: #66d9ef">class</span> <span style="color: #f8f8f2">instanceSize</span>
+</pre></div>
 
 <h2 id="toc_3">Static members</h2>
 
 <p>Static members belong to a class, rather than to an instance.</p>
 
-<pre><code>#!ooc
-Node: class {
-  count: static Int = 0
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #a6e22e">Node</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #f8f8f2">count:</span> <span style="color: #66d9ef">static</span> <span style="color: #a6e22e">Int</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">0</span>
 
-  init: func {
-    This count += 1
-  }
-}
+  <span style="color: #f8f8f2">init:</span> <span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">{</span>
+    <span style="color: #a6e22e">This</span> <span style="color: #f8f8f2">count</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+  <span style="color: #f8f8f2">}</span>
+<span style="color: #f8f8f2">}</span>
 
-for (i in 0..10) {
-  Node new()
-}
-&quot;Number of nodes: %d&quot; printfln(Node count)
-</code></pre>
+<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">(i</span> <span style="color: #66d9ef">in</span> <span style="color: #ae81ff">0</span><span style="color: #f92672">..</span><span style="color: #ae81ff">10</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #a6e22e">Node</span> <span style="color: #66d9ef">new</span><span style="color: #f8f8f2">()</span>
+<span style="color: #f8f8f2">}</span>
+<span style="color: #e6db74">&quot;Number of nodes: %d&quot;</span> <span style="color: #a6e22e">printfln</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">Node</span> <span style="color: #f8f8f2">count)</span>
+</pre></div>
 
 <p>In the code above, <code>count</code> is &ldquo;shared&rdquo; among all instances of node - hence,
 incrementing it in the constructor will be &ldquo;remembered&rdquo; the next time a node
@@ -524,28 +524,26 @@ is created. So, we really are counting the number of nodes being created.</p>
 The declare-assignment operator, <code>:=</code>, also works with the <code>static</code> keyword before
 the right-hand-side value:</p>
 
-<pre><code>#!ooc
-Node: class {
-  count := static 0
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #a6e22e">Node</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #f8f8f2">count</span> <span style="color: #f92672">:=</span> <span style="color: #66d9ef">static</span> <span style="color: #ae81ff">0</span>
 
-  init: func {
-    count += 1
-  }
-}
+  <span style="color: #f8f8f2">init:</span> <span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">{</span>
+    <span style="color: #f8f8f2">count</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+  <span style="color: #f8f8f2">}</span>
+<span style="color: #f8f8f2">}</span>
 
-// etc.
-</code></pre>
+<span style="color: #75715e">// etc.</span>
+</pre></div>
 
 <h2 id="toc_4">Properties</h2>
 
 <p>The shortest and sweetest way to define a property is to use the <code>::=</code> operator:</p>
 
-<pre><code>#!ooc
-Rectangle: class {
-  width, height: Int
-  area ::= width * height
-}
-</code></pre>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #a6e22e">Rectangle</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #f8f8f2">width,</span> <span style="color: #f8f8f2">height:</span> <span style="color: #a6e22e">Int</span>
+  <span style="color: #f8f8f2">area</span> <span style="color: #f8f8f2">:</span><span style="color: #f92672">:=</span> <span style="color: #f8f8f2">width</span> <span style="color: #f92672">*</span> <span style="color: #f8f8f2">height</span>
+<span style="color: #f8f8f2">}</span>
+</pre></div>
 
 <p>Contrary to a variable declaration, the value of <code>area</code> will be
 recomputed every time it is being accessed. Contrary to a function
@@ -561,17 +559,16 @@ getters and setters.</p>
 
 <p>Here&rsquo;s an example of long-form, read-only property:</p>
 
-<pre><code>#!ooc
-Person: class {
-  lastName, firstName: String
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #a6e22e">Person</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #f8f8f2">lastName,</span> <span style="color: #f8f8f2">firstName:</span> <span style="color: #a6e22e">String</span>
 
-  fullName: String {
-    get {
-      &quot;%s %s&quot; format(lastName, firstName)
-    }
-  }
-}
-</code></pre>
+  <span style="color: #f8f8f2">fullName:</span> <span style="color: #a6e22e">String</span> <span style="color: #f8f8f2">{</span>
+    <span style="color: #f8f8f2">get</span> <span style="color: #f8f8f2">{</span>
+      <span style="color: #e6db74">&quot;%s %s&quot;</span> <span style="color: #a6e22e">format</span><span style="color: #f8f8f2">(lastName,</span> <span style="color: #f8f8f2">firstName)</span>
+    <span style="color: #f8f8f2">}</span>
+  <span style="color: #f8f8f2">}</span>
+<span style="color: #f8f8f2">}</span>
+</pre></div>
 
 <p>Note that when specifying a getter, one does not need a return type,
 as it is the type of the property itself.</p>
@@ -579,27 +576,25 @@ as it is the type of the property itself.</p>
 <p>Similarly, when specifying a setter, one only needs an argument name
 not its type:</p>
 
-<pre><code>#!ooc
-Person: class {
-  lastName, firstName: String
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #a6e22e">Person</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #f8f8f2">lastName,</span> <span style="color: #f8f8f2">firstName:</span> <span style="color: #a6e22e">String</span>
 
-  name: String {
-    set (name) {
-      tokens := name split(&quot; &quot;)
-      assert(tokens size == 2)
-      (firstName, lastName) = (tokens[0], tokens[1])
-    }
-  }
-}
-</code></pre>
+  <span style="color: #f8f8f2">name:</span> <span style="color: #a6e22e">String</span> <span style="color: #f8f8f2">{</span>
+    <span style="color: #a6e22e">set</span> <span style="color: #f8f8f2">(name)</span> <span style="color: #f8f8f2">{</span>
+      <span style="color: #f8f8f2">tokens</span> <span style="color: #f92672">:=</span> <span style="color: #f8f8f2">name</span> <span style="color: #a6e22e">split</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot; &quot;</span><span style="color: #f8f8f2">)</span>
+      <span style="color: #a6e22e">assert</span><span style="color: #f8f8f2">(tokens</span> <span style="color: #f8f8f2">size</span> <span style="color: #f92672">==</span> <span style="color: #ae81ff">2</span><span style="color: #f8f8f2">)</span>
+      <span style="color: #f8f8f2">(firstName,</span> <span style="color: #f8f8f2">lastName)</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">(tokens[</span><span style="color: #ae81ff">0</span><span style="color: #f8f8f2">],</span> <span style="color: #f8f8f2">tokens[</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">])</span>
+    <span style="color: #f8f8f2">}</span>
+  <span style="color: #f8f8f2">}</span>
+<span style="color: #f8f8f2">}</span>
+</pre></div>
 
 <p>Empty getters and setters are valid as well, for a simple read-write property:</p>
 
-<pre><code>#!ooc
-Person: class {
-  name: String { get set }
-}
-</code></pre>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #a6e22e">Person</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #f8f8f2">name:</span> <span style="color: #a6e22e">String</span> <span style="color: #f8f8f2">{</span> <span style="color: #f8f8f2">get</span> <span style="color: #f8f8f2">set</span> <span style="color: #f8f8f2">}</span>
+<span style="color: #f8f8f2">}</span>
+</pre></div>
 
 <p>The advantage is the following - since a property is only accessed via its
 getters and setters, which are methods, changing the structure of the <code>Person</code>
@@ -614,16 +609,15 @@ from somewhere else.</p>
 <p>Methods are function declarations in the class body, that are called
 on a particular instance:</p>
 
-<pre><code>#!ooc
-Dog: class {
-  bark: func {
-    &quot;Woof!&quot; println()
-  }
-}
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #a6e22e">Dog</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #f8f8f2">bark:</span> <span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">{</span>
+    <span style="color: #e6db74">&quot;Woof!&quot;</span> <span style="color: #a6e22e">println</span><span style="color: #f8f8f2">()</span>
+  <span style="color: #f8f8f2">}</span>
+<span style="color: #f8f8f2">}</span>
 
-dog := Dog new()
-dog bark()
-</code></pre>
+<span style="color: #f8f8f2">dog</span> <span style="color: #f92672">:=</span> <span style="color: #a6e22e">Dog</span> <span style="color: #66d9ef">new</span><span style="color: #f8f8f2">()</span>
+<span style="color: #f8f8f2">dog</span> <span style="color: #a6e22e">bark</span><span style="color: #f8f8f2">()</span>
+</pre></div>
 
 <h2 id="toc_6">this and This</h2>
 
@@ -632,27 +626,25 @@ the method is being called on.</p>
 
 <p>Example usage of <code>this</code></p>
 
-<pre><code>#!ooc
-Building: class {
-  height: Int
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #a6e22e">Building</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #f8f8f2">height:</span> <span style="color: #a6e22e">Int</span>
 
-  // argument name shadows member name
-  setHeight: func (height: Int) {
-    if (height &lt; 0 || height &gt; 300) return
+  <span style="color: #75715e">// argument name shadows member name</span>
+  <span style="color: #f8f8f2">setHeight:</span> <span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">(height:</span> <span style="color: #a6e22e">Int</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
+    <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">(height</span> <span style="color: #f92672">&lt;</span> <span style="color: #ae81ff">0</span> <span style="color: #f92672">||</span> <span style="color: #f8f8f2">height</span> <span style="color: #f92672">&gt;</span> <span style="color: #ae81ff">300</span><span style="color: #f8f8f2">)</span> <span style="color: #66d9ef">return</span>
 
-    // using `this` explicitly to differenciate them
-    this height = height
-  }
-}
-</code></pre>
+    <span style="color: #75715e">// using `this` explicitly to differenciate them</span>
+    <span style="color: #66d9ef">this</span> <span style="color: #f8f8f2">height</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">height</span>
+  <span style="color: #f8f8f2">}</span>
+<span style="color: #f8f8f2">}</span>
+</pre></div>
 
 <p><code>This</code>, on the other hand, refers to the type currently being defined:</p>
 
-<pre><code>#!ooc
-Engine: class {
-  logger := Log getLogger(This name)
-}
-</code></pre>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #a6e22e">Engine</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #f8f8f2">logger</span> <span style="color: #f92672">:=</span> <span style="color: #a6e22e">Log</span> <span style="color: #a6e22e">getLogger</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">This</span> <span style="color: #f8f8f2">name)</span>
+<span style="color: #f8f8f2">}</span>
+</pre></div>
 
 <p>In the example above, we are using the name of the class we are currently defining,
 instead of typing out <code>&quot;Engine&quot;</code> directly — that way, if we rename the class, the
@@ -664,21 +656,20 @@ code will still be valid. It&rsquo;s a good way to <a href="https://en.wikipedia
 a particular instance. Hence, you don&rsquo;t have access to <code>this</code> in a static
 method because it&rsquo;s not called on an instance:</p>
 
-<pre><code>#!ooc
-Map: class {
-  tiles := Map&lt;Tile&gt; new()
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #a6e22e">Map</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #f8f8f2">tiles</span> <span style="color: #f92672">:=</span> <span style="color: #a6e22e">Map</span><span style="color: #f92672">&lt;</span><span style="color: #a6e22e">Tile</span><span style="color: #f92672">&gt;</span> <span style="color: #66d9ef">new</span><span style="color: #f8f8f2">()</span>
 
-  generate: static func (width, height: Int) -&gt; This {
-    m := This new()
-    for (y in 0..height) for (x in 0..width) {
-      m addTile(x, y)
-    }
-    m
-  }
+  <span style="color: #f8f8f2">generate:</span> <span style="color: #66d9ef">static</span> <span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">(width,</span> <span style="color: #f8f8f2">height:</span> <span style="color: #a6e22e">Int</span><span style="color: #f8f8f2">)</span> <span style="color: #f92672">-&gt;</span> <span style="color: #a6e22e">This</span> <span style="color: #f8f8f2">{</span>
+    <span style="color: #f8f8f2">m</span> <span style="color: #f92672">:=</span> <span style="color: #a6e22e">This</span> <span style="color: #66d9ef">new</span><span style="color: #f8f8f2">()</span>
+    <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">(y</span> <span style="color: #66d9ef">in</span> <span style="color: #ae81ff">0</span><span style="color: #f92672">..</span><span style="color: #f8f8f2">height)</span> <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">(x</span> <span style="color: #66d9ef">in</span> <span style="color: #ae81ff">0</span><span style="color: #f92672">..</span><span style="color: #f8f8f2">width)</span> <span style="color: #f8f8f2">{</span>
+      <span style="color: #f8f8f2">m</span> <span style="color: #a6e22e">addTile</span><span style="color: #f8f8f2">(x,</span> <span style="color: #f8f8f2">y)</span>
+    <span style="color: #f8f8f2">}</span>
+    <span style="color: #f8f8f2">m</span>
+  <span style="color: #f8f8f2">}</span>
 
-  addTile: func (x, y: Int) { /* ... */ }
-}
-</code></pre>
+  <span style="color: #f8f8f2">addTile:</span> <span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">(x,</span> <span style="color: #f8f8f2">y:</span> <span style="color: #a6e22e">Int</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span> <span style="color: #75715e">/* ... */</span> <span style="color: #f8f8f2">}</span>
+<span style="color: #f8f8f2">}</span>
+</pre></div>
 
 <p>In some languages, <code>new</code> is a keyword used to create objects. In ooc,
 it&rsquo;s just a static method doing some allocation and initialization, and
@@ -689,37 +680,35 @@ returning a new instance. See &ldquo;Constructors&rdquo; for more details.</p>
 <p>Define the <code>init</code> method (with a suffix to have different constructors), and
 a <code>new</code> static method will get defined automatically.</p>
 
-<pre><code>#!ooc
-Dog: class {
-  name: String
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #a6e22e">Dog</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #f8f8f2">name:</span> <span style="color: #a6e22e">String</span>
 
-  init: func (=name)
-  init: func ~default { name = &quot;Fido&quot; }
-}
-</code></pre>
+  <span style="color: #f8f8f2">init:</span> <span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">(</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">name)</span>
+  <span style="color: #f8f8f2">init:</span> <span style="color: #66d9ef">func</span> <span style="color: #a6e22e">~default</span> <span style="color: #f8f8f2">{</span> <span style="color: #f8f8f2">name</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&quot;Fido&quot;</span> <span style="color: #f8f8f2">}</span>
+<span style="color: #f8f8f2">}</span>
+</pre></div>
 
-<p>For alternative instanciation strategies, defining a custom, static <code>new</code>
+<p>For alternative instantiation strategies, defining a custom, static <code>new</code>
 method, returning an instance of type <code>This</code>, works just as well:</p>
 
-<pre><code>#!ooc
-Dog: class {
-  pool := static Stack&lt;This&gt; new()
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #a6e22e">Dog</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #f8f8f2">pool</span> <span style="color: #f92672">:=</span> <span style="color: #66d9ef">static</span> <span style="color: #a6e22e">Stack</span><span style="color: #f92672">&lt;</span><span style="color: #a6e22e">This</span><span style="color: #f92672">&gt;</span> <span style="color: #66d9ef">new</span><span style="color: #f8f8f2">()</span>
 
-  new: static func -&gt; This {
-    if (pool empty?()) {
-      obj := This alloc()
-      obj __defaults__()
-      obj
-    } else {
-      pool pop()
-    }
-  }
+  <span style="color: #66d9ef">new</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">static</span> <span style="color: #66d9ef">func</span> <span style="color: #f92672">-&gt;</span> <span style="color: #a6e22e">This</span> <span style="color: #f8f8f2">{</span>
+    <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">(pool</span> <span style="color: #f8f8f2">empty</span><span style="color: #f92672">?</span><span style="color: #f8f8f2">())</span> <span style="color: #f8f8f2">{</span>
+      <span style="color: #f8f8f2">obj</span> <span style="color: #f92672">:=</span> <span style="color: #a6e22e">This</span> <span style="color: #a6e22e">alloc</span><span style="color: #f8f8f2">()</span>
+      <span style="color: #f8f8f2">obj</span> <span style="color: #ae81ff">__</span><span style="color: #a6e22e">defaults__</span><span style="color: #f8f8f2">()</span>
+      <span style="color: #f8f8f2">obj</span>
+    <span style="color: #f8f8f2">}</span> <span style="color: #66d9ef">else</span> <span style="color: #f8f8f2">{</span>
+      <span style="color: #f8f8f2">pool</span> <span style="color: #a6e22e">pop</span><span style="color: #f8f8f2">()</span>
+    <span style="color: #f8f8f2">}</span>
+  <span style="color: #f8f8f2">}</span>
 
-  free: func {
-    pool push(this)
-  }
-}
-</code></pre>
+  <span style="color: #f8f8f2">free:</span> <span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">{</span>
+    <span style="color: #f8f8f2">pool</span> <span style="color: #a6e22e">push</span><span style="color: #f8f8f2">(</span><span style="color: #66d9ef">this</span><span style="color: #f8f8f2">)</span>
+  <span style="color: #f8f8f2">}</span>
+<span style="color: #f8f8f2">}</span>
+</pre></div>
 
 <p>We can clearly see that the <code>alloc</code> static method here does memory allocation
 for the object, but what about <code>__defaults__</code>? It contains initializers, discussed
@@ -730,26 +719,24 @@ in the next section.</p>
 <p>We&rsquo;ve discussed methods, but not all code that belong to a class is in an explicit
 method. For example, in this code, declaration and initialization are clearly separate:</p>
 
-<pre><code>#!ooc
-Group: class {
-  number: Int
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #a6e22e">Group</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #f8f8f2">number:</span> <span style="color: #a6e22e">Int</span>
 
-  init: func {
-    number = 42
-  }
-}
-</code></pre>
+  <span style="color: #f8f8f2">init:</span> <span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">{</span>
+    <span style="color: #f8f8f2">number</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">42</span>
+  <span style="color: #f8f8f2">}</span>
+<span style="color: #f8f8f2">}</span>
+</pre></div>
 
 <p>But what happens with the following code?</p>
 
-<pre><code>#!ooc
-Group: class {
-  number := 42
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #a6e22e">Group</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #f8f8f2">number</span> <span style="color: #f92672">:=</span> <span style="color: #ae81ff">42</span>
 
-  init: func {
-  }
-}
-</code></pre>
+  <span style="color: #f8f8f2">init:</span> <span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #f8f8f2">}</span>
+<span style="color: #f8f8f2">}</span>
+</pre></div>
 
 <p>The resulting executable does the same. The class contains a field
 of type Int, initially equal to 0, but there&rsquo;s an implicit <code>__defaults__</code>
@@ -759,12 +746,11 @@ the <code>init</code> method is called.</p>
 <p>Above, the example is a pattern you&rsquo;ll see often - however, one can put
 any amount of code directly in the class declaration:</p>
 
-<pre><code>#!ooc
-Dog: class {
-    &quot;You made a dog!&quot; println()
-    init: func
-}
-</code></pre>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #a6e22e">Dog</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #f8f8f2">{</span>
+    <span style="color: #e6db74">&quot;You made a dog!&quot;</span> <span style="color: #a6e22e">println</span><span style="color: #f8f8f2">()</span>
+    <span style="color: #f8f8f2">init:</span> <span style="color: #66d9ef">func</span>
+<span style="color: #f8f8f2">}</span>
+</pre></div>
 
 <p>Every time <code>Dog new()</code> is called, the <code>&quot;You made a dog!&quot;</code> string will get
 printed.</p>
@@ -775,10 +761,9 @@ printed.</p>
 
 <p>Simple inheritance is achieved through the <code>extends</code> keyword:</p>
 
-<pre><code>#!ooc
-Animal: class {}
-Dog: class extends Animal {}
-</code></pre>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #a6e22e">Animal</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #f8f8f2">{}</span>
+<span style="color: #a6e22e">Dog</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #66d9ef">extends</span> <span style="color: #a6e22e">Animal</span> <span style="color: #f8f8f2">{}</span>
+</pre></div>
 
 <p>In this case, an instance of <code>Dog</code> will also be an instance of <code>Animal</code>,
 and it inherits all its methods and members.</p>
@@ -791,46 +776,43 @@ on the matter, check out the <a href="http://en.wikipedia.org/wiki/Liskov_substi
 
 <p>Calling <code>super</code> will call the definition of a method in the super-class.</p>
 
-<pre><code>#!ooc
-SimpleApp: class {
-  init: func {
-    loadConfig()
-  }
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #a6e22e">SimpleApp</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #f8f8f2">init:</span> <span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">{</span>
+    <span style="color: #a6e22e">loadConfig</span><span style="color: #f8f8f2">()</span>
+  <span style="color: #f8f8f2">}</span>
 
-  // ...
-}
+  <span style="color: #75715e">// ...</span>
+<span style="color: #f8f8f2">}</span>
 
-NetworkedApp: class extends SimpleApp {
-  init: func {
-    super()
-    initNetworking()
-  }
-}
-</code></pre>
+<span style="color: #a6e22e">NetworkedApp</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #66d9ef">extends</span> <span style="color: #a6e22e">SimpleApp</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #f8f8f2">init:</span> <span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">{</span>
+    <span style="color: #66d9ef">super</span><span style="color: #f8f8f2">()</span>
+    <span style="color: #a6e22e">initNetworking</span><span style="color: #f8f8f2">()</span>
+  <span style="color: #f8f8f2">}</span>
+<span style="color: #f8f8f2">}</span>
+</pre></div>
 
 <p>When one just wants to relay a constructor, one can use <code>super func</code>:</p>
 
-<pre><code>#!ooc
-MyException: class extends Exception {
-  init: super func
-}
-</code></pre>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #a6e22e">MyException</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #66d9ef">extends</span> <span style="color: #a6e22e">Exception</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #f8f8f2">init:</span> <span style="color: #66d9ef">super</span> <span style="color: #66d9ef">func</span>
+<span style="color: #f8f8f2">}</span>
+</pre></div>
 
 <p>Which is equivalent to the following:</p>
 
-<pre><code>#!ooc
-MyException: class extends Exception {
-  init: func {
-    super()
-  }
-}
-</code></pre>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #a6e22e">MyException</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #66d9ef">extends</span> <span style="color: #a6e22e">Exception</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #f8f8f2">init:</span> <span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">{</span>
+    <span style="color: #66d9ef">super</span><span style="color: #f8f8f2">()</span>
+  <span style="color: #f8f8f2">}</span>
+<span style="color: #f8f8f2">}</span>
+</pre></div>
 
 <p><code>super func</code> can take a suffix, and it relays argument as well. It is useful
 when you really don&rsquo;t have much more to do in the constructor of the sub-class.</p>
 
 <p>Please bear in mind that <code>super func</code> is relatively hackish - it is documented
-here for completeness&rsquo; sake, but it is more of a rapid coding trick than a good
+here for completeness sake, but it is more of a rapid coding trick than a good
 practice, really.</p>
 
 <h2 id="toc_13">Class hierarchy</h2>
@@ -838,32 +820,29 @@ practice, really.</p>
 <p>The class hierarchy can be explored via built-in members and methods on objects
 and classes:</p>
 
-<pre><code>#!ooc
-// in this case, the Object class - otherwise, whatever super class it has
-dog class super
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #75715e">// in this case, the Object class - otherwise, whatever super class it has dog class super</span>
 
-// evaluates to true
-dog instanceOf?(Dog)
+<span style="color: #75715e">// evaluates to true</span>
+<span style="color: #f8f8f2">dog</span> <span style="color: #f8f8f2">instanceOf</span><span style="color: #f92672">?</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">Dog</span><span style="color: #f8f8f2">)</span>
 
-// also evaluates to true
-dog instanceOf?(Object)
+<span style="color: #75715e">// also evaluates to true</span>
+<span style="color: #f8f8f2">dog</span> <span style="color: #f8f8f2">instanceOf</span><span style="color: #f92672">?</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">Object</span><span style="color: #f8f8f2">)</span>
 
-// evaluates to false
-dog instanceOf?(Cat)
-</code></pre>
+<span style="color: #75715e">// evaluates to false</span>
+<span style="color: #f8f8f2">dog</span> <span style="color: #f8f8f2">instanceOf</span><span style="color: #f92672">?</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">Cat</span><span style="color: #f8f8f2">)</span>
+</pre></div>
 
 <p>The equivalent of <code>instanceOf?</code> called on classes, is <code>inheritsFrom?</code></p>
 
-<pre><code>#!ooc
-// true
-Dog inheritsFrom?(Dog)
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #75715e">// true</span>
+<span style="color: #a6e22e">Dog</span> <span style="color: #f8f8f2">inheritsFrom</span><span style="color: #f92672">?</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">Dog</span><span style="color: #f8f8f2">)</span>
 
-// true
-Dog inheritsFrom?(Object)
+<span style="color: #75715e">// true</span>
+<span style="color: #a6e22e">Dog</span> <span style="color: #f8f8f2">inheritsFrom</span><span style="color: #f92672">?</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">Object</span><span style="color: #f8f8f2">)</span>
 
-// false
-Dog inheritsFrom?(Cat)
-</code></pre>
+<span style="color: #75715e">// false</span>
+<span style="color: #a6e22e">Dog</span> <span style="color: #f8f8f2">inheritsFrom</span><span style="color: #f92672">?</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">Cat</span><span style="color: #f8f8f2">)</span>
+</pre></div>
 
 <h1 id="toc_14">Adding methods after definition</h1>
 
@@ -874,31 +853,32 @@ defined in another module.</p>
 <p>It is useful to add convenience methods of your own without having
 to modify the original library.</p>
 
-<pre><code>#!ooc
-extend Float {
-  negated: func -&gt; This { -this }
-}
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #f8f8f2">extend</span> <span style="color: #a6e22e">Float</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #f8f8f2">negated:</span> <span style="color: #66d9ef">func</span> <span style="color: #f92672">-&gt;</span> <span style="color: #a6e22e">This</span> <span style="color: #f8f8f2">{</span> <span style="color: #f92672">-</span><span style="color: #66d9ef">this</span> <span style="color: #f8f8f2">}</span>
+<span style="color: #f8f8f2">}</span>
 
-if (-3.14 == 3.14 negated()) {
-  &quot;Everything is fine&quot; println()
-}
-</code></pre>
+<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">(</span><span style="color: #f92672">-</span><span style="color: #ae81ff">3.14</span> <span style="color: #f92672">==</span> <span style="color: #ae81ff">3.14</span> <span style="color: #a6e22e">negated</span><span style="color: #f8f8f2">())</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #e6db74">&quot;Everything is fine&quot;</span> <span style="color: #a6e22e">println</span><span style="color: #f8f8f2">()</span>
+<span style="color: #f8f8f2">}</span>
+</pre></div>
 
 <p>Virtual properties (that do not correspond to a real instance variable,
 but rather compute their value from other information everytime) can also
 be added in an <code>extend</code> block:</p>
 
-<pre><code>#!ooc
-extend Int {
-  plusFive: This { get {
-    this + 5
-  } }
-}
-</code></pre>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #f8f8f2">extend</span> <span style="color: #a6e22e">Int</span> <span style="color: #f8f8f2">{</span>
+  <span style="color: #f8f8f2">plusFive:</span> <span style="color: #a6e22e">This</span> <span style="color: #f8f8f2">{</span> <span style="color: #f8f8f2">get</span> <span style="color: #f8f8f2">{</span>
+    <span style="color: #66d9ef">this</span> <span style="color: #f92672">+</span> <span style="color: #ae81ff">5</span>
+  <span style="color: #f8f8f2">}</span> <span style="color: #f8f8f2">}</span>
+<span style="color: #f8f8f2">}</span>
+</pre></div>
 
 <p>See the <a href="#properties">Properties</a> section for more info on properties.</p>
 
 			</article>
+			<footer>
+				<p><span id="footer-copyright">2009-2014 Amos Wenger</span><span id="footer-license">CC BY-SA 3.0</span></p>
+			</footer>
 		</main>
 		<footer>
   <p></p>

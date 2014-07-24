@@ -3,7 +3,7 @@
 	<head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-	<title> coro &middot; The OOC Manual </title>
+	<title> Interfaces &middot; The OOC Manual </title>
 	
 	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/reset.css">
 	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/text.css">
@@ -413,68 +413,43 @@
 
 		<main>
 			<header>
-				<h1>coro</h1>
+				<h1>Interfaces</h1>
 			</header>
 			<nav id="TableOfContents">
 <ul>
-<li><a href="#toc_0">The os/Coro module</a></li>
-<li><a href="#toc_1">Basic usage</a></li>
+<li><a href="#toc_0">NOT VERIFIED</a></li>
+<li><a href="#toc_1">Declaring interfaces</a></li>
+<li><a href="#toc_2">Implementing interfaces</a></li>
 </ul>
 </nav>
 			<article>
 				
 
-<h1 id="toc_0">The os/Coro module</h1>
+<h1 id="toc_0">NOT VERIFIED</h1>
 
-<p>That module was originally an ooc port of Steve Dekorte&rsquo;s <a href="https://github.com/stevedekorte/coroutine">libcoroutine</a>.</p>
+<h1 id="toc_1">Declaring interfaces</h1>
 
-<p>Coroutines help achieve cooperative multi-tasking, as opposed to threads, which
-achieve preemptive multitasking. In cooperative multi-tasking, each task (or
-&lsquo;coroutine&rsquo;) is responsible for handing the control to another coroutine.</p>
+<p>Declare interfaces with the <code>interface</code> keyword:</p>
 
-<h1 id="toc_1">Basic usage</h1>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #66d9ef">ID</span><span style="color: #f8f8f2">og:</span> <span style="color: #66d9ef">interface</span> <span style="color: #f8f8f2">{</span>
+    <span style="color: #f8f8f2">bark:</span> <span style="color: #66d9ef">func</span>
+<span style="color: #f8f8f2">}</span>
+</pre></div>
 
-<p>First, we have to create a main coroutine:</p>
+<h1 id="toc_2">Implementing interfaces</h1>
 
-<pre><code>#!ooc
-import os/Coro
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #a6e22e">Dog</span><span style="color: #f8f8f2">:</span> <span style="color: #66d9ef">class</span> <span style="color: #f8f8f2">implements</span> <span style="color: #66d9ef">ID</span><span style="color: #f8f8f2">og</span> <span style="color: #f8f8f2">{</span>
+    <span style="color: #f8f8f2">name:</span> <span style="color: #a6e22e">String</span>
+    <span style="color: #f8f8f2">race:</span> <span style="color: #a6e22e">Race</span>
 
-mainCoro := Coro new()
-mainCoro initializeMainCoro
-</code></pre>
-
-<p>We can then create another coroutine, which we&rsquo;ll here use as a generator</p>
-
-<pre><code>#!ooc
-letter: Char
-
-coro1 := Coro new()
-mainCoro startCoro(coro1, ||
-    for (c in &quot;LLAMACORE&quot;) {
-        letter = c
-        coro1 switchTo(mainCoro)
-    }
-    exit(0)
-)
-</code></pre>
-
-<p>Then we can retrieve those letters one by one:</p>
-
-<pre><code>#!ooc
-while (true) {
-    &quot;%c&quot; printfln(letter)
-    mainCoro switchTo(coro1)
-}
-</code></pre>
-
-<p>This example is quite simple, just printing each letter that
-<code>coro1</code> gives us on separate lines, but complex tasks can be
-broken down in various coroutines and be achieved in a much
-more lightweight fashion than threads or processes.</p>
+    <span style="color: #f8f8f2">init:</span> <span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">(</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">name,</span> <span style="color: #f92672">=</span><span style="color: #f8f8f2">race)</span>
+    <span style="color: #f8f8f2">bark:</span> <span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">{</span> <span style="color: #e6db74">&quot;Woof!&quot;</span> <span style="color: #a6e22e">println</span><span style="color: #f8f8f2">()</span> <span style="color: #f8f8f2">}</span>
+<span style="color: #f8f8f2">}</span>
+</pre></div>
 
 			</article>
 			<footer>
-				<p><span id="footer-copyright">2009-2014 Amos Wenger</span><span id="footer-license">CC BY-SA 3.0</span></p>
+				<p><span id="footer-copyright">2014 Simon Mika</span><span id="footer-license">CC BY-SA-4.0</span></p>
 			</footer>
 		</main>
 		<footer>

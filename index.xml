@@ -66,873 +66,544 @@ solve, considering posting to the &lt;a href=&#34;https://groups.google.com/grou
     </item>
     
     <item>
-      <title>mmap</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/mmap</link>
+      <title>channel</title>
+      <link>http://oocmanual.cogneco.com/sdk/os/channel</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/sdk/os/mmap</guid>
+      <guid>http://oocmanual.cogneco.com/sdk/os/channel</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/mmap module&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;The os/Channel module&lt;/h1&gt;
 
-&lt;p&gt;As it stands, the &lt;code&gt;os/mmap&lt;/code&gt; module just exposes the *nix functions for memory
-mapping: &lt;code&gt;mmap&lt;/code&gt;, &lt;code&gt;munmap&lt;/code&gt;, &lt;code&gt;mprotect&lt;/code&gt;, &lt;code&gt;madvise&lt;/code&gt;, &lt;code&gt;mincore&lt;/code&gt;, &lt;code&gt;minherit&lt;/code&gt;,
-&lt;code&gt;msync&lt;/code&gt;, &lt;code&gt;mlock&lt;/code&gt;, and &lt;code&gt;munlock&lt;/code&gt;, along with the associated constants.&lt;/p&gt;
+&lt;p&gt;Channels are another way to think about data flow in the program.
+Perhaps most famous in their Go implementation, &amp;lsquo;goroutines&amp;rsquo;, can
+communicate via channels.&lt;/p&gt;
 
-&lt;p&gt;It also contains prototypes / covers for the Windows equivalent,
-&lt;code&gt;VirtualProtect&lt;/code&gt;, and its constants as well.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;Notes&lt;/h2&gt;
-
-&lt;p&gt;This module is not a high-level or cross-platform interface and is not
-documented extensively here.&lt;/p&gt;
-
-&lt;p&gt;However, to find more information on memory mapping for various platform
-see here:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://en.wikipedia.org/wiki/Mmap&#34;&gt;mmap on Wikipedia&lt;/a&gt; (for *nix platforms)&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://msdn.microsoft.com/en-us/windows/desktop/aa366898(v=vs.85).aspx&#34;&gt;VirtualProtect on MSDN&lt;/a&gt; (for Windows)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;On a historical note, this module was originally included in the SDK as support
-code for the closure implementation, which back then implied generating
-bytecode at runtime and thus marking some memory regions as executable.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>system</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/system</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/os/system</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/System module&lt;/h1&gt;
-
-&lt;p&gt;The &lt;code&gt;System&lt;/code&gt; module allows to get information about the system, such
-as the number of processors, as an &lt;code&gt;Int&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;os/Channel&lt;/code&gt; module contains a trivial implementation of channels
+which may be used like so:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-cores := System numProcessors()
+import os/Channel
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Or the hostname of the machine, as a &lt;code&gt;String&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;By importing this module, a scheduler is set to run before the program
+exits. Let&amp;rsquo;s start by making a channel by which Ints can travel:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-hostname := System hostname()
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>shellutils</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/shellutils</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/os/shellutils</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/ShellUtils module&lt;/h1&gt;
-
-&lt;p&gt;The entire purpose of the &lt;code&gt;ShellUtils&lt;/code&gt; module is to find an
-executable in the PATH environment variable.&lt;/p&gt;
-
-&lt;p&gt;It can be used to implement functionality usually found in the
-*nix &lt;code&gt;which&lt;/code&gt; command-line utility.&lt;/p&gt;
-
-&lt;p&gt;For example, to know where &lt;code&gt;autoconf&lt;/code&gt; is hiding, one can do:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import os/ShellUtils
-file := ShellUtils findExecutable(&amp;quot;autoconf&amp;quot;)
+chan := make(Int)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;If the executable is not found, &lt;code&gt;file&lt;/code&gt; here will be null. Otherwise,
-it&amp;rsquo;ll correspond to the executable first found in the path:&lt;/p&gt;
+&lt;p&gt;Then let&amp;rsquo;s make a data producer coroutine:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-match file {
-    case null =&amp;gt; &amp;quot;autoconf not found&amp;quot;
-    case =&amp;gt; &amp;quot;found: %s&amp;quot; format(file path)
-} println()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;Cross-platform&lt;/h2&gt;
-
-&lt;p&gt;Adding the &lt;code&gt;.exe&lt;/code&gt; suffix is not necessary on Windows - it&amp;rsquo;ll be
-added automatically on this platform when searching.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Crucial&lt;/h2&gt;
-
-&lt;p&gt;&lt;code&gt;findExecutable&lt;/code&gt; can be made to throw an exception in case an
-executable is not found, instead of returning null. For this, pass
-&lt;code&gt;true&lt;/code&gt; as its second argument:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-// if we can&#39;t find make, don&#39;t even bother
-make := ShellUtils findExecutable(&amp;quot;make&amp;quot;, true)
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>pipe</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/pipe</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/os/pipe</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/Pipe module&lt;/h1&gt;
-
-&lt;p&gt;The Pipe module allows one to deal with pipes. Pipes are basically a pair of
-read and write file descriptors.&lt;/p&gt;
-
-&lt;p&gt;The writer writes into the write file descriptor and the reader reads into the
-read file descriptor.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;Reading&lt;/h2&gt;
-
-&lt;p&gt;A read call may either:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;successfully read, if there&amp;rsquo;s data in the pipe&lt;/li&gt;
-&lt;li&gt;block to wait for some more data (in blocking mode)&lt;/li&gt;
-&lt;li&gt;return immediately with no data (in non-blocking mode)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;In non-blocking mode, one has to be careful to distinguish between the &amp;lsquo;no
-data&amp;rsquo; condition and the &amp;lsquo;end of pipe&amp;rsquo; condition. OS pipes don&amp;rsquo;t have a proper
-&amp;lsquo;eof&amp;rsquo; marker, but reading from a closed pipe will mark the Pipe class as eof
-anyway, accessible with &lt;code&gt;Pipe eof?()&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;The &lt;code&gt;os/Pipe&lt;/code&gt; package contains a &lt;code&gt;PipeReader&lt;/code&gt; class, which extends the
-&lt;code&gt;io/Reader&lt;/code&gt; class, for convenience.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Writing&lt;/h2&gt;
-
-&lt;p&gt;A write call may either:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;return immediately if there&amp;rsquo;s room in the pipe&lt;/li&gt;
-&lt;li&gt;block to wait for some data to be read, making room to write something (in
-blocking mode)&lt;/li&gt;
-&lt;li&gt;return immediately, having written as much as it can (in non-blocking mode)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The &lt;code&gt;os/Pipe&lt;/code&gt; package contains a &lt;code&gt;PipeWriter&lt;/code&gt; class, which extends the
-&lt;code&gt;io/Writer&lt;/code&gt; class, for convenience.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Buffering considerations&lt;/h2&gt;
-
-&lt;p&gt;Note that a pipe&amp;rsquo;s user has to do its own buffering when writing: in blocking
-mode, writing something too large will hang forever, and in non-blocking mode,
-only the part that fits will be written, leaving the rest unwritten.&lt;/p&gt;
-
-&lt;p&gt;As a result, using a &lt;code&gt;PipeReader&lt;/code&gt; or a &lt;code&gt;PipeReader&lt;/code&gt; in non-blocking mode is
-unreliable.  Instead, using blocking mode inside a thread is preferrable.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_4&#34;&gt;Basic usage&lt;/h1&gt;
-
-&lt;p&gt;Here&amp;rsquo;s a not so useful pipe:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-pipe := Pipe new()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;We can write a string into it:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-pipe write(&amp;quot;Hello&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And then read the result back:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-str := pipe read(128)
-str println()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Even though we requested 128 bytes from the pipe, only 5 bytes have been written,
-so we the call immediately returns with a String of size 5.&lt;/p&gt;
-
-&lt;p&gt;We could have also read into our own buffer:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-b := Buffer new(128)
-pipe read(b)
-b println()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Same here, the buffer has 128 bytes capacity, but only 5 bytes have been read, and
-the buffer&amp;rsquo;s length has been set accordingly. Using a buffer is more efficient
-because fewer allocations are being done.&lt;/p&gt;
-
-&lt;p&gt;Then, we shouldn&amp;rsquo;t forget to close both the reading and the writing end of the pipe&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-pipe close(&#39;r&#39;)
-pipe close(&#39;w&#39;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Or simply:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-pipe close()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_5&#34;&gt;Communication&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;Inter-thread communication&lt;/h2&gt;
-
-&lt;p&gt;Pipes can be used to communicate between threads.&lt;/p&gt;
-
-&lt;p&gt;Let&amp;rsquo;s create a pipe:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-pipe := Pipe new()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then a thread that is going to read out of it until it&amp;rsquo;s closed:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-reader := Thread new(||
-    while (!pipe eof?()) {
-        result := pipe read(128)
-        if (result) result print()
+go(||
+    for (i in 0..5) {
+        chan &amp;lt;&amp;lt; i
+        yield()
     }
-    pipe close(&#39;r&#39;)
 )
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Then a writer path which is going to write ten hellos, one every 100
-milliseconds:&lt;/p&gt;
+&lt;p&gt;And another one:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-writer := Thread new(||
-    for (i in 0..10) {
-        pipe write(&amp;quot;Hello %d\n&amp;quot; format(i))
-        Time sleepMilli(100)
+go(||
+    for (i in 5..10) {
+        chan &amp;lt;&amp;lt; i
+        yield()
     }
-    pipe close(&#39;w&#39;)
+    chan &amp;lt;&amp;lt; -1
 )
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Let&amp;rsquo;s start them both:&lt;/p&gt;
+&lt;p&gt;-1 will be used as a stopping signal here. &lt;code&gt;go&lt;/code&gt; create a new
+coroutine, and &lt;code&gt;chan &amp;lt;&amp;lt; value&lt;/code&gt; sends a value down a channel.
+&lt;code&gt;yield&lt;/code&gt; switches from the current coroutine back to the scheduler.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s now make a consumer channel:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-reader start(); writer start()
-reader wait();  writer wait()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;Inter-process communication&lt;/h2&gt;
-
-&lt;p&gt;Similarly, pipes can be (and are mostly) used to communicate with other
-processes. This is covered in the &lt;a href=&#34;/docs/sdk/os/process/&#34;&gt;Process&lt;/a&gt; section.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;Non-blocking I/O&lt;/h2&gt;
-
-&lt;p&gt;A pipe can be set to non-blocking mode to use non-blocking read operations.
-This is used in the streaming example in the &lt;a href=&#34;/docs/sdk/os/process/&#34;&gt;Process&lt;/a&gt; section.&lt;/p&gt;
-
-&lt;p&gt;Let&amp;rsquo;s create a pipe in non-blocking mode for reading only:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-pipe := Pipe new()
-pipe setNonBlocking(&#39;r&#39;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then a state variable that&amp;rsquo;ll be shared by both threads:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-done := false
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then we&amp;rsquo;ll make a writer thread that never closes the pipe itself (much like a
-process launched in the background that you never blockingly wait on):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-t := Thread new(||
-  for (i in 0..10) {
-    Time sleepSec(1)
-    pipe write(&amp;quot;Hello %d&amp;quot; format(i))
-  }
-  done = true
+go(||
+    while (true) match (i := !chan) {
+        case -1 =&amp;gt; break
+        case =&amp;gt; &amp;quot;%d&amp;quot; printfln(i)
+    }
 )
-
-t start()
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;It does set done to true after it&amp;rsquo;s done, though - much like you could know if
-a background process is still running with &lt;code&gt;waitNoHang&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;re reading from the channel with the not operator: &lt;code&gt;!chan&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;Then we&amp;rsquo;ll read, from the main thread, as much as we can, and when we don&amp;rsquo;t receive
-anything, we&amp;rsquo;ll check if we&amp;rsquo;re done:&lt;/p&gt;
+&lt;p&gt;This will print 0, 5, 1, 6, 2, 7, 3, 8, 4, 9, and then exit, as
+expected.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>os</title>
+      <link>http://oocmanual.cogneco.com/sdk/os</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/os</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The os package&lt;/h1&gt;
+
+&lt;p&gt;The os packages contains various modules pertaining to Operating System functionality such as:&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Concurrency&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;process&#34;&gt;Process&lt;/a&gt;, to launch child processes&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;jobpool&#34;&gt;JobPool&lt;/a&gt;, to easily control a pool of child processes&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;[Coro](coro, which provides a basic coroutine implementation&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;I/O&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;terminal&#34;&gt;Terminal&lt;/a&gt;, used to control terminal text output (color, etc.)&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;pipe&#34;&gt;Pipe&lt;/a&gt;, to open, read from, and write to pipes&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;dynlib&#34;&gt;Dynlib&lt;/a&gt;, which deals with dynamic library loading&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;mmap&#34;&gt;mmap&lt;/a&gt;, which exposes memory mapping capabilities&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;channel&#34;&gt;Channel&lt;/a&gt;, which implements channels&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;System&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;system&#34;&gt;System&lt;/a&gt;, to get information such as the number of processors,
+the hostname, etc.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;env&#34;&gt;Env&lt;/a&gt;, to deal with environment variables&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;shellutils&#34;&gt;ShellUtils&lt;/a&gt;, used mostly to find executables&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;time&#34;&gt;Time&lt;/a&gt;, to get the current time and date, and sleep&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Covers vs Classes</title>
+      <link>http://oocmanual.cogneco.com/language/covers-vs-classes</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/language/covers-vs-classes</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;When to use covers and classes&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;Whenever possible, use classes.&lt;/p&gt;
+
+&lt;p&gt;If you&amp;rsquo;re new to ooc, don&amp;rsquo;t use covers because you&amp;rsquo;ve heard they
+are &amp;ldquo;faster&amp;rdquo;. Covers are powerful. Great power comes with great responsibility.
+The sword cut both ways&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;By-reference, by-value&lt;/h2&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Classes&lt;/h2&gt;
+
+&lt;p&gt;Classes are by-references. Which means every object is a reference. Doing that:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Number: class {
+        value: Int
+        init: func (=value) {}
+    }
+
+    modifyRef: func (n: Number) {
+        n = Number new(-1)
+    }
+
+    modifyInside: func (n: Number) {
+        n value = -1
+    }
+
+    answer := Number new(42)
+    modifyRef(answer) // does nothing
+    modifyInside(answer)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;What happens in &amp;lsquo;modifyRef&amp;rsquo; is that we change the value of the parameter &amp;lsquo;n&amp;rsquo;.
+The code does not modify what &amp;lsquo;n&amp;rsquo; was a reference to in the first place.
+In the example above the variable &amp;lsquo;answer&amp;rsquo; is given as the argument and &amp;lsquo;modifyRef&amp;rsquo; has
+no effect at all on &amp;lsquo;answer&amp;rsquo;.&lt;/p&gt;
+
+&lt;p&gt;However, in &amp;lsquo;modifyInside&amp;rsquo;, we actually modify the content of what &amp;lsquo;n&amp;rsquo; refers to.
+Since &amp;lsquo;n&amp;rsquo; refers to &amp;lsquo;answer&amp;rsquo;, the code will modify its member &amp;lsquo;value&amp;rsquo; and set it to -1.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Covers&lt;/h2&gt;
+
+&lt;p&gt;Covers are trickier. There are two types of covers: primitive covers and compound covers&lt;/p&gt;
+
+&lt;p&gt;Primitive covers allow to us to add methods to an existing underlying type. For implementations
+of ooc on top of C this means you can do stuff like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Int: cover from int
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is actually the way all C types are used within ooc.&lt;/p&gt;
+
+&lt;p&gt;As a consequence, covers are by-value. Which means that&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    modify: func (i: Int) {
+        i = -1
+    }
+
+    answer := 42
+    modify(answer)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Doesn&amp;rsquo;t modify answer.&lt;/p&gt;
+
+&lt;p&gt;But compound covers (you can think of them as structs) are also by value,
+which means that:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Number: cover {
+        value: Int
+    }
+
+    modifyInside: func (n: Number) {
+        n value = -1
+    }
+
+    answer: Number
+    answer value = 42
+
+    modifyInside(answer)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Won&amp;rsquo;t modify &amp;lsquo;answer&amp;rsquo; at all, but a &lt;em&gt;copy&lt;/em&gt; of it that has been
+passed to &amp;lsquo;modifyInside&amp;rsquo;.&lt;/p&gt;
+
+&lt;p&gt;As an interesting side effect, a &amp;lsquo;clone&amp;rsquo; method is futile for covers.&lt;/p&gt;
+
+&lt;p&gt;It also means that this won&amp;rsquo;t work:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Number: cover {
+        value: Int
+        init: func (=value) {}
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Because init will be working on a &lt;em&gt;copy&lt;/em&gt; of the object, thus leaving
+the original object unmodified. That&amp;rsquo;s why func@ exists, ie.:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Number: cover {
+        value: Int
+        init: func@ (=value) {}
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Where &amp;lsquo;this&amp;rsquo; will be passed by reference. Same goes for any cover method
+that modifies its content.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Heap allocation, stack allocation&lt;/h2&gt;
+
+&lt;p&gt;When you do&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    NumberClass: class {}
+    n := NumberClass new()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;n may be allocated on the heap or on the stack, however the compiler sees fit.&lt;/p&gt;
+
+&lt;p&gt;However, with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    NumberCover: cover {}
+    n: NumberCover
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;n is allocated on the stack.&lt;/p&gt;
+
+&lt;p&gt;Choosing whether to allocate an object on the stack or on the heap is a
+non-trivial decision. In C++ for example, it is the role of the programmer
+to decide whether to allocate on the stack or on the heap.&lt;/p&gt;
+
+&lt;p&gt;In ooc, it&amp;rsquo;s the role of the compiler. Until the language is properly
+standardized and annotations are added for extern functions to allow
+escape analysis, the compiler may choose to only allocate on the heap.&lt;/p&gt;
+
+&lt;p&gt;Allocating on the stack is much faster (since it only involves moving
+the stack pointer), and the stack is always hot, the memory you get when
+allocating is much more likely to be in cache than any far heap allocated
+memory.&lt;/p&gt;
+
+&lt;p&gt;So why don&amp;rsquo;t we always allocate on the stack? Why do we even bother about
+heap allocation, which involves all kinds of housekeeping to know which
+memory blocks are reserved and which are free?&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;Why stack allocation isn&amp;rsquo;t a silver bullet&lt;/h2&gt;
+
+&lt;p&gt;A typical stack size for C programs on desktop OSes is between 1MB and 2MB.
+Therefore, if you need to allocate big objects, you may run out of stack space.&lt;/p&gt;
+
+&lt;p&gt;Running out of stack space is really something to be avoided. It&amp;rsquo;s a lot
+harder to debug than heap allocation failures. When heap allocation fails,
+you usually get back a null pointer, and tools (GDB, Valgrind) help figuring
+out the cause.&lt;/p&gt;
+
+&lt;p&gt;However, when you run out of stack space, the program usually crashes violently
+with very little information about the situation that lead to the crash.
+Even worse, it could corrupt data without crashing.&lt;/p&gt;
+
+&lt;p&gt;What&amp;rsquo;s more, often, when a program crashes because of a stack allocation failure,
+the call stack is overwritten with random data, making it impossible to trace back
+the origin of the problem.&lt;/p&gt;
+
+&lt;p&gt;To add insult to injury, as far as I know, there is no reliable and portable way
+to know how much free memory is left on the stack.&lt;/p&gt;
+
+&lt;p&gt;For all those reasons, stack allocation is sometimes entirely avoided,
+because it&amp;rsquo;s tricky to deal with manually.&lt;/p&gt;
+
+&lt;p&gt;The following IBM DeveloperWorks article goes more in-depth into the issue:
+&lt;a href=&#34;http://www.ibm.com/developerworks/java/library/j-jtp09275.html&#34;&gt;http://www.ibm.com/developerworks/java/library/j-jtp09275.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;Stack and scope&lt;/h2&gt;
+
+&lt;p&gt;But wait, there&amp;rsquo;s more! (assuming you&amp;rsquo;re still reading at that point)&lt;/p&gt;
+
+&lt;p&gt;Stack-allocated variables are deallocated when they go out of scope.&lt;/p&gt;
+
+&lt;p&gt;What does that mean? It means that this code is wrong.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    getAnswer: func -&amp;gt; Int* {
+        // answer is allocated on the stack
+        answer := 42
+        // we&#39;re returning the address of a local variable
+        // this is WRONG, don&#39;t do it.
+        answer&amp;amp;
+        // when the function returns, &#39;answer&#39; goes out of scope
+        // and is deallocated
+    }
+
+    answerPtr := getAnswer()
+    &amp;quot;answer = %d&amp;quot; printfln(answerPtr@)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Whereas this one will work perfectly:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    getAnswer: func -&amp;gt; Int* {
+        // answer is allocated on the heap
+        answer := gc_malloc(Int size)
+        answer@ = 42
+        // we&#39;re returning the address of a heap-allocated variable
+        // no problem with that. the memory will be freed on a garbage
+        // collector sweep phase, when it will have detected that
+        // it&#39;s unused
+        answer
+    }
+
+    answerPtr := getAnswer()
+    &amp;quot;answer = %d&amp;quot; printfln(answerPtr@)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;However, the first version (returning the address of a local variable)
+might work sometimes: don&amp;rsquo;t be surprised. If the memory address (on the stack
+or in a register) where the local variable was stored isn&amp;rsquo;t overwritten
+between the return from the function and the time when it&amp;rsquo;s used, it might
+still contain the original value. But, again - it&amp;rsquo;s wrong and unreliable.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_8&#34;&gt;When to use stack allocation&lt;/h2&gt;
+
+&lt;p&gt;For small objects for which you need by-value behavior and of which you use
+gazillions in your application.&lt;/p&gt;
+
+&lt;p&gt;Each project is a unique situation - as a rule, I&amp;rsquo;d always advise to begin
+with a class, and turn it into a cover later if the situation requires it.&lt;/p&gt;
+
+&lt;p&gt;However, keep in mind that allocation is often not the first place to look
+if you want to optimize your application. Remember to always use a profiler
+(I find that valgrind + KCachegrind work particularly well with ooc code)
+to figure out where the hotspots are in your code.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>process</title>
+      <link>http://oocmanual.cogneco.com/sdk/os/process</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/os/process</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The os/Process module&lt;/h1&gt;
+
+&lt;p&gt;The Process module deals with everything related to launching a child process, waiting for
+its status or signals, and communicating with it.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;Basic usage&lt;/h1&gt;
+
+&lt;p&gt;A process can be launched by providing an array or a list of arguments to the &lt;code&gt;Process&lt;/code&gt; constructor:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
+import os/Process
+
+p := Process new([&amp;quot;cat&amp;quot;, &amp;quot;/etc/hosts&amp;quot;])
+exitCode := p execute()
+
+// at this point, the process has ended
+// and &#39;exitCode&#39; contains the value returned by the program
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Instead of running execute, one might want to run &lt;code&gt;getOutput&lt;/code&gt; directly, to get
+the standard output of the process as a string&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+p := Process new([&amp;quot;cat&amp;quot;, &amp;quot;/etc/hosts&amp;quot;])
+out := p getOutput()
+// out now contains the contents of the /etc/hosts file
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or getErrOutput to get the standard error output:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+p := Process new([&amp;quot;cat&amp;quot;, &amp;quot;/etc/hosts&amp;quot;])
+err := p getErrOutput()
+// err is empty
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To retrieve the result of both stderr and stdout, see the &amp;lsquo;Redirecting&amp;rsquo; section
+below.&lt;/p&gt;
+
+&lt;p&gt;However, depending on your use case, that might not be the best way to do it.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Manual wait and pid&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;execute&lt;/code&gt; will start the child process, wait for it to finish, and print the output.&lt;/p&gt;
+
+&lt;p&gt;However, we can do things manually if we want:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+p := Process new([&amp;quot;curl&amp;quot;, &amp;quot;example.org&amp;quot;])
+p executeNoWait()
+p wait()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;wait&lt;/code&gt; method will wait until the child process has exited or errored. If you
+just want to check if a process is still running, &lt;code&gt;waitNoHang&lt;/code&gt; can be used instead:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+p := Process new([&amp;quot;curl&amp;quot;, &amp;quot;example.org&amp;quot;])
+p executeNoWait()
+while (p waitNoHang() == -1) {
+    Time sleepMilli(20)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To execute a bunch of processes in parallel, using a &lt;a href=&#34;/docs/sdk/os/jobpool&#34;&gt;JobPool&lt;/a&gt; is easier and
+more suitable.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_3&#34;&gt;Process settings&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Current working directory&lt;/h2&gt;
+
+&lt;p&gt;By default, a process will inherit from the current working directory. To make
+the child process run in a specified directory, use the &lt;code&gt;setCwd&lt;/code&gt; method&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+p := Process new([&amp;quot;cat&amp;quot;, &amp;quot;hosts&amp;quot;])
+p setCwd(&amp;quot;/etc&amp;quot;)
+p execute()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Environment&lt;/h2&gt;
+
+&lt;p&gt;To specify custom environment variables for a process, use the &lt;code&gt;setEnv&lt;/code&gt; method
+with a &lt;code&gt;HashMap&amp;lt;String, String&amp;gt;&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+p := Process new([&amp;quot;bash&amp;quot;, &amp;quot;-c&amp;quot;, &amp;quot;echo $MYVAR&amp;quot;])
+
+env := HashMap&amp;lt;String, String&amp;gt; new()
+env put(&amp;quot;MYVAR&amp;quot;, &amp;quot;42&amp;quot;)
+p setEnv(env)
+
+// prints 42
+p execute()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;toc_6&#34;&gt;Communicating with a process&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;Redirecting stdin, stdout, stderr&lt;/h2&gt;
+
+&lt;p&gt;One may use &lt;a href=&#34;/docs/sdk/os/pipe/&#34;&gt;pipes&lt;/a&gt; to redirect the standard input, output, or error stream of
+a process.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import os/[Process, Pipe, PipeReader]
+
+p := Process new([&amp;quot;some&amp;quot;, &amp;quot;process&amp;quot;])
+
+(out, err) := (Pipe new(), Pipe new())
+p setStdout(out)
+p setStderr(err)
+
+exitCode := p execute()
+
+outString := PipeReader new(out) toString()
+errString := PipeReader new(err) toString()
+
+out close(&#39;r&#39;). close(&#39;w&#39;)
+err close(&#39;r&#39;). close(&#39;w&#39;)
+
+// we now have the exit code in exitCode, the
+// stdout in outString, and the stderr in errString
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_8&#34;&gt;Streaming output&lt;/h2&gt;
+
+&lt;p&gt;This can be used to stream stdout to the output of our main program, if the launched
+process is interactive. If blinkenlights is still up and running when you try this, it
+should display star wars scene in ASCII art:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+p := Process new([&amp;quot;nc&amp;quot;, &amp;quot;towel.blinkenlights.nl&amp;quot;, &amp;quot;23&amp;quot;])
+
+out := Pipe new()
+out setNonBlocking()
+p setStdout(out)
+
+p executeNoWait()
+
 while (true) {
-  res := pipe read(128)
-  if (res) {
-    &amp;quot;Received: %s&amp;quot; printfln(res)
-  } else if (done) break
+    chr := out read()
+    if (chr != &#39;\0&#39;) {
+        chr print()
+    } else if(p waitNoHang() &amp;gt; 0) {
+        // process is done
+        break
+    }
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;And let&amp;rsquo;s not forget to clean up:&lt;/p&gt;
+&lt;h1 id=&#34;toc_9&#34;&gt;Terminate or kill a process&lt;/h1&gt;
+
+&lt;p&gt;The &lt;code&gt;terminate&lt;/code&gt; method will send a process the &lt;code&gt;SIGTERM&lt;/code&gt; message, while the &lt;code&gt;kill&lt;/code&gt; method
+will send a process the &lt;code&gt;SIGKILL&lt;/code&gt; message.&lt;/p&gt;
+
+&lt;p&gt;This can be used to gracefully end a process:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-pipe close()
-t wait()
-&lt;/code&gt;&lt;/pre&gt;
+p terminate()
+if (p waitNoHang() != -1) {
+    // give a few seconds of grace..
+    Time sleepSec(3)
+}
 
-&lt;p&gt;That behaves as expected. Note that in the main thread loop we could be doing anything
-really, without blocking on the read.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_9&#34;&gt;Pipes disclaimer&lt;/h1&gt;
-
-&lt;p&gt;If you have read all the way down, and you&amp;rsquo;re thinking of doing some complex
-stuff with pipes, you probably want some queuing library instead of using raw
-pipes, both for cross-platform support, performance, and ease of use.
-&lt;a href=&#34;http://zeromq.org/&#34;&gt;zeromq&lt;/a&gt; is an interesting library and it has &lt;a href=&#34;https://github.com/nddrylliog/ooc-zeromq&#34;&gt;ooc bindings&lt;/a&gt;.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>terminal</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/terminal</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/os/terminal</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/Terminal module&lt;/h1&gt;
-
-&lt;p&gt;Terminal is used to control the terminal output, mostly by setting colors and
-attributes on there.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;Colors&lt;/h1&gt;
-
-&lt;p&gt;The &lt;code&gt;Color&lt;/code&gt; enum contains colors that are possible to set on the terminal:&lt;/p&gt;
-
-&lt;p&gt;To change the foreground color, use &lt;code&gt;setFgColor&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Terminal setFgColor(Color black)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;To change the background color, use &lt;code&gt;setBgColor&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Terminal setBgColor(Color white)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;List of colors&lt;/h2&gt;
-
-&lt;p&gt;Here are the colors defined in the Color enum:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;black&lt;/li&gt;
-&lt;li&gt;red&lt;/li&gt;
-&lt;li&gt;green&lt;/li&gt;
-&lt;li&gt;yellow&lt;/li&gt;
-&lt;li&gt;blue&lt;/li&gt;
-&lt;li&gt;magenta&lt;/li&gt;
-&lt;li&gt;cyan&lt;/li&gt;
-&lt;li&gt;grey&lt;/li&gt;
-&lt;li&gt;white&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Note that depending on your terminal emulator, these colors
-might not map to their actual names.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_3&#34;&gt;Attributes&lt;/h1&gt;
-
-&lt;p&gt;Attributes can be set using &lt;code&gt;setAttr&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Terminal setAttr(Attr bright)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;List of attributes&lt;/h2&gt;
-
-&lt;p&gt;Here are the attributes defined in the &lt;code&gt;Attr&lt;/code&gt; enum:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;reset&lt;/li&gt;
-&lt;li&gt;bright&lt;/li&gt;
-&lt;li&gt;dim&lt;/li&gt;
-&lt;li&gt;under&lt;/li&gt;
-&lt;li&gt;blink&lt;/li&gt;
-&lt;li&gt;reverse&lt;/li&gt;
-&lt;li&gt;hidden&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&#34;toc_5&#34;&gt;Resetting&lt;/h1&gt;
-
-&lt;p&gt;Reset all color and attribute settings to default by using the
-&lt;code&gt;reset&lt;/code&gt; method:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Terminal reset()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_6&#34;&gt;Cross-platform considerations&lt;/h1&gt;
-
-&lt;p&gt;On *nix platforms, all attributes are supposed. On Windows, only
-the &lt;code&gt;reset&lt;/code&gt; attribute is supported.&lt;/p&gt;
-
-&lt;p&gt;On *nix, the &lt;code&gt;Terminal&lt;/code&gt; module outputs ANSI escape sequences to
-stdout, whereas on Windows it uses the console text attribute API.&lt;/p&gt;
-
-&lt;p&gt;That&amp;rsquo;s why there is no cross-platform way to transform a string
-into a &amp;ldquo;colored string&amp;rdquo;, because it would make no sense on Windows.&lt;/p&gt;
-
-&lt;p&gt;Also, on *nix, color escapes will only be outputted if stdout is
-a terminal and not if it&amp;rsquo;s redirected to a file or a pipe.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>memory</title>
-      <link>http://oocmanual.cogneco.com/sdk/lang/memory</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/lang/memory</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Memory&lt;/h1&gt;
-
-&lt;p&gt;Sometimes, you just have to handle memory yourself. None of that class
-or cover stuff, just give me a raw block of memory any day.&lt;/p&gt;
-
-&lt;p&gt;You&amp;rsquo;ll see the &lt;code&gt;gc_&lt;/code&gt; prefix being used in the following page: that stands
-for Garbage Collection, which is enabled by default in ooc. However, when
-the GC is disabled, those will point to non-GC version of the functions.&lt;/p&gt;
-
-&lt;p&gt;So that your code remains flexible, do yourself a favor and use the &lt;code&gt;gc_&lt;/code&gt;
-variants regardless.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;Allocating memory&lt;/h2&gt;
-
-&lt;p&gt;Use &lt;code&gt;gc_malloc&lt;/code&gt; to get a chunk of memory all to yourself.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-// get ourselves a slice of 4 bytes
-block := gc_malloc(4)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;However, you&amp;rsquo;ll get a &lt;code&gt;Pointer&lt;/code&gt; back - which is a little bit pointless.
-Plus you&amp;rsquo;ll probably want to determine how much you are allocating as
-a function of the size of some other type instead:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-// get ourselves room to store 4 doubles.
-doubles := gc_malloc(4 * Double size) as Double*
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;That&amp;rsquo;s better. Now you can index that, like any pointer:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-doubles[0] = 3.14    
-doubles[1] = 6.28    
-// etc.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Pointer arithmetic works:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-addressOfSecondDouble := doubles + 1
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then again, why not write it the explicit way:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-addressOfSecondDouble := doubles[1]&amp;amp;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Note that &lt;code&gt;gc_malloc&lt;/code&gt; returns zeroed memory (even when the GC is disabled),
-just like the C function &lt;code&gt;calloc&lt;/code&gt; does. While a small performance hit, a
-little additional safety can&amp;rsquo;t hurt.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Allocating in bulks&lt;/h2&gt;
-
-&lt;p&gt;&lt;code&gt;calloc&lt;/code&gt; is typically used in C to get zeroed memory (e.g. all null bytes).
-This is unnecessary in ooc, since &lt;code&gt;gc_malloc&lt;/code&gt; returns zeroed memory anyway.&lt;/p&gt;
-
-&lt;p&gt;In the rare cases where you do mean to allocate &lt;code&gt;num&lt;/code&gt; members of size &lt;code&gt;size&lt;/code&gt;,
-use &lt;code&gt;gc_calloc&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-members := gc_calloc(num, size)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Re-allocating memory&lt;/h2&gt;
-
-&lt;p&gt;Didn&amp;rsquo;t get enough the first time around? Misjudged your budget needs?&lt;/p&gt;
-
-&lt;p&gt;Fear not, &lt;code&gt;gc_realloc&lt;/code&gt; is here:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-// get ourselves 4 bytes
-block := gc_malloc(4)
-
-// woops, make that 8
-block = gc_realloc(block, 8)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Duplicating memory&lt;/h2&gt;
-
-&lt;p&gt;In our family of memory-related functions, &lt;code&gt;gc_strdup&lt;/code&gt;, nostalgically
-named as if it was only used with strings, is here. It&amp;rsquo;ll make a copy of
-a block of memory so that the original may be disposed of.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-someCallback: func (word: CString) {
-  // CString is a pointer to a memory block that will get
-  // overriden sometimes after this function returns - hence,
-  // we want to make a copy so that the data we got doesn&#39;t
-  // get tampered with.
-  storeString(String new(gc_strdup(word)))
+if (p waitNoHang() != -1) {
+    // still not finished? alright, that&#39;s enough
+    p kill()
 }
 &lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The block of code above shows the typical use case, anyway.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Freeing memory&lt;/h2&gt;
-
-&lt;p&gt;Technically, since we are using a garbage collector, you don&amp;rsquo;t need to
-free explicitly. Should you feel the need to do so, however, &lt;code&gt;gc_free&lt;/code&gt; is
-here to do the job:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-// you know what, I&#39;m good for now, thanks.
-gc_free(block)
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Basic Usage</title>
-      <link>http://oocmanual.cogneco.com/tools/rock/basic</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/tools/rock/basic</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Using rock, the basic way&lt;/h1&gt;
-
-&lt;p&gt;If you have a usefile, calling rock is pretty easy:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-rock
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;will look for usefiles in your current directory and, if possible, build them.&lt;/p&gt;
-
-&lt;p&gt;Since the world is not always perfect, it&amp;rsquo;s also possible to pass an &lt;code&gt;.ooc&lt;/code&gt; file directly:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-rock mmorpg.ooc
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Sadly, it&amp;rsquo;s possible that rock thinks your ooc code is alright and passes the C files to your
-C compiler which then prints pages of errors and explodes subsequently.
-In that case, you&amp;rsquo;ll need to increase rock&amp;rsquo;s verbosity to see the compiler output:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-rock -v ...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Building an executable and tired of typing &lt;code&gt;./mmorpg&lt;/code&gt; all over again?&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-rock -r ...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;will run your executable after having built it successfully.&lt;/p&gt;
-
-&lt;p&gt;To speed up the compilation process and to save you some time, rock caches compiled dependencies
-in a hidden subdirectory called &lt;code&gt;.libs&lt;/code&gt;. In most cases, this is awesome, but sometimes, something
-goes wrong and you get pretty strange unexplainable error messages. Just to be sure, you can just&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-rock -x
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;then, recompile and see if it works.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>text</title>
-      <link>http://oocmanual.cogneco.com/sdk/text</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/text</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The text package&lt;/h1&gt;
-
-&lt;p&gt;This package contains various helper classes to work with text
-and JSON.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;Escape sequences&lt;/h1&gt;
-
-&lt;p&gt;The module &lt;code&gt;text/EscapeSequence&lt;/code&gt; contains a class &lt;code&gt;EscapeSequence&lt;/code&gt; which defines
-some methods to work with backslash escape sequences. In the real world, you probably
-just need the two following methods:&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;escape&lt;/code&gt; takes a string and converts all special characters to escape sequences.
-In this context, special characters are:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;non-printable characters&lt;/li&gt;
-&lt;li&gt;single and double quotes&lt;/li&gt;
-&lt;li&gt;backslashes&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Use it like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-escaped := EscapeSequence escape(&amp;quot;This is\na &#39;String&#39;&amp;quot;)
-// now, `escaped` looks like this:
-escaped == &amp;quot;This is \\n a \\&#39;String\\&#39;&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;But that is only one half of the truth: You can additionally pass a
-string of all characters that should not be escaped as the
-second argument:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-escaped := EscapeSequence escape(&amp;quot;This is\na &#39;String&#39;&amp;quot;, &amp;quot;&#39;\n&amp;quot;)
-// The method did not escape anything now.
-escaped == &amp;quot;This is\na &#39;String&#39;&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;unescape&lt;/code&gt; is useful if you have a string containing escape sequences
-and you need a string with these sequences converted to their real character
-counterparts. This method supports one-character escape sequences like
-&amp;ldquo;\n&amp;rdquo;, &amp;ldquo;\r&amp;rdquo; or &amp;ldquo;\t&amp;rdquo;, but also hexadecimal sequences like &amp;ldquo;\x34&amp;rdquo;.
-Usage is easy:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;\\x27\\163up\\t\\x62ro\\n\\x3f&amp;quot; println()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;which will print&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-&#39;sup    bro
-?
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_2&#34;&gt;StringTokenizer&lt;/h1&gt;
-
-&lt;p&gt;Sometimes, one needs to split a string at a special character and turn
-it into an array. In ooc, the &lt;code&gt;text/StringTokenizer&lt;/code&gt; module adds
-every desirable variation of the good old &lt;code&gt;split&lt;/code&gt; method to &lt;code&gt;Buffer&lt;/code&gt; and &lt;code&gt;String&lt;/code&gt;,
-each returning an &lt;code&gt;ArrayList&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import text/StringTokenizer
-import structs/ArrayList
-
-// split at a specific character
-&amp;quot;A|simple and stupid|example&amp;quot; split(&#39;|&#39;)
-// This creates an ArrayList:
-//  [&amp;quot;A&amp;quot;, &amp;quot;simple and stupid&amp;quot;, &amp;quot;example&amp;quot;]
-
-// split until a specific number of tokens is reached.
-// This will produce an ArrayList like
-//    [&amp;quot;A&amp;quot;, &amp;quot;simple and stupid|example&amp;quot;]
-&amp;quot;A|simple and stupid|example&amp;quot; split(&#39;|&#39;, 2)
-
-// There is also a function to split at delimiters longer
-// than one char:
-&amp;quot;:-)A case :-)of intimidating:-)smiley abuse :-)&amp;quot; split(&amp;quot;:-&amp;quot;)
-// ... produces
-//  [&amp;quot;&amp;quot;, &amp;quot;A case &amp;quot;, &amp;quot;of intimidating&amp;quot;, &amp;quot;smiley abuse &amp;quot;, &amp;quot;&amp;quot;]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_3&#34;&gt;StringTemplate&lt;/h1&gt;
-
-&lt;p&gt;The &lt;code&gt;io/StringTemplate&lt;/code&gt; module adds a lightweight &lt;code&gt;formatTemplate&lt;/code&gt; string interpolation
-function to strings, which can be used in cases where &lt;code&gt;format&lt;/code&gt; is not enough. This function
-uses a hashmap to access items by value:&lt;/p&gt;
-
-&lt;p&gt;{{=&amp;lt;% %&amp;gt;=}}&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import text/StringTemplate
-import structs/HashMap
-
-values := HashMap&amp;lt;String, String&amp;gt; new()
-values put(&amp;quot;day&amp;quot;, &amp;quot;Saturday&amp;quot;) \
-      .put(&amp;quot;weather&amp;quot;, &amp;quot;cloudy&amp;quot;)
-
-&amp;quot;Hi! Today&#39;s {{day}}, and it is a pretty {{  weather   }} {{ day }}!&amp;quot; formatTemplate(values) println()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&amp;lt;%={{ }}=%&amp;gt;&lt;/p&gt;
-
-&lt;p&gt;This will print:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Hi! Today&#39;s Saturday, and it is a pretty cloudy Saturday!
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;As you can see, you can access the values by their keys, order isn&amp;rsquo;t important
-and you can interpolate one value multiple times.&lt;br /&gt;
-However, this is still pretty basic, since it does not support filters or control
-structures, but this is often enough.&lt;/p&gt;
-
-&lt;p&gt;In case a key is referenced that does not exist in the hashmap, it will be
-replaced by an empty string.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_4&#34;&gt;Shell-like Lexer&lt;/h1&gt;
-
-&lt;p&gt;The &lt;code&gt;text/Shlex&lt;/code&gt; module implements a basic lexer for strings containing
-quoted strings and backslash escape sequences. Basically, it splits an input
-string into an Array, using whitespace characters as delimiters. Single and double
-quotes can be used to include whitespace in the string items.&lt;/p&gt;
-
-&lt;p&gt;The public API can be accessed like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import text/Shlex
-import structs/ArrayList
-Shlex split(&amp;quot;&#39;This is a \\&#39;quoted\\&#39; string&#39;     and I \&amp;quot;like \\x69\\x74.\&amp;quot;&amp;quot;)
-// This produces the following ArrayList:
-// [&amp;quot;This is a &#39;quoted&#39; string&amp;quot;, &amp;quot;and&amp;quot;, &amp;quot;I&amp;quot;, &amp;quot;like it.&amp;quot;]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This can be useful to parse command-line arguments. However, be careful, since
-this module was not designed with security in mind.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_5&#34;&gt;Regular Expressions&lt;/h1&gt;
-
-&lt;p&gt;The SDK provides a simple cover for the &lt;a href=&#34;http://www.pcre.org/&#34;&gt;Perl Compatible Regular Expressions&lt;/a&gt;
-library. Its use is pretty straightforward. First, you need to compile a regular
-expression pattern, passing some options as a bitmask if you want to:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import text/Regexp
-
-pattern := Regexp compile(&amp;quot;on (?P&amp;lt;year&amp;gt;[0-9]{4})-?P&amp;lt;month&amp;gt;[0-9]{1,2})-(?P&amp;lt;day&amp;gt;[0-9]{1,2})&amp;quot;, RegexOptions CASELESS)
-pattern matches(&amp;quot;foo&amp;quot;) // this will return null, since the pattern could not be matched
-
-someDate := pattern matches(&amp;quot;On 2013-08-07&amp;quot;)
-// `someDate` is now a `Match` object. You can access groups by index or by name:
-someDate group(1)
-someDate group(&amp;quot;year&amp;quot;)
-// ... both return &amp;quot;2013&amp;quot;.
-// Group zero is the whole matched string:
-someDate group(0) // is &amp;quot;On 2013-08-07&amp;quot;
-
-// You can also iterate over the matches. This will include
-// group 0 (the whole string), though.
-for(group in someDate) {
-    // `group` is now a String.
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;For more information about the Perl regular expression syntax, take a look
-at the &lt;a href=&#34;http://perldoc.perl.org/perlre.html&#34;&gt;Perl documentation&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_6&#34;&gt;JSON&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;Basic reading and writing&lt;/h2&gt;
-
-&lt;p&gt;The &lt;code&gt;text/json/&lt;/code&gt; package contains a JSON parser and generator, written in ooc
-without external dependencies, which is able to deal with basic JSON. However,
-if you care about speed or compliance (especially when dealing with numbers),
-you should check out &lt;a href=&#34;https://github.com/nddrylliog/ooc-yaml&#34;&gt;ooc-yaml&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;The JSON classes operate on nested &lt;a href=&#34;/docs/sdk/structs/#bag-variants&#34;&gt;HashBags and Bags&lt;/a&gt;,
-so if you parse JSON, you get some (Hash)Bags, and if you want to generate JSON, you need
-to pass the data as (Hash)Bags.&lt;/p&gt;
-
-&lt;p&gt;To parse or generate JSON, you can just use the convenience &lt;code&gt;text/json&lt;/code&gt; module.
-Every function exists in two flavours: Normally, you need to pass the class
-of your expected base value. So, for example, if you want to parse JSON like that:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!json
-[&amp;quot;Hi&amp;quot;, &amp;quot;World&amp;quot;]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You need to pass &lt;code&gt;Bag&lt;/code&gt; as the base value class. However, since most of the time
-you will parse JSON objects that will represented by a &lt;code&gt;HashBag&lt;/code&gt;, &lt;code&gt;HashBag&lt;/code&gt; is
-used by default if you do not pass a class explicitly.&lt;/p&gt;
-
-&lt;p&gt;Here are some examples:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import text/json
-import structs/HashBag
-
-// if you have a `Reader` (to read directly from a file, for example):
-import io/FileReader
-myObject := JSON parse(FileReader new(&amp;quot;package.json&amp;quot;))
-
-// ... and if your base value is not a JSON object:
-import structs/Bag
-myArray := JSON parse(FileReader new(&amp;quot;myarray.json&amp;quot;), Bag)
-
-// reading directly from strings is also supported:
-JSON parse(&amp;quot;{\&amp;quot;hello\&amp;quot;: \&amp;quot;world\&amp;quot;}&amp;quot;)
-JSON parse(&amp;quot;\&amp;quot;just a string\&amp;quot;&amp;quot;, String)
-
-// and to generate JSON, there is:
-myBag := HashBag new()
-myBag put(&amp;quot;integer&amp;quot;, 1234) \
-     .put(&amp;quot;string&amp;quot;, &amp;quot;Yes&amp;quot;)
-
-import io/FileWriter
-JSON generate(FileWriter new(&amp;quot;output.json&amp;quot;), myBag)
-
-myJSONString := JSON generateString(myBag)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;When dealing with the &lt;code&gt;HashBag&lt;/code&gt; class, you should take a look at its
-&lt;a href=&#34;/docs/sdk/structs/#hashbag&#34;&gt;getPath&lt;/a&gt; function, which will save you
-a lot of typing.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;A JSON generation DSL&lt;/h2&gt;
-
-&lt;p&gt;If you find yourself generating a lot of JSON, you might find
-the &lt;code&gt;HashBag&lt;/code&gt;/&lt;code&gt;Bag&lt;/code&gt; objects create a lot of syntactic noise. For this
-reason, the SDK contains another convenience module implementing
-a small DSL for JSON generation.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-// Let&#39;s import the module into a namespace, since `make`
-// is a bit ambiguous.
-import text/json/DSL into JSON
-
-data := JSON make(|j|
-    j object(
-        &amp;quot;some-key&amp;quot;,
-            &amp;quot;some-value&amp;quot;,
-        &amp;quot;here comes a list&amp;quot;,
-            j array(
-                1, 2, &amp;quot;three&amp;quot;, 4
-            ),
-        &amp;quot;and a nested object&amp;quot;,
-            j object(
-                &amp;quot;true&amp;quot;, true
-            )
-    )
-)
-data println()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;make&lt;/code&gt; creates a helper object with &lt;code&gt;object&lt;/code&gt; and &lt;code&gt;array&lt;/code&gt; functions and passes
-it to the function you provide; using a closure is the most convenient way here.
-You can use &lt;code&gt;object&lt;/code&gt; to create JSON objects, passing as many key-value pairs
-as you want, and &lt;code&gt;array&lt;/code&gt; for JSON arrays.&lt;/p&gt;
-
-&lt;p&gt;When it&amp;rsquo;s done, it returns the JSON data as a string.&lt;/p&gt;
 </description>
     </item>
     
@@ -1074,153 +745,1154 @@ for ((index, element) in list) {
     </item>
     
     <item>
-      <title>Rock</title>
-      <link>http://oocmanual.cogneco.com/tools/rock</link>
+      <title>Introduction</title>
+      <link>http://oocmanual.cogneco.com/introduction</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/tools/rock</guid>
+      <guid>http://oocmanual.cogneco.com/introduction</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;About Rock&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;Once Upon A Time&amp;hellip;&lt;/h1&gt;
 
-&lt;p&gt;Rock is the main ooc compiler. It parses ooc files using nagaqueen, does some
-checking and inference, produces .c files, and then drives the C compilation process
-to produce either an executable or a library.&lt;/p&gt;
+&lt;p&gt;Once upon a time, there was a sysadmin who wanted to make sure her website
+was always online. However, she figured that she was pretty good at compiling,
+installing, and configuring software, but that her programming skills were a bit
+rusty.&lt;/p&gt;
 
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/basic/&#34;&gt;Basic usage&lt;/a&gt; section explains how to quickly get
-up and running, using rock to compile ooc projects.&lt;/p&gt;&lt;/li&gt;
+&lt;p&gt;Oh, sure, she remembered her days at university where she learned a bit of Java,
+and C++, and the cool mind-bending exercises in LISP, but today she felt like trying
+something new. She followed the &lt;a href=&#34;/install/&#34;&gt;installation instructions&lt;/a&gt; carefully, and then
+jumped in without waiting.&lt;/p&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/drivers/&#34;&gt;Drivers&lt;/a&gt; section gives an overview of rock&amp;rsquo;s various
-drivers, akin to compiling strategies, like the sequence driver (default), the make
-driver, and the android driver.&lt;/p&gt;&lt;/li&gt;
+&lt;p&gt;After fishing online for information, she decided to start with the following
+program:&lt;/p&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/advanced/&#34;&gt;Advanced usage&lt;/a&gt; section covers some less-often used
-options like using a different C compiler, keeping source files, etc.&lt;/p&gt;&lt;/li&gt;
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;The website may or may not be online.&amp;quot; println()
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/usefiles/&#34;&gt;Usefiles&lt;/a&gt; section describes the format of &lt;code&gt;.use&lt;/code&gt; files,
-which define the characteristics of an ooc app or library.&lt;/p&gt;&lt;/li&gt;
+&lt;p&gt;Saving it as &lt;code&gt;watchcorgi.ooc&lt;/code&gt; and running &lt;code&gt;rock -v watchcorgi&lt;/code&gt; sure produced a lot
+of output. And - as a token of its appreciation, the compiler even left an executable
+on the hard drive. What a promising relationship, she thought.&lt;/p&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/gc/&#34;&gt;Garbage Collection&lt;/a&gt; section talks about the Garbage Collection
-strategy in rock, how to make sure things work well on different plaforms, how the
-Boehm GC is bundled, etc.&lt;/p&gt;&lt;/li&gt;
+&lt;p&gt;However, not one to be overly chatty, she decided that instead of having to type
+&lt;code&gt;rock watchcorgi&lt;/code&gt; every time she wanted to compile her new program, she was going
+to write a &lt;a href=&#34;/docs/tools/rock/usefiles&#34;&gt;usefile&lt;/a&gt; for it, and put them both together in a directory.&lt;/p&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/debug/&#34;&gt;Debugging&lt;/a&gt; section talks about what to do when a program
-doesn&amp;rsquo;t behave correctly. Debug symbols, stack traces, debugging on particularly painful
-platforms like Windows.&lt;/p&gt;&lt;/li&gt;
+&lt;pre&gt;&lt;code&gt;#!yaml
+Name: Watch Corgi
+Description: Tells on the bad websites that go down
+Version: 0.1.0
+SourcePath: source
+Main: watchcorgi
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/packaging/&#34;&gt;Packaging&lt;/a&gt; section talks about releasing standalone
-applications coded in ooc, such as games — when you don&amp;rsquo;t want to have users install
-dependencies on their own, but would rather bundle everything together.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;Saving it as &lt;code&gt;watchcorgi.use&lt;/code&gt;, she realized that, if she wanted her usefile to be
+valid, she needed to move her ooc module into &lt;code&gt;source/watchcorgi.ooc&lt;/code&gt;. So then, her
+folder hierarchy now looked like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.
+├── source
+│   └── watchcorgi.ooc
+└── watchcorgi.use
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, all she had to do was type &lt;code&gt;rock&lt;/code&gt; to have her program compiled. If she felt
+like reading a bit, all she had to do was &lt;code&gt;rock -v&lt;/code&gt; - it reminded her of the countless
+hours spent installing packages on Gentoo.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;The Great Illusion&lt;/h1&gt;
+
+&lt;p&gt;However, that program was not quite as useful as she had hoped so far. While it was
+technically correct — the best kind of correct — it did not, in fact, bring any new
+information to the table.&lt;/p&gt;
+
+&lt;p&gt;That was not meant to last, though, as she quickly devised a devious scheme. Before
+the era of watchcorgi, she was using &lt;code&gt;curl&lt;/code&gt;, a command-line utility, to check if the
+website was still online. It looked a little something like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+curl -I http://example.org/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;(Of course, that wasn&amp;rsquo;t her website&amp;rsquo;s actual URL, which we have sneakingly substituted
+with something a tad more common, in order to protect our heroine&amp;rsquo;s privacy.)&lt;/p&gt;
+
+&lt;p&gt;Running that simple command was enough to let her know, with a simple look, whether
+the website was up and running or down in the ground — in which case prompt maintenance
+was needed as soon as humanly possible.&lt;/p&gt;
+
+&lt;p&gt;She decided that if she could run that command herself, there was no reason why her
+program couldn&amp;rsquo;t do so as well. After a second documentation hunt, she quickly jotted
+down a few more lines, replacing the contents of &lt;code&gt;source/watchcorgi.ooc&lt;/code&gt; with this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import os/Process
+
+exitCode := Process new([&amp;quot;curl&amp;quot;, &amp;quot;-I&amp;quot;, &amp;quot;http://example.org/&amp;quot;]) execute()
+&amp;quot;Sir Curl exited with: %d&amp;quot; printfln(exitCode)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And sure enough, after a quick recompilation, she saw the expected result: &lt;code&gt;Sir Curl
+exited with: 0&lt;/code&gt;. Curious, she disconnected from the internet, and tried launching
+&lt;code&gt;./watchcorgi&lt;/code&gt; again. This time, she saw: &lt;code&gt;Sir Curl exited with: 6&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&amp;ldquo;It&amp;rsquo;s just like it always is with Unix-like tools&amp;rdquo; she thought. &amp;ldquo;An exit code of 0
+is a good sign, anything else&amp;hellip; not so much. It sure is convenient to be able
+to import another ooc module for almost everything. Apparently, this &lt;code&gt;Process&lt;/code&gt; class
+takes an array with the command arguments. And this &lt;code&gt;execute&lt;/code&gt; method returns the
+exit code. Neato!&amp;rdquo; And so it was.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_2&#34;&gt;Form Follows Function&lt;/h1&gt;
+
+&lt;p&gt;She was starting to be happy with her program. For all intents and purposes, was doing
+its job, and it was doing its job well. However, she could not deny that her program
+could have put a little more effort in the presentation. Just because a program does
+not have a will of its own, doesn&amp;rsquo;t mean it&amp;rsquo;s okay for it to be rude.&lt;/p&gt;
+
+&lt;p&gt;&amp;ldquo;Time to get to work&amp;rdquo;, she said out loud, forgetting that it was past 2 in the morning,
+and that nobody could probably hear her - and even if they could, there was no
+certainty that they would agree. While she thought about that, her fingers had kept
+tapping on the keyboard. Her program now looked a little bit like that:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import os/[Process, Terminal]
+
+exitCode := Process new([&amp;quot;curl&amp;quot;, &amp;quot;-I&amp;quot;, &amp;quot;http://example.org/&amp;quot;]) execute()
+
+match (exitCode) {
+  case 0 =&amp;gt;
+    &amp;quot;Everything is fine.&amp;quot; println()
+
+  case =&amp;gt;
+    Terminal setFgColor(Color red)
+    &amp;quot;[ERROR] The website is down!&amp;quot; println()
+    Terminal reset()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It didn&amp;rsquo;t blink, and there were no 3D effects: disappointing maybe for a sci-fi
+fan like her little brother, but having alerts in red, and a human-readable message
+was fine enough for her.&lt;/p&gt;
+
+&lt;p&gt;While carefully proofreading her code to check if she hadn&amp;rsquo;t missed anything, she
+thought about the syntax of the &lt;code&gt;match&lt;/code&gt; construct. &amp;ldquo;It&amp;rsquo;s pretty smart, in fact.
+Cases are tested from top to bottom - the first that matches, wins. And a case with
+no value simply matches everything&amp;rdquo;. It just made sense.&lt;/p&gt;
+
+&lt;p&gt;She was also particularly happy with the way she was able to import both &lt;code&gt;os/Process&lt;/code&gt;
+and &lt;code&gt;os/Terminal&lt;/code&gt; from the same line. Sure, she could have written two different
+&lt;code&gt;import&lt;/code&gt; directives, but she had been promised a concise programming language and it
+was about time it delivered.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_3&#34;&gt;Corgi Ever Watching&lt;/h1&gt;
+
+&lt;p&gt;Now that the program was polite, our programmer felt good enough to take a
+small break. As she was looking out the window, waiting for her 3rd cup of
+nocturnal coffee to brew, it came to her: &amp;ldquo;Wait a minute&amp;hellip; what good is my
+program if I have to keep running it manually?&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;A quick sip out of her coffee cup finished to clear her mind completely.
+&amp;ldquo;I am going to need some sort of loop. And I think watchcorgi should shut
+up if everything is fine, and only complain if something goes wrong.&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;As she looked at her timer, waiting for it to run out and allow her to go back
+to hacking (self-discipline is important, after all), she came to a second
+realization: that there were two main tasks in her program - the checking, and
+the notifying. Surely there must be some way to write that in a more modular
+way?&lt;/p&gt;
+
+&lt;p&gt;She decided to go for broke, and split her program into three different ooc
+modules. She started with &lt;code&gt;source/watchcorgi/checker.ooc&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import os/[Process]
+
+Checker: class {
+  url: String
+
+  init: func (=url)
+
+  /**
+   * @return true if the url is reachable, false otherwise
+   */
+  check: func -&amp;gt; Bool {
+    0 == Process new([&amp;quot;curl&amp;quot;, &amp;quot;-I&amp;quot;, url]) execute()
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then went on with &lt;code&gt;source/watchcorgi/notifier.ooc&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import os/[Terminal]
+
+Notifier: class {
+  quiet: Bool
+
+  init: func
+
+  notify: func (online: Bool, url: String) {
+    if (online) {
+      if (quiet) return
+
+      Terminal setFgColor(Color green)
+      &amp;quot;[ OK  ] %s is online.&amp;quot; printfln(url)
+      Terminal reset()
+    } else {
+      Terminal setFgColor(Color red)
+      &amp;quot;[ERROR] %s is not reachable! You may panic now.&amp;quot; printfln(url)
+      Terminal reset()
+    }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And finally, thought it was better to rewrite &lt;code&gt;source/watchcorgi.ooc&lt;/code&gt; from
+scratch using those new modules:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import watchcorgi/[checker, notifier]
+import os/Time
+
+notifier := Notifier new()
+notifier quiet = true // only bother me if something goes wrong
+checker := Checker new(&amp;quot;http://example.org/&amp;quot;)
+
+while (true) {
+  notifier notify(checker check(), checker url)
+  Time sleepSec(5)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;There. All good. Not only was her program now constantly vigilant, checking
+for potential problems every five seconds, she felt that the various components
+were just as flexible as needed, small enough, and that it made the main program
+file short and sweet.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_4&#34;&gt;The Littlest Things&lt;/h1&gt;
+
+&lt;p&gt;There was one area of the code she wasn&amp;rsquo;t entirely happy with - in the
+notifier, she was using the same pattern twice. First &lt;code&gt;Terminal setFgColor&lt;/code&gt;,
+then &lt;code&gt;String printfln&lt;/code&gt;, then &lt;code&gt;Terminal reset&lt;/code&gt;.  She decided to extract that
+pattern into a function instead, and added it to the end of the the &lt;code&gt;Notifier&lt;/code&gt;
+class definition:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+say: func (color: Color, message: String) {
+  Terminal setFgColor(color)
+  message println()
+  Terminal reset()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With that new neighbor, the notify function was happy to be reduced to:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+notify: (online: Bool, url: String) {
+  if (online) {
+    if (quiet) return
+    say(Color green, &amp;quot;[ OK  ] %s is online&amp;quot; format(url))
+  } else {
+    say(Color red, &amp;quot;[ERROR] %s is not reachable! You may panic now.&amp;quot; \
+      format(url))
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;While this was better, she wasn&amp;rsquo;t satisfied yet - calling &lt;code&gt;format&lt;/code&gt; like this
+(she thought of it as a version of &lt;code&gt;printfln&lt;/code&gt; that returned the formatted string
+instead of printing it) wasn&amp;rsquo;t particularly pretty.&lt;/p&gt;
+
+&lt;p&gt;Like with everything that bothered her, she decided to do something about it:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+say: func (color: Color, message: String, args: ...) {
+  Terminal setFgColor(color)
+  message printfln(args)
+  Terminal reset()
+}
+
+notify: func (online: Bool, url: String) {
+  if (online) {
+    if (quiet) return
+    say(Color green, &amp;quot;[ OK  ] %s is online&amp;quot;, url)
+  } else {
+    say(Color red, &amp;quot;[ERROR] %s is not reachable! You may panic now.&amp;quot;, url)
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It was subtle, but for her, it made all the difference. Being able to relay
+any number of arguments like that? This language might actually be comfortable
+after all.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_5&#34;&gt;All Together Now&lt;/h1&gt;
+
+&lt;p&gt;&amp;ldquo;So, that was nice. For the life of me, I can&amp;rsquo;t think of a single thing my program
+is missing.&amp;rdquo; Her eyes closed gently, and she leaned back, as if overwhelmed by bliss.&lt;/p&gt;
+
+&lt;p&gt;Wait. Her eyes, suddenly inquisitive, were perfectly open now. &amp;ldquo;What if I want
+to monitor several websites? Then I would need a config file so that I could modify
+the list of websites to monitor&amp;hellip; and it would need to check them in parallel, so
+it doesn&amp;rsquo;t get stuck on any one of them.&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;She decided she needed one more module: &lt;code&gt;source/watchcorgi/config.ooc&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import io/File
+import os/Env
+import structs/List
+import text/StringTokenizer
+
+DEFAULT_PATH := Env get(&amp;quot;HOME&amp;quot;) + &amp;quot;/.config/corgirc&amp;quot;
+
+Config: class {
+  websites: List&amp;lt;String&amp;gt;
+
+  init: func (path := DEFAULT_PATH) {
+    content := File new(path) read()
+    websites = content split(&#39;\n&#39;) \
+               map(|line| line trim(&amp;quot;\t &amp;quot;)) \
+               filter(|line| !line empty?())
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Armed with that new weapon, checking multiple websites in parallel was just a
+matter of making threads behave. Since she didn&amp;rsquo;t have much experience in the
+domain, and the documentation seemed a little bit obscure, she decided to ask
+for help in the &lt;a href=&#34;https://groups.google.com/group/ooc-lang&#34;&gt;ooc discussion group&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Almost immediately, a response sprung with numerous code examples she could use
+as inspiration for her own endeavor. And so she embarked courageously,
+rewriting &lt;code&gt;source/watchcorgi.ooc&lt;/code&gt; once again:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import watchcorgi/[config, checker, notifier]
+import os/Time
+import threading/Thread
+import structs/[ArrayList]
+
+threads := ArrayList&amp;lt;Thread&amp;gt; new()
+config := Config new()
+
+for (url in config websites) {
+  threads add(Thread new(||
+    guard := Guard new(url, 5)
+    guard run()
+  ))
+}
+
+// start all the threads
+for (thread in threads) {
+  thread start()
+}
+
+// wait for all threads to complete
+threads each(|thread| thread wait())
+
+Guard: class {
+    delay: Int
+    checker: Checker
+    notifier: Notifier
+
+    init: func (url: String, =delay) {
+      checker = Checker new(url)
+      notifier = Notifier new()
+      notifier quiet = true
+    }
+
+    run: func {
+      while (true) {
+        notifier notify(checker check(), checker url)
+        Time sleepSec(delay)
+      }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As she began to write down a list of websites to check in &lt;code&gt;~/.config/corgirc&lt;/code&gt;,
+she started to list the new things she had learned during that last refactoring:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;That classes can be used before they are defined - in order word, the order
+in which classes are defined does not matter!&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;That threads, while really old fashioned, were quite easy to use - all you
+had to do was create a new &lt;code&gt;Thread&lt;/code&gt; object and pass a function that takes
+zero arguments.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;That some functions are anonymous - and that they can be defined as an
+argument to a function call like this: &lt;code&gt;[1, 2, 3] reduce(|a, b| a + b)&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;That using a foreach, such as &lt;code&gt;for (element in iterable) { /* code */ }&lt;/code&gt; or
+using the each method, like so &lt;code&gt;iterable each(|element| /* code */ )&lt;/code&gt;, where
+pretty much equivalent.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;toc_6&#34;&gt;When Features Creep&lt;/h1&gt;
+
+&lt;p&gt;As magnificent as the program was, she couldn&amp;rsquo;t shake an eerie feeling. It
+seemed so perfect, so concise, so damn practical - what could possibly go
+wrong?&lt;/p&gt;
+
+&lt;p&gt;&amp;ldquo;Oh, right!&amp;rdquo; she whispered. The program assumes that the &lt;code&gt;curl&lt;/code&gt; command-line
+utility is installed and in the &lt;code&gt;$PATH&lt;/code&gt;. While on most Linux distributions,
+that&amp;rsquo;s a safe bet, it might not be there on OSX. Or, god forbid, on Windows.&lt;/p&gt;
+
+&lt;p&gt;But it was almost 6AM, and rays of sunlight would soon come and disturb the
+oh so peaceful (yet eventful) night of coding. Obviously, she could not afford
+to write her own HTTP library.&lt;/p&gt;
+
+&lt;p&gt;Sure, in theory, a simple usage of &lt;code&gt;net/TCPSocket&lt;/code&gt; from the SDK, writing
+something like&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;HEAD / HTTP/1.0\r\n\r\n
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;..and seeing if you get a non-empty response, would suffice. But what about
+parsing empty, yet worrying responses, like an HTTP 404, or an HTTP 502? What
+about HTTP 1.1 and the Host header, essential when several websites are running
+on the same IP address? And most importantly, what about HTTPS, which runs on a
+different port, and what&amp;rsquo;s more, over SSL?&lt;/p&gt;
+
+&lt;p&gt;No, definitely, writing an HTTP library was not part of the plan. But maybe
+there was something she could use&amp;hellip; maybe curl existed also as a library. A
+quick search for &lt;code&gt;ooc curl&lt;/code&gt; revealed the existence of
+&lt;a href=&#34;https://github.com/nddrylliog/ooc-curl&#34;&gt;nddrylliog/ooc-curl&lt;/a&gt;. Jackpot!&lt;/p&gt;
+
+&lt;p&gt;A quick clone and.. wait. She knew better. Why not use &lt;a href=&#34;/docs/tools/sam/&#34;&gt;sam&lt;/a&gt; instead?
+A simple &lt;code&gt;sam clone curl&lt;/code&gt; would suffice. Or, better yet, she could add the
+dependency in the .use file, and run &lt;code&gt;sam get&lt;/code&gt; from the watchcorgi folder
+afterwards.&lt;/p&gt;
+
+&lt;p&gt;Her .use file now looked a little bit like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!yaml
+Name: Watch Corgi
+Description: Multi-threaded website monitoring system
+Version: 0.2.0
+
+SourcePath: source
+Main: watchcorgi
+Requires: curl
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And sure enough, after &lt;code&gt;sam get&lt;/code&gt;, she saw the &lt;code&gt;ooc-curl&lt;/code&gt; folder appear in her
+&lt;code&gt;$OOC_LIBS&lt;/code&gt; directory. It was time to rewrite &lt;code&gt;source/watchcorgi/checker.ooc&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+use curl
+import curl/Highlevel
+
+Checker: class {
+    url: String
+
+    init: func (=url)
+
+    /**
+     * @return true if the url is reachable, false otherwise
+     */
+    check: func -&amp;gt; Bool {
+      200 == (HTTPRequest new(url). perform(). getResponseCode())
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This piece of code was one of her favorites yet. She had used one of the
+features she had just learned about - call chaining. &amp;ldquo;In fact&amp;rdquo;, she would
+later explain to a colleague, &amp;ldquo;you can think of the dot as a comma - it
+separates several method calls, but they all happen on the same object,
+sequentially&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;Recompiling the program after this change was exciting. There was no
+configuration dialog to fill out. No complicated command-line option to add
+when compiling. As a matter of fact, the single line added to the use file was
+enough to make sam happy - and rock itself seemed pretty content with the &lt;code&gt;use
+curl&lt;/code&gt; directive now sitting at the top of the checker module.&lt;/p&gt;
+
+&lt;p&gt;A simple &lt;code&gt;rock -v&lt;/code&gt; did the trick. And there she had it. The perfect website
+monitoring system. At last. Oh, sure, part of her brain fully realized that
+the impression of perfectness would fade out over the days, but as far as
+discovering a new language goes, she thought this was a pretty good run.&lt;/p&gt;
+
+&lt;p&gt;There was just one thing left to do&amp;hellip;&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_7&#34;&gt;To Give Back&lt;/h1&gt;
+
+&lt;p&gt;At this point, she felt that watchcorgi it was worth it to publish her program
+somewhere. Of course, all along, she had been keeping track of it using
+&lt;a href=&#34;http://git-scm.org/&#34;&gt;git&lt;/a&gt;. In this case, she was using &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; as a host.&lt;/p&gt;
+
+&lt;p&gt;She decided to make it easy for other people who might want to use
+&lt;code&gt;watchcorgi&lt;/code&gt;, to get it. After a quick search, it quickly became evident that
+the process itself was trivial. She just had to send a pull request to the
+&lt;a href=&#34;https://github.com/nddrylliog/sam&#34;&gt;sam repository&lt;/a&gt; that added a formula for her new pet project.&lt;/p&gt;
+
+&lt;p&gt;So, after forking sam on GitHub, changing the origin of her sam repository,
+she opened a new file in &lt;code&gt;$OOC_LIBS/sam/library/watchcorgi.yml&lt;/code&gt;, and wrote:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!yaml
+Origin: https://github.com/example/watchcorgi.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And then, she &lt;a href=&#34;https://help.github.com/articles/creating-a-pull-request&#34;&gt;submitted the pull request&lt;/a&gt;. The sun was rising.
+It felt warm. I think - she thought - I just might like it here.&lt;/p&gt;
 </description>
     </item>
     
     <item>
-      <title>Exceptions</title>
-      <link>http://oocmanual.cogneco.com/language/exceptions</link>
+      <title>coro</title>
+      <link>http://oocmanual.cogneco.com/sdk/os/coro</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/language/exceptions</guid>
+      <guid>http://oocmanual.cogneco.com/sdk/os/coro</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;Error handling&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;The os/Coro module&lt;/h1&gt;
 
-&lt;p&gt;The C way to do error handling is usually via return codes:&lt;/p&gt;
+&lt;p&gt;That module was originally an ooc port of Steve Dekorte&amp;rsquo;s &lt;a href=&#34;https://github.com/stevedekorte/coroutine&#34;&gt;libcoroutine&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Coroutines help achieve cooperative multi-tasking, as opposed to threads, which
+achieve preemptive multitasking. In cooperative multi-tasking, each task (or
+&amp;lsquo;coroutine&amp;rsquo;) is responsible for handing the control to another coroutine.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;Basic usage&lt;/h1&gt;
+
+&lt;p&gt;First, we have to create a main coroutine:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-openFile: (path: String) -&amp;gt; Int {
-  if (error) {
-    return -1
-  }
-  return someFileDescriptor
+import os/Coro
+
+mainCoro := Coro new()
+mainCoro initializeMainCoro
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can then create another coroutine, which we&amp;rsquo;ll here use as a generator&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+letter: Char
+
+coro1 := Coro new()
+mainCoro startCoro(coro1, ||
+    for (c in &amp;quot;LLAMACORE&amp;quot;) {
+        letter = c
+        coro1 switchTo(mainCoro)
+    }
+    exit(0)
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then we can retrieve those letters one by one:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+while (true) {
+    &amp;quot;%c&amp;quot; printfln(letter)
+    mainCoro switchTo(coro1)
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;However, it relies on the user correctly checking the return value:&lt;/p&gt;
+&lt;p&gt;This example is quite simple, just printing each letter that
+&lt;code&gt;coro1&lt;/code&gt; gives us on separate lines, but complex tasks can be
+broken down in various coroutines and be achieved in a much
+more lightweight fashion than threads or processes.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Packaging</title>
+      <link>http://oocmanual.cogneco.com/tools/rock/packaging</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/tools/rock/packaging</guid>
+      <description>
 
-&lt;pre&gt;&lt;code&gt;#!ooc
-fd := openFile(&amp;quot;/etc/hosts&amp;quot;)
-doSomethingWithFile(fd) // forgot to check, things might go bad!
+&lt;h1 id=&#34;toc_0&#34;&gt;Intro&lt;/h1&gt;
+
+&lt;p&gt;While ooc provides facilities to write highly cross-platform applications, and
+makes it rather easy to develop on all these platforms, distributing standalone
+applications is another matter entirely.&lt;/p&gt;
+
+&lt;p&gt;Until a tool comes along and in the darkness binds them, this chapter documents
+the manual process that goes into releasing neatly packaged software for
+Windows, OSX and Linux.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;Windows&lt;/h1&gt;
+
+&lt;p&gt;Windows is surprisingly easy to package for — a 32-bit executable will happily
+run on both 32-bit and 64-bit systems, there is no library path headache if you
+include all the required DLLs in the same directory as the .exe, and the
+current working directory is always the one with the .exe file.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Dynamic GC&lt;/h2&gt;
+
+&lt;p&gt;If your application is multi-threaded, make sure to link with the GC
+dynamically as explained in &lt;a href=&#34;/docs/tools/rock/gc/#threads&#34;&gt;the Garbage Collection chapter&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you link statically with the GC and use multiple threads, chances are you
+will run into very ugly memory corruption bugs that seemingly make no sense.
+So, make sure to double-check that first.&lt;/p&gt;
+
+&lt;p&gt;Since you&amp;rsquo;ll link dynamically with it, you&amp;rsquo;ll need to include &lt;code&gt;libgc-1.dll&lt;/code&gt;,
+and you might also need &lt;code&gt;pthreadGC2.dll&lt;/code&gt;, which lives in &lt;code&gt;/mingw/bin/&lt;/code&gt; under
+MinGW.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Resource file&lt;/h2&gt;
+
+&lt;p&gt;To bundle an icon with your executable, and add the full program name, author,
+etc, create a .rc file containing something like that:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;id ICON &amp;quot;art/foo.ico&amp;quot;
+1 VERSIONINFO
+FILEVERSION     1,0,0,0
+PRODUCTVERSION  1,0,0,0
+BEGIN
+  BLOCK &amp;quot;StringFileInfo&amp;quot;
+  BEGIN
+    BLOCK &amp;quot;040904E4&amp;quot;
+    BEGIN
+      VALUE &amp;quot;CompanyName&amp;quot;, &amp;quot;Company Name&amp;quot;
+      VALUE &amp;quot;FileDescription&amp;quot;, &amp;quot;Application Name&amp;quot;
+      VALUE &amp;quot;FileVersion&amp;quot;, &amp;quot;1.0&amp;quot;
+      VALUE &amp;quot;InternalName&amp;quot;, &amp;quot;applicationname&amp;quot;
+      VALUE &amp;quot;LegalCopyright&amp;quot;, &amp;quot;Author Name&amp;quot;
+      VALUE &amp;quot;OriginalFilename&amp;quot;, &amp;quot;foo.exe&amp;quot;
+      VALUE &amp;quot;ProductName&amp;quot;, &amp;quot;Application Name&amp;quot;
+      VALUE &amp;quot;ProductVersion&amp;quot;, &amp;quot;1.0&amp;quot;
+    END
+  END
+
+  BLOCK &amp;quot;VarFileInfo&amp;quot;
+  BEGIN
+    VALUE &amp;quot;Translation&amp;quot;, 0x409, 1252
+  END
+END
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;toc_1&#34;&gt;Exceptions&lt;/h1&gt;
+&lt;p&gt;Adjust these values as needed. To create a high-quality &lt;code&gt;.ico&lt;/code&gt; file from a
+PNG image, the usage of a tool such as &lt;a href=&#34;http://icofx.ro/&#34;&gt;IcoFX&lt;/a&gt; might be needed.&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_2&#34;&gt;raise&lt;/h2&gt;
+&lt;p&gt;Then, compile this &lt;code&gt;.rc&lt;/code&gt; file with the &lt;code&gt;windres&lt;/code&gt; command-line utility - if
+you have a Makefile you might want to add a target for this.&lt;/p&gt;
 
-&lt;p&gt;Another way to handle that would be with exceptions&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;windres -i foo.rc -o foo.res -O coff
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;pre&gt;&lt;code&gt;#!ooc
-openFile: (path: String) -&amp;gt; File {
-  if (error) {
-    raise(&amp;quot;Could not open %s&amp;quot; format(path))
-  }
-  return someFile
+&lt;p&gt;The final step to include these resources is to link them with your executable.
+This can be done easily if you already have a .use file, by adding a section in
+a &lt;code&gt;version(windows)&lt;/code&gt; block. For example, in foo.use:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Name: foo
+Version: 1.0
+Description: Foo builds upon bar baz and does wonderful stuff
+SourcePath: source
+Requires: bar, baz
+Main: foo/foo
+
+# Add resources on Windows
+version (windows) {
+  Libs: ./foo.res
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;That way, even if the user doesn&amp;rsquo;t explicitly check for the error, it&amp;rsquo;ll
-still interrupt the flow of the program:&lt;/p&gt;
+&lt;p&gt;Make sure to &lt;code&gt;use foo&lt;/code&gt; in the main file of your application so that rock takes
+these into account. The resulting executable should have the icon built-in,
+along with the author and product information you have specified in the
+&lt;code&gt;foo.rc&lt;/code&gt; file.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;file := openFile(&amp;quot;/dev/does/not/exist&amp;quot;)
-doSomethingWithFile(file) // we are never even going to reach there
+&lt;p&gt;Note that every time &lt;code&gt;foo.rc&lt;/code&gt; changes, it needs to be recompiled to &lt;code&gt;foo.res&lt;/code&gt;.
+You don&amp;rsquo;t need to distribute either the &lt;code&gt;.rc&lt;/code&gt; or the &lt;code&gt;.res&lt;/code&gt; file with the
+executable, it&amp;rsquo;s all baked in!&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;DLL dependencies&lt;/h2&gt;
+
+&lt;p&gt;To figure out which libraries someone will need to run your application, you can use
+&lt;a href=&#34;http://www.dependencywalker.com/&#34;&gt;Dependency Walker&lt;/a&gt;, also known as &lt;code&gt;depends.exe&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Loading your .exe in it, with the right working directory, will allow you to
+see which DLLs it loads and from where. Then, all you need is to copy those
+DLLs to the directory of your application and distribute them along.&lt;/p&gt;
+
+&lt;p&gt;Be warned: there may be several versions of a given library on your system.
+Make sure to pick the right one.&lt;/p&gt;
+
+&lt;p&gt;If your program can be launched by double-clicking on it in the Windows GUI
+(instead of running it from the command-line), it&amp;rsquo;s a good sign - but it might
+not be enough. Some open-source programs install libraries to system paths, and
+your application may be relying on that.&lt;/p&gt;
+
+&lt;p&gt;To make sure the application runs everywhere, testing it on a &amp;ldquo;virgin&amp;rdquo; install
+of Windows is recommended. If there was a time to use a virtual machine, that
+would be it.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Final notes&lt;/h2&gt;
+
+&lt;p&gt;You can choose to generate an installer of course, but a .zip file is fine as
+well.  Windows systems usually have facilities to extract .zip files without
+the need for an external program.&lt;/p&gt;
+
+&lt;p&gt;Creating a zip file can be done with the command line GNU zip utility:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;zip -r Foo-1.0-Windows.zip Foo-1.0-Windows
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;toc_3&#34;&gt;Throwing&lt;/h2&gt;
+&lt;p&gt;..or by using a graphical tool, for example, &lt;a href=&#34;http://www.7-zip.org/&#34;&gt;7-Zip&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;The &lt;code&gt;raise&lt;/code&gt; function above is a quick method to raise an exception. What
-it really does is this:&lt;/p&gt;
+&lt;h1 id=&#34;toc_6&#34;&gt;OSX&lt;/h1&gt;
+
+&lt;p&gt;Releasing an app on OSX is relatively easy, as tools exist to make it easier.
+64-bit executables are the norm for recent versions of Mac OS X, so there is no
+pain there either.&lt;/p&gt;
+
+&lt;p&gt;The only part where it needs a little hand holding is when creating the app
+bundle.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;dylibbundler&lt;/h2&gt;
+
+&lt;p&gt;We need to distribute libraries inside the app bundle - however, so that the
+paths are resolve correctly, we&amp;rsquo;ll need to use &lt;a href=&#34;http://macdylibbundler.sourceforge.net/&#34;&gt;dylibbundler&lt;/a&gt; to modify
+the executable and &amp;lsquo;fix&amp;rsquo; the paths to these libraries.&lt;/p&gt;
+
+&lt;p&gt;With &lt;a href=&#34;http://brew.sh/&#34;&gt;Homebrew&lt;/a&gt;, installing dylibbundler is as simple as doing:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;brew install dylibbundler
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The first step is to tell the C compiler to reserve enough room to modify the
+library paths later:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rock +-headerpad_max_install_names
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then, we&amp;rsquo;ll have to create a folder that will be our app bundle, such as
+&lt;code&gt;Foo.app&lt;/code&gt;, with the following directory structure:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Foo.app/
+  Contents/
+    Info.pList
+    MacOS/
+      foo
+      wrapper
+    Resources/
+      foo.icns
+    libs/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;Contents/MacOS/foo&lt;/code&gt; is our executable that we have copied from before, and
+&lt;code&gt;Contents/MacOS/wrapper&lt;/code&gt; will be our launcher script (described in a further
+section).&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;Contents/MacOS&lt;/code&gt; directory should also contain any files the executable
+expects to find in the current working directory when launched (e.g. for game
+that would be the graphics, sounds, etc.)&lt;/p&gt;
+
+&lt;p&gt;The next step is to dylibbundler on the executable so that libs are copied and
+the paths are fixed:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;dylibbundler -od -b -x ./Foo.app/Contents/MacOS/helloworld -d ./Foo.app/Contents/libs/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_8&#34;&gt;Info.pList&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;Info.pList&lt;/code&gt; file is similar to the &lt;code&gt;foo.rc&lt;/code&gt; file we discussed in the
+Windows section. A stock plist file looks something like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt;
+&amp;lt;!DOCTYPE plist PUBLIC &amp;quot;-//Apple Computer//DTD PLIST 1.0//EN&amp;quot; &amp;quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;quot;&amp;gt;
+&amp;lt;plist version=&amp;quot;1.0&amp;quot;&amp;gt;
+&amp;lt;dict&amp;gt;
+  &amp;lt;key&amp;gt;CFBundleGetInfoString&amp;lt;/key&amp;gt;
+  &amp;lt;string&amp;gt;Application Name&amp;lt;/string&amp;gt;
+  &amp;lt;key&amp;gt;CFBundleExecutable&amp;lt;/key&amp;gt;
+  &amp;lt;string&amp;gt;wrapper&amp;lt;/string&amp;gt;
+  &amp;lt;key&amp;gt;CFBundleIdentifier&amp;lt;/key&amp;gt;
+  &amp;lt;string&amp;gt;com.yourdomain.www&amp;lt;/string&amp;gt;
+  &amp;lt;key&amp;gt;CFBundleName&amp;lt;/key&amp;gt;
+  &amp;lt;string&amp;gt;applicationname&amp;lt;/string&amp;gt;
+  &amp;lt;key&amp;gt;CFBundleIconFile&amp;lt;/key&amp;gt;
+  &amp;lt;string&amp;gt;foo.icns&amp;lt;/string&amp;gt;
+  &amp;lt;!-- Don&#39;t modify those! --&amp;gt;
+  &amp;lt;key&amp;gt;CFBundleShortVersionString&amp;lt;/key&amp;gt;
+  &amp;lt;string&amp;gt;1.0&amp;lt;/string&amp;gt;
+  &amp;lt;key&amp;gt;CFBundleInfoDictionaryVersion&amp;lt;/key&amp;gt;
+  &amp;lt;string&amp;gt;6.0&amp;lt;/string&amp;gt;
+  &amp;lt;key&amp;gt;CFBundlePackageType&amp;lt;/key&amp;gt;
+  &amp;lt;string&amp;gt;APPL&amp;lt;/string&amp;gt;
+  &amp;lt;key&amp;gt;IFMajorVersion&amp;lt;/key&amp;gt;
+  &amp;lt;integer&amp;gt;0&amp;lt;/integer&amp;gt;
+  &amp;lt;key&amp;gt;IFMinorVersion&amp;lt;/key&amp;gt;
+  &amp;lt;integer&amp;gt;1&amp;lt;/integer&amp;gt;
+&amp;lt;/dict&amp;gt;
+&amp;lt;/plist&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It should live in &lt;code&gt;Foo.app/Contents/Info.pList&lt;/code&gt;. Just like a Windows RC file,
+it references a &lt;code&gt;foo.icns&lt;/code&gt; file. A tool like &lt;a href=&#34;http://www.img2icnsapp.com/&#34;&gt;img2icns&lt;/a&gt; can be used
+to convert a high-resolution PNG image to a Mac OSX icon.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_9&#34;&gt;Launcher script&lt;/h2&gt;
+
+&lt;p&gt;Finally, we have to use a launcher script so that the current working
+directory of the app will be correct.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+#!/bin/bash
+cd &amp;quot;${0%/*}&amp;quot;
+./foo
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_10&#34;&gt;Troubleshooting&lt;/h2&gt;
+
+&lt;p&gt;It&amp;rsquo;s not uncommon to encounter an error if an app Bundle is malformed or
+otherwise problematic. Instead of double-clicking on the .app bundle to
+launch it, one can open it from the command line:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;open Foo.app
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you get an &amp;ldquo;error -10180&amp;rdquo;, it means something went wrong while launching
+the app. Make sure the files inside &lt;code&gt;Contents/MacOS/&lt;/code&gt; are executable, and
+that the wrapper is trying to launch the correct executable.&lt;/p&gt;
+
+&lt;p&gt;In doubt, running &lt;code&gt;plutil&lt;/code&gt; can help proofread the &lt;code&gt;pList&lt;/code&gt; file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;plutil Foo.app/Contents/Info.pList
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_11&#34;&gt;Final notes&lt;/h2&gt;
+
+&lt;p&gt;OSX apps are sometimes encountered as &lt;code&gt;.dmg&lt;/code&gt; files in the wild, which are
+image files that contain partitions, which can be mounted and read from.
+This allows a nice &amp;ldquo;drag and drop&amp;rdquo; window to be displayed.&lt;/p&gt;
+
+&lt;p&gt;However, distributing an OSX application by just zipping up the &lt;code&gt;.app&lt;/code&gt;
+bundle is acceptable. It can be done either on the command line:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;zip -r Foo.OSX.zip Foo.app
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;hellip;or in the graphical interface (Right Click -&amp;gt; Compress Foo.app).&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_12&#34;&gt;Linux&lt;/h1&gt;
+
+&lt;p&gt;Linux may be one of the comfiest platform for ooc development, but ironically,
+it is one of the most painful to package standalone applications for. As a rule
+of thumb, do not assume that your users will want to install libraries
+themselves — always package them with the software.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_13&#34;&gt;Multiarch&lt;/h2&gt;
+
+&lt;p&gt;64-bit installs of Linux that aren&amp;rsquo;t multi-arch will complaing about missing
+32-bit libraries, and conversely, 32-bit installs won&amp;rsquo;t be able to run a 64-bit
+application at all. Which leaves us with the only option of providing both a
+32-bit and a 64-bit executable.&lt;/p&gt;
+
+&lt;p&gt;An example folder hierarchy is:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;foo-1.0-linux/
+  bin/
+    foo32
+    foo64
+    libs32/
+    libs64/
+  foo.sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Since we are going to ship dynamic libraries with the app, we should specify
+the path where they are with the &lt;code&gt;-rpath&lt;/code&gt; linker option. The rock command looks
+a little bit like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rock +-Wl,-rpath=bin/libs32 -o=foo32
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;hellip;for the 32-bit version, and similarly for the 64-bit version.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_14&#34;&gt;Chroot&lt;/h2&gt;
+
+&lt;p&gt;One of the easiest ways to build both a 32-bit and a 64-bit executable is to
+have a 64-bit VM of Ubuntu, and set up a 32-bit chroot inside of it, then copy
+files out of the chroot to retrieve the binaries and associated libraries.&lt;/p&gt;
+
+&lt;p&gt;Setting up a chroot with debootstrap is &lt;a href=&#34;https://wiki.ubuntu.com/DebootstrapChroot&#34;&gt;documented on the Ubuntu website&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_15&#34;&gt;Copying libs&lt;/h2&gt;
+
+&lt;p&gt;To figure out the libraries you need to copy to &lt;code&gt;libs32&lt;/code&gt; or &lt;code&gt;libs64&lt;/code&gt;, the &lt;code&gt;ldd&lt;/code&gt;
+command line utility can be used. Filtering its output to remove a few
+libraries always present on Linux systems can help:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+ldd foo64 | egrep &amp;quot;(/usr/lib/)|(prefix64)&amp;quot; | cut -d &#39; &#39; -f 3 | egrep -v &amp;quot;lib(X|x|GL|gl|drm)&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The example above works for an OpenGL-based application. Copying these files
+automatically can be done with a shell script such as:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+for l in $(ldd foo64 | egrep &amp;quot;(/usr/lib/)|(prefix64)&amp;quot; | cut -d &#39; &#39; -f 3 | egrep -v &amp;quot;lib(X|x|GL|gl|drm)&amp;quot; | tr &#39;\n&#39; &#39; &#39;); do
+  cp $l libs64/
+done
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Checking that it well can be done by running &lt;code&gt;ldd bin/foo64&lt;/code&gt; in the release
+directory.  Here&amp;rsquo;s some example output that shows the libs are resolved to
+their relative paths:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ ldd bin/foo64
+libSDL2-2.0.so.0 =&amp;gt; bin/libs64/libSDL2-2.0.so.0 (0x00007fc6fa615000)
+libSDL2_mixer-2.0.so.0 =&amp;gt; bin/libs64/libSDL2_mixer-2.0.so.0 (0x00007fc6f9ee0000)
+libmxml.so.1 =&amp;gt; bin/libs64/libmxml.so.1 (0x00007fc6f9cd3000)
+libfreetype.so.6 =&amp;gt; bin/libs64/libfreetype.so.6 (0x00007fc6f9a37000)
+libyaml-0.so.2 =&amp;gt; bin/libs64/libyaml-0.so.2 (0x00007fc6f9815000)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_16&#34;&gt;Launcher script&lt;/h2&gt;
+
+&lt;p&gt;Courtesy of &lt;a href=&#34;https://twitter.com/flibitijibibo&#34;&gt;Ethan Lee&lt;/a&gt;, such a launcher script will detect the architecture
+of the machine it&amp;rsquo;s running on and launch the right executable:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+#!/bin/bash
+# Move to the script&#39;s directory
+cd &amp;quot;`dirname &amp;quot;$0&amp;quot;`&amp;quot;
+
+# Get the kernel/architecture information
+UNAME=`uname`
+ARCH=`uname -m`
+
+# Pick the proper executable
+if [ &amp;quot;$ARCH&amp;quot; == &amp;quot;x86_64&amp;quot; ]; then
+  ./bin/foo64
+else
+  ./bin/foo32
+fi
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_17&#34;&gt;Final notes&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;.tar.gz&lt;/code&gt; or &lt;code&gt;.tar.bz2&lt;/code&gt; archive formats is well-suited to distribute
+applications for Linux, but &lt;code&gt;.zip&lt;/code&gt; works just as well, and &lt;code&gt;.tar.xz&lt;/code&gt; is usually
+a little smaller.&lt;/p&gt;
+
+&lt;p&gt;To create a &lt;code&gt;.tar.gz&lt;/code&gt;, do:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;tar czvf foo-1.0-linux.tar.gz foo-1.0-linux
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To create a &lt;code&gt;.tar.bz2&lt;/code&gt;, use &lt;code&gt;cjvf&lt;/code&gt; instead.&lt;/p&gt;
+
+&lt;p&gt;To create a &lt;code&gt;.tar.xz&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;tar cf --xz foo-1.0-linux.tar.xz foo-1.0-linux
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To create a &lt;code&gt;.zip&lt;/code&gt;, do:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;zip -r foo-1.0-linux.tar.zip foo-1.0-linux
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>native</title>
+      <link>http://oocmanual.cogneco.com/sdk/native</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/native</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The native package&lt;/h1&gt;
+
+&lt;p&gt;The &lt;code&gt;native&lt;/code&gt; package of the SDK contains nothing that should be
+directly imported in a cross-platform application. It&amp;rsquo;s all platform-specific
+support code for other parts of the SDK.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Windows&lt;/h2&gt;
+
+&lt;p&gt;For example, the &lt;code&gt;native/win32&lt;/code&gt; package contains covers for types defined
+in the Win32 API, along with a few error handling functions and other
+things that are useful in the Win32 implementation of the SDK.&lt;/p&gt;
+
+&lt;p&gt;Note that there exists &lt;code&gt;native&lt;/code&gt; sub packages elsewhere in the SDK, for example
+in the &lt;code&gt;io&lt;/code&gt; or in the &lt;code&gt;os&lt;/code&gt; packages.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Operators</title>
+      <link>http://oocmanual.cogneco.com/language/operators</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/language/operators</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Foreword&lt;/h1&gt;
+
+&lt;p&gt;This lists all ooc operators, from highest precendence to lowest precedence&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;Access&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Array access&lt;/h2&gt;
+
+&lt;p&gt;The array-index operator is &lt;code&gt;[]&lt;/code&gt;, the array-modify operator&amp;rsquo;s short form is &lt;code&gt;[]=&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Examples:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-Exception new(message) throw()
+arr[0] = &#39;\n&#39;
+return arr[0]
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;There is no special keyword to throw exceptions, it&amp;rsquo;s just a method on the
-&lt;code&gt;Exception&lt;/code&gt; class.&lt;/p&gt;
+&lt;h2 id=&#34;toc_3&#34;&gt;Pointers&lt;/h2&gt;
 
-&lt;h2 id=&#34;toc_4&#34;&gt;Catching exceptions&lt;/h2&gt;
-
-&lt;p&gt;Catching exceptions is done through the &lt;code&gt;try&lt;/code&gt; / &lt;code&gt;catch&lt;/code&gt; syntax:&lt;/p&gt;
+&lt;p&gt;The address-of operator is a post-fix &lt;code&gt;&amp;amp;&lt;/code&gt;, the dereference operator is a post-fix
+&lt;code&gt;@&lt;/code&gt;:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-try {
-  openFile(&amp;quot;dev/does/not/exist&amp;quot;)
-} catch (e: Exception) {
-  // something wrong happened
-  &amp;quot;Error: %s&amp;quot; printfln(e message)
-}
+a := 42
+aPtr := a&amp;amp;
+aToo := aPtr@
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;toc_5&#34;&gt;Exception sub-classes&lt;/h2&gt;
+&lt;h2 id=&#34;toc_4&#34;&gt;Call&lt;/h2&gt;
 
-&lt;p&gt;It is possible to sub-class exceptions to have several exception types.&lt;/p&gt;
+&lt;p&gt;Technically not an operator, but call is in that priority level:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-FileNotFoundException: class extends Exception {
-  init: func (path: String) {
-    super(&amp;quot;File not found: %s&amp;quot; format(path))
-  }
-}
-
-openFile: func (path: String) {
-  if (error) {
-    FileNotFoundException new(path) throw()
-  }
-}
+a := func -&amp;gt; Int { 42 }
+a()
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Which makes it easy to catch a specific type of exception:&lt;/p&gt;
+&lt;h2 id=&#34;toc_5&#34;&gt;Member access&lt;/h2&gt;
+
+&lt;p&gt;Also technically not an operator. Simply two identifiers side by side,
+not using dot, unlike some other programming languages:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-try {
-  file := openFile(&amp;quot;/dev/does/not/exist&amp;quot;)
-  doSomethingWithFile(file)
-} catch (e1: FileNotFoundException) {
-  // The file wasn&#39;t found
-} catch (e2: Exception) {
-  // Something else went wrong.
+dog name
+dog race
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;Casting&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;as&lt;/code&gt; operator is used to cast from one type to the other:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+pi := 3.14
+roughlyPi := pi as Int
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;toc_7&#34;&gt;Product&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_8&#34;&gt;Binary operators&lt;/h2&gt;
+
+&lt;p&gt;The exponent operator is &lt;code&gt;**&lt;/code&gt;, the multiplication operator is &lt;code&gt;*&lt;/code&gt;,
+and the division operator is &lt;code&gt;/&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_9&#34;&gt;Unary operators&lt;/h2&gt;
+
+&lt;p&gt;Logical not is a prefixed &lt;code&gt;!&lt;/code&gt;, binary not is a prefixed &lt;code&gt;~&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_10&#34;&gt;Sum&lt;/h1&gt;
+
+&lt;p&gt;The addition operator is &lt;code&gt;+&lt;/code&gt;, subtraction is &lt;code&gt;-&lt;/code&gt;,
+modulo is &lt;code&gt;%&lt;/code&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_11&#34;&gt;Shift&lt;/h1&gt;
+
+&lt;p&gt;Right shift is &lt;code&gt;&amp;gt;&amp;gt;&lt;/code&gt;, left shift is &lt;code&gt;&amp;lt;&amp;lt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_12&#34;&gt;Inequality&lt;/h1&gt;
+
+&lt;p&gt;You have your regular less than &lt;code&gt;&amp;lt;&lt;/code&gt;, greater than &lt;code&gt;&amp;gt;&lt;/code&gt;,
+less than or equal &lt;code&gt;&amp;lt;=&lt;/code&gt;, more than or equal &lt;code&gt;&amp;gt;=&lt;/code&gt;,
+but also the comparison operator &lt;code&gt;&amp;lt;=&amp;gt;&lt;/code&gt; (evaluates to -1
+if less than, 0 if equal, 1 if greater than).&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_13&#34;&gt;Equality&lt;/h1&gt;
+
+&lt;p&gt;Equality operator is &lt;code&gt;==&lt;/code&gt;, inequality operator is &lt;code&gt;!=&lt;/code&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_14&#34;&gt;Binary and boolean operations&lt;/h1&gt;
+
+&lt;p&gt;Binary and is &lt;code&gt;&amp;amp;&lt;/code&gt;, xor is &lt;code&gt;^&lt;/code&gt;, or is &lt;code&gt;|&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Logical and is &lt;code&gt;&amp;amp;&amp;amp;&lt;/code&gt;, logical or is &lt;code&gt;||&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_15&#34;&gt;Ternary&lt;/h1&gt;
+
+&lt;p&gt;The ternary operator is &lt;code&gt;?:&lt;/code&gt; as in &lt;code&gt;condition ? ifTrue : ifFalse&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_16&#34;&gt;Assignment&lt;/h1&gt;
+
+&lt;p&gt;The assignment operator is &lt;code&gt;=&lt;/code&gt;, the following variants exist:
+&lt;code&gt;+=&lt;/code&gt;, &lt;code&gt;-=&lt;/code&gt;, &lt;code&gt;*=&lt;/code&gt;, &lt;code&gt;**=&lt;/code&gt;, &lt;code&gt;/=&lt;/code&gt;, &lt;code&gt;&amp;gt;&amp;gt;=&lt;/code&gt;, &lt;code&gt;&amp;lt;&amp;lt;=&lt;/code&gt;, &lt;code&gt;^=&lt;/code&gt;, &lt;code&gt;|=&lt;/code&gt;, &lt;code&gt;&amp;amp;=&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The declare-assignment operator is &lt;code&gt;:=&lt;/code&gt;. And the declare-property-assignment
+operator is &lt;code&gt;::=&lt;/code&gt;. For more details on these, see the &lt;a href=&#34;/docs/lang/values/#variables&#34;&gt;Variables&lt;/a&gt; and
+&lt;a href=&#34;/docs/lang/classes/#properties&#34;&gt;Properties&lt;/a&gt; pages.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_17&#34;&gt;Double arrow&lt;/h1&gt;
+
+&lt;p&gt;The double arrow operator &lt;code&gt;=&amp;gt;&lt;/code&gt; - it must be overloaded.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_18&#34;&gt;Operator overloading&lt;/h1&gt;
+
+&lt;p&gt;Overloading an operator can be done as a function-like, using the
+&lt;code&gt;operator&lt;/code&gt; keyword:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+operator + (v1, v2: Vec2) -&amp;gt; Vec2 { v1 add(v2) }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;However, if the operator is linked to a type, it&amp;rsquo;s better to declare
+it in the type itself, so that it&amp;rsquo;ll be usable even if the module containing
+the type declaration isn&amp;rsquo;t explicitly imported:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+Vec2: class {
+  // other stuff
+
+  operator + (v: This) -&amp;gt; This { add(v) }
 }
 &lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>mmap</title>
+      <link>http://oocmanual.cogneco.com/sdk/os/mmap</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/os/mmap</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The os/mmap module&lt;/h1&gt;
+
+&lt;p&gt;As it stands, the &lt;code&gt;os/mmap&lt;/code&gt; module just exposes the *nix functions for memory
+mapping: &lt;code&gt;mmap&lt;/code&gt;, &lt;code&gt;munmap&lt;/code&gt;, &lt;code&gt;mprotect&lt;/code&gt;, &lt;code&gt;madvise&lt;/code&gt;, &lt;code&gt;mincore&lt;/code&gt;, &lt;code&gt;minherit&lt;/code&gt;,
+&lt;code&gt;msync&lt;/code&gt;, &lt;code&gt;mlock&lt;/code&gt;, and &lt;code&gt;munlock&lt;/code&gt;, along with the associated constants.&lt;/p&gt;
+
+&lt;p&gt;It also contains prototypes / covers for the Windows equivalent,
+&lt;code&gt;VirtualProtect&lt;/code&gt;, and its constants as well.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Notes&lt;/h2&gt;
+
+&lt;p&gt;This module is not a high-level or cross-platform interface and is not
+documented extensively here.&lt;/p&gt;
+
+&lt;p&gt;However, to find more information on memory mapping for various platform
+see here:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://en.wikipedia.org/wiki/Mmap&#34;&gt;mmap on Wikipedia&lt;/a&gt; (for *nix platforms)&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://msdn.microsoft.com/en-us/windows/desktop/aa366898(v=vs.85).aspx&#34;&gt;VirtualProtect on MSDN&lt;/a&gt; (for Windows)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;On a historical note, this module was originally included in the SDK as support
+code for the closure implementation, which back then implied generating
+bytecode at runtime and thus marking some memory regions as executable.&lt;/p&gt;
 </description>
     </item>
     
@@ -1270,224 +1942,97 @@ lighter, for example.&lt;/p&gt;
     </item>
     
     <item>
-      <title>Version</title>
-      <link>http://oocmanual.cogneco.com/language/version-blocks</link>
+      <title>terminal</title>
+      <link>http://oocmanual.cogneco.com/sdk/os/terminal</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/language/version-blocks</guid>
+      <guid>http://oocmanual.cogneco.com/sdk/os/terminal</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;Version blocks&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;The os/Terminal module&lt;/h1&gt;
 
-&lt;h2 id=&#34;toc_1&#34;&gt;Syntax&lt;/h2&gt;
+&lt;p&gt;Terminal is used to control the terminal output, mostly by setting colors and
+attributes on there.&lt;/p&gt;
 
-&lt;p&gt;Version blocks use the following syntax:&lt;/p&gt;
+&lt;h1 id=&#34;toc_1&#34;&gt;Colors&lt;/h1&gt;
 
-&lt;pre&gt;&lt;code&gt;    version (&amp;lt;version expression&amp;gt;) {
-        &amp;lt;body&amp;gt;
-    } else {
-        &amp;lt;alternative body&amp;gt;
-    }
+&lt;p&gt;The &lt;code&gt;Color&lt;/code&gt; enum contains colors that are possible to set on the terminal:&lt;/p&gt;
+
+&lt;p&gt;To change the foreground color, use &lt;code&gt;setFgColor&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+Terminal setFgColor(Color black)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Where &lt;version expression&gt; can be any of:&lt;/p&gt;
+&lt;p&gt;To change the background color, use &lt;code&gt;setBgColor&lt;/code&gt;:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;    &amp;lt;version name&amp;gt;
-    !&amp;lt;version expression&amp;gt;
-    &amp;lt;version expression&amp;gt; &amp;amp;&amp;amp; &amp;lt;version expression&amp;gt;
-    &amp;lt;version expression&amp;gt; || &amp;lt;version expression&amp;gt;
+&lt;pre&gt;&lt;code&gt;#!ooc
+Terminal setBgColor(Color white)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;toc_2&#34;&gt;Semantics&lt;/h2&gt;
+&lt;h2 id=&#34;toc_2&#34;&gt;List of colors&lt;/h2&gt;
 
-&lt;p&gt;Version blocks aren&amp;rsquo;t if-else blocks - they aren&amp;rsquo;t evaluated at runtime.
-In rock, version blocks aren&amp;rsquo;t evaluated at ooc-compile-time either.
-They&amp;rsquo;re evaluated at C compile time. Which means the C code generated by rock
-should be the same on any platform.&lt;/p&gt;
+&lt;p&gt;Here are the colors defined in the Color enum:&lt;/p&gt;
 
-&lt;p&gt;Practically, in rock, version blocks are an abstraction for #ifdef / #endif blocks.
-The syntax makes it harder to forget to close a version block than an #ifdef / #endif block,
-and a few handy aliases (listed below) for commonly used version names are standard, so that developers
-don&amp;rsquo;t have to remember the convoluted corresponding C defines.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;black&lt;/li&gt;
+&lt;li&gt;red&lt;/li&gt;
+&lt;li&gt;green&lt;/li&gt;
+&lt;li&gt;yellow&lt;/li&gt;
+&lt;li&gt;blue&lt;/li&gt;
+&lt;li&gt;magenta&lt;/li&gt;
+&lt;li&gt;cyan&lt;/li&gt;
+&lt;li&gt;grey&lt;/li&gt;
+&lt;li&gt;white&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;For other compilers not based on the C language, version block handling may happen at any
-stage of the compilation (if any), as long as the version expressions are correctly evaluated
-and have the correct meaning (for example, a &amp;lsquo;windows&amp;rsquo; version block should be ignored on OSX)&lt;/p&gt;
+&lt;p&gt;Note that depending on your terminal emulator, these colors
+might not map to their actual names.&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_3&#34;&gt;Built-in version names&lt;/h2&gt;
+&lt;h1 id=&#34;toc_3&#34;&gt;Attributes&lt;/h1&gt;
 
-&lt;p&gt;C defines are included here for completeness, but are only relevant for people who want
-to implement ooc on top of C.&lt;/p&gt;
+&lt;p&gt;Attributes can be set using &lt;code&gt;setAttr&lt;/code&gt;:&lt;/p&gt;
 
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;Name&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;corresponding C define&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;windows&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;WIN32&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;linux&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;linux&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;solaris&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;__sun&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;unix&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;unix&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;beos&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;BEOS&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;haiku&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;HAIKU&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;apple&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;APPLE&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;gnuc&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;GNUC&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;i386&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;i386&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;x86&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;X86&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;x86_64&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;x86_64&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;ppc&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;ppc&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;ppc64&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;ppc64&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;64&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;x86_64&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;gc&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;OOC_USE_GC&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Custom version names&lt;/h2&gt;
-
-&lt;p&gt;Most of the standard version names above depend on your building environment, and the &amp;lsquo;gc&amp;rsquo; name depends
-on the compiler setting -gc=[off,static,dynamic].&lt;/p&gt;
-
-&lt;p&gt;Custom version names can be used, and turned on/off with the -D and -U compiler flags, for example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    version(debug) {
-        &amp;quot;[%d] Saving database %s&amp;quot; println(timestamp(), db name)
-    }
-    db save()
+&lt;pre&gt;&lt;code&gt;#!ooc
+Terminal setAttr(Attr bright)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;The code inside the version(debug) block will be compiled if -Ddebug is used. It is common practise for ooc developers
-to use the -Ddebug switch to debug their applications.&lt;/p&gt;
+&lt;h2 id=&#34;toc_4&#34;&gt;List of attributes&lt;/h2&gt;
 
-&lt;h2 id=&#34;toc_5&#34;&gt;Semantics continued&lt;/h2&gt;
+&lt;p&gt;Here are the attributes defined in the &lt;code&gt;Attr&lt;/code&gt; enum:&lt;/p&gt;
 
-&lt;p&gt;Version blocks can be used in function bodies, to make certain parts of the code OS-specific, or
-they can be used at the mdule-level to make functions or types OS-specific.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;reset&lt;/li&gt;
+&lt;li&gt;bright&lt;/li&gt;
+&lt;li&gt;dim&lt;/li&gt;
+&lt;li&gt;under&lt;/li&gt;
+&lt;li&gt;blink&lt;/li&gt;
+&lt;li&gt;reverse&lt;/li&gt;
+&lt;li&gt;hidden&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;If different types are defined in different version blocks, make sure they expose the same interface.
-It&amp;rsquo;s not necessary for them to have the exact same class layout, but they should at least have all the
-methods/fields that are used in every OS.&lt;/p&gt;
+&lt;h1 id=&#34;toc_5&#34;&gt;Resetting&lt;/h1&gt;
 
-&lt;h2 id=&#34;toc_6&#34;&gt;Examples&lt;/h2&gt;
+&lt;p&gt;Reset all color and attribute settings to default by using the
+&lt;code&gt;reset&lt;/code&gt; method:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;    version(windows) {
-        &amp;quot;Hi, Bill!&amp;quot; println()
-    }
-    version(apple) {
-        &amp;quot;Hi, Steve!&amp;quot; println()
-    }
-    version(linux) {
-        &amp;quot;Hi, Linus!&amp;quot; println()
-    }
-    version(!windows &amp;amp;&amp;amp; !apple &amp;amp;&amp;amp; !linux) {
-        &amp;quot;Who are you, and what did you do to my OS?&amp;quot;
-    }
-
-    version(apple) {
-        &amp;quot;Nice Hardware!&amp;quot; println()
-    } else {
-        &amp;quot;So you like your computer made of plastic then!&amp;quot; println()
-    }
+&lt;pre&gt;&lt;code&gt;#!ooc
+Terminal reset()
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;See also io/File and os/Time in the SDK for real-world examples of heavily versioned code.&lt;/p&gt;
+&lt;h1 id=&#34;toc_6&#34;&gt;Cross-platform considerations&lt;/h1&gt;
 
-&lt;h2 id=&#34;toc_7&#34;&gt;Pattern for OS-specific classes&lt;/h2&gt;
+&lt;p&gt;On *nix platforms, all attributes are supposed. On Windows, only
+the &lt;code&gt;reset&lt;/code&gt; attribute is supported.&lt;/p&gt;
 
-&lt;p&gt;In ooc, &amp;lsquo;new&amp;rsquo; isn&amp;rsquo;t a keyword but a static method. As a result, you can define new yourself.
-This allows an interesting pattern for OS-specific classes in ooc:&lt;/p&gt;
+&lt;p&gt;On *nix, the &lt;code&gt;Terminal&lt;/code&gt; module outputs ANSI escape sequences to
+stdout, whereas on Windows it uses the console text attribute API.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;    // io/File
-    import io/[FileUnix, FileWin32]
-    
-    File: class {
-        path: String
-    
-        new: static func (.path) -&amp;gt; This {
-            version(windows) { return FileWin32 new(path) }
-            version(unix)    { return FileUnix  new(path) }
-            Exception new(This, &amp;quot;Unsupported platform&amp;quot;) throw()
-        }
-        
-        // abstract methods
-    }
+&lt;p&gt;That&amp;rsquo;s why there is no cross-platform way to transform a string
+into a &amp;ldquo;colored string&amp;rdquo;, because it would make no sense on Windows.&lt;/p&gt;
 
-    // io/FileUnix
-    FileUnix: class extends File {
-        init: func (=path) {}
-        
-        // implement abstract methods for unix
-    }
-    
-    // io/FileWin32
-    FileWin32: class extends File {
-        init: func (=path) {}
-        
-        // implement abstract methods for Win32
-    }
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Also, on *nix, color escapes will only be outputted if stdout is
+a terminal and not if it&amp;rsquo;s redirected to a file or a pipe.&lt;/p&gt;
 </description>
     </item>
     
