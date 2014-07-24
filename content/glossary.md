@@ -1,5 +1,8 @@
 ---
 title: Glossary
+menu:
+  main:
+    weight: 80
 author: Amos Wenger
 copyright: 2009-2014 Amos Wenger
 license: CC BY-SA 3.0

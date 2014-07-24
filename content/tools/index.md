@@ -1,6 +1,8 @@
 ---
 title: Tools
-menu: main
+menu:
+  main:
+    weight: 50
 author: Amos Wenger
 copyright: 2009-2014 Amos Wenger
 license: CC BY-SA 3.0
