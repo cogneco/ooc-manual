@@ -5,6 +5,9 @@ menu:
   main:
     parent: Rock
     weight: 30
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # Using more Rock options
@@ -45,5 +48,3 @@ to turn your C sources into machine code, rock provides you with some alternativ
     rock --onlygen # no compiler
 
 The latter is especially useful if you want to compile your C code to assembler by hand.
-
-

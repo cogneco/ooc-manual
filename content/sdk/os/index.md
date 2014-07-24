@@ -4,6 +4,9 @@ menu:
   main:
     parent: sdk
     weight: 50
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # The os package
@@ -40,5 +43,3 @@ The os packages contains various modules pertaining to Operating System function
  3. [ShellUtils](shellutils), used mostly to find executables
 
  3. [Time](time), to get the current time and date, and sleep
-
-

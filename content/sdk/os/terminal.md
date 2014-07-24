@@ -4,6 +4,9 @@ menu:
   main:
     parent: os
     weight: 40
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # The os/Terminal module
@@ -82,4 +85,3 @@ into a "colored string", because it would make no sense on Windows.
 
 Also, on *nix, color escapes will only be outputted if stdout is
 a terminal and not if it's redirected to a file or a pipe.
-

@@ -4,6 +4,9 @@ menu:
   main:
     parent: os
     weight: 20
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 
@@ -116,4 +119,3 @@ Our new job type can then be used, like so:
         pool add(CompilationJob new())
     }
     pool waitAll()
-

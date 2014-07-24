@@ -4,6 +4,9 @@ menu:
   main:
     parent: Classes
     weight: 65
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 Constructors

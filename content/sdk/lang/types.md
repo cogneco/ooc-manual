@@ -4,6 +4,9 @@ menu:
   main:
     parent: lang
     weight: 10
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # Base types in the lang package
@@ -142,5 +145,4 @@ Or, more simply, with `each`:
             raise("Unsupported argument type")
         }
       )
-    }    
-
+    }

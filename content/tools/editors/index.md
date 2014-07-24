@@ -5,6 +5,9 @@ menu:
   main:
     parent: Tools
     weight: 30
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # ooc support in text editors
@@ -68,8 +71,8 @@ static website generators such as [nanoc][nanoc].
 [ooc.vim]: https://github.com/nddrylliog/ooc.vim
 [ooc-mode]: https://github.com/nixeagle/ooc-mode
 [ooc.tmbundle]: https://github.com/nilium/ooc.tmbundle
-[pygments]: http://pygments.org/ 
-[nanoc]: http://nanoc.ws/ 
+[pygments]: http://pygments.org/
+[nanoc]: http://nanoc.ws/
 [sam]: https://github.com/nddrylliog/sam
 [atom]: https://atom.io/
 [brackets]: http://brackets.io/

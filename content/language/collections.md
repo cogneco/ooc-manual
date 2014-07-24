@@ -4,12 +4,15 @@ menu:
   main:
     parent: Language
     weight: 40
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # Foreword
 
 The array situation in ooc is a bit delicate right now - while
-I (Amos) am definitely not happy with it, I am still going to 
+I (Amos) am definitely not happy with it, I am still going to
 document the current state of things, if only as a motivation to
 make it better.
 
@@ -197,7 +200,7 @@ In the same fashion, ArrayList literals exist:
 
 # Others
 
-The ooc sdk is full of other data structures, such as `LinkedList`, 
+The ooc sdk is full of other data structures, such as `LinkedList`,
 `HashMap` (an dictionary associating keys and values), etc.
 
 For more information, read up on the [structs package][structs].

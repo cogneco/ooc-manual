@@ -4,6 +4,9 @@ menu:
   main:
     parent: sdk
     weight: 40
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # The math package
@@ -75,7 +78,7 @@ As for `atan2`, straight from Wikipedia:
     one, is to gather information of the signs of the inputs in order to return
     the appropriate quadrant of the computed angle, which is not possible for
     the single-argument arctangent function.
-    
+
     For any real number (e.g., floating point) arguments x and y not both equal
     to zero, atan2(y, x) is the angle in radians between the positive x-axis of
     a plane and the point given by the coordinates (x, y) on it. The angle is
@@ -197,5 +200,3 @@ number generator][prng-wiki]) coded directly into the Random class.
 The `fast` variants are meant to be faster, as the name implies, but they're even
 less guaranteed to have good random qualities - the numbers it generates might be
 less even / repeat more easily.
-
-

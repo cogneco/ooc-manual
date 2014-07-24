@@ -4,6 +4,9 @@ menu:
   main:
     parent: Language
     weight: 20
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # Values
@@ -332,7 +335,7 @@ And here's the same with references:
     mul2: func (var: Int@) {
       var *= 2
     }
-    
+
     a := 12
     mul2(a&)
     a // now evalutes to 24
@@ -421,4 +424,3 @@ A value from an enum will be of the type of the enum. See:
     isAsleep?: func (s: State) -> Bool {
       (s == State ASLEEP)
     }
-

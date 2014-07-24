@@ -4,6 +4,9 @@ menu:
   main:
     parent: Preprocessor
     weight: 135
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 Version blocks
@@ -47,20 +50,20 @@ don't have to remember the convoluted corresponding C defines.
 For other compilers not based on the C language, version block handling may happen at any
 stage of the compilation (if any), as long as the version expressions are correctly evaluated
 and have the correct meaning (for example, a 'windows' version block should be ignored on OSX)
-	
+
 Built-in version names
 ----------------------
-	
+
 C defines are included here for completeness, but are only relevant for people who want
 to implement ooc on top of C.
-	
+
 |Name   |corresponding C define |
 |:-----:|:---------------------:|
 |windows|__WIN32__ || __WIN64__ |
 |linux  |__linux__              |
 |solaris|__sun                  |
 |unix   |__unix__               |
-|beos   |__BEOS__               | 
+|beos   |__BEOS__               |
 |haiku  |__HAIKU__              |
 |apple  |__APPLE__              |
 |gnuc   |__GNUC__               |
@@ -135,30 +138,30 @@ This allows an interesting pattern for OS-specific classes in ooc:
 ~~~
 	// io/File
 	import io/[FileUnix, FileWin32]
-	
+
 	File: class {
 		path: String
-	
+
 		new: static func (.path) -> This {
 			version(windows) { return FileWin32 new(path) }
 			version(unix)    { return FileUnix  new(path) }
 			Exception new(This, "Unsupported platform") throw()
 		}
-		
+
 		// abstract methods
 	}
 
 	// io/FileUnix
 	FileUnix: class extends File {
 		init: func (=path) {}
-		
+
 		// implement abstract methods for unix
 	}
-	
+
 	// io/FileWin32
 	FileWin32: class extends File {
 		init: func (=path) {}
-		
+
 		// implement abstract methods for Win32
 	}
 ~~~

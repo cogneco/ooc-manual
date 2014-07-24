@@ -3,6 +3,9 @@ title: sdk
 menu:
   main:
     weight: 30
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # An overview of the SDK's packages
@@ -39,4 +42,3 @@ These pages will give you an overview of what you can find in the SDK:
 
  9. The [native](native package should not be imported directly -
     it contains platform-specific specific implementations of certain features.
-

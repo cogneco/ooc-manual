@@ -4,6 +4,9 @@ menu:
   main:
     parent: os
     weight: 110
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 
@@ -44,6 +47,3 @@ executable is not found, instead of returning null. For this, pass
     #!ooc
     // if we can't find make, don't even bother
     make := ShellUtils findExecutable("make", true)
-
-
-

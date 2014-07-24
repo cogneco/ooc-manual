@@ -4,6 +4,9 @@ menu:
   main:
     parent: Language
     weight: 90
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # Enums
@@ -148,4 +151,3 @@ Or, each element can be aliased individually:
       extern(SHUT_WR) write
       extern(SHUT_RDWR) readWrite
     }
-

@@ -5,6 +5,9 @@ menu:
   main:
     parent: Rock
     weight: 50
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # Garbage Collection in rock
@@ -43,7 +46,7 @@ that is as easy as doing `brew install bdw-gc`.
 
 [brew]: https://github.com/nddrylliog/winbrew
 
-You should now have Boehm-GC-related files in both `/usr/local/lib` and 
+You should now have Boehm-GC-related files in both `/usr/local/lib` and
 `/usr/local/bin` (`/usr/local` being mapped to a Windows path like `C:\MinGW\msys\1.0\local`).
 
 To make rock use that version, simply do:
@@ -66,4 +69,3 @@ that the SDK was written with the GC in mind though.
 
 When the GC is disabled, `version(gc)` block will get discarded, and `version(!gc)` blocks will be
 used. You can use this to write both GC and non-GC friendly code.
-

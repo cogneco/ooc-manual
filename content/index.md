@@ -1,5 +1,8 @@
 ---
 title: Manual
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # How to use the documentation

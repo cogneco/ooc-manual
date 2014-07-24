@@ -4,6 +4,9 @@ menu:
   main:
     parent: sdk
     weight: 20
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 
@@ -259,4 +262,3 @@ Example usage:
 bounds checking, no type checking at all. To be used when you absolutely,
 positively need to squeeze bytes together as close as possible and don't care
 about safety at all.
-

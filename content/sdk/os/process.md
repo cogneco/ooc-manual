@@ -4,6 +4,9 @@ menu:
   main:
     parent: os
     weight: 10
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 
@@ -170,4 +173,3 @@ This can be used to gracefully end a process:
         // still not finished? alright, that's enough
         p kill()
     }
-

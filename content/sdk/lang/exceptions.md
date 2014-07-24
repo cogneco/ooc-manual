@@ -4,6 +4,9 @@ menu:
   main:
     parent: lang
     weight: 50
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 
@@ -68,4 +71,3 @@ a constructor:
         super("Nothing happened, just thought it'd be fun to interrupt the program!")
       }
     }
-

@@ -4,6 +4,9 @@ menu:
   main:
     parent: os
     weight: 80
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # The os/Channel module
@@ -63,4 +66,3 @@ We're reading from the channel with the not operator: `!chan`
 
 This will print 0, 5, 1, 6, 2, 7, 3, 8, 4, 9, and then exit, as
 expected.
-

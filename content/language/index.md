@@ -1,6 +1,9 @@
 ---
 title: Language
 menu: main
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # The OOC Language
@@ -56,4 +59,3 @@ Here's a list of sections of the language documentation:
 
  13. The [Preprocessor](preprocessor) describes what happens to
     the code before it is even compiled.
-

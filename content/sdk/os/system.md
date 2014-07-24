@@ -4,6 +4,9 @@ menu:
   main:
     parent: os
     weight: 90
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # The os/System module
@@ -18,4 +21,3 @@ Or the hostname of the machine, as a `String`
 
     #!ooc
     hostname := System hostname()
-

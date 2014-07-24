@@ -4,6 +4,9 @@ menu:
   main:
     parent: lang
     weight: 40
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 
@@ -31,7 +34,7 @@ Here's a demonstration, iterating through characters of the word `hellfire`:
         init: func
 
         hasNext?: func -> Bool {
-          index < content size 
+          index < content size
         }
 
         next: func -> Char {
@@ -63,7 +66,7 @@ Or the eachUntil, which will break if the passed closure returns false:
     #!ooc
     HellfireIterator new() eachUntil(|letter|
       if (letter == 'f') {
-        return false // just hell, please 
+        return false // just hell, please
       }
 
       // do something with letter
@@ -89,4 +92,3 @@ method. Let's try it on a string, which is iterable:
 
     #!ooc
     "ABC" toList() // gives ['A', 'B', 'C']
-

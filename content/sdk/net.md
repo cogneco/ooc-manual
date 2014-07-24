@@ -4,6 +4,9 @@ menu:
   main:
     parent: sdk
     weight: 60
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # The net package
@@ -118,5 +121,3 @@ If you want to send datagrams, just call send:
     socket send("udp is fun")
 
 That's about it for now.
-
-

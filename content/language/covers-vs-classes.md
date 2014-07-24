@@ -4,6 +4,9 @@ menu:
   main:
     parent: Covers
     weight: 85
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 When to use covers and classes
@@ -44,7 +47,7 @@ Classes are by-references. Which means every object is a reference. Doing that:
     modifyInside(answer)
 ~~~
 
-What happens in 'modifyRef' is that we change the value of the parameter 'n'. 
+What happens in 'modifyRef' is that we change the value of the parameter 'n'.
 The code does not modify what 'n' was a reference to in the first place.
 In the example above the variable 'answer' is given as the argument and 'modifyRef' has
 no effect at all on 'answer'.

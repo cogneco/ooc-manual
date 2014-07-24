@@ -4,6 +4,9 @@ menu:
   main:
     parent: Language
     weight: 130
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # Version blocks
@@ -246,4 +249,3 @@ Itself equivalent to:
     a add(1)
     a add(2)
     a add(3)
-

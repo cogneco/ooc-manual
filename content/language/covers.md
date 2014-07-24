@@ -4,6 +4,9 @@ menu:
   main:
     parent: Language
     weight: 80
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # Covers
@@ -88,4 +91,3 @@ And so, a properly covered C struct with methods can be used as if it was an obj
     #!ooc
     context := FooContext new()
     context doSomething()
-

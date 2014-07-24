@@ -4,6 +4,9 @@ menu:
   main:
     parent: os
     weight: 30
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # The os/Coro module
@@ -12,7 +15,7 @@ That module was originally an ooc port of Steve Dekorte's [libcoroutine][libco].
 
 [libco]: https://github.com/stevedekorte/coroutine
 
-Coroutines help achieve cooperative multi-tasking, as opposed to threads, which 
+Coroutines help achieve cooperative multi-tasking, as opposed to threads, which
 achieve preemptive multitasking. In cooperative multi-tasking, each task (or
 'coroutine') is responsible for handing the control to another coroutine.
 
@@ -52,5 +55,3 @@ This example is quite simple, just printing each letter that
 `coro1` gives us on separate lines, but complex tasks can be
 broken down in various coroutines and be achieved in a much
 more lightweight fashion than threads or processes.
-
-

@@ -4,6 +4,9 @@ menu:
   main:
     parent: Language
     weight: 30
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # Conditionals
@@ -122,5 +125,3 @@ A variant of foreach allows one to get the index of the current element:
     for ((index, element) in list) {
         "list[%d] = %s" printfln(index, element toString())
     }
-
-

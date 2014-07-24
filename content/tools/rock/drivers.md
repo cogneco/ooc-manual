@@ -5,6 +5,9 @@ menu:
   main:
     parent: Rock
     weight: 20
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # Compilation strategy
@@ -37,7 +40,7 @@ If you just want rock to generate C files to look at what is being done
 under the hood, the `--onlygen` option can be used. They will be output
 in the `rock_tmp` (for .c files) and `.libs` (for header files) folders by default.
 
-If the goal is to tinker with the 
+If the goal is to tinker with the
 
 ## Parallelism
 
@@ -92,5 +95,3 @@ In spirit, the Android driver (invoked with `--driver=android`) is similar to
 the make driver, excepts that instead of generating Makefiles, it will generate
 `Android.mk` files, suitable for usage with the `ndk-build` utility from the
 Android NDK toolchain.
-
-

@@ -4,6 +4,9 @@ menu:
   main:
     parent: os
     weight: 100
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 
@@ -30,4 +33,3 @@ Environment variables can be unset as well:
 
     #!ooc
     Env unset("PKG_CONFIG_PATH")
-

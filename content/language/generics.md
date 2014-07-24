@@ -4,6 +4,9 @@ menu:
   main:
     parent: Language
     weight: 110
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # Generic functions
@@ -142,5 +145,3 @@ than its super-type:
         get() toString() println()
       }
     }
-
-

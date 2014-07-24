@@ -4,6 +4,9 @@ menu:
   main:
     parent: os
     weight: 120
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 
@@ -19,7 +22,7 @@ granularity, but the SDK will use the most precise method available.
 
     #!ooc
     // sleep for one second
-    Time sleepSec(1) 
+    Time sleepSec(1)
 
     // then for 12 milliseconds
     Time sleepMilli(12)
@@ -62,5 +65,3 @@ spent elapsing it. It might be used as a poor humanoid's profiler:
         // some time-consuming task
     )
     "Huge task done in %d ms" printfln(duration)
-
-

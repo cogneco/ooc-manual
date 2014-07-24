@@ -4,6 +4,9 @@ menu:
   main:
     parent: os
     weight: 70
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # The os/mmap module
@@ -32,4 +35,3 @@ see here:
 On a historical note, this module was originally included in the SDK as support
 code for the closure implementation, which back then implied generating
 bytecode at runtime and thus marking some memory regions as executable.
-

@@ -1,6 +1,9 @@
 ---
 title: Tools
 menu: main
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # Frequently used ooc tools

@@ -4,6 +4,9 @@ menu:
   main:
     parent: os
     weight: 50
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 
@@ -204,4 +207,3 @@ pipes, both for cross-platform support, performance, and ease of use.
 
 [zmq]: http://zeromq.org/
 [ooc-zeromq]: https://github.com/nddrylliog/ooc-zeromq
-

@@ -1,6 +1,9 @@
 ---
 title: Introduction
 menu: main
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # Once Upon A Time...
@@ -79,7 +82,7 @@ down a few more lines, replacing the contents of `source/watchcorgi.ooc` with th
 
     #!ooc
     import os/Process
-    
+
     exitCode := Process new(["curl", "-I", "http://example.org/"]) execute()
     "Sir Curl exited with: %d" printfln(exitCode)
 
@@ -205,7 +208,7 @@ scratch using those new modules:
     notifier := Notifier new()
     notifier quiet = true // only bother me if something goes wrong
     checker := Checker new("http://example.org/")
-    
+
     while (true) {
       notifier notify(checker check(), checker url)
       Time sleepSec(5)
@@ -317,7 +320,7 @@ rewriting `source/watchcorgi.ooc` once again:
     import os/Time
     import threading/Thread
     import structs/[ArrayList]
-    
+
     threads := ArrayList<Thread> new()
     config := Config new()
 
@@ -346,7 +349,7 @@ rewriting `source/watchcorgi.ooc` once again:
           notifier = Notifier new()
           notifier quiet = true
         }
-        
+
         run: func {
           while (true) {
             notifier notify(checker check(), checker url)
@@ -359,7 +362,7 @@ As she began to write down a list of websites to check in `~/.config/corgirc`,
 she started to list the new things she had learned during that last refactoring:
 
   * That classes can be used before they are defined - in order word, the order
-    in which classes are defined does not matter! 
+    in which classes are defined does not matter!
 
   * That threads, while really old fashioned, were quite easy to use - all you
     had to do was create a new `Thread` object and pass a function that takes
@@ -417,7 +420,7 @@ Her .use file now looked a little bit like this:
     Name: Watch Corgi
     Description: Multi-threaded website monitoring system
     Version: 0.2.0
-    
+
     SourcePath: source
     Main: watchcorgi
     Requires: curl
@@ -460,7 +463,7 @@ the impression of perfectness would fade out over the days, but as far as
 discovering a new language goes, she thought this was a pretty good run.
 
 There was just one thing left to do...
-    
+
 # To Give Back
 
 At this point, she felt that watchcorgi it was worth it to publish her program
@@ -487,4 +490,3 @@ And then, she [submitted the pull request][create-pullreq]. The sun was rising.
 It felt warm. I think - she thought - I just might like it here.
 
 [create-pullreq]: https://help.github.com/articles/creating-a-pull-request
-

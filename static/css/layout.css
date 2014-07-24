@@ -2,7 +2,8 @@
 	html > body > header > h1,
 	html > body > main > header > h1,
 	html > body > main > nav > ul,
-	html > body > main > article {
+	html > body > main > article,
+	html > body > main > footer {
 		margin: 0 auto;
 		max-width: 576px;
 		min-width: 288px;
@@ -35,12 +36,27 @@
 		padding-top: 0.5em;
 		padding-bottom: 0.5em;
 	}
-	@media (max-width: 979px) {
+	html > body > main > footer > p {
+		font-size: 60%;
+	}
+	html > body > main > footer > p > #footer-copyright {
+		float: left;
+	}
+	html > body > main > footer > p > #footer-copyright:before {
+		content: "copyright: ";
+	}
+	html > body > main > footer > p > #footer-license {
+		float: right;
+	}
+	html > body > main > footer > p > #footer-license:before {
+		content: "license: ";
+	}
+	@media (max-width: 899px) {
 		html > body > nav {
 			display: none;
 		}
 	}
-	@media (min-width: 980px) {
+	@media (min-width: 900px) {
 		html > body > nav {
 			float: right;
 		}

@@ -4,6 +4,9 @@ menu:
   main:
     parent: Language
     weight: 120
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # Error handling

@@ -4,6 +4,9 @@ menu:
   main:
     parent: os
     weight: 60
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # The os/Dynlib module
@@ -57,4 +60,3 @@ When we're done with the library we can just close it:
 
 Note: on Windows, failing to close a library may lead to a
 crash on application exit.
-

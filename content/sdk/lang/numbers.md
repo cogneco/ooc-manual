@@ -4,6 +4,9 @@ menu:
   main:
     parent: lang
     weight: 30
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 # Numbers
 
@@ -90,4 +93,3 @@ floating point number, with a precision of 2 after the decimal point.
 
     #!ooc
     3.14 toString() // "3.14", conveniently
-

@@ -4,6 +4,9 @@ menu:
   main:
     parent: lang
     weight: 60
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # Memory
@@ -37,8 +40,8 @@ a function of the size of some other type instead:
 That's better. Now you can index that, like any pointer:
 
     #!ooc
-    doubles[0] = 3.14    
-    doubles[1] = 6.28    
+    doubles[0] = 3.14
+    doubles[1] = 6.28
     // etc.
 
 Pointer arithmetic works:
@@ -105,4 +108,3 @@ here to do the job:
     #!ooc
     // you know what, I'm good for now, thanks.
     gc_free(block)
-

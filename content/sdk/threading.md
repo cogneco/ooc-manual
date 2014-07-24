@@ -4,6 +4,9 @@ menu:
   main:
     parent: sdk
     weight: 80
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 
@@ -55,9 +58,9 @@ And wait for it to finish with `wait()` (which will block until the
 thread terminates):
 
     #!ooc
-    "Waiting for thread to finish..." println() 
+    "Waiting for thread to finish..." println()
     thread wait()
-    "All done!" println() 
+    "All done!" println()
 
 ## Check if a thread is still running
 
@@ -146,7 +149,7 @@ that is specific to each thread, use ThreadLocal:
     threads := ArrayList<Thread> new()
     for (i in 1..3) {
         threads add(Thread new(||
-            val set(i) 
+            val set(i)
         ))
     }
 
@@ -175,7 +178,7 @@ in invalid state.
     for (i in 0..10) {
         threads add(Thread new(||
             for (i in 0..1000) {
-                counter += 1   
+                counter += 1
                 Thread yield()
             }
         ))
@@ -207,7 +210,7 @@ To alleviate that problem, we can use a mutex:
         threads add(Thread new(||
             for (i in 0..1000) {
                 mutex lock()
-                counter += 1   
+                counter += 1
                 mutex unlock()
                 Thread yield()
             }
@@ -278,4 +281,3 @@ a recursive mutex, more funky behaviour could happen. For example, on OSX, the
 program enters an infinite waiting loop, as we are trying to lock an already
 locked non-recursive mutex acquired by the current thread, resulting in a
 deadlock.
-

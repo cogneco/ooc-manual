@@ -4,6 +4,9 @@ menu:
   main:
     parent: sdk
     weight: 70
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # The text package

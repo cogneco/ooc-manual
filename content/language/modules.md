@@ -4,6 +4,9 @@ menu:
   main:
     parent: Language
     weight: 10
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # Modules
@@ -46,7 +49,7 @@ syntax:
 
     #!ooc
     import os/[Process, Terminal, Env]
-    
+
 By default, symbols imported another module are available in the global scope.  To import the symbols into a namespace, use `into`:
 
     #!ooc

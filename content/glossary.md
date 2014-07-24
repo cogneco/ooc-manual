@@ -1,6 +1,8 @@
 ---
 title: Glossary
-has_toc: true
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 glossary:
   project: >
     A piece of software written in ooc: usually a [library] or

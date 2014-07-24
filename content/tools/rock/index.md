@@ -4,6 +4,9 @@ menu:
   main:
     parent: Tools
     weight: 10
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # About Rock
@@ -36,4 +39,3 @@ to produce either an executable or a library.
  7. The [Packaging](/docs/tools/rock/packaging/) section talks about releasing standalone
     applications coded in ooc, such as games — when you don't want to have users install
     dependencies on their own, but would rather bundle everything together.
-

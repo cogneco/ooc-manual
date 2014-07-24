@@ -4,6 +4,9 @@ menu:
   main:
     parent: sdk
     weight: 90
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 
@@ -21,4 +24,3 @@ things that are useful in the Win32 implementation of the SDK.
 
 Note that there exists `native` sub packages elsewhere in the SDK, for example
 in the `io` or in the `os` packages.
-

@@ -4,6 +4,9 @@ menu:
   main:
     parent: sdk
     weight: 30
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 # The io package
 
@@ -230,4 +233,3 @@ The corresponding module exists for writing binary sequences.
     seq s32(0xdeadbeef)
 
 For more details, refer to the oocdocs.
-

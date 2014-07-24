@@ -5,6 +5,9 @@ menu:
   main:
     parent: Rock
     weight: 40
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 

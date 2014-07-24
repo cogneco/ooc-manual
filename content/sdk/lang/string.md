@@ -4,7 +4,11 @@ menu:
   main:
     parent: lang
     weight: 20
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
+
 # String
 
 A string in ooc is a chain of bytes with no particular property.
@@ -142,4 +146,3 @@ when dealing with C functions, one will want to convert back and forth
 with `toCString()`, which gives a `CString`, a cover of `char*`.
 
 Conversely, converting a CString to a String can be done with `toString()`.
-

@@ -5,6 +5,9 @@ menu:
   main:
     parent: Rock
     weight: 70
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 
@@ -64,7 +67,7 @@ etc, create a .rc file containing something like that:
           VALUE "ProductVersion", "1.0"
         END
       END
-    
+
       BLOCK "VarFileInfo"
       BEGIN
         VALUE "Translation", 0x409, 1252
@@ -230,7 +233,7 @@ Windows section. A stock plist file looks something like:
     </plist>
 
 It should live in `Foo.app/Contents/Info.pList`. Just like a Windows RC file,
-it references a `foo.icns` file. A tool like [img2icns][icns] can be used 
+it references a `foo.icns` file. A tool like [img2icns][icns] can be used
 to convert a high-resolution PNG image to a Mac OSX icon.
 
 [icns]: http://www.img2icnsapp.com/
@@ -386,4 +389,3 @@ To create a `.tar.xz`:
 To create a `.zip`, do:
 
     zip -r foo-1.0-linux.tar.zip foo-1.0-linux
-

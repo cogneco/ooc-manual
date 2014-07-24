@@ -1,6 +1,9 @@
 ---
 title: Troubleshooting
 menu: main
+author: Amos Wenger
+copyright: 2009-2014 Amos Wenger
+license: CC BY-SA 3.0
 ---
 
 # Stuck? Stranded on a desert island?
@@ -38,7 +41,7 @@ A few typical "ooc compilation stage" errors are listed below.
 # Use not found in the ooc library path
 
 An ooc library is missing, or can't be found by rock. Explanation: ooc libraries are
-just folders with a .use file of a given name, and most often, a set of `.ooc` 
+just folders with a .use file of a given name, and most often, a set of `.ooc`
 source files.
 
 The recommended way to install ooc libraries is to set your `$OOC_LIBS` environment
@@ -121,7 +124,7 @@ refer to the ooc file, like in this example:
     /Users/amos/Dev/tests/membe/a.ooc:3: error: dereferencing pointer to incomplete type
     C compiler failed (got code 1), aborting compilation process
     [FAIL]
-    
+
 If working out the problem from the location in the .ooc file is not helpful
 enough, you can use rock's `--nolines` command line option to get the location
 of the error in the generated C file instead, for example:
@@ -186,4 +189,3 @@ And in module `c.ooc`, you have the actual definition of type `C`:
 In that particular case, due to implementation details, and for the time being,
 it will result in a compilation error during the C phase. The fix is simply to
 include module c from module a.
-
