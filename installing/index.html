@@ -3,7 +3,7 @@
 	<head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-	<title> types &middot; The OOC Manual </title>
+	<title> Installing &middot; The OOC Manual </title>
 	
 	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/reset.css">
 	<link rel="stylesheet" href="http://oocmanual.cogneco.com/css/text.css">
@@ -423,174 +423,46 @@
 
 		<main>
 			<header>
-				<h1>types</h1>
+				<h1>Installing</h1>
 			</header>
 			<nav id="TableOfContents">
 <ul>
-<li><a href="#toc_0">Base types in the lang package</a></li>
-<li><a href="#toc_1">Object / Class</a>
-<ul>
-<li><a href="#toc_2">size vs instanceSize</a></li>
-</ul></li>
-<li><a href="#toc_3">Various types</a>
-<ul>
-<li><a href="#toc_4">Bool</a></li>
-<li><a href="#toc_5">Void</a></li>
-<li><a href="#toc_6">Pointer</a></li>
-<li><a href="#toc_7">None</a></li>
-<li><a href="#toc_8">Cell</a></li>
-</ul></li>
-<li><a href="#toc_9">VarArgs</a></li>
+<li><a href="#toc_0">Bootstrapping</a></li>
+<li><a href="#toc_1">Setting Environment Variables</a></li>
 </ul>
 </nav>
 			<article>
 				
 
-<h1 id="toc_0">Base types in the lang package</h1>
+<h1 id="toc_0">Bootstrapping</h1>
 
-<p>Some types are useful enough that they are imported into every ooc
-module out there. For example, <code>Object</code>, which is the default super type
-of all objects.</p>
+<p>The OOC compiler Rock is not currently installed but rather bootstrapped from sources.</p>
 
-<p>Integer types, both fixed-width (<code>Int32</code>, <code>Int64</code>) and variable-width
-(<code>Long</code>, <code>LLong</code>) are also in <code>lang/types</code>, along with the boolean type
-<code>Bool</code>.</p>
+<p>Start by creating a folder for all OOC projects and move to that folder.
+There you issue the following commands:</p>
 
-<h1 id="toc_1">Object / Class</h1>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #75715e">#!/bin/bash</span>
+sudo apt-get -y -qq install curl make libgc-dev
+<span style="color: #f8f8f2">export PATH</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">$PATH</span>:<span style="color: #f8f8f2">$PWD</span>/rock/bin:<span style="color: #f8f8f2">$PWD</span>/sam
+<span style="color: #f8f8f2">export OOC_LIBS</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">$PWD</span>
+git clone --depth<span style="color: #f92672">=</span>1 -b 99x git://github.com/cogneco/rock.git
+git clone --depth<span style="color: #f92672">=</span>1 git://github.com/cogneco/sam.git
+<span style="color: #f92672">(</span><span style="color: #f8f8f2">cd </span>rock <span style="color: #f92672">&amp;&amp;</span> make rescue <span style="color: #f92672">&amp;&amp;</span> make<span style="color: #f92672">)</span>
+<span style="color: #f92672">(</span><span style="color: #f8f8f2">cd </span>sam <span style="color: #f92672">&amp;&amp;</span> rock -v<span style="color: #f92672">)</span>
+</pre></div>
 
-<p>The <code>Object</code> and <code>Class</code> classes are written in ooc itself, and not part
-of some separate C runtime.</p>
+<h1 id="toc_1">Setting Environment Variables</h1>
 
-<p>Anytime a type is referred to, you have something of type <code>Class</code>:</p>
+<p>It is necessary to set the following environments variables for every terminal used:</p>
 
-<pre><code>#!ooc
-type := Int
-type name // &quot;Int&quot;
-type size // 4
-type instanceSize // 4
-</code></pre>
-
-<p>Actually, in this case, it&rsquo;s an instance of <code>IntClass</code>, as demonstrated
-by this chunk of code:</p>
-
-<pre><code>#!ooc
-type class name // &quot;IntClass&quot;
-</code></pre>
-
-<p>Even base types have classes, although they aren&rsquo;t available via the
-<code>class</code> property, unlike objects.</p>
-
-<pre><code>#!ooc
-dog := Dog new()
-dog class == Dog // true
-
-a := 42
-a class // invalid, not an object, it doesn't have fields
-</code></pre>
-
-<p>This is especially useful for generics, where classes are passed
-along with actual arguments:</p>
-
-<pre><code>#!ooc
-acceptAnything: func &lt;T&gt; (t: T) {
-  T // is a subtype of Class, can access 'name', etc.
-}
-</code></pre>
-
-<h2 id="toc_2">size vs instanceSize</h2>
-
-<p>For basic types such as Int, Float, Char - there is no difference between size
-and instanceSize. For complex types, e.g. objects, there is a difference between
-size and instanceSize.</p>
-
-<p>For objects, <code>size</code> is always equal to the size of a pointer - since objects are
-references. However, <code>instanceSize</code> is equal to the amount of memory an object
-takes in memory.</p>
-
-<p>For more information on the subject, read about <a href="/docs/lang/classes/">ooc classes</a></p>
-
-<h1 id="toc_3">Various types</h1>
-
-<h2 id="toc_4">Bool</h2>
-
-<p>Booleans in ooc, equal to either the boolean literal <code>true</code>, or <code>false</code>,
-are of type <code>Bool</code>.</p>
-
-<pre><code>#!ooc
-b := true
-</code></pre>
-
-<h2 id="toc_5">Void</h2>
-
-<p><code>Void</code> is the type of nothing. A function that doesn&rsquo;t return anything
-has a return type of <code>Void</code>, implicitly.</p>
-
-<p>It is never used explicitly throughout the SDK, it is mostly there so
-that compiler iternals work fine.</p>
-
-<h2 id="toc_6">Pointer</h2>
-
-<p><code>Pointer</code> is the umbrella term for any type of pointer. When possible,
-using a more precise type such as <code>Int*</code> is desirable.</p>
-
-<h2 id="toc_7">None</h2>
-
-<p>None can be used as an object representing nothing. It has a single
-no-argument constructor:</p>
-
-<pre><code>#!ooc
-nothing := None new()
-</code></pre>
-
-<p>It can be used in place of null when adopting a pattern-matching approach.</p>
-
-<h2 id="toc_8">Cell</h2>
-
-<p>Cell is documented in the <a href="/docs/sdk/structs/">structs package</a>.</p>
-
-<h1 id="toc_9">VarArgs</h1>
-
-<p>This is the sdk-side implementation of variable arguments. Basically,
-it allows packing different values in the <code>VarArgs</code> structure with
-<code>_addValue</code> - although the compiler will typically write those out
-with a static initializer for efficiency.</p>
-
-<p>They can be iterated through thanks to <code>VarArgsIterator</code>:</p>
-
-<pre><code>#!ooc
-something: func (args: ...) {
-  iter := args iterator()
-  while (iter hasNext?()) {
-    T := iter getNextType()
-    match T {
-      case Int =&gt;
-        value := iter next(Int)
-        // do something with value
-      case =&gt;
-        raise(&quot;Unsupported argument type: %s&quot; format(T name))
-    }
-  }
-}
-</code></pre>
-
-<p>Or, more simply, with <code>each</code>:</p>
-
-<pre><code>#!ooc
-something: func (args: ...) {
-  args each(|arg|
-    match arg {
-      case value: Int =&gt;
-        // do something with value
-      case =&gt;
-        raise(&quot;Unsupported argument type&quot;)
-    }
-  )
-}
-</code></pre>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #75715e">#!/bin/bash</span>
+<span style="color: #f8f8f2">export PATH</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">$PATH</span>:<span style="color: #f8f8f2">$PWD</span>/rock/bin:<span style="color: #f8f8f2">$PWD</span>/sam
+<span style="color: #f8f8f2">export OOC_LIBS</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">$PWD</span>
+</pre></div>
 
 			</article>
 			<footer>
-				<p><span id="footer-copyright">2009-2014 Amos Wenger</span><span id="footer-license">CC BY-SA 3.0</span></p>
+				<p><span id="footer-copyright">2014 Simon Mika</span><span id="footer-license">CC BY-SA-4.0</span></p>
 			</footer>
 		</main>
 		<footer>

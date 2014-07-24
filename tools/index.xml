@@ -10,468 +10,45 @@
     <updated>Tue, 01 Jan 2008 00:00:00 UTC</updated>
     
     <item>
-      <title>Packaging</title>
-      <link>http://oocmanual.cogneco.com/tools/rock/packaging</link>
+      <title>Rock</title>
+      <link>http://oocmanual.cogneco.com/tools/rock</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/tools/rock/packaging</guid>
+      <guid>http://oocmanual.cogneco.com/tools/rock</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;Intro&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;About Rock&lt;/h1&gt;
 
-&lt;p&gt;While ooc provides facilities to write highly cross-platform applications, and
-makes it rather easy to develop on all these platforms, distributing standalone
-applications is another matter entirely.&lt;/p&gt;
+&lt;p&gt;Rock is the main ooc compiler. It parses ooc files using nagaqueen, does some
+checking and inference, produces .c files, and then drives the C compilation process
+to produce either an executable or a library.&lt;/p&gt;
 
-&lt;p&gt;Until a tool comes along and in the darkness binds them, this chapter documents
-the manual process that goes into releasing neatly packaged software for
-Windows, OSX and Linux.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/basic/&#34;&gt;Basic usage&lt;/a&gt; section explains how to quickly get
+up and running, using rock to compile ooc projects.&lt;/p&gt;&lt;/li&gt;
 
-&lt;h1 id=&#34;toc_1&#34;&gt;Windows&lt;/h1&gt;
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/drivers/&#34;&gt;Drivers&lt;/a&gt; section gives an overview of rock&amp;rsquo;s various
+drivers, akin to compiling strategies, like the sequence driver (default), the make
+driver, and the android driver.&lt;/p&gt;&lt;/li&gt;
 
-&lt;p&gt;Windows is surprisingly easy to package for — a 32-bit executable will happily
-run on both 32-bit and 64-bit systems, there is no library path headache if you
-include all the required DLLs in the same directory as the .exe, and the
-current working directory is always the one with the .exe file.&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/advanced/&#34;&gt;Advanced usage&lt;/a&gt; section covers some less-often used
+options like using a different C compiler, keeping source files, etc.&lt;/p&gt;&lt;/li&gt;
 
-&lt;h2 id=&#34;toc_2&#34;&gt;Dynamic GC&lt;/h2&gt;
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/usefiles/&#34;&gt;Usefiles&lt;/a&gt; section describes the format of &lt;code&gt;.use&lt;/code&gt; files,
+which define the characteristics of an ooc app or library.&lt;/p&gt;&lt;/li&gt;
 
-&lt;p&gt;If your application is multi-threaded, make sure to link with the GC
-dynamically as explained in &lt;a href=&#34;/docs/tools/rock/gc/#threads&#34;&gt;the Garbage Collection chapter&lt;/a&gt;.&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/gc/&#34;&gt;Garbage Collection&lt;/a&gt; section talks about the Garbage Collection
+strategy in rock, how to make sure things work well on different plaforms, how the
+Boehm GC is bundled, etc.&lt;/p&gt;&lt;/li&gt;
 
-&lt;p&gt;If you link statically with the GC and use multiple threads, chances are you
-will run into very ugly memory corruption bugs that seemingly make no sense.
-So, make sure to double-check that first.&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/debug/&#34;&gt;Debugging&lt;/a&gt; section talks about what to do when a program
+doesn&amp;rsquo;t behave correctly. Debug symbols, stack traces, debugging on particularly painful
+platforms like Windows.&lt;/p&gt;&lt;/li&gt;
 
-&lt;p&gt;Since you&amp;rsquo;ll link dynamically with it, you&amp;rsquo;ll need to include &lt;code&gt;libgc-1.dll&lt;/code&gt;,
-and you might also need &lt;code&gt;pthreadGC2.dll&lt;/code&gt;, which lives in &lt;code&gt;/mingw/bin/&lt;/code&gt; under
-MinGW.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Resource file&lt;/h2&gt;
-
-&lt;p&gt;To bundle an icon with your executable, and add the full program name, author,
-etc, create a .rc file containing something like that:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;id ICON &amp;quot;art/foo.ico&amp;quot;
-1 VERSIONINFO
-FILEVERSION     1,0,0,0
-PRODUCTVERSION  1,0,0,0
-BEGIN
-  BLOCK &amp;quot;StringFileInfo&amp;quot;
-  BEGIN
-    BLOCK &amp;quot;040904E4&amp;quot;
-    BEGIN
-      VALUE &amp;quot;CompanyName&amp;quot;, &amp;quot;Company Name&amp;quot;
-      VALUE &amp;quot;FileDescription&amp;quot;, &amp;quot;Application Name&amp;quot;
-      VALUE &amp;quot;FileVersion&amp;quot;, &amp;quot;1.0&amp;quot;
-      VALUE &amp;quot;InternalName&amp;quot;, &amp;quot;applicationname&amp;quot;
-      VALUE &amp;quot;LegalCopyright&amp;quot;, &amp;quot;Author Name&amp;quot;
-      VALUE &amp;quot;OriginalFilename&amp;quot;, &amp;quot;foo.exe&amp;quot;
-      VALUE &amp;quot;ProductName&amp;quot;, &amp;quot;Application Name&amp;quot;
-      VALUE &amp;quot;ProductVersion&amp;quot;, &amp;quot;1.0&amp;quot;
-    END
-  END
-
-  BLOCK &amp;quot;VarFileInfo&amp;quot;
-  BEGIN
-    VALUE &amp;quot;Translation&amp;quot;, 0x409, 1252
-  END
-END
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Adjust these values as needed. To create a high-quality &lt;code&gt;.ico&lt;/code&gt; file from a
-PNG image, the usage of a tool such as &lt;a href=&#34;http://icofx.ro/&#34;&gt;IcoFX&lt;/a&gt; might be needed.&lt;/p&gt;
-
-&lt;p&gt;Then, compile this &lt;code&gt;.rc&lt;/code&gt; file with the &lt;code&gt;windres&lt;/code&gt; command-line utility - if
-you have a Makefile you might want to add a target for this.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;windres -i foo.rc -o foo.res -O coff
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The final step to include these resources is to link them with your executable.
-This can be done easily if you already have a .use file, by adding a section in
-a &lt;code&gt;version(windows)&lt;/code&gt; block. For example, in foo.use:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Name: foo
-Version: 1.0
-Description: Foo builds upon bar baz and does wonderful stuff
-SourcePath: source
-Requires: bar, baz
-Main: foo/foo
-
-# Add resources on Windows
-version (windows) {
-  Libs: ./foo.res
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Make sure to &lt;code&gt;use foo&lt;/code&gt; in the main file of your application so that rock takes
-these into account. The resulting executable should have the icon built-in,
-along with the author and product information you have specified in the
-&lt;code&gt;foo.rc&lt;/code&gt; file.&lt;/p&gt;
-
-&lt;p&gt;Note that every time &lt;code&gt;foo.rc&lt;/code&gt; changes, it needs to be recompiled to &lt;code&gt;foo.res&lt;/code&gt;.
-You don&amp;rsquo;t need to distribute either the &lt;code&gt;.rc&lt;/code&gt; or the &lt;code&gt;.res&lt;/code&gt; file with the
-executable, it&amp;rsquo;s all baked in!&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;DLL dependencies&lt;/h2&gt;
-
-&lt;p&gt;To figure out which libraries someone will need to run your application, you can use
-&lt;a href=&#34;http://www.dependencywalker.com/&#34;&gt;Dependency Walker&lt;/a&gt;, also known as &lt;code&gt;depends.exe&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Loading your .exe in it, with the right working directory, will allow you to
-see which DLLs it loads and from where. Then, all you need is to copy those
-DLLs to the directory of your application and distribute them along.&lt;/p&gt;
-
-&lt;p&gt;Be warned: there may be several versions of a given library on your system.
-Make sure to pick the right one.&lt;/p&gt;
-
-&lt;p&gt;If your program can be launched by double-clicking on it in the Windows GUI
-(instead of running it from the command-line), it&amp;rsquo;s a good sign - but it might
-not be enough. Some open-source programs install libraries to system paths, and
-your application may be relying on that.&lt;/p&gt;
-
-&lt;p&gt;To make sure the application runs everywhere, testing it on a &amp;ldquo;virgin&amp;rdquo; install
-of Windows is recommended. If there was a time to use a virtual machine, that
-would be it.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Final notes&lt;/h2&gt;
-
-&lt;p&gt;You can choose to generate an installer of course, but a .zip file is fine as
-well.  Windows systems usually have facilities to extract .zip files without
-the need for an external program.&lt;/p&gt;
-
-&lt;p&gt;Creating a zip file can be done with the command line GNU zip utility:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;zip -r Foo-1.0-Windows.zip Foo-1.0-Windows
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;..or by using a graphical tool, for example, &lt;a href=&#34;http://www.7-zip.org/&#34;&gt;7-Zip&lt;/a&gt;&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_6&#34;&gt;OSX&lt;/h1&gt;
-
-&lt;p&gt;Releasing an app on OSX is relatively easy, as tools exist to make it easier.
-64-bit executables are the norm for recent versions of Mac OS X, so there is no
-pain there either.&lt;/p&gt;
-
-&lt;p&gt;The only part where it needs a little hand holding is when creating the app
-bundle.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;dylibbundler&lt;/h2&gt;
-
-&lt;p&gt;We need to distribute libraries inside the app bundle - however, so that the
-paths are resolve correctly, we&amp;rsquo;ll need to use &lt;a href=&#34;http://macdylibbundler.sourceforge.net/&#34;&gt;dylibbundler&lt;/a&gt; to modify
-the executable and &amp;lsquo;fix&amp;rsquo; the paths to these libraries.&lt;/p&gt;
-
-&lt;p&gt;With &lt;a href=&#34;http://brew.sh/&#34;&gt;Homebrew&lt;/a&gt;, installing dylibbundler is as simple as doing:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;brew install dylibbundler
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The first step is to tell the C compiler to reserve enough room to modify the
-library paths later:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;rock +-headerpad_max_install_names
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then, we&amp;rsquo;ll have to create a folder that will be our app bundle, such as
-&lt;code&gt;Foo.app&lt;/code&gt;, with the following directory structure:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Foo.app/
-  Contents/
-    Info.pList
-    MacOS/
-      foo
-      wrapper
-    Resources/
-      foo.icns
-    libs/
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;Contents/MacOS/foo&lt;/code&gt; is our executable that we have copied from before, and
-&lt;code&gt;Contents/MacOS/wrapper&lt;/code&gt; will be our launcher script (described in a further
-section).&lt;/p&gt;
-
-&lt;p&gt;The &lt;code&gt;Contents/MacOS&lt;/code&gt; directory should also contain any files the executable
-expects to find in the current working directory when launched (e.g. for game
-that would be the graphics, sounds, etc.)&lt;/p&gt;
-
-&lt;p&gt;The next step is to dylibbundler on the executable so that libs are copied and
-the paths are fixed:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;dylibbundler -od -b -x ./Foo.app/Contents/MacOS/helloworld -d ./Foo.app/Contents/libs/
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;Info.pList&lt;/h2&gt;
-
-&lt;p&gt;The &lt;code&gt;Info.pList&lt;/code&gt; file is similar to the &lt;code&gt;foo.rc&lt;/code&gt; file we discussed in the
-Windows section. A stock plist file looks something like:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt;
-&amp;lt;!DOCTYPE plist PUBLIC &amp;quot;-//Apple Computer//DTD PLIST 1.0//EN&amp;quot; &amp;quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;quot;&amp;gt;
-&amp;lt;plist version=&amp;quot;1.0&amp;quot;&amp;gt;
-&amp;lt;dict&amp;gt;
-  &amp;lt;key&amp;gt;CFBundleGetInfoString&amp;lt;/key&amp;gt;
-  &amp;lt;string&amp;gt;Application Name&amp;lt;/string&amp;gt;
-  &amp;lt;key&amp;gt;CFBundleExecutable&amp;lt;/key&amp;gt;
-  &amp;lt;string&amp;gt;wrapper&amp;lt;/string&amp;gt;
-  &amp;lt;key&amp;gt;CFBundleIdentifier&amp;lt;/key&amp;gt;
-  &amp;lt;string&amp;gt;com.yourdomain.www&amp;lt;/string&amp;gt;
-  &amp;lt;key&amp;gt;CFBundleName&amp;lt;/key&amp;gt;
-  &amp;lt;string&amp;gt;applicationname&amp;lt;/string&amp;gt;
-  &amp;lt;key&amp;gt;CFBundleIconFile&amp;lt;/key&amp;gt;
-  &amp;lt;string&amp;gt;foo.icns&amp;lt;/string&amp;gt;
-  &amp;lt;!-- Don&#39;t modify those! --&amp;gt;
-  &amp;lt;key&amp;gt;CFBundleShortVersionString&amp;lt;/key&amp;gt;
-  &amp;lt;string&amp;gt;1.0&amp;lt;/string&amp;gt;
-  &amp;lt;key&amp;gt;CFBundleInfoDictionaryVersion&amp;lt;/key&amp;gt;
-  &amp;lt;string&amp;gt;6.0&amp;lt;/string&amp;gt;
-  &amp;lt;key&amp;gt;CFBundlePackageType&amp;lt;/key&amp;gt;
-  &amp;lt;string&amp;gt;APPL&amp;lt;/string&amp;gt;
-  &amp;lt;key&amp;gt;IFMajorVersion&amp;lt;/key&amp;gt;
-  &amp;lt;integer&amp;gt;0&amp;lt;/integer&amp;gt;
-  &amp;lt;key&amp;gt;IFMinorVersion&amp;lt;/key&amp;gt;
-  &amp;lt;integer&amp;gt;1&amp;lt;/integer&amp;gt;
-&amp;lt;/dict&amp;gt;
-&amp;lt;/plist&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;It should live in &lt;code&gt;Foo.app/Contents/Info.pList&lt;/code&gt;. Just like a Windows RC file,
-it references a &lt;code&gt;foo.icns&lt;/code&gt; file. A tool like &lt;a href=&#34;http://www.img2icnsapp.com/&#34;&gt;img2icns&lt;/a&gt; can be used
-to convert a high-resolution PNG image to a Mac OSX icon.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_9&#34;&gt;Launcher script&lt;/h2&gt;
-
-&lt;p&gt;Finally, we have to use a launcher script so that the current working
-directory of the app will be correct.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-#!/bin/bash
-cd &amp;quot;${0%/*}&amp;quot;
-./foo
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_10&#34;&gt;Troubleshooting&lt;/h2&gt;
-
-&lt;p&gt;It&amp;rsquo;s not uncommon to encounter an error if an app Bundle is malformed or
-otherwise problematic. Instead of double-clicking on the .app bundle to
-launch it, one can open it from the command line:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;open Foo.app
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;If you get an &amp;ldquo;error -10180&amp;rdquo;, it means something went wrong while launching
-the app. Make sure the files inside &lt;code&gt;Contents/MacOS/&lt;/code&gt; are executable, and
-that the wrapper is trying to launch the correct executable.&lt;/p&gt;
-
-&lt;p&gt;In doubt, running &lt;code&gt;plutil&lt;/code&gt; can help proofread the &lt;code&gt;pList&lt;/code&gt; file:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;plutil Foo.app/Contents/Info.pList
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_11&#34;&gt;Final notes&lt;/h2&gt;
-
-&lt;p&gt;OSX apps are sometimes encountered as &lt;code&gt;.dmg&lt;/code&gt; files in the wild, which are
-image files that contain partitions, which can be mounted and read from.
-This allows a nice &amp;ldquo;drag and drop&amp;rdquo; window to be displayed.&lt;/p&gt;
-
-&lt;p&gt;However, distributing an OSX application by just zipping up the &lt;code&gt;.app&lt;/code&gt;
-bundle is acceptable. It can be done either on the command line:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;zip -r Foo.OSX.zip Foo.app
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&amp;hellip;or in the graphical interface (Right Click -&amp;gt; Compress Foo.app).&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_12&#34;&gt;Linux&lt;/h1&gt;
-
-&lt;p&gt;Linux may be one of the comfiest platform for ooc development, but ironically,
-it is one of the most painful to package standalone applications for. As a rule
-of thumb, do not assume that your users will want to install libraries
-themselves — always package them with the software.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_13&#34;&gt;Multiarch&lt;/h2&gt;
-
-&lt;p&gt;64-bit installs of Linux that aren&amp;rsquo;t multi-arch will complaing about missing
-32-bit libraries, and conversely, 32-bit installs won&amp;rsquo;t be able to run a 64-bit
-application at all. Which leaves us with the only option of providing both a
-32-bit and a 64-bit executable.&lt;/p&gt;
-
-&lt;p&gt;An example folder hierarchy is:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;foo-1.0-linux/
-  bin/
-    foo32
-    foo64
-    libs32/
-    libs64/
-  foo.sh
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Since we are going to ship dynamic libraries with the app, we should specify
-the path where they are with the &lt;code&gt;-rpath&lt;/code&gt; linker option. The rock command looks
-a little bit like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;rock +-Wl,-rpath=bin/libs32 -o=foo32
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&amp;hellip;for the 32-bit version, and similarly for the 64-bit version.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_14&#34;&gt;Chroot&lt;/h2&gt;
-
-&lt;p&gt;One of the easiest ways to build both a 32-bit and a 64-bit executable is to
-have a 64-bit VM of Ubuntu, and set up a 32-bit chroot inside of it, then copy
-files out of the chroot to retrieve the binaries and associated libraries.&lt;/p&gt;
-
-&lt;p&gt;Setting up a chroot with debootstrap is &lt;a href=&#34;https://wiki.ubuntu.com/DebootstrapChroot&#34;&gt;documented on the Ubuntu website&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_15&#34;&gt;Copying libs&lt;/h2&gt;
-
-&lt;p&gt;To figure out the libraries you need to copy to &lt;code&gt;libs32&lt;/code&gt; or &lt;code&gt;libs64&lt;/code&gt;, the &lt;code&gt;ldd&lt;/code&gt;
-command line utility can be used. Filtering its output to remove a few
-libraries always present on Linux systems can help:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-ldd foo64 | egrep &amp;quot;(/usr/lib/)|(prefix64)&amp;quot; | cut -d &#39; &#39; -f 3 | egrep -v &amp;quot;lib(X|x|GL|gl|drm)&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The example above works for an OpenGL-based application. Copying these files
-automatically can be done with a shell script such as:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-for l in $(ldd foo64 | egrep &amp;quot;(/usr/lib/)|(prefix64)&amp;quot; | cut -d &#39; &#39; -f 3 | egrep -v &amp;quot;lib(X|x|GL|gl|drm)&amp;quot; | tr &#39;\n&#39; &#39; &#39;); do
-  cp $l libs64/
-done
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Checking that it well can be done by running &lt;code&gt;ldd bin/foo64&lt;/code&gt; in the release
-directory.  Here&amp;rsquo;s some example output that shows the libs are resolved to
-their relative paths:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ ldd bin/foo64
-libSDL2-2.0.so.0 =&amp;gt; bin/libs64/libSDL2-2.0.so.0 (0x00007fc6fa615000)
-libSDL2_mixer-2.0.so.0 =&amp;gt; bin/libs64/libSDL2_mixer-2.0.so.0 (0x00007fc6f9ee0000)
-libmxml.so.1 =&amp;gt; bin/libs64/libmxml.so.1 (0x00007fc6f9cd3000)
-libfreetype.so.6 =&amp;gt; bin/libs64/libfreetype.so.6 (0x00007fc6f9a37000)
-libyaml-0.so.2 =&amp;gt; bin/libs64/libyaml-0.so.2 (0x00007fc6f9815000)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_16&#34;&gt;Launcher script&lt;/h2&gt;
-
-&lt;p&gt;Courtesy of &lt;a href=&#34;https://twitter.com/flibitijibibo&#34;&gt;Ethan Lee&lt;/a&gt;, such a launcher script will detect the architecture
-of the machine it&amp;rsquo;s running on and launch the right executable:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-#!/bin/bash
-# Move to the script&#39;s directory
-cd &amp;quot;`dirname &amp;quot;$0&amp;quot;`&amp;quot;
-
-# Get the kernel/architecture information
-UNAME=`uname`
-ARCH=`uname -m`
-
-# Pick the proper executable
-if [ &amp;quot;$ARCH&amp;quot; == &amp;quot;x86_64&amp;quot; ]; then
-  ./bin/foo64
-else
-  ./bin/foo32
-fi
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_17&#34;&gt;Final notes&lt;/h2&gt;
-
-&lt;p&gt;The &lt;code&gt;.tar.gz&lt;/code&gt; or &lt;code&gt;.tar.bz2&lt;/code&gt; archive formats is well-suited to distribute
-applications for Linux, but &lt;code&gt;.zip&lt;/code&gt; works just as well, and &lt;code&gt;.tar.xz&lt;/code&gt; is usually
-a little smaller.&lt;/p&gt;
-
-&lt;p&gt;To create a &lt;code&gt;.tar.gz&lt;/code&gt;, do:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;tar czvf foo-1.0-linux.tar.gz foo-1.0-linux
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;To create a &lt;code&gt;.tar.bz2&lt;/code&gt;, use &lt;code&gt;cjvf&lt;/code&gt; instead.&lt;/p&gt;
-
-&lt;p&gt;To create a &lt;code&gt;.tar.xz&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;tar cf --xz foo-1.0-linux.tar.xz foo-1.0-linux
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;To create a &lt;code&gt;.zip&lt;/code&gt;, do:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;zip -r foo-1.0-linux.tar.zip foo-1.0-linux
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Editors</title>
-      <link>http://oocmanual.cogneco.com/tools/editors</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/tools/editors</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;ooc support in text editors&lt;/h1&gt;
-
-&lt;p&gt;ooc has a varying level of support among different text editors.&lt;/p&gt;
-
-&lt;p&gt;Read on to find if your favourite flavor is supported. If you add
-support for a new editor, please open an issue on the &lt;a href=&#34;https://github.com/nddrylliog/ooc-lang.org&#34;&gt;ooc-lang.org repo&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;vim&lt;/h1&gt;
-
-&lt;p&gt;ooc support for vim is provided by the &lt;a href=&#34;https://github.com/nddrylliog/ooc.vim&#34;&gt;ooc.vim&lt;/a&gt; plug-in. It provides:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Syntax highlighting&lt;/li&gt;
-&lt;li&gt;Indentation support&lt;/li&gt;
-&lt;li&gt;A syntastic plug-in for use with &lt;a href=&#34;https://github.com/nddrylliog/sam&#34;&gt;sam&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;:make&lt;/code&gt; command support (launches &lt;code&gt;rock -v&lt;/code&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;You can read more at the &lt;a href=&#34;https://github.com/nddrylliog/ooc.vim&#34;&gt;project repository&lt;/a&gt;&amp;rsquo;s page.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_2&#34;&gt;emacs&lt;/h1&gt;
-
-&lt;p&gt;ooc support for emacs is provided by &lt;a href=&#34;https://github.com/nixeagle/ooc-mode&#34;&gt;ooc-mode&lt;/a&gt;. It provides:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Syntax highlighting&lt;/li&gt;
-&lt;li&gt;Indentation support&lt;/li&gt;
-&lt;li&gt;On the fly syntax check with flymake-ooc&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&#34;toc_3&#34;&gt;TextMate&lt;/h1&gt;
-
-&lt;p&gt;ooc support for TextMate is provided by &lt;a href=&#34;https://github.com/nilium/ooc.tmbundle&#34;&gt;ooc.tmbundle&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_4&#34;&gt;Atom&lt;/h1&gt;
-
-&lt;p&gt;The &lt;a href=&#34;https://atom.io/&#34;&gt;Atom editor&lt;/a&gt; can use converted TextMate bundles.&lt;/p&gt;
-
-&lt;p&gt;You can easily convert &lt;a href=&#34;https://github.com/nilium/ooc.tmbundle&#34;&gt;ooc.tmbundle&lt;/a&gt; for your own usage, like so:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;apm init --package ~/.atom/packages/language-ooc --convert https://github.com/nilium/ooc.tmbundle
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You might need to restart Atom to see the changes.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_5&#34;&gt;Brackets&lt;/h1&gt;
-
-&lt;p&gt;The &lt;a href=&#34;http://brackets.io/&#34;&gt;Brackets editor&lt;/a&gt; now has an extension for ooc syntax highlighting.
-It can be installed from the Extensions Manager by searching for &lt;code&gt;ooc syntax&lt;/code&gt;.
-The source is available &lt;a href=&#34;https://github.com/nddrylliog/brackets-ooc&#34;&gt;on GitHub&lt;/a&gt;&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_6&#34;&gt;gtksourceview&lt;/h1&gt;
-
-&lt;p&gt;gtksourceview-based tools such as gedit, meld, etc. have
-ooc support out of the box.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_7&#34;&gt;pygments&lt;/h1&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://pygments.org/&#34;&gt;pygments&lt;/a&gt; has relatively good ooc support built-in. It is a python
-solution for syntax highlighting used on GitHub and easy to integrate with
-static website generators such as &lt;a href=&#34;http://nanoc.ws/&#34;&gt;nanoc&lt;/a&gt;.&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/packaging/&#34;&gt;Packaging&lt;/a&gt; section talks about releasing standalone
+applications coded in ooc, such as games — when you don&amp;rsquo;t want to have users install
+dependencies on their own, but would rather bundle everything together.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
 </description>
     </item>
     
@@ -590,6 +167,210 @@ that the SDK was written with the GC in mind though.&lt;/p&gt;
 
 &lt;p&gt;When the GC is disabled, &lt;code&gt;version(gc)&lt;/code&gt; block will get discarded, and &lt;code&gt;version(!gc)&lt;/code&gt; blocks will be
 used. You can use this to write both GC and non-GC friendly code.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Use-files</title>
+      <link>http://oocmanual.cogneco.com/tools/rock/use-files</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/tools/rock/use-files</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Usefiles explained&lt;/h1&gt;
+
+&lt;p&gt;A usefile describes an ooc package, ie. a collection of modules and contains information
+how to compile and link that specific collection of ooc files.
+It also denotes if the package should compile to an executable or a shared/static library.&lt;/p&gt;
+
+&lt;p&gt;Usefiles are not a totally novel concept. They are comparable to &lt;code&gt;pkg-config&lt;/code&gt; files or, to
+some degree, similar to build system files like CMake or SCons.&lt;/p&gt;
+
+&lt;p&gt;However, in ooc, (and this is a pretty new thing!),
+the compiler rock itself reads and handles these usefiles.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;Examples&lt;/h1&gt;
+
+&lt;p&gt;Let&amp;rsquo;s start off with some examples. Following is the repository structure of
+&lt;a href=&#34;https://github.com/nddrylliog/ooc-zeromq&#34;&gt;ooc-zeromq&lt;/a&gt;, a &lt;a href=&#34;http://zeromq.org&#34;&gt;zeromq&lt;/a&gt; binding
+for ooc:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.
+├── LICENSE
+├── README.md
+├── samples
+│   ├── ...
+├── source
+│   └── zeromq.ooc
+└── zeromq.use
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let&amp;rsquo;s assume that you cloned the repository into a subdirectory of your ooc library path
+(which consists of the paths in the &lt;code&gt;OOC_LIBS&lt;/code&gt; environment variable).&lt;/p&gt;
+
+&lt;p&gt;And here are the contents of &lt;code&gt;zeromq.use&lt;/code&gt; (shortened for brevity):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+Name: zeromq
+Description: The 0MQ lightweight messaging kernel
+Version: 2010-06-16
+SourcePath: source
+Includes: zmq.h
+Libs: -lzmq
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A usefile should always contain the name, description and version of its package.&lt;/p&gt;
+
+&lt;p&gt;In addition, this usefile tells rock that the actual ooc files reside in the subdirectory
+&lt;code&gt;source&lt;/code&gt; (which will be added to the so-called sourcepath).&lt;/p&gt;
+
+&lt;p&gt;Also, since this is a C library binding, the zeromq C header needs to be included,
+and the &lt;code&gt;-lzmq&lt;/code&gt; flag needs to be passed to the linker.&lt;/p&gt;
+
+&lt;p&gt;So far so good. But what are the benefits of writing such a file?&lt;/p&gt;
+
+&lt;p&gt;If you now want to use this package in any of your projects, you can just write:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+use zeromq
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;at the top of your ooc file, and rock will automatically look through your library path
+(the paths in the &lt;code&gt;OOC_LIBS&lt;/code&gt; environment variable) for a file called &lt;code&gt;zeromq.use&lt;/code&gt; and find
+the usefile above. Now it parses this usefile and instantly knows not only where it can
+find the ooc-zeromq ooc files, but also what C headers need to be included and
+what libraries need to be linked.&lt;/p&gt;
+
+&lt;p&gt;As a result, you can now just import the ooc-zeromq ooc file like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import zeromq
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and hack away.&lt;/p&gt;
+
+&lt;p&gt;Another simpler example is the &lt;a href=&#34;https://github.com/nddrylliog/sam&#34;&gt;sam&lt;/a&gt; usefile. sam is
+different because it compiles to an executable file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+Name: sam
+Description: Sam keeps your ooc repos up to date
+SourcePath: source
+Main: sam.ooc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once again, the usefile contains name and description (no version here, though!) and
+the sourcepath.&lt;/p&gt;
+
+&lt;p&gt;The new thing: &lt;code&gt;Main&lt;/code&gt; denotes the entry point for the executable, e.g. the file
+containing the &lt;code&gt;main&lt;/code&gt; function. rock looks for a file named this in the source path,
+which here contains the subdirectory source/.&lt;/p&gt;
+
+&lt;p&gt;To build sam, you can now just run:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+rock -v
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;which will look for a usefile in your current directory and build the package. As a result,
+you get a &lt;code&gt;sam&lt;/code&gt; executable &amp;ndash; and all of that without using a third party build system!&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_2&#34;&gt;Fields&lt;/h1&gt;
+
+&lt;p&gt;A list of all currently supported fields in usefiles follows.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Name&lt;/code&gt;, &lt;code&gt;Description&lt;/code&gt; and &lt;code&gt;Version&lt;/code&gt; contain metadata about the package
+and version&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Pkgs&lt;/code&gt; contains a comma-separated list of &lt;code&gt;pkg-config&lt;/code&gt; packages this
+package depends on. rock will invoke &lt;code&gt;pkg-config&lt;/code&gt; with these packages
+and add the resulting C flags and linker flags to its pipeline&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;CustomPkg&lt;/code&gt; can be used to specify the name of a &lt;code&gt;pkg-config&lt;/code&gt;-like tool
+that should be used instead. For example, the ooc sdl2 binding sets
+this to &lt;code&gt;sdl2-config&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Libs&lt;/code&gt; contains a comma-separated list of linker flags like &lt;code&gt;-lSDL2_image&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Frameworks&lt;/code&gt;: OSX-only, specify Frameworks to be linked with (example: &lt;code&gt;OpenGL&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Includes&lt;/code&gt; can be used to specify C headers that should be included
+(as a comma-separated list)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;PreMains&lt;/code&gt;: List of compiler flags that, if specified from a .pc file or a .use file,
+(maybe conditioned by a version block), must appear before the main compilation unit.
+Example: &lt;code&gt;-lSDL2main&lt;/code&gt; on Windows.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Linker&lt;/code&gt; can be used to specify a &lt;code&gt;ld&lt;/code&gt; replacement&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;LibPaths&lt;/code&gt; and &lt;code&gt;IncludePaths&lt;/code&gt; are comma-separated lists and contain
+paths that should be added to the linker or C include paths&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;AndroidLibs&lt;/code&gt;, &lt;code&gt;AndroidIncludePaths&lt;/code&gt;: Android-specific properties that are
+only used with the Android driver.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Additionals&lt;/code&gt;: can be used to add &lt;code&gt;.c&lt;/code&gt; files to be compiled along with the .ooc code.
+Relative paths (starting with &lt;code&gt;./&lt;/code&gt;) will have the .c file be copied locally.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Requires&lt;/code&gt; can be used to specify requirements (denoted by usefile
+names), for example for sam&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;SourcePath&lt;/code&gt; can be used to add a path to the source path&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Imports&lt;/code&gt; contains a comma-separated list of modules that should be
+implicitly imported when &lt;code&gt;use yourusefile&lt;/code&gt; is used.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Origin&lt;/code&gt; is ignored by rock, but it traditionally specifies the
+git repository url of that package&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Main&lt;/code&gt; is the name of the entrypoint file&lt;/li&gt;
+&lt;li&gt;all fields starting with &lt;code&gt;_&lt;/code&gt; are ignored by rock&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;toc_3&#34;&gt;Version blocks&lt;/h1&gt;
+
+&lt;p&gt;Similarily to ooc&amp;rsquo;s &lt;a href=&#34;/docs/lang/preprocessor/#version-blocks&#34;&gt;version blocks&lt;/a&gt;, usefile version blocks
+can be used to work with different requirements on different platforms.&lt;/p&gt;
+
+&lt;p&gt;The syntax is similar to version blocks in ooc. Here is an example from
+&lt;a href=&#34;https://github.com/nddrylliog/isaac-paper&#34;&gt;Paper Isaac&lt;/a&gt;&amp;rsquo;s usefile:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+Name: isaac
+Version: 0.1
+Requires: dye, bleep, gnaar
+SourcePath: source
+Main: isaac
+
+version (windows) {
+  Libs: ./isaac.res
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Compiling under windows, the linker command line will contain the additional file
+&lt;code&gt;./isaac.res&lt;/code&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Tools</title>
+      <link>http://oocmanual.cogneco.com/tools</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/tools</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Frequently used ooc tools&lt;/h1&gt;
+
+&lt;p&gt;There are some tools you should know about when you start looking into ooc.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;rock&#34;&gt;Rock&lt;/a&gt; is the ooc compiler. In most cases,
+you will use it to generate C sources and executables from your ooc sources.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;sam&#34;&gt;Sam&lt;/a&gt; helps you to keep all your libraries together and up-to-date.
+It&amp;rsquo;s also able to resolve dependencies without any hassle.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;editors&#34;&gt;Editors&lt;/a&gt; - describes how to get syntax highlighting,
+program checking, indentation in vim, emacs, TextMate?&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Tools like autoconf, automake, even CMake, are irrelevant in the context of
+ooc, since rock drives the whole compilation process.&lt;/p&gt;
+
+&lt;p&gt;ooc libraries have one, standardized way to be built - as such, the ooc ecosystem
+is a lot more homogenous than, say, the C ecosystem. Complexity is dealt with
+through &lt;a href=&#34;rock/usefiles&#34;&gt;use files&lt;/a&gt; and the such.&lt;/p&gt;
+
+&lt;p&gt;Still, the ooc toolchain is quite flexible, working on major desktop OSes, and
+more constrained platform such as Android.&lt;/p&gt;
 </description>
     </item>
     
@@ -1068,6 +849,400 @@ or if the ooc line numbers are messed up for some reason.&lt;/p&gt;
     </item>
     
     <item>
+      <title>Packaging</title>
+      <link>http://oocmanual.cogneco.com/tools/rock/packaging</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/tools/rock/packaging</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Intro&lt;/h1&gt;
+
+&lt;p&gt;While ooc provides facilities to write highly cross-platform applications, and
+makes it rather easy to develop on all these platforms, distributing standalone
+applications is another matter entirely.&lt;/p&gt;
+
+&lt;p&gt;Until a tool comes along and in the darkness binds them, this chapter documents
+the manual process that goes into releasing neatly packaged software for
+Windows, OSX and Linux.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;Windows&lt;/h1&gt;
+
+&lt;p&gt;Windows is surprisingly easy to package for — a 32-bit executable will happily
+run on both 32-bit and 64-bit systems, there is no library path headache if you
+include all the required DLLs in the same directory as the .exe, and the
+current working directory is always the one with the .exe file.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Dynamic GC&lt;/h2&gt;
+
+&lt;p&gt;If your application is multi-threaded, make sure to link with the GC
+dynamically as explained in &lt;a href=&#34;/docs/tools/rock/gc/#threads&#34;&gt;the Garbage Collection chapter&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you link statically with the GC and use multiple threads, chances are you
+will run into very ugly memory corruption bugs that seemingly make no sense.
+So, make sure to double-check that first.&lt;/p&gt;
+
+&lt;p&gt;Since you&amp;rsquo;ll link dynamically with it, you&amp;rsquo;ll need to include &lt;code&gt;libgc-1.dll&lt;/code&gt;,
+and you might also need &lt;code&gt;pthreadGC2.dll&lt;/code&gt;, which lives in &lt;code&gt;/mingw/bin/&lt;/code&gt; under
+MinGW.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Resource file&lt;/h2&gt;
+
+&lt;p&gt;To bundle an icon with your executable, and add the full program name, author,
+etc, create a .rc file containing something like that:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;id ICON &amp;quot;art/foo.ico&amp;quot;
+1 VERSIONINFO
+FILEVERSION     1,0,0,0
+PRODUCTVERSION  1,0,0,0
+BEGIN
+  BLOCK &amp;quot;StringFileInfo&amp;quot;
+  BEGIN
+    BLOCK &amp;quot;040904E4&amp;quot;
+    BEGIN
+      VALUE &amp;quot;CompanyName&amp;quot;, &amp;quot;Company Name&amp;quot;
+      VALUE &amp;quot;FileDescription&amp;quot;, &amp;quot;Application Name&amp;quot;
+      VALUE &amp;quot;FileVersion&amp;quot;, &amp;quot;1.0&amp;quot;
+      VALUE &amp;quot;InternalName&amp;quot;, &amp;quot;applicationname&amp;quot;
+      VALUE &amp;quot;LegalCopyright&amp;quot;, &amp;quot;Author Name&amp;quot;
+      VALUE &amp;quot;OriginalFilename&amp;quot;, &amp;quot;foo.exe&amp;quot;
+      VALUE &amp;quot;ProductName&amp;quot;, &amp;quot;Application Name&amp;quot;
+      VALUE &amp;quot;ProductVersion&amp;quot;, &amp;quot;1.0&amp;quot;
+    END
+  END
+
+  BLOCK &amp;quot;VarFileInfo&amp;quot;
+  BEGIN
+    VALUE &amp;quot;Translation&amp;quot;, 0x409, 1252
+  END
+END
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Adjust these values as needed. To create a high-quality &lt;code&gt;.ico&lt;/code&gt; file from a
+PNG image, the usage of a tool such as &lt;a href=&#34;http://icofx.ro/&#34;&gt;IcoFX&lt;/a&gt; might be needed.&lt;/p&gt;
+
+&lt;p&gt;Then, compile this &lt;code&gt;.rc&lt;/code&gt; file with the &lt;code&gt;windres&lt;/code&gt; command-line utility - if
+you have a Makefile you might want to add a target for this.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;windres -i foo.rc -o foo.res -O coff
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The final step to include these resources is to link them with your executable.
+This can be done easily if you already have a .use file, by adding a section in
+a &lt;code&gt;version(windows)&lt;/code&gt; block. For example, in foo.use:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Name: foo
+Version: 1.0
+Description: Foo builds upon bar baz and does wonderful stuff
+SourcePath: source
+Requires: bar, baz
+Main: foo/foo
+
+# Add resources on Windows
+version (windows) {
+  Libs: ./foo.res
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Make sure to &lt;code&gt;use foo&lt;/code&gt; in the main file of your application so that rock takes
+these into account. The resulting executable should have the icon built-in,
+along with the author and product information you have specified in the
+&lt;code&gt;foo.rc&lt;/code&gt; file.&lt;/p&gt;
+
+&lt;p&gt;Note that every time &lt;code&gt;foo.rc&lt;/code&gt; changes, it needs to be recompiled to &lt;code&gt;foo.res&lt;/code&gt;.
+You don&amp;rsquo;t need to distribute either the &lt;code&gt;.rc&lt;/code&gt; or the &lt;code&gt;.res&lt;/code&gt; file with the
+executable, it&amp;rsquo;s all baked in!&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;DLL dependencies&lt;/h2&gt;
+
+&lt;p&gt;To figure out which libraries someone will need to run your application, you can use
+&lt;a href=&#34;http://www.dependencywalker.com/&#34;&gt;Dependency Walker&lt;/a&gt;, also known as &lt;code&gt;depends.exe&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Loading your .exe in it, with the right working directory, will allow you to
+see which DLLs it loads and from where. Then, all you need is to copy those
+DLLs to the directory of your application and distribute them along.&lt;/p&gt;
+
+&lt;p&gt;Be warned: there may be several versions of a given library on your system.
+Make sure to pick the right one.&lt;/p&gt;
+
+&lt;p&gt;If your program can be launched by double-clicking on it in the Windows GUI
+(instead of running it from the command-line), it&amp;rsquo;s a good sign - but it might
+not be enough. Some open-source programs install libraries to system paths, and
+your application may be relying on that.&lt;/p&gt;
+
+&lt;p&gt;To make sure the application runs everywhere, testing it on a &amp;ldquo;virgin&amp;rdquo; install
+of Windows is recommended. If there was a time to use a virtual machine, that
+would be it.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Final notes&lt;/h2&gt;
+
+&lt;p&gt;You can choose to generate an installer of course, but a .zip file is fine as
+well.  Windows systems usually have facilities to extract .zip files without
+the need for an external program.&lt;/p&gt;
+
+&lt;p&gt;Creating a zip file can be done with the command line GNU zip utility:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;zip -r Foo-1.0-Windows.zip Foo-1.0-Windows
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;..or by using a graphical tool, for example, &lt;a href=&#34;http://www.7-zip.org/&#34;&gt;7-Zip&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_6&#34;&gt;OSX&lt;/h1&gt;
+
+&lt;p&gt;Releasing an app on OSX is relatively easy, as tools exist to make it easier.
+64-bit executables are the norm for recent versions of Mac OS X, so there is no
+pain there either.&lt;/p&gt;
+
+&lt;p&gt;The only part where it needs a little hand holding is when creating the app
+bundle.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;dylibbundler&lt;/h2&gt;
+
+&lt;p&gt;We need to distribute libraries inside the app bundle - however, so that the
+paths are resolve correctly, we&amp;rsquo;ll need to use &lt;a href=&#34;http://macdylibbundler.sourceforge.net/&#34;&gt;dylibbundler&lt;/a&gt; to modify
+the executable and &amp;lsquo;fix&amp;rsquo; the paths to these libraries.&lt;/p&gt;
+
+&lt;p&gt;With &lt;a href=&#34;http://brew.sh/&#34;&gt;Homebrew&lt;/a&gt;, installing dylibbundler is as simple as doing:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;brew install dylibbundler
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The first step is to tell the C compiler to reserve enough room to modify the
+library paths later:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rock +-headerpad_max_install_names
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then, we&amp;rsquo;ll have to create a folder that will be our app bundle, such as
+&lt;code&gt;Foo.app&lt;/code&gt;, with the following directory structure:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Foo.app/
+  Contents/
+    Info.pList
+    MacOS/
+      foo
+      wrapper
+    Resources/
+      foo.icns
+    libs/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;Contents/MacOS/foo&lt;/code&gt; is our executable that we have copied from before, and
+&lt;code&gt;Contents/MacOS/wrapper&lt;/code&gt; will be our launcher script (described in a further
+section).&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;Contents/MacOS&lt;/code&gt; directory should also contain any files the executable
+expects to find in the current working directory when launched (e.g. for game
+that would be the graphics, sounds, etc.)&lt;/p&gt;
+
+&lt;p&gt;The next step is to dylibbundler on the executable so that libs are copied and
+the paths are fixed:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;dylibbundler -od -b -x ./Foo.app/Contents/MacOS/helloworld -d ./Foo.app/Contents/libs/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_8&#34;&gt;Info.pList&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;Info.pList&lt;/code&gt; file is similar to the &lt;code&gt;foo.rc&lt;/code&gt; file we discussed in the
+Windows section. A stock plist file looks something like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt;
+&amp;lt;!DOCTYPE plist PUBLIC &amp;quot;-//Apple Computer//DTD PLIST 1.0//EN&amp;quot; &amp;quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;quot;&amp;gt;
+&amp;lt;plist version=&amp;quot;1.0&amp;quot;&amp;gt;
+&amp;lt;dict&amp;gt;
+  &amp;lt;key&amp;gt;CFBundleGetInfoString&amp;lt;/key&amp;gt;
+  &amp;lt;string&amp;gt;Application Name&amp;lt;/string&amp;gt;
+  &amp;lt;key&amp;gt;CFBundleExecutable&amp;lt;/key&amp;gt;
+  &amp;lt;string&amp;gt;wrapper&amp;lt;/string&amp;gt;
+  &amp;lt;key&amp;gt;CFBundleIdentifier&amp;lt;/key&amp;gt;
+  &amp;lt;string&amp;gt;com.yourdomain.www&amp;lt;/string&amp;gt;
+  &amp;lt;key&amp;gt;CFBundleName&amp;lt;/key&amp;gt;
+  &amp;lt;string&amp;gt;applicationname&amp;lt;/string&amp;gt;
+  &amp;lt;key&amp;gt;CFBundleIconFile&amp;lt;/key&amp;gt;
+  &amp;lt;string&amp;gt;foo.icns&amp;lt;/string&amp;gt;
+  &amp;lt;!-- Don&#39;t modify those! --&amp;gt;
+  &amp;lt;key&amp;gt;CFBundleShortVersionString&amp;lt;/key&amp;gt;
+  &amp;lt;string&amp;gt;1.0&amp;lt;/string&amp;gt;
+  &amp;lt;key&amp;gt;CFBundleInfoDictionaryVersion&amp;lt;/key&amp;gt;
+  &amp;lt;string&amp;gt;6.0&amp;lt;/string&amp;gt;
+  &amp;lt;key&amp;gt;CFBundlePackageType&amp;lt;/key&amp;gt;
+  &amp;lt;string&amp;gt;APPL&amp;lt;/string&amp;gt;
+  &amp;lt;key&amp;gt;IFMajorVersion&amp;lt;/key&amp;gt;
+  &amp;lt;integer&amp;gt;0&amp;lt;/integer&amp;gt;
+  &amp;lt;key&amp;gt;IFMinorVersion&amp;lt;/key&amp;gt;
+  &amp;lt;integer&amp;gt;1&amp;lt;/integer&amp;gt;
+&amp;lt;/dict&amp;gt;
+&amp;lt;/plist&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It should live in &lt;code&gt;Foo.app/Contents/Info.pList&lt;/code&gt;. Just like a Windows RC file,
+it references a &lt;code&gt;foo.icns&lt;/code&gt; file. A tool like &lt;a href=&#34;http://www.img2icnsapp.com/&#34;&gt;img2icns&lt;/a&gt; can be used
+to convert a high-resolution PNG image to a Mac OSX icon.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_9&#34;&gt;Launcher script&lt;/h2&gt;
+
+&lt;p&gt;Finally, we have to use a launcher script so that the current working
+directory of the app will be correct.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+#!/bin/bash
+cd &amp;quot;${0%/*}&amp;quot;
+./foo
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_10&#34;&gt;Troubleshooting&lt;/h2&gt;
+
+&lt;p&gt;It&amp;rsquo;s not uncommon to encounter an error if an app Bundle is malformed or
+otherwise problematic. Instead of double-clicking on the .app bundle to
+launch it, one can open it from the command line:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;open Foo.app
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you get an &amp;ldquo;error -10180&amp;rdquo;, it means something went wrong while launching
+the app. Make sure the files inside &lt;code&gt;Contents/MacOS/&lt;/code&gt; are executable, and
+that the wrapper is trying to launch the correct executable.&lt;/p&gt;
+
+&lt;p&gt;In doubt, running &lt;code&gt;plutil&lt;/code&gt; can help proofread the &lt;code&gt;pList&lt;/code&gt; file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;plutil Foo.app/Contents/Info.pList
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_11&#34;&gt;Final notes&lt;/h2&gt;
+
+&lt;p&gt;OSX apps are sometimes encountered as &lt;code&gt;.dmg&lt;/code&gt; files in the wild, which are
+image files that contain partitions, which can be mounted and read from.
+This allows a nice &amp;ldquo;drag and drop&amp;rdquo; window to be displayed.&lt;/p&gt;
+
+&lt;p&gt;However, distributing an OSX application by just zipping up the &lt;code&gt;.app&lt;/code&gt;
+bundle is acceptable. It can be done either on the command line:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;zip -r Foo.OSX.zip Foo.app
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;hellip;or in the graphical interface (Right Click -&amp;gt; Compress Foo.app).&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_12&#34;&gt;Linux&lt;/h1&gt;
+
+&lt;p&gt;Linux may be one of the comfiest platform for ooc development, but ironically,
+it is one of the most painful to package standalone applications for. As a rule
+of thumb, do not assume that your users will want to install libraries
+themselves — always package them with the software.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_13&#34;&gt;Multiarch&lt;/h2&gt;
+
+&lt;p&gt;64-bit installs of Linux that aren&amp;rsquo;t multi-arch will complaing about missing
+32-bit libraries, and conversely, 32-bit installs won&amp;rsquo;t be able to run a 64-bit
+application at all. Which leaves us with the only option of providing both a
+32-bit and a 64-bit executable.&lt;/p&gt;
+
+&lt;p&gt;An example folder hierarchy is:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;foo-1.0-linux/
+  bin/
+    foo32
+    foo64
+    libs32/
+    libs64/
+  foo.sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Since we are going to ship dynamic libraries with the app, we should specify
+the path where they are with the &lt;code&gt;-rpath&lt;/code&gt; linker option. The rock command looks
+a little bit like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rock +-Wl,-rpath=bin/libs32 -o=foo32
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;hellip;for the 32-bit version, and similarly for the 64-bit version.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_14&#34;&gt;Chroot&lt;/h2&gt;
+
+&lt;p&gt;One of the easiest ways to build both a 32-bit and a 64-bit executable is to
+have a 64-bit VM of Ubuntu, and set up a 32-bit chroot inside of it, then copy
+files out of the chroot to retrieve the binaries and associated libraries.&lt;/p&gt;
+
+&lt;p&gt;Setting up a chroot with debootstrap is &lt;a href=&#34;https://wiki.ubuntu.com/DebootstrapChroot&#34;&gt;documented on the Ubuntu website&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_15&#34;&gt;Copying libs&lt;/h2&gt;
+
+&lt;p&gt;To figure out the libraries you need to copy to &lt;code&gt;libs32&lt;/code&gt; or &lt;code&gt;libs64&lt;/code&gt;, the &lt;code&gt;ldd&lt;/code&gt;
+command line utility can be used. Filtering its output to remove a few
+libraries always present on Linux systems can help:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+ldd foo64 | egrep &amp;quot;(/usr/lib/)|(prefix64)&amp;quot; | cut -d &#39; &#39; -f 3 | egrep -v &amp;quot;lib(X|x|GL|gl|drm)&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The example above works for an OpenGL-based application. Copying these files
+automatically can be done with a shell script such as:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+for l in $(ldd foo64 | egrep &amp;quot;(/usr/lib/)|(prefix64)&amp;quot; | cut -d &#39; &#39; -f 3 | egrep -v &amp;quot;lib(X|x|GL|gl|drm)&amp;quot; | tr &#39;\n&#39; &#39; &#39;); do
+  cp $l libs64/
+done
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Checking that it well can be done by running &lt;code&gt;ldd bin/foo64&lt;/code&gt; in the release
+directory.  Here&amp;rsquo;s some example output that shows the libs are resolved to
+their relative paths:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ ldd bin/foo64
+libSDL2-2.0.so.0 =&amp;gt; bin/libs64/libSDL2-2.0.so.0 (0x00007fc6fa615000)
+libSDL2_mixer-2.0.so.0 =&amp;gt; bin/libs64/libSDL2_mixer-2.0.so.0 (0x00007fc6f9ee0000)
+libmxml.so.1 =&amp;gt; bin/libs64/libmxml.so.1 (0x00007fc6f9cd3000)
+libfreetype.so.6 =&amp;gt; bin/libs64/libfreetype.so.6 (0x00007fc6f9a37000)
+libyaml-0.so.2 =&amp;gt; bin/libs64/libyaml-0.so.2 (0x00007fc6f9815000)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_16&#34;&gt;Launcher script&lt;/h2&gt;
+
+&lt;p&gt;Courtesy of &lt;a href=&#34;https://twitter.com/flibitijibibo&#34;&gt;Ethan Lee&lt;/a&gt;, such a launcher script will detect the architecture
+of the machine it&amp;rsquo;s running on and launch the right executable:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+#!/bin/bash
+# Move to the script&#39;s directory
+cd &amp;quot;`dirname &amp;quot;$0&amp;quot;`&amp;quot;
+
+# Get the kernel/architecture information
+UNAME=`uname`
+ARCH=`uname -m`
+
+# Pick the proper executable
+if [ &amp;quot;$ARCH&amp;quot; == &amp;quot;x86_64&amp;quot; ]; then
+  ./bin/foo64
+else
+  ./bin/foo32
+fi
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_17&#34;&gt;Final notes&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;.tar.gz&lt;/code&gt; or &lt;code&gt;.tar.bz2&lt;/code&gt; archive formats is well-suited to distribute
+applications for Linux, but &lt;code&gt;.zip&lt;/code&gt; works just as well, and &lt;code&gt;.tar.xz&lt;/code&gt; is usually
+a little smaller.&lt;/p&gt;
+
+&lt;p&gt;To create a &lt;code&gt;.tar.gz&lt;/code&gt;, do:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;tar czvf foo-1.0-linux.tar.gz foo-1.0-linux
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To create a &lt;code&gt;.tar.bz2&lt;/code&gt;, use &lt;code&gt;cjvf&lt;/code&gt; instead.&lt;/p&gt;
+
+&lt;p&gt;To create a &lt;code&gt;.tar.xz&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;tar cf --xz foo-1.0-linux.tar.xz foo-1.0-linux
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To create a &lt;code&gt;.zip&lt;/code&gt;, do:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;zip -r foo-1.0-linux.tar.zip foo-1.0-linux
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Drivers</title>
       <link>http://oocmanual.cogneco.com/tools/rock/drivers</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
@@ -1161,6 +1336,130 @@ similar to rock, e.g. with 8 cores, one might want to use &lt;code&gt;make -j7&l
 the make driver, excepts that instead of generating Makefiles, it will generate
 &lt;code&gt;Android.mk&lt;/code&gt; files, suitable for usage with the &lt;code&gt;ndk-build&lt;/code&gt; utility from the
 Android NDK toolchain.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Basic Usage</title>
+      <link>http://oocmanual.cogneco.com/tools/rock/basic</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/tools/rock/basic</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Using rock, the basic way&lt;/h1&gt;
+
+&lt;p&gt;If you have a usefile, calling rock is pretty easy:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+rock
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;will look for usefiles in your current directory and, if possible, build them.&lt;/p&gt;
+
+&lt;p&gt;Since the world is not always perfect, it&amp;rsquo;s also possible to pass an &lt;code&gt;.ooc&lt;/code&gt; file directly:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+rock mmorpg.ooc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Sadly, it&amp;rsquo;s possible that rock thinks your ooc code is alright and passes the C files to your
+C compiler which then prints pages of errors and explodes subsequently.
+In that case, you&amp;rsquo;ll need to increase rock&amp;rsquo;s verbosity to see the compiler output:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+rock -v ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Building an executable and tired of typing &lt;code&gt;./mmorpg&lt;/code&gt; all over again?&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+rock -r ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;will run your executable after having built it successfully.&lt;/p&gt;
+
+&lt;p&gt;To speed up the compilation process and to save you some time, rock caches compiled dependencies
+in a hidden subdirectory called &lt;code&gt;.libs&lt;/code&gt;. In most cases, this is awesome, but sometimes, something
+goes wrong and you get pretty strange unexplainable error messages. Just to be sure, you can just&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+rock -x
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;then, recompile and see if it works.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Editors</title>
+      <link>http://oocmanual.cogneco.com/tools/editors</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/tools/editors</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;ooc support in text editors&lt;/h1&gt;
+
+&lt;p&gt;ooc has a varying level of support among different text editors.&lt;/p&gt;
+
+&lt;p&gt;Read on to find if your favourite flavor is supported. If you add
+support for a new editor, please open an issue on the &lt;a href=&#34;https://github.com/nddrylliog/ooc-lang.org&#34;&gt;ooc-lang.org repo&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;vim&lt;/h1&gt;
+
+&lt;p&gt;ooc support for vim is provided by the &lt;a href=&#34;https://github.com/nddrylliog/ooc.vim&#34;&gt;ooc.vim&lt;/a&gt; plug-in. It provides:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Syntax highlighting&lt;/li&gt;
+&lt;li&gt;Indentation support&lt;/li&gt;
+&lt;li&gt;A syntastic plug-in for use with &lt;a href=&#34;https://github.com/nddrylliog/sam&#34;&gt;sam&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;:make&lt;/code&gt; command support (launches &lt;code&gt;rock -v&lt;/code&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You can read more at the &lt;a href=&#34;https://github.com/nddrylliog/ooc.vim&#34;&gt;project repository&lt;/a&gt;&amp;rsquo;s page.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_2&#34;&gt;emacs&lt;/h1&gt;
+
+&lt;p&gt;ooc support for emacs is provided by &lt;a href=&#34;https://github.com/nixeagle/ooc-mode&#34;&gt;ooc-mode&lt;/a&gt;. It provides:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Syntax highlighting&lt;/li&gt;
+&lt;li&gt;Indentation support&lt;/li&gt;
+&lt;li&gt;On the fly syntax check with flymake-ooc&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;toc_3&#34;&gt;TextMate&lt;/h1&gt;
+
+&lt;p&gt;ooc support for TextMate is provided by &lt;a href=&#34;https://github.com/nilium/ooc.tmbundle&#34;&gt;ooc.tmbundle&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_4&#34;&gt;Atom&lt;/h1&gt;
+
+&lt;p&gt;The &lt;a href=&#34;https://atom.io/&#34;&gt;Atom editor&lt;/a&gt; can use converted TextMate bundles.&lt;/p&gt;
+
+&lt;p&gt;You can easily convert &lt;a href=&#34;https://github.com/nilium/ooc.tmbundle&#34;&gt;ooc.tmbundle&lt;/a&gt; for your own usage, like so:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;apm init --package ~/.atom/packages/language-ooc --convert https://github.com/nilium/ooc.tmbundle
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You might need to restart Atom to see the changes.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_5&#34;&gt;Brackets&lt;/h1&gt;
+
+&lt;p&gt;The &lt;a href=&#34;http://brackets.io/&#34;&gt;Brackets editor&lt;/a&gt; now has an extension for ooc syntax highlighting.
+It can be installed from the Extensions Manager by searching for &lt;code&gt;ooc syntax&lt;/code&gt;.
+The source is available &lt;a href=&#34;https://github.com/nddrylliog/brackets-ooc&#34;&gt;on GitHub&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_6&#34;&gt;gtksourceview&lt;/h1&gt;
+
+&lt;p&gt;gtksourceview-based tools such as gedit, meld, etc. have
+ooc support out of the box.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_7&#34;&gt;pygments&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://pygments.org/&#34;&gt;pygments&lt;/a&gt; has relatively good ooc support built-in. It is a python
+solution for syntax highlighting used on GitHub and easy to integrate with
+static website generators such as &lt;a href=&#34;http://nanoc.ws/&#34;&gt;nanoc&lt;/a&gt;.&lt;/p&gt;
 </description>
     </item>
     
@@ -1529,305 +1828,6 @@ AndroidIncludes: ../SDL/
 include paths, relative to the subfolder of your app/library.&lt;/p&gt;
 
 &lt;p&gt;These directives have no effect on other platforms, even outside version blocks.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Rock</title>
-      <link>http://oocmanual.cogneco.com/tools/rock</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/tools/rock</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;About Rock&lt;/h1&gt;
-
-&lt;p&gt;Rock is the main ooc compiler. It parses ooc files using nagaqueen, does some
-checking and inference, produces .c files, and then drives the C compilation process
-to produce either an executable or a library.&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/basic/&#34;&gt;Basic usage&lt;/a&gt; section explains how to quickly get
-up and running, using rock to compile ooc projects.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/drivers/&#34;&gt;Drivers&lt;/a&gt; section gives an overview of rock&amp;rsquo;s various
-drivers, akin to compiling strategies, like the sequence driver (default), the make
-driver, and the android driver.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/advanced/&#34;&gt;Advanced usage&lt;/a&gt; section covers some less-often used
-options like using a different C compiler, keeping source files, etc.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/usefiles/&#34;&gt;Usefiles&lt;/a&gt; section describes the format of &lt;code&gt;.use&lt;/code&gt; files,
-which define the characteristics of an ooc app or library.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/gc/&#34;&gt;Garbage Collection&lt;/a&gt; section talks about the Garbage Collection
-strategy in rock, how to make sure things work well on different plaforms, how the
-Boehm GC is bundled, etc.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/debug/&#34;&gt;Debugging&lt;/a&gt; section talks about what to do when a program
-doesn&amp;rsquo;t behave correctly. Debug symbols, stack traces, debugging on particularly painful
-platforms like Windows.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/packaging/&#34;&gt;Packaging&lt;/a&gt; section talks about releasing standalone
-applications coded in ooc, such as games — when you don&amp;rsquo;t want to have users install
-dependencies on their own, but would rather bundle everything together.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Use-files</title>
-      <link>http://oocmanual.cogneco.com/tools/rock/use-files</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/tools/rock/use-files</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Usefiles explained&lt;/h1&gt;
-
-&lt;p&gt;A usefile describes an ooc package, ie. a collection of modules and contains information
-how to compile and link that specific collection of ooc files.
-It also denotes if the package should compile to an executable or a shared/static library.&lt;/p&gt;
-
-&lt;p&gt;Usefiles are not a totally novel concept. They are comparable to &lt;code&gt;pkg-config&lt;/code&gt; files or, to
-some degree, similar to build system files like CMake or SCons.&lt;/p&gt;
-
-&lt;p&gt;However, in ooc, (and this is a pretty new thing!),
-the compiler rock itself reads and handles these usefiles.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;Examples&lt;/h1&gt;
-
-&lt;p&gt;Let&amp;rsquo;s start off with some examples. Following is the repository structure of
-&lt;a href=&#34;https://github.com/nddrylliog/ooc-zeromq&#34;&gt;ooc-zeromq&lt;/a&gt;, a &lt;a href=&#34;http://zeromq.org&#34;&gt;zeromq&lt;/a&gt; binding
-for ooc:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;.
-├── LICENSE
-├── README.md
-├── samples
-│   ├── ...
-├── source
-│   └── zeromq.ooc
-└── zeromq.use
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Let&amp;rsquo;s assume that you cloned the repository into a subdirectory of your ooc library path
-(which consists of the paths in the &lt;code&gt;OOC_LIBS&lt;/code&gt; environment variable).&lt;/p&gt;
-
-&lt;p&gt;And here are the contents of &lt;code&gt;zeromq.use&lt;/code&gt; (shortened for brevity):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Name: zeromq
-Description: The 0MQ lightweight messaging kernel
-Version: 2010-06-16
-SourcePath: source
-Includes: zmq.h
-Libs: -lzmq
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;A usefile should always contain the name, description and version of its package.&lt;/p&gt;
-
-&lt;p&gt;In addition, this usefile tells rock that the actual ooc files reside in the subdirectory
-&lt;code&gt;source&lt;/code&gt; (which will be added to the so-called sourcepath).&lt;/p&gt;
-
-&lt;p&gt;Also, since this is a C library binding, the zeromq C header needs to be included,
-and the &lt;code&gt;-lzmq&lt;/code&gt; flag needs to be passed to the linker.&lt;/p&gt;
-
-&lt;p&gt;So far so good. But what are the benefits of writing such a file?&lt;/p&gt;
-
-&lt;p&gt;If you now want to use this package in any of your projects, you can just write:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-use zeromq
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;at the top of your ooc file, and rock will automatically look through your library path
-(the paths in the &lt;code&gt;OOC_LIBS&lt;/code&gt; environment variable) for a file called &lt;code&gt;zeromq.use&lt;/code&gt; and find
-the usefile above. Now it parses this usefile and instantly knows not only where it can
-find the ooc-zeromq ooc files, but also what C headers need to be included and
-what libraries need to be linked.&lt;/p&gt;
-
-&lt;p&gt;As a result, you can now just import the ooc-zeromq ooc file like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import zeromq
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;and hack away.&lt;/p&gt;
-
-&lt;p&gt;Another simpler example is the &lt;a href=&#34;https://github.com/nddrylliog/sam&#34;&gt;sam&lt;/a&gt; usefile. sam is
-different because it compiles to an executable file:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Name: sam
-Description: Sam keeps your ooc repos up to date
-SourcePath: source
-Main: sam.ooc
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Once again, the usefile contains name and description (no version here, though!) and
-the sourcepath.&lt;/p&gt;
-
-&lt;p&gt;The new thing: &lt;code&gt;Main&lt;/code&gt; denotes the entry point for the executable, e.g. the file
-containing the &lt;code&gt;main&lt;/code&gt; function. rock looks for a file named this in the source path,
-which here contains the subdirectory source/.&lt;/p&gt;
-
-&lt;p&gt;To build sam, you can now just run:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-rock -v
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;which will look for a usefile in your current directory and build the package. As a result,
-you get a &lt;code&gt;sam&lt;/code&gt; executable &amp;ndash; and all of that without using a third party build system!&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_2&#34;&gt;Fields&lt;/h1&gt;
-
-&lt;p&gt;A list of all currently supported fields in usefiles follows.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Name&lt;/code&gt;, &lt;code&gt;Description&lt;/code&gt; and &lt;code&gt;Version&lt;/code&gt; contain metadata about the package
-and version&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Pkgs&lt;/code&gt; contains a comma-separated list of &lt;code&gt;pkg-config&lt;/code&gt; packages this
-package depends on. rock will invoke &lt;code&gt;pkg-config&lt;/code&gt; with these packages
-and add the resulting C flags and linker flags to its pipeline&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;CustomPkg&lt;/code&gt; can be used to specify the name of a &lt;code&gt;pkg-config&lt;/code&gt;-like tool
-that should be used instead. For example, the ooc sdl2 binding sets
-this to &lt;code&gt;sdl2-config&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Libs&lt;/code&gt; contains a comma-separated list of linker flags like &lt;code&gt;-lSDL2_image&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Frameworks&lt;/code&gt;: OSX-only, specify Frameworks to be linked with (example: &lt;code&gt;OpenGL&lt;/code&gt;)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Includes&lt;/code&gt; can be used to specify C headers that should be included
-(as a comma-separated list)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;PreMains&lt;/code&gt;: List of compiler flags that, if specified from a .pc file or a .use file,
-(maybe conditioned by a version block), must appear before the main compilation unit.
-Example: &lt;code&gt;-lSDL2main&lt;/code&gt; on Windows.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Linker&lt;/code&gt; can be used to specify a &lt;code&gt;ld&lt;/code&gt; replacement&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;LibPaths&lt;/code&gt; and &lt;code&gt;IncludePaths&lt;/code&gt; are comma-separated lists and contain
-paths that should be added to the linker or C include paths&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;AndroidLibs&lt;/code&gt;, &lt;code&gt;AndroidIncludePaths&lt;/code&gt;: Android-specific properties that are
-only used with the Android driver.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Additionals&lt;/code&gt;: can be used to add &lt;code&gt;.c&lt;/code&gt; files to be compiled along with the .ooc code.
-Relative paths (starting with &lt;code&gt;./&lt;/code&gt;) will have the .c file be copied locally.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Requires&lt;/code&gt; can be used to specify requirements (denoted by usefile
-names), for example for sam&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;SourcePath&lt;/code&gt; can be used to add a path to the source path&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Imports&lt;/code&gt; contains a comma-separated list of modules that should be
-implicitly imported when &lt;code&gt;use yourusefile&lt;/code&gt; is used.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Origin&lt;/code&gt; is ignored by rock, but it traditionally specifies the
-git repository url of that package&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Main&lt;/code&gt; is the name of the entrypoint file&lt;/li&gt;
-&lt;li&gt;all fields starting with &lt;code&gt;_&lt;/code&gt; are ignored by rock&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&#34;toc_3&#34;&gt;Version blocks&lt;/h1&gt;
-
-&lt;p&gt;Similarily to ooc&amp;rsquo;s &lt;a href=&#34;/docs/lang/preprocessor/#version-blocks&#34;&gt;version blocks&lt;/a&gt;, usefile version blocks
-can be used to work with different requirements on different platforms.&lt;/p&gt;
-
-&lt;p&gt;The syntax is similar to version blocks in ooc. Here is an example from
-&lt;a href=&#34;https://github.com/nddrylliog/isaac-paper&#34;&gt;Paper Isaac&lt;/a&gt;&amp;rsquo;s usefile:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Name: isaac
-Version: 0.1
-Requires: dye, bleep, gnaar
-SourcePath: source
-Main: isaac
-
-version (windows) {
-  Libs: ./isaac.res
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Compiling under windows, the linker command line will contain the additional file
-&lt;code&gt;./isaac.res&lt;/code&gt;.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Basic Usage</title>
-      <link>http://oocmanual.cogneco.com/tools/rock/basic</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/tools/rock/basic</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Using rock, the basic way&lt;/h1&gt;
-
-&lt;p&gt;If you have a usefile, calling rock is pretty easy:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-rock
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;will look for usefiles in your current directory and, if possible, build them.&lt;/p&gt;
-
-&lt;p&gt;Since the world is not always perfect, it&amp;rsquo;s also possible to pass an &lt;code&gt;.ooc&lt;/code&gt; file directly:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-rock mmorpg.ooc
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Sadly, it&amp;rsquo;s possible that rock thinks your ooc code is alright and passes the C files to your
-C compiler which then prints pages of errors and explodes subsequently.
-In that case, you&amp;rsquo;ll need to increase rock&amp;rsquo;s verbosity to see the compiler output:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-rock -v ...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Building an executable and tired of typing &lt;code&gt;./mmorpg&lt;/code&gt; all over again?&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-rock -r ...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;will run your executable after having built it successfully.&lt;/p&gt;
-
-&lt;p&gt;To speed up the compilation process and to save you some time, rock caches compiled dependencies
-in a hidden subdirectory called &lt;code&gt;.libs&lt;/code&gt;. In most cases, this is awesome, but sometimes, something
-goes wrong and you get pretty strange unexplainable error messages. Just to be sure, you can just&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-rock -x
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;then, recompile and see if it works.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Tools</title>
-      <link>http://oocmanual.cogneco.com/tools</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/tools</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Frequently used ooc tools&lt;/h1&gt;
-
-&lt;p&gt;There are some tools you should know about when you start looking into ooc.&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;rock&#34;&gt;Rock&lt;/a&gt; is the ooc compiler. In most cases,
-you will use it to generate C sources and executables from your ooc sources.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;sam&#34;&gt;Sam&lt;/a&gt; helps you to keep all your libraries together and up-to-date.
-It&amp;rsquo;s also able to resolve dependencies without any hassle.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;editors&#34;&gt;Editors&lt;/a&gt; - describes how to get syntax highlighting,
-program checking, indentation in vim, emacs, TextMate?&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Tools like autoconf, automake, even CMake, are irrelevant in the context of
-ooc, since rock drives the whole compilation process.&lt;/p&gt;
-
-&lt;p&gt;ooc libraries have one, standardized way to be built - as such, the ooc ecosystem
-is a lot more homogenous than, say, the C ecosystem. Complexity is dealt with
-through &lt;a href=&#34;rock/usefiles&#34;&gt;use files&lt;/a&gt; and the such.&lt;/p&gt;
-
-&lt;p&gt;Still, the ooc toolchain is quite flexible, working on major desktop OSes, and
-more constrained platform such as Android.&lt;/p&gt;
 </description>
     </item>
     
