@@ -442,12 +442,12 @@
 There you issue the following commands:</p>
 
 <div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #75715e">#!/bin/bash</span>
-sudo apt-get -y -qq install curl make libgc-dev
+sudo apt-get -y -qq install curl make libgc-dev binutils-dev libiberty-dev
 <span style="color: #f8f8f2">export PATH</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">$PATH</span>:<span style="color: #f8f8f2">$PWD</span>/rock/bin:<span style="color: #f8f8f2">$PWD</span>/sam
 <span style="color: #f8f8f2">export OOC_LIBS</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">$PWD</span>
 git clone --depth<span style="color: #f92672">=</span>1 -b 99x git://github.com/cogneco/rock.git
 git clone --depth<span style="color: #f92672">=</span>1 git://github.com/cogneco/sam.git
-<span style="color: #f92672">(</span><span style="color: #f8f8f2">cd </span>rock <span style="color: #f92672">&amp;&amp;</span> make rescue <span style="color: #f92672">&amp;&amp;</span> make<span style="color: #f92672">)</span>
+<span style="color: #f92672">(</span><span style="color: #f8f8f2">cd </span>rock <span style="color: #f92672">&amp;&amp;</span> make rescue <span style="color: #f92672">&amp;&amp;</span> make <span style="color: #f92672">&amp;&amp;</span> make extension<span style="color: #f92672">)</span>
 <span style="color: #f92672">(</span><span style="color: #f8f8f2">cd </span>sam <span style="color: #f92672">&amp;&amp;</span> rock -v<span style="color: #f92672">)</span>
 </pre></div>
 
