@@ -8,8 +8,6 @@ author: Simon Mika
 copyright: 2014 Simon Mika
 license: CC BY-SA-4.0
 ---
-# NOT VERIFIED
-
 # Declaring interfaces
 
 Declare interfaces with the `interface` keyword:
