@@ -10,256 +10,260 @@
     <updated>Tue, 01 Jan 2008 00:00:00 UTC</updated>
     
     <item>
-      <title>Glossary</title>
-      <link>http://oocmanual.cogneco.com/glossary</link>
+      <title>Manual</title>
+      <link>http://oocmanual.cogneco.com/</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/glossary</guid>
-      <description>&lt;p&gt;{{GLOSSARY}}&lt;/p&gt;
+      <guid>http://oocmanual.cogneco.com/</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;How to use the documentation&lt;/h1&gt;
+
+&lt;p&gt;The documentation for ooc is structured as follows:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tutorial/&#34;&gt;Tutorial&lt;/a&gt; is a ten minute journey meant for
+newcomers to the language. By building a small program, you will learn the
+basics of the syntax and even use bits of the SDK.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/lang/&#34;&gt;Language&lt;/a&gt; section explains in detail every feature
+of the language: it goes through the syntax and a the main use cases for
+every feature. It also contains a full grammar, and a collection of best
+practices.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/sdk/&#34;&gt;SDK&lt;/a&gt; section gives an overview of the modules included
+with the default ooc distribution. Whether you need access to files, to
+measure time, to do some networking, or simply use common data structures,
+the SDK is packed with goodness.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/&#34;&gt;Tools&lt;/a&gt; section lists useful tools for ooc development,
+along with a typical workflow from the creation, compilation, testing, and
+documentation of a project.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/kaputt/&#34;&gt;Troubleshooting&lt;/a&gt; section gives advice on how
+to address frequently encountered problems.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/glossary/&#34;&gt;Glossary&lt;/a&gt; is a collection of terms you may stumble
+upon while using ooc or reading its documentation. If you don&amp;rsquo;t understand
+a term, go here!&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;When you’re stuck with a question or a problem the documentation doesn’t
+solve, considering posting to the &lt;a href=&#34;https://groups.google.com/group/ooc-lang&#34;&gt;discussion group&lt;/a&gt; or joining the
+&lt;a href=&#34;irc://chat.freenode.net/#ooc-lang&#34;&gt;ooc-lang IRC channel&lt;/a&gt;. We’ll get it sorted out in no time. Check out the
+&lt;a href=&#34;/community/&#34;&gt;Community&lt;/a&gt; page for details.&lt;/p&gt;
 </description>
     </item>
     
     <item>
-      <title>Exceptions</title>
-      <link>http://oocmanual.cogneco.com/language/exceptions</link>
+      <title>Constructors</title>
+      <link>http://oocmanual.cogneco.com/language/constructors</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/language/exceptions</guid>
+      <guid>http://oocmanual.cogneco.com/language/constructors</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;Error handling&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;Constructors&lt;/h1&gt;
 
-&lt;p&gt;The C way to do error handling is usually via return codes:&lt;/p&gt;
+&lt;p&gt;In ooc, unlike Java/Scala/C++/C#, &amp;lsquo;new&amp;rsquo; isn&amp;rsquo;t a keyword, but a static method.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;#!ooc
-openFile: (path: String) -&amp;gt; Int {
-  if (error) {
-    return -1
-  }
-  return someFileDescriptor
-}
+&lt;p&gt;For example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    dog := Dog new(&amp;quot;Pif&amp;quot;)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;However, it relies on the user correctly checking the return value:&lt;/p&gt;
+&lt;p&gt;However it&amp;rsquo;s uncommon to directly define a new method. Instead, an init method is
+defined, like this:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;#!ooc
-fd := openFile(&amp;quot;/etc/hosts&amp;quot;)
-doSomethingWithFile(fd) // forgot to check, things might go bad!
+&lt;pre&gt;&lt;code&gt;    Dog: class {
+
+        name: String
+
+        init: func (=name) {}
+
+    }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;toc_1&#34;&gt;Exceptions&lt;/h1&gt;
+&lt;p&gt;When an &amp;lsquo;init&amp;rsquo; method is defined, a corresponding &amp;lsquo;new&amp;rsquo; static method is defined, in our case,
+the code above is equivalent to:&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_2&#34;&gt;raise&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;    Dog: class {
 
-&lt;p&gt;Another way to handle that would be with exceptions&lt;/p&gt;
+        name: String
 
-&lt;pre&gt;&lt;code&gt;#!ooc
-openFile: (path: String) -&amp;gt; File {
-  if (error) {
-    raise(&amp;quot;Could not open %s&amp;quot; format(path))
-  }
-  return someFile
-}
+        init: func (name: String) {
+            this name = name
+        }
+
+        new: static func (name: String) -&amp;gt; This {
+            this := This alloc() as This
+            this init()
+            this
+        }
+
+    }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;That way, even if the user doesn&amp;rsquo;t explicitly check for the error, it&amp;rsquo;ll
-still interrupt the flow of the program:&lt;/p&gt;
+&lt;p&gt;&amp;lsquo;alloc&amp;rsquo; is a method of Class, which can be defined like this, for example:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;file := openFile(&amp;quot;/dev/does/not/exist&amp;quot;)
-doSomethingWithFile(file) // we are never even going to reach there
+&lt;pre&gt;&lt;code&gt;    /// Create a new instance of the object of type defined by this class
+    alloc: final func ~_class -&amp;gt; Object {
+        object := gc_malloc(instanceSize) as Object
+        if(object) {
+            object class = this
+        }
+        return object
+    }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;toc_3&#34;&gt;Throwing&lt;/h2&gt;
+&lt;p&gt;In ooc implementations, Object and Class are often classes defined in .ooc source
+files, so you can easily study their source code. You can typically find their definitions
+in sdk/lang/ (because everything in the lang/ package is automatically imported)&lt;/p&gt;
 
-&lt;p&gt;The &lt;code&gt;raise&lt;/code&gt; function above is a quick method to raise an exception. What
-it really does is this:&lt;/p&gt;
+&lt;h2 id=&#34;toc_1&#34;&gt;Reminder: member-arguments and assign-arguments&lt;/h2&gt;
 
-&lt;pre&gt;&lt;code&gt;#!ooc
-Exception new(message) throw()
+&lt;p&gt;This:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    DiceRoll: class {
+        value: Int
+
+        init: func (=value) {}
+    }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;There is no special keyword to throw exceptions, it&amp;rsquo;s just a method on the
-&lt;code&gt;Exception&lt;/code&gt; class.&lt;/p&gt;
+&lt;p&gt;is the equivalent of this:&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_4&#34;&gt;Catching exceptions&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;    DiceRoll: class {
+        value: Int
 
-&lt;p&gt;Catching exceptions is done through the &lt;code&gt;try&lt;/code&gt; / &lt;code&gt;catch&lt;/code&gt; syntax:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-try {
-  openFile(&amp;quot;dev/does/not/exist&amp;quot;)
-} catch (e: Exception) {
-  // something wrong happened
-  &amp;quot;Error: %s&amp;quot; printfln(e message)
-}
+        init: func (.value) {
+            this value = value
+        }
+    }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;toc_5&#34;&gt;Exception sub-classes&lt;/h2&gt;
+&lt;p&gt;which is the equivalent of this:&lt;/p&gt;
 
-&lt;p&gt;It is possible to sub-class exceptions to have several exception types.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    DiceRoll: class {
+        value: Int
 
-&lt;pre&gt;&lt;code&gt;#!ooc
-FileNotFoundException: class extends Exception {
-  init: func (path: String) {
-    super(&amp;quot;File not found: %s&amp;quot; format(path))
-  }
-}
-
-openFile: func (path: String) {
-  if (error) {
-    FileNotFoundException new(path) throw()
-  }
-}
+        init: func (value: Int) {
+            this value = value
+        }
+    }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Which makes it easy to catch a specific type of exception:&lt;/p&gt;
+&lt;p&gt;Ie &amp;lsquo;.&amp;rsquo; allows &amp;lsquo;value&amp;rsquo;s type to be inferred from the member variable
+of the same name, and &amp;lsquo;=&amp;rsquo; does the same plus assigns it in the constructor.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;#!ooc
-try {
-  file := openFile(&amp;quot;/dev/does/not/exist&amp;quot;)
-  doSomethingWithFile(file)
-} catch (e1: FileNotFoundException) {
-  // The file wasn&#39;t found
-} catch (e2: Exception) {
-  // Something else went wrong.
-}
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Control Structures</title>
-      <link>http://oocmanual.cogneco.com/language/control-structures</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/language/control-structures</guid>
-      <description>
+&lt;p&gt;This works for any method, not only for constructors. However, if you&amp;rsquo;re using
+it for setters, you probably want to use properties instead.&lt;/p&gt;
 
-&lt;h1 id=&#34;toc_0&#34;&gt;Conditionals&lt;/h1&gt;
+&lt;h2 id=&#34;toc_2&#34;&gt;Multiple constructors&lt;/h2&gt;
 
-&lt;h2 id=&#34;toc_1&#34;&gt;if / else&lt;/h2&gt;
+&lt;p&gt;As any method, constructors can be overloaded with suffixes.&lt;/p&gt;
 
-&lt;p&gt;There&amp;rsquo;s your traditional if, else if, else structure. The body should be either
-a single statement, or a scope.&lt;/p&gt;
+&lt;p&gt;Suffixes may seem annoying at first, seen as a sort of &amp;lsquo;manual name mangling&amp;rsquo;,
+but aside from helping to debug, they&amp;rsquo;re also a way to document the purpose of your
+different constructors. For that reason, it&amp;rsquo;s always a good idea to give meaningful
+suffixes that lets one hint the reason for existence of a constructor.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;#!ooc
-if (off) turnOn()
+&lt;p&gt;From a constructor, you can call another constructor with init(), just like a regular
+method.&lt;/p&gt;
 
-if (stressed) {
-    breatheIn()
-    breatheOut()
-} else if (tired) {
-    rest()
-} else {
-    allGood()
-}
+&lt;p&gt;You can also call a super-constructor with super()&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Dog: class {
+
+        name: String
+
+        init: func ~defaultName {
+            init(&amp;quot;The Man&amp;quot;)
+        }
+
+        init: func (=name) {}
+
+    }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;The condition can be of type &lt;code&gt;Bool&lt;/code&gt; or a Pointer, in which case it will evaluate to
-&lt;code&gt;true&lt;/code&gt; if it is non-null.&lt;/p&gt;
+&lt;h2 id=&#34;toc_3&#34;&gt;Inheritance&lt;/h2&gt;
 
-&lt;h2 id=&#34;toc_2&#34;&gt;match / case&lt;/h2&gt;
+&lt;p&gt;A common mistake is to think that constructor are inherited, because they are standard
+methods. However, this behavior would be harmful, as explained in the following example:&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;match&lt;/code&gt; is ooc&amp;rsquo;s &lt;code&gt;switch&lt;/code&gt;, loosely modelled after Scala&amp;rsquo;s. In its simplest form, it tests for equality between an expression and several values:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    Logger: class {
+        prefix: String
 
-&lt;pre&gt;&lt;code&gt;#!ooc
-match (numFeets) {
-    case 1 =&amp;gt; &amp;quot;Ouch&amp;quot;
-    case 2 =&amp;gt; &amp;quot;Normal&amp;quot;
-    case =&amp;gt;
-        // what?
-        raise(&amp;quot;Too many feet&amp;quot;)
-}
+        init: func (=prefix) {}
+
+        log: func (msg: String) {
+            &amp;quot;%s%s&amp;quot; printfln(prefix, msg)
+        }
+    }
+
+    FileLogger: class extends Logger {
+        output: FileWriter
+
+        init: func ~withPath (path: String) {
+            super(prefix)
+            output = FileWriter new(path)
+        }
+
+        log: func (msg: String) {
+            output write(prefix). write(msg). write(&#39;\n&#39;)
+        }
+    }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Each case is a scope of its own - it doesn&amp;rsquo;t require braces. A case with no
-expression is a catch-all.&lt;/p&gt;
+&lt;p&gt;What would happen if the first constructor defined in Logger was available
+for FileLogger? Let&amp;rsquo;s find out&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;match&lt;/code&gt; also works with any class T that implements the method &lt;code&gt;matches?: func
--&amp;gt; (other: T) -&amp;gt; Bool&lt;/code&gt;. Another way to get complex types to work in matches
-is simply to override the &lt;code&gt;==&lt;/code&gt; operator. Hence, Strings work:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-match keyword {
-    case &amp;quot;if&amp;quot; =&amp;gt;
-        Keyword IF
-    case &amp;quot;match&amp;quot; =&amp;gt;
-        Keyword MATCH
-    case =&amp;gt;
-        Keyword UNKNOWN
-}
+&lt;pre&gt;&lt;code&gt;    warn := FileLogger new(&amp;quot;WARN&amp;quot;)
+    warn log(&amp;quot;Somebody set us up the stacktrace&amp;quot;)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;code&gt;match&lt;/code&gt; is also a good way to avoid explicit casting, by matching an object
-against variable declarations, one can use its specific form directly:&lt;/p&gt;
+&lt;p&gt;The constructor call, if it was valid, would either return a Logger, which is
+not what we want, or by some miracle trick, return a FileLogger - but one
+that wouldn&amp;rsquo;t be properly initialized, so that log() would crash.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;#!ooc
-result := match (op) {
-    case plus: Plus =&amp;gt;
-        plus lhs + plus rhs
-    case minus: Minus =&amp;gt;
-        minus lhs - minus rhs
-}
+&lt;h2 id=&#34;toc_4&#34;&gt;Super func (and beyond)&lt;/h2&gt;
+
+&lt;p&gt;However, there are times when one truly wants to relay a constructor
+in an inherited class, such as:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Expression: abstract class {
+        eval: abstract func -&amp;gt; Int
+    }
+
+    BinaryOp: abstract class extends Expression {
+        left, right: Expression
+
+        init: func ~lr (=left, =right) {}
+    }
+
+    Add: class extends BinaryOp {
+        init: func ~lr (=left, =right) {}
+    }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;A &lt;code&gt;match&lt;/code&gt; is an expression, if every case ends with an expression. Hence, a
-match can be used as a return value, or in a function call, on the right hand
-side of a declaration-assignment (&lt;code&gt;:=&lt;/code&gt;), as demonstrated above.&lt;/p&gt;
+&lt;p&gt;Repeating the &amp;lsquo;init~lr&amp;rsquo; definition in Add violates the Don&amp;rsquo;t Repeat Yourself (DRY)
+principle. Besides, if functionality is added to the base BinaryOp init~lr, it
+wouldn&amp;rsquo;t be replicated in Add init~lr.&lt;/p&gt;
 
-&lt;h1 id=&#34;toc_3&#34;&gt;Loops&lt;/h1&gt;
+&lt;p&gt;For this precise case, the &amp;lsquo;super func&amp;rsquo; construct exists:&lt;/p&gt;
 
-&lt;p&gt;Loops are structures that control the repetition of a body of code.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;break / continue&lt;/h2&gt;
-
-&lt;p&gt;Two particular keywords are of interest when writing loops:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;break&lt;/code&gt; immediately exits the loop, skipping the rest of the body
-and not executing any further iteration&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;continue&lt;/code&gt; skips over the rest of the body and begins the next
-iteration immediately&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;while&lt;/h2&gt;
-
-&lt;p&gt;Checks the condition - if false, skips the body. If true, runs the body,
-then checks the condition again, etc.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-while (!satisfied) {
-    buyStuff()
-}
+&lt;pre&gt;&lt;code&gt;    Add: class extends BinaryOp {
+        init: super func ~lr
+    }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;toc_6&#34;&gt;for&lt;/h2&gt;
+&lt;p&gt;This behaves exactly as if we had written:&lt;/p&gt;
 
-&lt;p&gt;There is no C-like &lt;code&gt;for&lt;/code&gt; in ooc, only a foreach. It can iterate through
-values like ranges:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-for (i in 1..10) {
-    &amp;quot;Counting to %d&amp;quot; printfln(i)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Or more complex data structures:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-for (element in list) {
-    &amp;quot;Element = %s&amp;quot; printfln(element toString())
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;For an object to be iterable, it has to implement the
-&lt;code&gt;iterator: func &amp;lt;T&amp;gt; -&amp;gt; Iterator&amp;lt;T&amp;gt;&lt;/code&gt; method.&lt;/p&gt;
-
-&lt;p&gt;A variant of foreach allows one to get the index of the current element:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-for ((index, element) in list) {
-    &amp;quot;list[%d] = %s&amp;quot; printfln(index, element toString())
-}
+&lt;pre&gt;&lt;code&gt;    Add: class extends BinaryOp {
+        init: func ~lr (.left, .right) {
+            super(left, right)
+        }
+    }
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
@@ -503,656 +507,111 @@ to figure out where the hotspots are in your code.&lt;/p&gt;
     </item>
     
     <item>
-      <title>Constructors</title>
-      <link>http://oocmanual.cogneco.com/language/constructors</link>
+      <title>Covers</title>
+      <link>http://oocmanual.cogneco.com/language/covers</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/language/constructors</guid>
+      <guid>http://oocmanual.cogneco.com/language/covers</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;Constructors&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;Covers&lt;/h1&gt;
 
-&lt;p&gt;In ooc, unlike Java/Scala/C++/C#, &amp;lsquo;new&amp;rsquo; isn&amp;rsquo;t a keyword, but a static method.&lt;/p&gt;
+&lt;p&gt;One selling point of ooc is that it makes it easy to use C libraries which
+design is object-oriented. Covers are one way to do that.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;Struct-like covers&lt;/h1&gt;
+
+&lt;p&gt;Covers are a by-value, lighter, lower-level alternative to classes.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+Vec2: cover {
+  x, y: Float
+
+  norm: func -&amp;gt; Float {
+    sqrt(x * x + y * y)
+  }
+}
+
+v: Vec2
+v x = 1.5
+v y = 4
+&amp;quot;Norm = %.2f&amp;quot; printfln(v norm())
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;toc_2&#34;&gt;Covers from&lt;/h1&gt;
+
+&lt;p&gt;Covers from are based on an external, C type, and provide a way to access
+members of the external type (if it&amp;rsquo;s a struct), and to call methods on it -
+either existing, external functions, or adding whole new methods.&lt;/p&gt;
 
 &lt;p&gt;For example:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;    dog := Dog new(&amp;quot;Pif&amp;quot;)
+&lt;pre&gt;&lt;code&gt;#!ooc
+Int: cover from int
+UInt8: cover from uint8_t
+LLong: cover from long long
+UInt: cover from unsigned int
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;However it&amp;rsquo;s uncommon to directly define a new method. Instead, an init method is
-defined, like this:&lt;/p&gt;
+&lt;h1 id=&#34;toc_3&#34;&gt;Members&lt;/h1&gt;
 
-&lt;pre&gt;&lt;code&gt;    Dog: class {
+&lt;p&gt;Members can be declared extern, like functions - which means they are defined
+somewhere else and need to be accessed from ooc code.&lt;/p&gt;
 
-        name: String
+&lt;pre&gt;&lt;code&gt;#!ooc
+CpFloat: cover from cpFloat
 
-        init: func (=name) {}
-
-    }
+CpVect: cover from cpVect {
+  x, y: extern CpFloat
+}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;When an &amp;lsquo;init&amp;rsquo; method is defined, a corresponding &amp;lsquo;new&amp;rsquo; static method is defined, in our case,
-the code above is equivalent to:&lt;/p&gt;
+&lt;p&gt;Members can be aliased by using the &lt;code&gt;extern(original_name)&lt;/code&gt; function.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;    Dog: class {
-
-        name: String
-
-        init: func (name: String) {
-            this name = name
-        }
-
-        new: static func (name: String) -&amp;gt; This {
-            this := This alloc() as This
-            this init()
-            this
-        }
-
-    }
+&lt;pre&gt;&lt;code&gt;#!ooc
+Rectangle: cover from bar_rectangle_t {
+  width: extern(Width)
+  height: extern(Height)
+}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&amp;lsquo;alloc&amp;rsquo; is a method of Class, which can be defined like this, for example:&lt;/p&gt;
+&lt;h1 id=&#34;toc_4&#34;&gt;Methods&lt;/h1&gt;
 
-&lt;pre&gt;&lt;code&gt;    /// Create a new instance of the object of type defined by this class
-    alloc: final func ~_class -&amp;gt; Object {
-        object := gc_malloc(instanceSize) as Object
-        if(object) {
-            object class = this
-        }
-        return object
-    }
+&lt;p&gt;The &lt;code&gt;extern&lt;/code&gt; function can be used to describe cover methods as well. Aliasing is
+often good practice, as it allows to get rid of the unnecessary prefixes.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+FooContext: cover from foo_context_t {
+  // extern constructor
+  new: static extern(foo_context_new) func (CString, Int) -&amp;gt; This
+
+  // extern method
+  doSomething: extern(foo_context_do_something) -&amp;gt; CString
+
+  // additional method
+  doSomethingTwice: func {
+    doSomething()
+    doSomething()
+  }
+}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;In ooc implementations, Object and Class are often classes defined in .ooc source
-files, so you can easily study their source code. You can typically find their definitions
-in sdk/lang/ (because everything in the lang/ package is automatically imported)&lt;/p&gt;
+&lt;p&gt;And so, a properly covered C struct with methods can be used as if it was an object:&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_1&#34;&gt;Reminder: member-arguments and assign-arguments&lt;/h2&gt;
-
-&lt;p&gt;This:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    DiceRoll: class {
-        value: Int
-
-        init: func (=value) {}
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;is the equivalent of this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    DiceRoll: class {
-        value: Int
-
-        init: func (.value) {
-            this value = value
-        }
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;which is the equivalent of this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    DiceRoll: class {
-        value: Int
-
-        init: func (value: Int) {
-            this value = value
-        }
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Ie &amp;lsquo;.&amp;rsquo; allows &amp;lsquo;value&amp;rsquo;s type to be inferred from the member variable
-of the same name, and &amp;lsquo;=&amp;rsquo; does the same plus assigns it in the constructor.&lt;/p&gt;
-
-&lt;p&gt;This works for any method, not only for constructors. However, if you&amp;rsquo;re using
-it for setters, you probably want to use properties instead.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Multiple constructors&lt;/h2&gt;
-
-&lt;p&gt;As any method, constructors can be overloaded with suffixes.&lt;/p&gt;
-
-&lt;p&gt;Suffixes may seem annoying at first, seen as a sort of &amp;lsquo;manual name mangling&amp;rsquo;,
-but aside from helping to debug, they&amp;rsquo;re also a way to document the purpose of your
-different constructors. For that reason, it&amp;rsquo;s always a good idea to give meaningful
-suffixes that lets one hint the reason for existence of a constructor.&lt;/p&gt;
-
-&lt;p&gt;From a constructor, you can call another constructor with init(), just like a regular
-method.&lt;/p&gt;
-
-&lt;p&gt;You can also call a super-constructor with super()&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Dog: class {
-
-        name: String
-
-        init: func ~defaultName {
-            init(&amp;quot;The Man&amp;quot;)
-        }
-
-        init: func (=name) {}
-
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Inheritance&lt;/h2&gt;
-
-&lt;p&gt;A common mistake is to think that constructor are inherited, because they are standard
-methods. However, this behavior would be harmful, as explained in the following example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Logger: class {
-        prefix: String
-
-        init: func (=prefix) {}
-
-        log: func (msg: String) {
-            &amp;quot;%s%s&amp;quot; printfln(prefix, msg)
-        }
-    }
-
-    FileLogger: class extends Logger {
-        output: FileWriter
-
-        init: func ~withPath (path: String) {
-            super(prefix)
-            output = FileWriter new(path)
-        }
-
-        log: func (msg: String) {
-            output write(prefix). write(msg). write(&#39;\n&#39;)
-        }
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;What would happen if the first constructor defined in Logger was available
-for FileLogger? Let&amp;rsquo;s find out&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    warn := FileLogger new(&amp;quot;WARN&amp;quot;)
-    warn log(&amp;quot;Somebody set us up the stacktrace&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The constructor call, if it was valid, would either return a Logger, which is
-not what we want, or by some miracle trick, return a FileLogger - but one
-that wouldn&amp;rsquo;t be properly initialized, so that log() would crash.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Super func (and beyond)&lt;/h2&gt;
-
-&lt;p&gt;However, there are times when one truly wants to relay a constructor
-in an inherited class, such as:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Expression: abstract class {
-        eval: abstract func -&amp;gt; Int
-    }
-
-    BinaryOp: abstract class extends Expression {
-        left, right: Expression
-
-        init: func ~lr (=left, =right) {}
-    }
-
-    Add: class extends BinaryOp {
-        init: func ~lr (=left, =right) {}
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Repeating the &amp;lsquo;init~lr&amp;rsquo; definition in Add violates the Don&amp;rsquo;t Repeat Yourself (DRY)
-principle. Besides, if functionality is added to the base BinaryOp init~lr, it
-wouldn&amp;rsquo;t be replicated in Add init~lr.&lt;/p&gt;
-
-&lt;p&gt;For this precise case, the &amp;lsquo;super func&amp;rsquo; construct exists:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Add: class extends BinaryOp {
-        init: super func ~lr
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This behaves exactly as if we had written:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Add: class extends BinaryOp {
-        init: func ~lr (.left, .right) {
-            super(left, right)
-        }
-    }
+&lt;pre&gt;&lt;code&gt;#!ooc
+context := FooContext new()
+context doSomething()
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
     <item>
-      <title>lang</title>
-      <link>http://oocmanual.cogneco.com/sdk/lang</link>
+      <title>Glossary</title>
+      <link>http://oocmanual.cogneco.com/glossary</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/sdk/lang</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The lang package&lt;/h1&gt;
-
-&lt;p&gt;The lang package is considered built-in: it is imported by default in ooc
-modules. There is a reason for that, however - the SDK is distributed as
-an ooc library itself, and as such, it has a .use file that specifies which
-modules should be imported.&lt;/p&gt;
-
-&lt;p&gt;Some of the lang package is essential, like &lt;code&gt;Object&lt;/code&gt; and &lt;code&gt;Class&lt;/code&gt;, which
-means that the compiler, &lt;a href=&#34;../tools/rock/&#34;&gt;rock&lt;/a&gt;, will expect them to be present,
-have certain names, fields and methods. However, using a custom sdk is
-possible, where the implementation for these can be swapped to something
-lighter, for example.&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;types&#34;&gt;Types&lt;/a&gt; section describes how Object,
- Class, and other types such as Void, Pointer, Bool, None,
- Cell are defined. It also discusses variable arguments.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;string&#34;&gt;String&lt;/a&gt; section talks about string
- handling, the mutable variant Buffer, and formatting&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;numbers&#34;&gt;Numbers&lt;/a&gt; section talks about number
- types, either integers or floats, and the various functions available.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;iterators&#34;&gt;Iterators&lt;/a&gt; section discusses
- how iterators are implemented, and what goes on behind a foreach.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;exceptions&#34;&gt;Exceptions&lt;/a&gt; section talks about
- default properties of exceptions, and how to extend them.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;memory&#34;&gt;Memory&lt;/a&gt; section talks about memory
- management, mostly just how to deal with blocks of memory rather
- than more high-level data structures.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Generics 2</title>
-      <link>http://oocmanual.cogneco.com/language/generics2</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/language/generics2</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Generics&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;Intro&lt;/h2&gt;
-
-&lt;p&gt;Generics are one of the most commonly misunderstood features of ooc.&lt;/p&gt;
-
-&lt;p&gt;Many people attempt confuse them with templates (like in C++ or D) and are
-surprised when things like this don&amp;rsquo;t work:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Vector2: class &amp;lt;T&amp;gt; {
-        x, y: T
-    init: func(=x, =y) {}
-        add: func (r: This&amp;lt;T&amp;gt;) {
-            new(x + r x, y + r y)
-        }
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;(Don&amp;rsquo;t worry about the syntax for now, I&amp;rsquo;ll get to it later)&lt;/p&gt;
-
-&lt;p&gt;Why doesn&amp;rsquo;t this work? It&amp;rsquo;s because you can&amp;rsquo;t do much with generic variables.
-The whole point is that &lt;em&gt;we don&amp;rsquo;t know which type they are&lt;/em&gt; until we run the
-program.&lt;/p&gt;
-
-&lt;p&gt;One might instanciate a Vector2&amp;lt;Int&amp;gt; - in which case the + operator
-makes sense - but they could also instanciate a Vector2&amp;lt;Carrot&amp;gt;, where Carrot
-wouldn&amp;rsquo;t necessarily have a + operator.&lt;/p&gt;
-
-&lt;p&gt;Besides, since ooc is statically typed, we wouldn&amp;rsquo;t know which + operator
-to use - they&amp;rsquo;re not all the same! We don&amp;rsquo;t add two ints the same manner that
-we add two floats, and so on.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Generic functions and type parameters&lt;/h2&gt;
-
-&lt;p&gt;So, if we can&amp;rsquo;t use any operator on generic variables - nor can we call
-methods on them, then what are they good for? Sure looks useless from here.&lt;/p&gt;
-
-&lt;p&gt;Well, here&amp;rsquo;s one thing we can do, for example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    identity: func &amp;lt;T&amp;gt; (val: T) -&amp;gt; T {
-        val
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Woha. What just happened here? Let&amp;rsquo;s recap line by line.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    identity: func &amp;lt;T&amp;gt; (val: T) -&amp;gt; T
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Here, we declare a function named &amp;lsquo;identity&amp;rsquo;, with one type parameter named T,
-taking one parameter named &amp;lsquo;val&amp;rsquo;, and returning a value of type T.&lt;/p&gt;
-
-&lt;p&gt;Type parameters are the names listed between the angular brackets &amp;lt; and &amp;gt;. You
-can have as many as you want (although if you have more than few of them,
-you&amp;rsquo;re probably doing it wrong)&lt;/p&gt;
-
-&lt;p&gt;When you declare a type parameter, it tells the compiler about a new type,
-that we know nothing about at compile-time. Well, not nothing. Remember
-classes? Here&amp;rsquo;s how we access the class of an object:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    object class
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And if object was of type Carrot, that amounts exactly to doing just:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Carrot
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;What is that, exactly? It&amp;rsquo;s an access to a class. What is a class? An instance
-of Class, which is declared in lang/CoreTypes.ooc If you actually go on and open
-CoreTypes, here is a simplified version of what you will find:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Class: class {
-        name: String
-        size, instanceSize: SizeT
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;(Reminder: SizeT can be used to store the size of something. On 32-bits
-platforms, it&amp;rsquo;s 32-bits wide. On 64-bits platforms, it&amp;rsquo;s 64-bits wide, and so
-on. Basically, it&amp;rsquo;s an integer type that is as wide as a Pointer)&lt;/p&gt;
-
-&lt;p&gt;So back to our generic stuff. I said we knew nothing about generic types. And
-in fact, it was a downright lie. Please accept my apologies. The reality is -
-we know all that matters! If you try to execute the following piece of code:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    test: func &amp;lt;T&amp;gt; (t: T) { T class name println() }
-    test(42)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You&amp;rsquo;ll find out something very strange and puzzling.. it prints &amp;ldquo;Class&amp;rdquo; !&lt;/p&gt;
-
-&lt;p&gt;We just discovered that we can access type parameters just like any other
-variable. And since T is a class, and we can access various fields of a class,
-here&amp;rsquo;s what we can do:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    test2: func &amp;lt;T&amp;gt; (t: T) {
-        &amp;quot;name = %s, size = %zd, instanceSize = %zd&amp;quot; printfln(
-        T name, T size, T instanceSize)
-    }
-    test2(42)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This will likely print something like &amp;ldquo;name = Int, size = 4, instanceSize =
-4&amp;rdquo;.&lt;/p&gt;
-
-&lt;p&gt;Then you must wonder why is there &amp;lsquo;size&amp;rsquo; and &amp;lsquo;instanceSize&amp;rsquo;, if they&amp;rsquo;re equal?
-Well, they&amp;rsquo;re not equal in all cases. Most importantly, for objects (which are
-references, remember), &amp;lsquo;object class size&amp;rsquo; is equal to &amp;lsquo;Pointer size&amp;rsquo;, but
-&amp;lsquo;object class instanceSize&amp;rsquo; is equal to the actual number of bytes we should
-allocate when we create an object of this class.&lt;/p&gt;
-
-&lt;p&gt;But I digress. (Then again, you&amp;rsquo;re the curious one - not me.)&lt;/p&gt;
-
-&lt;p&gt;So let&amp;rsquo;s analyze the second line of our &amp;lsquo;identity&amp;rsquo; function above:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    val
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Let&amp;rsquo;s see. It&amp;rsquo;s the last line of a non-void function, so it means it&amp;rsquo;s
-returned. &amp;lsquo;val&amp;rsquo; refers to a variable declaration which happens to be a
-function argument, of a generic type. (&lt;em&gt;phew&lt;/em&gt; - at this point, repeat that
-last line to yourself two or three times to impreign it into your brain)&lt;/p&gt;
-
-&lt;p&gt;So basically what our function does is&amp;hellip; just pass through what we give it as
-an argument! Let&amp;rsquo;s try that&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    42 toString() println() // just to be sure
-    identity(42) toString() println() // still a little trivial
-    identity(identity(identity(identity(42)))) toString() println() // whoa.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Yup, it prints 42 alright.&lt;/p&gt;
-
-&lt;p&gt;But wait! I just said above that the compiler &lt;em&gt;couldn&amp;rsquo;t do anything useful
-with a generic variable&lt;/em&gt;, that is, either use an operator on it or call a
-function on it, because it doesn&amp;rsquo;t know its type. And in our example, we
-clearly see that the &amp;lsquo;identity&amp;rsquo; function has return type T, which is a generic
-type! (Because it&amp;rsquo;s between the &amp;lt; and &amp;gt;, remember?)&lt;/p&gt;
-
-&lt;p&gt;Have I lied again? Let&amp;rsquo;s find out.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Generic type inference&lt;/h2&gt;
-
-&lt;p&gt;Let&amp;rsquo;s do a little experiment:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    a := 42
-    b := identity(42)
-    &amp;quot;%s and %s&amp;quot; printfln(a class name, b class name)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;What did you get? Int and Int, right? But - but the return type of &amp;lsquo;identity&amp;rsquo;
-is T! Shouldn&amp;rsquo;t b&amp;rsquo;s type be T too?&lt;/p&gt;
-
-&lt;p&gt;Well, no.&lt;/p&gt;
-
-&lt;p&gt;And thank God for that.&lt;/p&gt;
-
-&lt;p&gt;In fact, if it was so, generics would be pretty much useless (heh, they&amp;rsquo;re limited enough already!)&lt;/p&gt;
-
-&lt;p&gt;So what kind of magic is going on? White magic. Which really isn&amp;rsquo;t magic at
-all.&lt;/p&gt;
-
-&lt;p&gt;You see, when you call:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    identity(42)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And the definition of identity is&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    identity: func &amp;lt;T&amp;gt; (val: T) -&amp;gt; T
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Here&amp;rsquo;s what the compiler figures out: well, we have one unknown type (that
-is, generic type), called &amp;rsquo;T&amp;rsquo;. Also, the first (and only) argument is of that
-type. Hey - let&amp;rsquo;s infer what &amp;rsquo;T&amp;rsquo; is from the type of this argument!&lt;/p&gt;
-
-&lt;p&gt;And that&amp;rsquo;s exactly what it does. As a result, it figures the type of b to be
-Int - since we can know all that at compile-time. It makes b easier to use,
-avoid tons of cast, and is good for your karma.&lt;/p&gt;
-
-&lt;p&gt;Here&amp;rsquo;s another example.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    printTypeName: func &amp;lt;T&amp;gt; (T: Class) { T name println() }
-    printTypeName(Object)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then it prints &amp;ldquo;Object&amp;rdquo;. Did we find a way to print strings without having to
-enclose them between quotes? Hopefully not. That would be messy, man. Talk
-about Perl :/&lt;/p&gt;
-
-&lt;p&gt;However, we have just discovered that we can pass types as arguments to
-functions. Of course, because types are just instances of &amp;lsquo;Class&amp;rsquo;, right? So
-they&amp;rsquo;re objects. So they&amp;rsquo;re values. So we can pass them around.&lt;/p&gt;
-
-&lt;p&gt;So here, the compiler figures that, well - we give it the solution to &amp;lsquo;what is
-T&amp;rsquo;. It is then not too big a challenge for the compiler to go from here.&lt;/p&gt;
-
-&lt;p&gt;Then again, we could have done:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    dumbPrintTypeName: func (T: Class) { T name println() }
-    dumbPrintTypeName(Object)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Since we don&amp;rsquo;t use T as a type anywhere. So why even bother with this &amp;lt;T&amp;gt;
-thing, hmm? Why does the compiler even allow it? Read on if you want to find out.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Generic return types&lt;/h2&gt;
-
-&lt;p&gt;Here&amp;rsquo;s a little riddle for you. How does the compiler figure out the real return
-type of this function:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    sackOfUnknown: func &amp;lt;T&amp;gt; -&amp;gt; T { 42 }
-    sackOfUnknown()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Anyone? Ah, I see a hand in the back. What do you say? The type of the return
-expression? WRONG. But that was an honest try. One point for effort.&lt;/p&gt;
-
-&lt;p&gt;So what&amp;rsquo;s the solution? &amp;ldquo;It doesn&amp;rsquo;t.&amp;rdquo; That&amp;rsquo;s right. The compiler doesn&amp;rsquo;t even
-bother. We give absolutely no clue as to the type of T when we&amp;rsquo;re calling it -
-and the compiler never tries to infer a generic type from the return
-expression (that&amp;rsquo;s useless, I mean - why even make a generic function in the
-first place? Too lazy to type out &amp;lsquo;Int&amp;rsquo;? Yeah. Call me back when you have ABI
-incompatibilities because you changed a return expression. Or rather - don&amp;rsquo;t.)&lt;/p&gt;
-
-&lt;p&gt;So how do we make a function that&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;has a generic return type, let&amp;rsquo;s say &amp;rsquo;T&amp;rsquo;&lt;/li&gt;
-&lt;li&gt;doesn&amp;rsquo;t take an argument of type T ?&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Well, that&amp;rsquo;s precisely where that useless thing presented in the previous
-section comes in very handy:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    theAnswer: func &amp;lt;T&amp;gt; (T: Class) -&amp;gt; T {
-        match T {
-            case Int    =&amp;gt; 42
-            case Float  =&amp;gt; 42.0
-            case String =&amp;gt; &amp;quot;forty-two&amp;quot;
-            case        =&amp;gt; Exception new(&amp;quot;You&#39;re not worthy.&amp;quot;) throw(); 0
-        }
-    }
-   rational := theAnswer(Int)
-   real     := theAnswer(Float)
-   text     := theAnswer(String)
-   theAnswer(Object) // ka-boom!
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;What just happened? We used a match on &amp;rsquo;T&amp;rsquo;, which means we&amp;rsquo;re comparing it.
-We&amp;rsquo;re comparing it with the types &amp;lsquo;Int&amp;rsquo;, &amp;lsquo;Float&amp;rsquo;, &amp;lsquo;String&amp;rsquo;, trying to return
-expressions. And if it&amp;rsquo;s none of these types, it just blows up.&lt;/p&gt;
-
-&lt;p&gt;Note: in that case, our theAnswer function is pretty useless&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Generic classes&lt;/h2&gt;
-
-&lt;p&gt;Now that&amp;rsquo;s all good and fancy - but generic functions aren&amp;rsquo;t actually that
-useful. If we can&amp;rsquo;t use operators nor functions on generic types, what can we
-do? Well - store them! That&amp;rsquo;s the way all collections work.&lt;/p&gt;
-
-&lt;p&gt;Let&amp;rsquo;s start with a simple one:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Slot: class &amp;lt;T&amp;gt; {
-        element: T
-        init: func (.element) { set(element) }
-        set: func (=element) {}
-        get: func -&amp;gt; T { element }
-    }
-
-    s := Slot new(3.14)
-    s get() toString() println()
-    s T name println()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Not that bad, eh? (It should print 3.14 and Float - or some other type, if
-you&amp;rsquo;re in the future and ooc has a proper number tower)&lt;/p&gt;
-
-&lt;p&gt;But wait - get is defined like that:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    get: func -&amp;gt; T { element }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And clearly T is a generic type, ie. it could be anything at runtime, and
-&lt;em&gt;yet&lt;/em&gt; the compiler figures it out right.&lt;/p&gt;
-
-&lt;p&gt;So what happens here? Let&amp;rsquo;s look at the call, since it&amp;rsquo;s the info from which
-the compiler works to infer generic types:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    s get()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Hmmph. Not many types there - except maybe.. the type of s. Which is what
-exactly?&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    s := Slot new(3.14)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Well it turns out that Slot new is just a regular method call, the generic
-type T is inferred to &amp;lsquo;Float&amp;rsquo;, and so &amp;rsquo;s&amp;rsquo; becomes a Slot&amp;lt;Float&amp;gt;&lt;/p&gt;
-
-&lt;p&gt;Hence, the compiler sees the get() call as:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Slot&amp;lt;Float&amp;gt; get()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And it sees the get definition as&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Sloat&amp;lt;T&amp;gt; get: func {}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;From here, inferring that T = Float is trivial.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;Advanced type inference&lt;/h2&gt;
-
-&lt;p&gt;One of the most advanced example of type inference in the whole SDK
-is probably the List map() function. Here is its signature (ie.
-definition without the body) :&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    map: func &amp;lt;K&amp;gt; (f: Func (T) -&amp;gt; K) -&amp;gt; This&amp;lt;K&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;So basically it turns a List&amp;lt;T&amp;gt; into a List&amp;lt;K&amp;gt;, by calling f to turn
-every T into a K. Makes sense.&lt;/p&gt;
-
-&lt;p&gt;The question is now - how does the compiler infer K? The only info we have
-about it, is that it&amp;rsquo;s the return type of function we pass as an argument
-to the function.&lt;/p&gt;
-
-&lt;p&gt;Well - no big deal then, if we do:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    intToString: func (i: Int) -&amp;gt; String { i toString() }
-    strings := numbers map(intToString)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then we know that K = String from the definition of intToString.&lt;/p&gt;
-
-&lt;p&gt;But wait, there&amp;rsquo;s a nice infers-everything syntax for closures, ie.:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    stringsToo := numbers map(|x| x toString())
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And here, we&amp;rsquo;re doomed. The closure insides attempts to infers its whole
-signature (argument types, return type, etc.) from the type of the
-corresponding argmuent in the map definition. But map doesn&amp;rsquo;t provide
-a definitive answer, since the return type is generic.&lt;/p&gt;
-
-&lt;p&gt;Hence, the compiler falls back to the only possible resolution of this
-madness: it infers K from the return expression inside the closure.&lt;/p&gt;
-
-&lt;p&gt;This case is the &lt;em&gt;only case&lt;/em&gt; where rock considers the return expression
-inside functions to infer any type at all.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;Under the hood&lt;/h2&gt;
-
-&lt;p&gt;How does it work under the hood?&lt;/p&gt;
-
-&lt;p&gt;Here is the naive implementation: generic type arguments as passed
-as function arguments, ie a call to:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    ArrayList&amp;lt;Int&amp;gt; new()
-    identity(42)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;becomes (without mangling):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    ArrayList_new(Int_class());
-    identity()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Type arguments in classes become variables:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    ArrayList: class &amp;lt;T&amp;gt; {}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;is&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    ArrayList: class {
-        T: Class
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Class type arguments are assigned in the constructor to the appropriate
-values.&lt;/p&gt;
+      <guid>http://oocmanual.cogneco.com/glossary</guid>
+      <description>&lt;p&gt;{{GLOSSARY}}&lt;/p&gt;
 </description>
     </item>
     
@@ -1396,611 +855,186 @@ only for that instance, so d2 shout isn&amp;rsquo;t changed.&lt;/p&gt;
     </item>
     
     <item>
-      <title>Preprocessor</title>
-      <link>http://oocmanual.cogneco.com/language/preprocessor</link>
+      <title>Exceptions</title>
+      <link>http://oocmanual.cogneco.com/language/exceptions</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/language/preprocessor</guid>
+      <guid>http://oocmanual.cogneco.com/language/exceptions</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;Version blocks&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;Error handling&lt;/h1&gt;
 
-&lt;p&gt;Version blocks allows one to write platform-specific code. For example:&lt;/p&gt;
+&lt;p&gt;The C way to do error handling is usually via return codes:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-runThing: class {
-  version (windows) {
-    // use CreateProcess ...
-    return
+openFile: (path: String) -&amp;gt; Int {
+  if (error) {
+    return -1
   }
+  return someFileDescriptor
+}
+&lt;/code&gt;&lt;/pre&gt;
 
-  version (!windows) {
-    // use something more unix-y
+&lt;p&gt;However, it relies on the user correctly checking the return value:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+fd := openFile(&amp;quot;/etc/hosts&amp;quot;)
+doSomethingWithFile(fd) // forgot to check, things might go bad!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;Exceptions&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;raise&lt;/h2&gt;
+
+&lt;p&gt;Another way to handle that would be with exceptions&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+openFile: (path: String) -&amp;gt; File {
+  if (error) {
+    raise(&amp;quot;Could not open %s&amp;quot; format(path))
+  }
+  return someFile
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That way, even if the user doesn&amp;rsquo;t explicitly check for the error, it&amp;rsquo;ll
+still interrupt the flow of the program:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;file := openFile(&amp;quot;/dev/does/not/exist&amp;quot;)
+doSomethingWithFile(file) // we are never even going to reach there
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Throwing&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;raise&lt;/code&gt; function above is a quick method to raise an exception. What
+it really does is this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+Exception new(message) throw()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;There is no special keyword to throw exceptions, it&amp;rsquo;s just a method on the
+&lt;code&gt;Exception&lt;/code&gt; class.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Catching exceptions&lt;/h2&gt;
+
+&lt;p&gt;Catching exceptions is done through the &lt;code&gt;try&lt;/code&gt; / &lt;code&gt;catch&lt;/code&gt; syntax:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+try {
+  openFile(&amp;quot;dev/does/not/exist&amp;quot;)
+} catch (e: Exception) {
+  // something wrong happened
+  &amp;quot;Error: %s&amp;quot; printfln(e message)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Exception sub-classes&lt;/h2&gt;
+
+&lt;p&gt;It is possible to sub-class exceptions to have several exception types.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+FileNotFoundException: class extends Exception {
+  init: func (path: String) {
+    super(&amp;quot;File not found: %s&amp;quot; format(path))
+  }
+}
+
+openFile: func (path: String) {
+  if (error) {
+    FileNotFoundException new(path) throw()
   }
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Version blocks support complex binary expressions, like &lt;code&gt;&amp;amp;&amp;amp;&lt;/code&gt;, &lt;code&gt;||&lt;/code&gt;, &lt;code&gt;!&lt;/code&gt;, and
-any depth of parenthesis nesting. For example:&lt;/p&gt;
+&lt;p&gt;Which makes it easy to catch a specific type of exception:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-version (!(osx || linux)) {
-  // not on osx, nor on linux
+try {
+  file := openFile(&amp;quot;/dev/does/not/exist&amp;quot;)
+  doSomethingWithFile(file)
+} catch (e1: FileNotFoundException) {
+  // The file wasn&#39;t found
+} catch (e2: Exception) {
+  // Something else went wrong.
 }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Available version blocks and their corresponding C defines are as follow:&lt;/p&gt;
-
-&lt;table class=&#34;pretty&#34;&gt;
-&lt;tbody&gt;
-
-&lt;tr&gt;
-&lt;td&gt;Identifier&lt;/td&gt;
-&lt;td&gt;Description&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;windows&lt;/td&gt;
-&lt;td&gt;Windows OS, both 32 and 64-bit&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;linux&lt;/td&gt;
-&lt;td&gt;Linux&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;solaris&lt;/td&gt;
-&lt;td&gt;Solaris&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;unix&lt;/td&gt;
-&lt;td&gt;Unices (Apple products do not define this)&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;beos&lt;/td&gt;
-&lt;td&gt;BeOS&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;haiku&lt;/td&gt;
-&lt;td&gt;Haiku (BeOS-like)&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;apple&lt;/td&gt;
-&lt;td&gt;All things apple: iOS, OSX&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;em&gt;ios&lt;/em&gt;&lt;/td&gt;
-&lt;td&gt;iOS: iPhone, iPad&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;em&gt;ios_simulator&lt;/em&gt;&lt;/td&gt;
-&lt;td&gt;iOS compiled for the ios simulator&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;em&gt;osx&lt;/em&gt;&lt;/td&gt;
-&lt;td&gt;Mac OSX (consider using &lt;tt&gt;apple&lt;/tt&gt; instead)&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;freebsd&lt;/td&gt;
-&lt;td&gt;FreeBSD&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;openbsd&lt;/td&gt;
-&lt;td&gt;OpenBSD&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;netbsd&lt;/td&gt;
-&lt;td&gt;NetBSD&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;dragonfly&lt;/td&gt;
-&lt;td&gt;DragonFly BSD&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;cygwin&lt;/td&gt;
-&lt;td&gt;Cygwin toolchain&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;mingw&lt;/td&gt;
-&lt;td&gt;MinGW 32 or 64-bit toolchain&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;mingw64&lt;/td&gt;
-&lt;td&gt;MinGW 64-bit toolchain&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;gnuc&lt;/td&gt;
-&lt;td&gt;GCC (GNU C)&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;msvc&lt;/td&gt;
-&lt;td&gt;Microsoft Visual C++&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;android&lt;/td&gt;
-&lt;td&gt;Android toolchain&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;arm&lt;/td&gt;
-&lt;td&gt;ARM processor architecture&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;i386&lt;/td&gt;
-&lt;td&gt;Intel x86 architecture (defined by GNU C)&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;x86&lt;/td&gt;
-&lt;td&gt;Intel x86 architecture (defined by MinGW)&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;x86_64&lt;/td&gt;
-&lt;td&gt;AMD64 architecture&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;ppc&lt;/td&gt;
-&lt;td&gt;PPC architecture&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;ppc64&lt;/td&gt;
-&lt;td&gt;PPC 64-bit architecture&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;64&lt;/td&gt;
-&lt;td&gt;64-bit processor architecture and toolchain&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;gc&lt;/td&gt;
-&lt;td&gt;Garbage Collector activated on compilation&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;The specs in &lt;em&gt;italics&lt;/em&gt; are &amp;ldquo;complex&amp;rdquo; specs - they can&amp;rsquo;t be in a composed version
-expression, e.g. this is invalid:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-version (64 &amp;amp;&amp;amp; osx) {
-    // code here
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Consider doing this instead:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-version (64) {
-    version (osx) {
-        // code here
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The reason for this is that &lt;code&gt;osx&lt;/code&gt;, &lt;code&gt;ios&lt;/code&gt;, and &lt;code&gt;ios_simulator&lt;/code&gt; are not simple &lt;code&gt;#ifdef&lt;/code&gt;s
-in the generated code, but they require an include and an equality test.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;Line continuations&lt;/h1&gt;
-
-&lt;p&gt;Any line can be broken down on several lines, by using the backslash character, &lt;code&gt;\&lt;/code&gt;,
-as a line continuation:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-someList \
-map(|el| Something new(el))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;If it wasn&amp;rsquo;t for that &lt;code&gt;\&lt;/code&gt; before the end of the line, &lt;code&gt;map&lt;/code&gt; would be interpreted as
-a separate function call, and not a method call.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_2&#34;&gt;Constants&lt;/h1&gt;
-
-&lt;p&gt;Some constants are accessible anywhere and will be replaced at compile time with
-strings. Those are:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;__BUILD_DATETIME__&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;__BUILD_TARGET__&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;__BUILD_ROCK_VERSION__&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;__BUILD_ROCK_CODENAME__&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;__BUILD_HOSTNAME__&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&#34;toc_3&#34;&gt;Call chaining&lt;/h1&gt;
-
-&lt;p&gt;While not technically a preprocessor feature, the following code:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-a := ArrayList&amp;lt;Int&amp;gt; new(). add(1). add(2). add(3)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Is equivalent to:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-a := ArrayList&amp;lt;Int&amp;gt; new()
-a add(1). add(2). add(3)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Itself equivalent to:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-a := ArrayList&amp;lt;Int&amp;gt; new()
-a add(1)
-a add(2)
-a add(3)
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
     <item>
-      <title>pipe</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/pipe</link>
+      <title>exception</title>
+      <link>http://oocmanual.cogneco.com/sdk/lang/exceptions</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/sdk/os/pipe</guid>
+      <guid>http://oocmanual.cogneco.com/sdk/lang/exceptions</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/Pipe module&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;Exception&lt;/h1&gt;
 
-&lt;p&gt;The Pipe module allows one to deal with pipes. Pipes are basically a pair of
-read and write file descriptors.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;Exception&lt;/code&gt; class is the super-type of anything that can be thrown
+and caught.&lt;/p&gt;
 
-&lt;p&gt;The writer writes into the write file descriptor and the reader reads into the
-read file descriptor.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;Reading&lt;/h2&gt;
-
-&lt;p&gt;A read call may either:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;successfully read, if there&amp;rsquo;s data in the pipe&lt;/li&gt;
-&lt;li&gt;block to wait for some more data (in blocking mode)&lt;/li&gt;
-&lt;li&gt;return immediately with no data (in non-blocking mode)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;In non-blocking mode, one has to be careful to distinguish between the &amp;lsquo;no
-data&amp;rsquo; condition and the &amp;lsquo;end of pipe&amp;rsquo; condition. OS pipes don&amp;rsquo;t have a proper
-&amp;lsquo;eof&amp;rsquo; marker, but reading from a closed pipe will mark the Pipe class as eof
-anyway, accessible with &lt;code&gt;Pipe eof?()&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;The &lt;code&gt;os/Pipe&lt;/code&gt; package contains a &lt;code&gt;PipeReader&lt;/code&gt; class, which extends the
-&lt;code&gt;io/Reader&lt;/code&gt; class, for convenience.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Writing&lt;/h2&gt;
-
-&lt;p&gt;A write call may either:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;return immediately if there&amp;rsquo;s room in the pipe&lt;/li&gt;
-&lt;li&gt;block to wait for some data to be read, making room to write something (in
-blocking mode)&lt;/li&gt;
-&lt;li&gt;return immediately, having written as much as it can (in non-blocking mode)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The &lt;code&gt;os/Pipe&lt;/code&gt; package contains a &lt;code&gt;PipeWriter&lt;/code&gt; class, which extends the
-&lt;code&gt;io/Writer&lt;/code&gt; class, for convenience.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Buffering considerations&lt;/h2&gt;
-
-&lt;p&gt;Note that a pipe&amp;rsquo;s user has to do its own buffering when writing: in blocking
-mode, writing something too large will hang forever, and in non-blocking mode,
-only the part that fits will be written, leaving the rest unwritten.&lt;/p&gt;
-
-&lt;p&gt;As a result, using a &lt;code&gt;PipeReader&lt;/code&gt; or a &lt;code&gt;PipeReader&lt;/code&gt; in non-blocking mode is
-unreliable.  Instead, using blocking mode inside a thread is preferrable.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_4&#34;&gt;Basic usage&lt;/h1&gt;
-
-&lt;p&gt;Here&amp;rsquo;s a not so useful pipe:&lt;/p&gt;
+&lt;p&gt;There is no special keyword for throwing exceptions in ooc - instead, the
+mechanism is implemented transparently thanks to the &lt;code&gt;throw()&lt;/code&gt; method.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-pipe := Pipe new()
+e := Exception new(&amp;quot;Something bad happened&amp;quot;)
+e throw()
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;We can write a string into it:&lt;/p&gt;
+&lt;h2 id=&#34;toc_1&#34;&gt;Message&lt;/h2&gt;
+
+&lt;p&gt;A good exception will have a descriptive message. It can be accessed
+via the &lt;code&gt;message&lt;/code&gt; field of the &lt;code&gt;Exception&lt;/code&gt; class.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-pipe write(&amp;quot;Hello&amp;quot;)
+try {
+  attemptSomethingRisky()
+} catch (e: Exception) {
+  &amp;quot;Something bad happened, and here&#39;s what: %s&amp;quot; printfln(e message)
+}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;And then read the result back:&lt;/p&gt;
+&lt;h2 id=&#34;toc_2&#34;&gt;Origin&lt;/h2&gt;
+
+&lt;p&gt;It might be useful to know which class in particular has thrown an
+exception. For this purpose, the &lt;code&gt;origin&lt;/code&gt; field exists:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-str := pipe read(128)
-str println()
+try {
+} catch (e: Exception) {
+  &amp;quot;Something went wrong, and the culprit is: %s&amp;quot; \
+    printfln(e origin ? e origin name : &amp;quot;unknown&amp;quot;)
+}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Even though we requested 128 bytes from the pipe, only 5 bytes have been written,
-so we the call immediately returns with a String of size 5.&lt;/p&gt;
+&lt;p&gt;To have a default representation of an exception, like it would be
+printed as if there was no try block to catch it, use &lt;code&gt;formatMessage()&lt;/code&gt;,
+or, to print it, use &lt;code&gt;print()&lt;/code&gt; directly.&lt;/p&gt;
 
-&lt;p&gt;We could have also read into our own buffer:&lt;/p&gt;
+&lt;h2 id=&#34;toc_3&#34;&gt;Backtrace&lt;/h2&gt;
 
-&lt;pre&gt;&lt;code&gt;#!ooc
-b := Buffer new(128)
-pipe read(b)
-b println()
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;On platforms where it is implemented (currently, Linux with the &amp;ldquo;+-rdynamic&amp;rdquo;
+compiler option), a series of backtrace can be available, containing info
+about each stack frame leading up to the point the exception was thrown.&lt;/p&gt;
 
-&lt;p&gt;Same here, the buffer has 128 bytes capacity, but only 5 bytes have been read, and
-the buffer&amp;rsquo;s length has been set accordingly. Using a buffer is more efficient
-because fewer allocations are being done.&lt;/p&gt;
+&lt;p&gt;The backtrace can be printed with the &lt;code&gt;printBacktrace()&lt;/code&gt; method. It&amp;rsquo;ll get
+printed in the default representation, for example if there is no particular
+exception handler.&lt;/p&gt;
 
-&lt;p&gt;Then, we shouldn&amp;rsquo;t forget to close both the reading and the writing end of the pipe&lt;/p&gt;
+&lt;h2 id=&#34;toc_4&#34;&gt;Custom exceptions&lt;/h2&gt;
 
-&lt;pre&gt;&lt;code&gt;#!ooc
-pipe close(&#39;r&#39;)
-pipe close(&#39;w&#39;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Or simply:&lt;/p&gt;
+&lt;p&gt;To add a custom exception type, simply subclass &lt;code&gt;Exception&lt;/code&gt; and provide
+a constructor:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-pipe close()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_5&#34;&gt;Communication&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;Inter-thread communication&lt;/h2&gt;
-
-&lt;p&gt;Pipes can be used to communicate between threads.&lt;/p&gt;
-
-&lt;p&gt;Let&amp;rsquo;s create a pipe:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-pipe := Pipe new()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then a thread that is going to read out of it until it&amp;rsquo;s closed:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-reader := Thread new(||
-    while (!pipe eof?()) {
-        result := pipe read(128)
-        if (result) result print()
-    }
-    pipe close(&#39;r&#39;)
-)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then a writer path which is going to write ten hellos, one every 100
-milliseconds:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-writer := Thread new(||
-    for (i in 0..10) {
-        pipe write(&amp;quot;Hello %d\n&amp;quot; format(i))
-        Time sleepMilli(100)
-    }
-    pipe close(&#39;w&#39;)
-)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Let&amp;rsquo;s start them both:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-reader start(); writer start()
-reader wait();  writer wait()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;Inter-process communication&lt;/h2&gt;
-
-&lt;p&gt;Similarly, pipes can be (and are mostly) used to communicate with other
-processes. This is covered in the &lt;a href=&#34;/docs/sdk/os/process/&#34;&gt;Process&lt;/a&gt; section.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;Non-blocking I/O&lt;/h2&gt;
-
-&lt;p&gt;A pipe can be set to non-blocking mode to use non-blocking read operations.
-This is used in the streaming example in the &lt;a href=&#34;/docs/sdk/os/process/&#34;&gt;Process&lt;/a&gt; section.&lt;/p&gt;
-
-&lt;p&gt;Let&amp;rsquo;s create a pipe in non-blocking mode for reading only:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-pipe := Pipe new()
-pipe setNonBlocking(&#39;r&#39;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then a state variable that&amp;rsquo;ll be shared by both threads:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-done := false
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then we&amp;rsquo;ll make a writer thread that never closes the pipe itself (much like a
-process launched in the background that you never blockingly wait on):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-t := Thread new(||
-  for (i in 0..10) {
-    Time sleepSec(1)
-    pipe write(&amp;quot;Hello %d&amp;quot; format(i))
+FunnyException: class extends Exception {
+  init: func {
+    super(&amp;quot;Nothing happened, just thought it&#39;d be fun to interrupt the program!&amp;quot;)
   }
-  done = true
-)
-
-t start()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;It does set done to true after it&amp;rsquo;s done, though - much like you could know if
-a background process is still running with &lt;code&gt;waitNoHang&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Then we&amp;rsquo;ll read, from the main thread, as much as we can, and when we don&amp;rsquo;t receive
-anything, we&amp;rsquo;ll check if we&amp;rsquo;re done:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-while (true) {
-  res := pipe read(128)
-  if (res) {
-    &amp;quot;Received: %s&amp;quot; printfln(res)
-  } else if (done) break
 }
 &lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And let&amp;rsquo;s not forget to clean up:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-pipe close()
-t wait()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;That behaves as expected. Note that in the main thread loop we could be doing anything
-really, without blocking on the read.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_9&#34;&gt;Pipes disclaimer&lt;/h1&gt;
-
-&lt;p&gt;If you have read all the way down, and you&amp;rsquo;re thinking of doing some complex
-stuff with pipes, you probably want some queuing library instead of using raw
-pipes, both for cross-platform support, performance, and ease of use.
-&lt;a href=&#34;http://zeromq.org/&#34;&gt;zeromq&lt;/a&gt; is an interesting library and it has &lt;a href=&#34;https://github.com/nddrylliog/ooc-zeromq&#34;&gt;ooc bindings&lt;/a&gt;.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>net</title>
-      <link>http://oocmanual.cogneco.com/sdk/net</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/net</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The net package&lt;/h1&gt;
-
-&lt;p&gt;When you want to deal with TCP and UDP sockets directly, the &lt;code&gt;net&lt;/code&gt; package is
-here for you.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;TCP&lt;/h1&gt;
-
-&lt;p&gt;TCP guarantees that packets arrive eventually, and that they arrive in the
-order in which they were sent.&lt;/p&gt;
-
-&lt;p&gt;Usually, on the server side, sockets are bound to a port, and then listen.
-When clients attempt to connect, they accept connections (and can later
-close them if so they wish).&lt;/p&gt;
-
-&lt;p&gt;Accepting a connection via a server socket gives a TCPSocket - so, after
-a client has connected, the client and the server use the same data structure
-to communicate.&lt;/p&gt;
-
-&lt;p&gt;A Socket, like a &lt;code&gt;TCPSocket&lt;/code&gt;, has a reader / writer pair, since sockets
-are bidirectional communication channels. Which means they can write data
-to the writer, and read data from the reader.&lt;/p&gt;
-
-&lt;p&gt;For more info on readers and writers, go ahead and read (heh) the documentation
-on the &lt;a href=&#34;/docs/sdk/io/&#34;&gt;io package&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;ServerSocket&lt;/h2&gt;
-
-&lt;p&gt;Here&amp;rsquo;s an example usage of ServerSocket serving as a makeshift HTTP
-server (don&amp;rsquo;t do that, though):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import net/[ServerSocket]
-
-socket := ServerSocket new(&amp;quot;0.0.0.0&amp;quot;, 8000)
-socket listen()
-&amp;quot;Listening...&amp;quot; println()
-
-while(true) {
-    conn := socket accept()
-    &amp;quot;Got a connection!&amp;quot; println()
-
-    while (conn in readLine() trim() != &amp;quot;&amp;quot;) {
-      // read the request
-    }
-
-    conn out write(&amp;quot;HTTP/1.1 200 OK\r\n&amp;quot;)
-    conn out write(&amp;quot;Content-Type: text/html\r\n&amp;quot;)
-    conn out write(&amp;quot;\r\n&amp;quot;)
-    conn out write(&amp;quot;&amp;lt;html&amp;gt;&amp;lt;body&amp;gt;\
-      Hello, from the ooc socket world!&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;&amp;quot;)
-    conn out write(&amp;quot;\r\n&amp;quot;)
-    conn close()
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Don&amp;rsquo;t forget to call &lt;code&gt;listen()&lt;/code&gt; before trying to &lt;code&gt;accept()&lt;/code&gt; connections.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;TCPSocket&lt;/h2&gt;
-
-&lt;p&gt;Same as the ServerSocket, but on the client side. Make requests like
-that (or don&amp;rsquo;t - use a proper HTTP library):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import net/[TCPSocket]
-
-socket := TCPSocket new(&amp;quot;ooc-lang.org&amp;quot;, 80)
-socket connect()
-socket out write(&amp;quot;GET / HTTP/1.1\n&amp;quot;)
-socket out write(&amp;quot;Host: ooc-lang.org\n&amp;quot;)
-socket out write(&amp;quot;User-Agent: An anonymous admirer\n&amp;quot;)
-socket out write(&amp;quot;\n\n&amp;quot;)
-
-line := socket in readLine()
-&amp;quot;We got a response! %s&amp;quot; printfln(line)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Seriously. Use a proper HTTP library. But that&amp;rsquo;s an example.&lt;/p&gt;
-
-&lt;p&gt;Also, don&amp;rsquo;t forget to call &lt;code&gt;connect()&lt;/code&gt; before attempting to use &lt;code&gt;out&lt;/code&gt;
-or &lt;code&gt;in&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_4&#34;&gt;UDP&lt;/h1&gt;
-
-&lt;p&gt;Unlike TCP, UDP is unidirectional - some sockets bind and only get to
-receive, and some sockets don&amp;rsquo;t bind and can only send.&lt;/p&gt;
-
-&lt;p&gt;There&amp;rsquo;s also no guarantee that anything sent over UDP ever arrives, and
-order is not guaranteed either.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;UDPSocket&lt;/h2&gt;
-
-&lt;p&gt;When you create an &lt;code&gt;UDPSocket&lt;/code&gt;, always specify a hostname (or an ip) and a port, like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-socket := UDPSocket new(&amp;quot;localhost&amp;quot;, 5000)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;If you want to receive datagrams, call bind():&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-socket bind()
-
-while (true) {
-  buffer := socket receive(128)
-  buffer toString() println()
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;If you want to send datagrams, just call send:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-socket send(&amp;quot;udp is fun&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;That&amp;rsquo;s about it for now.&lt;/p&gt;
 </description>
     </item>
     
@@ -2268,447 +1302,598 @@ map each(|key, value|
     </item>
     
     <item>
-      <title>Version</title>
-      <link>http://oocmanual.cogneco.com/language/version-blocks</link>
+      <title>Operators</title>
+      <link>http://oocmanual.cogneco.com/language/operators</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/language/version-blocks</guid>
+      <guid>http://oocmanual.cogneco.com/language/operators</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;Version blocks&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;Foreword&lt;/h1&gt;
 
-&lt;h2 id=&#34;toc_1&#34;&gt;Syntax&lt;/h2&gt;
+&lt;p&gt;This lists all ooc operators, from highest precendence to lowest precedence&lt;/p&gt;
 
-&lt;p&gt;Version blocks use the following syntax:&lt;/p&gt;
+&lt;h1 id=&#34;toc_1&#34;&gt;Access&lt;/h1&gt;
 
-&lt;pre&gt;&lt;code&gt;    version (&amp;lt;version expression&amp;gt;) {
-        &amp;lt;body&amp;gt;
-    } else {
-        &amp;lt;alternative body&amp;gt;
-    }
+&lt;h2 id=&#34;toc_2&#34;&gt;Array access&lt;/h2&gt;
+
+&lt;p&gt;The array-index operator is &lt;code&gt;[]&lt;/code&gt;, the array-modify operator&amp;rsquo;s short form is &lt;code&gt;[]=&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Examples:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+arr[0] = &#39;\n&#39;
+return arr[0]
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Where &lt;version expression&gt; can be any of:&lt;/p&gt;
+&lt;h2 id=&#34;toc_3&#34;&gt;Pointers&lt;/h2&gt;
 
-&lt;pre&gt;&lt;code&gt;    &amp;lt;version name&amp;gt;
-    !&amp;lt;version expression&amp;gt;
-    &amp;lt;version expression&amp;gt; &amp;amp;&amp;amp; &amp;lt;version expression&amp;gt;
-    &amp;lt;version expression&amp;gt; || &amp;lt;version expression&amp;gt;
+&lt;p&gt;The address-of operator is a post-fix &lt;code&gt;&amp;amp;&lt;/code&gt;, the dereference operator is a post-fix
+&lt;code&gt;@&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+a := 42
+aPtr := a&amp;amp;
+aToo := aPtr@
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;toc_2&#34;&gt;Semantics&lt;/h2&gt;
+&lt;h2 id=&#34;toc_4&#34;&gt;Call&lt;/h2&gt;
 
-&lt;p&gt;Version blocks aren&amp;rsquo;t if-else blocks - they aren&amp;rsquo;t evaluated at runtime.
-In rock, version blocks aren&amp;rsquo;t evaluated at ooc-compile-time either.
-They&amp;rsquo;re evaluated at C compile time. Which means the C code generated by rock
-should be the same on any platform.&lt;/p&gt;
+&lt;p&gt;Technically not an operator, but call is in that priority level:&lt;/p&gt;
 
-&lt;p&gt;Practically, in rock, version blocks are an abstraction for #ifdef / #endif blocks.
-The syntax makes it harder to forget to close a version block than an #ifdef / #endif block,
-and a few handy aliases (listed below) for commonly used version names are standard, so that developers
-don&amp;rsquo;t have to remember the convoluted corresponding C defines.&lt;/p&gt;
-
-&lt;p&gt;For other compilers not based on the C language, version block handling may happen at any
-stage of the compilation (if any), as long as the version expressions are correctly evaluated
-and have the correct meaning (for example, a &amp;lsquo;windows&amp;rsquo; version block should be ignored on OSX)&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Built-in version names&lt;/h2&gt;
-
-&lt;p&gt;C defines are included here for completeness, but are only relevant for people who want
-to implement ooc on top of C.&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;Name&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;corresponding C define&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;windows&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;WIN32&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;linux&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;linux&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;solaris&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;__sun&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;unix&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;unix&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;beos&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;BEOS&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;haiku&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;HAIKU&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;apple&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;APPLE&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;gnuc&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;GNUC&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;i386&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;i386&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;x86&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;X86&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;x86_64&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;x86_64&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;ppc&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;ppc&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;ppc64&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;ppc64&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;64&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;x86_64&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;center&#34;&gt;gc&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;&lt;strong&gt;OOC_USE_GC&lt;/strong&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Custom version names&lt;/h2&gt;
-
-&lt;p&gt;Most of the standard version names above depend on your building environment, and the &amp;lsquo;gc&amp;rsquo; name depends
-on the compiler setting -gc=[off,static,dynamic].&lt;/p&gt;
-
-&lt;p&gt;Custom version names can be used, and turned on/off with the -D and -U compiler flags, for example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    version(debug) {
-        &amp;quot;[%d] Saving database %s&amp;quot; println(timestamp(), db name)
-    }
-    db save()
+&lt;pre&gt;&lt;code&gt;#!ooc
+a := func -&amp;gt; Int { 42 }
+a()
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;The code inside the version(debug) block will be compiled if -Ddebug is used. It is common practise for ooc developers
-to use the -Ddebug switch to debug their applications.&lt;/p&gt;
+&lt;h2 id=&#34;toc_5&#34;&gt;Member access&lt;/h2&gt;
 
-&lt;h2 id=&#34;toc_5&#34;&gt;Semantics continued&lt;/h2&gt;
+&lt;p&gt;Also technically not an operator. Simply two identifiers side by side,
+not using dot, unlike some other programming languages:&lt;/p&gt;
 
-&lt;p&gt;Version blocks can be used in function bodies, to make certain parts of the code OS-specific, or
-they can be used at the mdule-level to make functions or types OS-specific.&lt;/p&gt;
-
-&lt;p&gt;If different types are defined in different version blocks, make sure they expose the same interface.
-It&amp;rsquo;s not necessary for them to have the exact same class layout, but they should at least have all the
-methods/fields that are used in every OS.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;Examples&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;    version(windows) {
-        &amp;quot;Hi, Bill!&amp;quot; println()
-    }
-    version(apple) {
-        &amp;quot;Hi, Steve!&amp;quot; println()
-    }
-    version(linux) {
-        &amp;quot;Hi, Linus!&amp;quot; println()
-    }
-    version(!windows &amp;amp;&amp;amp; !apple &amp;amp;&amp;amp; !linux) {
-        &amp;quot;Who are you, and what did you do to my OS?&amp;quot;
-    }
-
-    version(apple) {
-        &amp;quot;Nice Hardware!&amp;quot; println()
-    } else {
-        &amp;quot;So you like your computer made of plastic then!&amp;quot; println()
-    }
+&lt;pre&gt;&lt;code&gt;#!ooc
+dog name
+dog race
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;See also io/File and os/Time in the SDK for real-world examples of heavily versioned code.&lt;/p&gt;
+&lt;h2 id=&#34;toc_6&#34;&gt;Casting&lt;/h2&gt;
 
-&lt;h2 id=&#34;toc_7&#34;&gt;Pattern for OS-specific classes&lt;/h2&gt;
+&lt;p&gt;The &lt;code&gt;as&lt;/code&gt; operator is used to cast from one type to the other:&lt;/p&gt;
 
-&lt;p&gt;In ooc, &amp;lsquo;new&amp;rsquo; isn&amp;rsquo;t a keyword but a static method. As a result, you can define new yourself.
-This allows an interesting pattern for OS-specific classes in ooc:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#!ooc
+pi := 3.14
+roughlyPi := pi as Int
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;pre&gt;&lt;code&gt;    // io/File
-    import io/[FileUnix, FileWin32]
+&lt;h1 id=&#34;toc_7&#34;&gt;Product&lt;/h1&gt;
 
-    File: class {
-        path: String
+&lt;h2 id=&#34;toc_8&#34;&gt;Binary operators&lt;/h2&gt;
 
-        new: static func (.path) -&amp;gt; This {
-            version(windows) { return FileWin32 new(path) }
-            version(unix)    { return FileUnix  new(path) }
-            Exception new(This, &amp;quot;Unsupported platform&amp;quot;) throw()
-        }
+&lt;p&gt;The exponent operator is &lt;code&gt;**&lt;/code&gt;, the multiplication operator is &lt;code&gt;*&lt;/code&gt;,
+and the division operator is &lt;code&gt;/&lt;/code&gt;.&lt;/p&gt;
 
-        // abstract methods
-    }
+&lt;h2 id=&#34;toc_9&#34;&gt;Unary operators&lt;/h2&gt;
 
-    // io/FileUnix
-    FileUnix: class extends File {
-        init: func (=path) {}
+&lt;p&gt;Logical not is a prefixed &lt;code&gt;!&lt;/code&gt;, binary not is a prefixed &lt;code&gt;~&lt;/code&gt;.&lt;/p&gt;
 
-        // implement abstract methods for unix
-    }
+&lt;h1 id=&#34;toc_10&#34;&gt;Sum&lt;/h1&gt;
 
-    // io/FileWin32
-    FileWin32: class extends File {
-        init: func (=path) {}
+&lt;p&gt;The addition operator is &lt;code&gt;+&lt;/code&gt;, subtraction is &lt;code&gt;-&lt;/code&gt;,
+modulo is &lt;code&gt;%&lt;/code&gt;&lt;/p&gt;
 
-        // implement abstract methods for Win32
-    }
+&lt;h1 id=&#34;toc_11&#34;&gt;Shift&lt;/h1&gt;
+
+&lt;p&gt;Right shift is &lt;code&gt;&amp;gt;&amp;gt;&lt;/code&gt;, left shift is &lt;code&gt;&amp;lt;&amp;lt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_12&#34;&gt;Inequality&lt;/h1&gt;
+
+&lt;p&gt;You have your regular less than &lt;code&gt;&amp;lt;&lt;/code&gt;, greater than &lt;code&gt;&amp;gt;&lt;/code&gt;,
+less than or equal &lt;code&gt;&amp;lt;=&lt;/code&gt;, more than or equal &lt;code&gt;&amp;gt;=&lt;/code&gt;,
+but also the comparison operator &lt;code&gt;&amp;lt;=&amp;gt;&lt;/code&gt; (evaluates to -1
+if less than, 0 if equal, 1 if greater than).&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_13&#34;&gt;Equality&lt;/h1&gt;
+
+&lt;p&gt;Equality operator is &lt;code&gt;==&lt;/code&gt;, inequality operator is &lt;code&gt;!=&lt;/code&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_14&#34;&gt;Binary and boolean operations&lt;/h1&gt;
+
+&lt;p&gt;Binary and is &lt;code&gt;&amp;amp;&lt;/code&gt;, xor is &lt;code&gt;^&lt;/code&gt;, or is &lt;code&gt;|&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Logical and is &lt;code&gt;&amp;amp;&amp;amp;&lt;/code&gt;, logical or is &lt;code&gt;||&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_15&#34;&gt;Ternary&lt;/h1&gt;
+
+&lt;p&gt;The ternary operator is &lt;code&gt;?:&lt;/code&gt; as in &lt;code&gt;condition ? ifTrue : ifFalse&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_16&#34;&gt;Assignment&lt;/h1&gt;
+
+&lt;p&gt;The assignment operator is &lt;code&gt;=&lt;/code&gt;, the following variants exist:
+&lt;code&gt;+=&lt;/code&gt;, &lt;code&gt;-=&lt;/code&gt;, &lt;code&gt;*=&lt;/code&gt;, &lt;code&gt;**=&lt;/code&gt;, &lt;code&gt;/=&lt;/code&gt;, &lt;code&gt;&amp;gt;&amp;gt;=&lt;/code&gt;, &lt;code&gt;&amp;lt;&amp;lt;=&lt;/code&gt;, &lt;code&gt;^=&lt;/code&gt;, &lt;code&gt;|=&lt;/code&gt;, &lt;code&gt;&amp;amp;=&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The declare-assignment operator is &lt;code&gt;:=&lt;/code&gt;. And the declare-property-assignment
+operator is &lt;code&gt;::=&lt;/code&gt;. For more details on these, see the &lt;a href=&#34;/docs/lang/values/#variables&#34;&gt;Variables&lt;/a&gt; and
+&lt;a href=&#34;/docs/lang/classes/#properties&#34;&gt;Properties&lt;/a&gt; pages.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_17&#34;&gt;Double arrow&lt;/h1&gt;
+
+&lt;p&gt;The double arrow operator &lt;code&gt;=&amp;gt;&lt;/code&gt; - it must be overloaded.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_18&#34;&gt;Operator overloading&lt;/h1&gt;
+
+&lt;p&gt;Overloading an operator can be done as a function-like, using the
+&lt;code&gt;operator&lt;/code&gt; keyword:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+operator + (v1, v2: Vec2) -&amp;gt; Vec2 { v1 add(v2) }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;However, if the operator is linked to a type, it&amp;rsquo;s better to declare
+it in the type itself, so that it&amp;rsquo;ll be usable even if the module containing
+the type declaration isn&amp;rsquo;t explicitly imported:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+Vec2: class {
+  // other stuff
+
+  operator + (v: This) -&amp;gt; This { add(v) }
+}
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
     <item>
-      <title>Rock</title>
-      <link>http://oocmanual.cogneco.com/tools/rock</link>
+      <title>mmap</title>
+      <link>http://oocmanual.cogneco.com/sdk/os/mmap</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/tools/rock</guid>
+      <guid>http://oocmanual.cogneco.com/sdk/os/mmap</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;About Rock&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;The os/mmap module&lt;/h1&gt;
 
-&lt;p&gt;Rock is the main ooc compiler. It parses ooc files using nagaqueen, does some
-checking and inference, produces .c files, and then drives the C compilation process
-to produce either an executable or a library.&lt;/p&gt;
+&lt;p&gt;As it stands, the &lt;code&gt;os/mmap&lt;/code&gt; module just exposes the *nix functions for memory
+mapping: &lt;code&gt;mmap&lt;/code&gt;, &lt;code&gt;munmap&lt;/code&gt;, &lt;code&gt;mprotect&lt;/code&gt;, &lt;code&gt;madvise&lt;/code&gt;, &lt;code&gt;mincore&lt;/code&gt;, &lt;code&gt;minherit&lt;/code&gt;,
+&lt;code&gt;msync&lt;/code&gt;, &lt;code&gt;mlock&lt;/code&gt;, and &lt;code&gt;munlock&lt;/code&gt;, along with the associated constants.&lt;/p&gt;
 
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/basic/&#34;&gt;Basic usage&lt;/a&gt; section explains how to quickly get
-up and running, using rock to compile ooc projects.&lt;/p&gt;&lt;/li&gt;
+&lt;p&gt;It also contains prototypes / covers for the Windows equivalent,
+&lt;code&gt;VirtualProtect&lt;/code&gt;, and its constants as well.&lt;/p&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/drivers/&#34;&gt;Drivers&lt;/a&gt; section gives an overview of rock&amp;rsquo;s various
-drivers, akin to compiling strategies, like the sequence driver (default), the make
-driver, and the android driver.&lt;/p&gt;&lt;/li&gt;
+&lt;h2 id=&#34;toc_1&#34;&gt;Notes&lt;/h2&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/advanced/&#34;&gt;Advanced usage&lt;/a&gt; section covers some less-often used
-options like using a different C compiler, keeping source files, etc.&lt;/p&gt;&lt;/li&gt;
+&lt;p&gt;This module is not a high-level or cross-platform interface and is not
+documented extensively here.&lt;/p&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/usefiles/&#34;&gt;Usefiles&lt;/a&gt; section describes the format of &lt;code&gt;.use&lt;/code&gt; files,
-which define the characteristics of an ooc app or library.&lt;/p&gt;&lt;/li&gt;
+&lt;p&gt;However, to find more information on memory mapping for various platform
+see here:&lt;/p&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/gc/&#34;&gt;Garbage Collection&lt;/a&gt; section talks about the Garbage Collection
-strategy in rock, how to make sure things work well on different plaforms, how the
-Boehm GC is bundled, etc.&lt;/p&gt;&lt;/li&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://en.wikipedia.org/wiki/Mmap&#34;&gt;mmap on Wikipedia&lt;/a&gt; (for *nix platforms)&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://msdn.microsoft.com/en-us/windows/desktop/aa366898(v=vs.85).aspx&#34;&gt;VirtualProtect on MSDN&lt;/a&gt; (for Windows)&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/debug/&#34;&gt;Debugging&lt;/a&gt; section talks about what to do when a program
-doesn&amp;rsquo;t behave correctly. Debug symbols, stack traces, debugging on particularly painful
-platforms like Windows.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/packaging/&#34;&gt;Packaging&lt;/a&gt; section talks about releasing standalone
-applications coded in ooc, such as games — when you don&amp;rsquo;t want to have users install
-dependencies on their own, but would rather bundle everything together.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;On a historical note, this module was originally included in the SDK as support
+code for the closure implementation, which back then implied generating
+bytecode at runtime and thus marking some memory regions as executable.&lt;/p&gt;
 </description>
     </item>
     
     <item>
-      <title>process</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/process</link>
+      <title>Control Structures</title>
+      <link>http://oocmanual.cogneco.com/language/control-structures</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/sdk/os/process</guid>
+      <guid>http://oocmanual.cogneco.com/language/control-structures</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/Process module&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;Conditionals&lt;/h1&gt;
 
-&lt;p&gt;The Process module deals with everything related to launching a child process, waiting for
-its status or signals, and communicating with it.&lt;/p&gt;
+&lt;h2 id=&#34;toc_1&#34;&gt;if / else&lt;/h2&gt;
 
-&lt;h1 id=&#34;toc_1&#34;&gt;Basic usage&lt;/h1&gt;
-
-&lt;p&gt;A process can be launched by providing an array or a list of arguments to the &lt;code&gt;Process&lt;/code&gt; constructor:&lt;/p&gt;
+&lt;p&gt;There&amp;rsquo;s your traditional if, else if, else structure. The body should be either
+a single statement, or a scope.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-import os/Process
+if (off) turnOn()
 
-p := Process new([&amp;quot;cat&amp;quot;, &amp;quot;/etc/hosts&amp;quot;])
-exitCode := p execute()
-
-// at this point, the process has ended
-// and &#39;exitCode&#39; contains the value returned by the program
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Instead of running execute, one might want to run &lt;code&gt;getOutput&lt;/code&gt; directly, to get
-the standard output of the process as a string&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-p := Process new([&amp;quot;cat&amp;quot;, &amp;quot;/etc/hosts&amp;quot;])
-out := p getOutput()
-// out now contains the contents of the /etc/hosts file
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Or getErrOutput to get the standard error output:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-p := Process new([&amp;quot;cat&amp;quot;, &amp;quot;/etc/hosts&amp;quot;])
-err := p getErrOutput()
-// err is empty
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;To retrieve the result of both stderr and stdout, see the &amp;lsquo;Redirecting&amp;rsquo; section
-below.&lt;/p&gt;
-
-&lt;p&gt;However, depending on your use case, that might not be the best way to do it.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Manual wait and pid&lt;/h2&gt;
-
-&lt;p&gt;&lt;code&gt;execute&lt;/code&gt; will start the child process, wait for it to finish, and print the output.&lt;/p&gt;
-
-&lt;p&gt;However, we can do things manually if we want:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-p := Process new([&amp;quot;curl&amp;quot;, &amp;quot;example.org&amp;quot;])
-p executeNoWait()
-p wait()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The &lt;code&gt;wait&lt;/code&gt; method will wait until the child process has exited or errored. If you
-just want to check if a process is still running, &lt;code&gt;waitNoHang&lt;/code&gt; can be used instead:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-p := Process new([&amp;quot;curl&amp;quot;, &amp;quot;example.org&amp;quot;])
-p executeNoWait()
-while (p waitNoHang() == -1) {
-    Time sleepMilli(20)
+if (stressed) {
+    breatheIn()
+    breatheOut()
+} else if (tired) {
+    rest()
+} else {
+    allGood()
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;To execute a bunch of processes in parallel, using a &lt;a href=&#34;/docs/sdk/os/jobpool&#34;&gt;JobPool&lt;/a&gt; is easier and
-more suitable.&lt;/p&gt;
+&lt;p&gt;The condition can be of type &lt;code&gt;Bool&lt;/code&gt; or a Pointer, in which case it will evaluate to
+&lt;code&gt;true&lt;/code&gt; if it is non-null.&lt;/p&gt;
 
-&lt;h1 id=&#34;toc_3&#34;&gt;Process settings&lt;/h1&gt;
+&lt;h2 id=&#34;toc_2&#34;&gt;match / case&lt;/h2&gt;
 
-&lt;h2 id=&#34;toc_4&#34;&gt;Current working directory&lt;/h2&gt;
-
-&lt;p&gt;By default, a process will inherit from the current working directory. To make
-the child process run in a specified directory, use the &lt;code&gt;setCwd&lt;/code&gt; method&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;match&lt;/code&gt; is ooc&amp;rsquo;s &lt;code&gt;switch&lt;/code&gt;, loosely modelled after Scala&amp;rsquo;s. In its simplest form, it tests for equality between an expression and several values:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-p := Process new([&amp;quot;cat&amp;quot;, &amp;quot;hosts&amp;quot;])
-p setCwd(&amp;quot;/etc&amp;quot;)
-p execute()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Environment&lt;/h2&gt;
-
-&lt;p&gt;To specify custom environment variables for a process, use the &lt;code&gt;setEnv&lt;/code&gt; method
-with a &lt;code&gt;HashMap&amp;lt;String, String&amp;gt;&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-p := Process new([&amp;quot;bash&amp;quot;, &amp;quot;-c&amp;quot;, &amp;quot;echo $MYVAR&amp;quot;])
-
-env := HashMap&amp;lt;String, String&amp;gt; new()
-env put(&amp;quot;MYVAR&amp;quot;, &amp;quot;42&amp;quot;)
-p setEnv(env)
-
-// prints 42
-p execute()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_6&#34;&gt;Communicating with a process&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;Redirecting stdin, stdout, stderr&lt;/h2&gt;
-
-&lt;p&gt;One may use &lt;a href=&#34;/docs/sdk/os/pipe/&#34;&gt;pipes&lt;/a&gt; to redirect the standard input, output, or error stream of
-a process.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import os/[Process, Pipe, PipeReader]
-
-p := Process new([&amp;quot;some&amp;quot;, &amp;quot;process&amp;quot;])
-
-(out, err) := (Pipe new(), Pipe new())
-p setStdout(out)
-p setStderr(err)
-
-exitCode := p execute()
-
-outString := PipeReader new(out) toString()
-errString := PipeReader new(err) toString()
-
-out close(&#39;r&#39;). close(&#39;w&#39;)
-err close(&#39;r&#39;). close(&#39;w&#39;)
-
-// we now have the exit code in exitCode, the
-// stdout in outString, and the stderr in errString
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;Streaming output&lt;/h2&gt;
-
-&lt;p&gt;This can be used to stream stdout to the output of our main program, if the launched
-process is interactive. If blinkenlights is still up and running when you try this, it
-should display star wars scene in ASCII art:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-p := Process new([&amp;quot;nc&amp;quot;, &amp;quot;towel.blinkenlights.nl&amp;quot;, &amp;quot;23&amp;quot;])
-
-out := Pipe new()
-out setNonBlocking()
-p setStdout(out)
-
-p executeNoWait()
-
-while (true) {
-    chr := out read()
-    if (chr != &#39;\0&#39;) {
-        chr print()
-    } else if(p waitNoHang() &amp;gt; 0) {
-        // process is done
-        break
-    }
+match (numFeets) {
+    case 1 =&amp;gt; &amp;quot;Ouch&amp;quot;
+    case 2 =&amp;gt; &amp;quot;Normal&amp;quot;
+    case =&amp;gt;
+        // what?
+        raise(&amp;quot;Too many feet&amp;quot;)
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;toc_9&#34;&gt;Terminate or kill a process&lt;/h1&gt;
+&lt;p&gt;Each case is a scope of its own - it doesn&amp;rsquo;t require braces. A case with no
+expression is a catch-all.&lt;/p&gt;
 
-&lt;p&gt;The &lt;code&gt;terminate&lt;/code&gt; method will send a process the &lt;code&gt;SIGTERM&lt;/code&gt; message, while the &lt;code&gt;kill&lt;/code&gt; method
-will send a process the &lt;code&gt;SIGKILL&lt;/code&gt; message.&lt;/p&gt;
-
-&lt;p&gt;This can be used to gracefully end a process:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;match&lt;/code&gt; also works with any class T that implements the method &lt;code&gt;matches?: func
+-&amp;gt; (other: T) -&amp;gt; Bool&lt;/code&gt;. Another way to get complex types to work in matches
+is simply to override the &lt;code&gt;==&lt;/code&gt; operator. Hence, Strings work:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-p terminate()
-if (p waitNoHang() != -1) {
-    // give a few seconds of grace..
-    Time sleepSec(3)
-}
-
-if (p waitNoHang() != -1) {
-    // still not finished? alright, that&#39;s enough
-    p kill()
+match keyword {
+    case &amp;quot;if&amp;quot; =&amp;gt;
+        Keyword IF
+    case &amp;quot;match&amp;quot; =&amp;gt;
+        Keyword MATCH
+    case =&amp;gt;
+        Keyword UNKNOWN
 }
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;match&lt;/code&gt; is also a good way to avoid explicit casting, by matching an object
+against variable declarations, one can use its specific form directly:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+result := match (op) {
+    case plus: Plus =&amp;gt;
+        plus lhs + plus rhs
+    case minus: Minus =&amp;gt;
+        minus lhs - minus rhs
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A &lt;code&gt;match&lt;/code&gt; is an expression, if every case ends with an expression. Hence, a
+match can be used as a return value, or in a function call, on the right hand
+side of a declaration-assignment (&lt;code&gt;:=&lt;/code&gt;), as demonstrated above.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_3&#34;&gt;Loops&lt;/h1&gt;
+
+&lt;p&gt;Loops are structures that control the repetition of a body of code.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;break / continue&lt;/h2&gt;
+
+&lt;p&gt;Two particular keywords are of interest when writing loops:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;break&lt;/code&gt; immediately exits the loop, skipping the rest of the body
+and not executing any further iteration&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;continue&lt;/code&gt; skips over the rest of the body and begins the next
+iteration immediately&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;while&lt;/h2&gt;
+
+&lt;p&gt;Checks the condition - if false, skips the body. If true, runs the body,
+then checks the condition again, etc.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+while (!satisfied) {
+    buyStuff()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;for&lt;/h2&gt;
+
+&lt;p&gt;There is no C-like &lt;code&gt;for&lt;/code&gt; in ooc, only a foreach. It can iterate through
+values like ranges:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+for (i in 1..10) {
+    &amp;quot;Counting to %d&amp;quot; printfln(i)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or more complex data structures:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+for (element in list) {
+    &amp;quot;Element = %s&amp;quot; printfln(element toString())
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For an object to be iterable, it has to implement the
+&lt;code&gt;iterator: func &amp;lt;T&amp;gt; -&amp;gt; Iterator&amp;lt;T&amp;gt;&lt;/code&gt; method.&lt;/p&gt;
+
+&lt;p&gt;A variant of foreach allows one to get the index of the current element:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+for ((index, element) in list) {
+    &amp;quot;list[%d] = %s&amp;quot; printfln(index, element toString())
+}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Advanced Usage</title>
+      <link>http://oocmanual.cogneco.com/tools/rock/advanced</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/tools/rock/advanced</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Using more Rock options&lt;/h1&gt;
+
+&lt;p&gt;Often, rock does the right thing by itself, but if it doesn&amp;rsquo;t, you can use some of these more
+advanced options and flags.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;Keep the C sources&lt;/h1&gt;
+
+&lt;p&gt;If rock somehow generates invalid C code and you want to know why, it can be helpful to actually
+take a look at all the C. Normally, rock deletes everything it has generated at exit, but you can
+tell rock to keep the sources for you:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+rock --noclean ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Afterwards, you&amp;rsquo;ll find the C source files in corresponding subdirectories of &lt;code&gt;rock_tmp&lt;/code&gt;. The header
+files reside in &lt;code&gt;.libs&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_2&#34;&gt;More information&lt;/h1&gt;
+
+&lt;p&gt;Also useful in these cases: Let rock tell its story of compilation. That means: print everything about
+all stages of symbol resolution and code generation. Invoke rock with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+rock -vv ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;toc_3&#34;&gt;Ditch gcc for your compiler of choice&lt;/h1&gt;
+
+&lt;p&gt;Since gcc is the evergreen of compilers, rock uses it by default. In case you want to use something else
+to turn your C sources into machine code, rock provides you with some alternatives:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+rock --gcc # if you change your mind
+rock --tcc # the tiny c compiler
+rock --icc # the intel c compiler
+rock --clang # llvm&#39;s clang
+rock --onlygen # no compiler
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The latter is especially useful if you want to compile your C code to assembler by hand.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>dynlib</title>
+      <link>http://oocmanual.cogneco.com/sdk/os/dynlib</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/os/dynlib</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The os/Dynlib module&lt;/h1&gt;
+
+&lt;p&gt;The &lt;code&gt;Dynlib&lt;/code&gt; module allows one to load dynamic libraries on all
+major platforms.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Basic usage&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;rsquo;s open a library:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import os/Dynlib
+
+lib := Dynlib load(&amp;quot;libm&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We don&amp;rsquo;t need to specify the &lt;code&gt;.so&lt;/code&gt;, &lt;code&gt;.dynlib&lt;/code&gt;, or &lt;code&gt;.dll&lt;/code&gt; extension here, it is
+set automatically by platform, although the original path will be tested first,
+in case of non-standard file extension.&lt;/p&gt;
+
+&lt;p&gt;If the lib returned is null, it wasn&amp;rsquo;t found or couldn&amp;rsquo;t be opened:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+if (!lib) {
+    raise(&amp;quot;Couldn&#39;t load library!&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can then retrieve a symbol:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+cosAddr := lib symbol(&amp;quot;cos&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And cast it to a more useful function. Since &lt;code&gt;Func&lt;/code&gt; is actually
+a function pointer and a context, we use a cover literal, passing
+null for the context:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+cos := (cosAddr, null) as Func (Double) -&amp;gt; Double
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Which we can then use!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;cos(PI / 4) = %.3f&amp;quot; printfln(cos(3.14 * 0.25))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This prints &lt;code&gt;cos(PI / 4) = 0.707&lt;/code&gt;, as expected.&lt;/p&gt;
+
+&lt;p&gt;When we&amp;rsquo;re done with the library we can just close it:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+lib close()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note: on Windows, failing to close a library may lead to a
+crash on application exit.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>string</title>
+      <link>http://oocmanual.cogneco.com/sdk/lang/string</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/lang/string</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;String&lt;/h1&gt;
+
+&lt;p&gt;A string in ooc is a chain of bytes with no particular property.
+In most cases, you&amp;rsquo;ll want to deal with UTF-8 encoded strings.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;String&lt;/code&gt; type is the full-blown ooc String - it is a pascal
+string in the sense that the length is stored with it. It is
+backed by the &lt;code&gt;Buffer&lt;/code&gt; type, which contains the actual bytes.&lt;/p&gt;
+
+&lt;p&gt;Buffers are mutable, whereas Strings are immutable. Therefore,
+to build up a long String from several elements, using &lt;code&gt;Buffer&lt;/code&gt;
+is preferable.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Basic usage&lt;/h2&gt;
+
+&lt;p&gt;The size of a String can be retrieved through the &lt;code&gt;size&lt;/code&gt; property.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;dumb luck&amp;quot; size == 9 // true
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Tests&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;startsWith?&lt;/code&gt; and &lt;code&gt;endsWith?&lt;/code&gt; do exactly what they sound like.
+&lt;code&gt;equals?&lt;/code&gt; tests for equality, and is aliased to the &lt;code&gt;==&lt;/code&gt; operator
+and, for non-equality, the &lt;code&gt;!=&lt;/code&gt; operator:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;moonlight&amp;quot; startsWith?(&amp;quot;moon&amp;quot;) // true
+&amp;quot;lightscape&amp;quot; endsWith?(&amp;quot;scape&amp;quot;) // true
+
+&amp;quot;moon&amp;quot; == &amp;quot;moon&amp;quot; // true
+&amp;quot;light&amp;quot; != &amp;quot;darkness&amp;quot; // true
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Indexing&lt;/h2&gt;
+
+&lt;p&gt;One can retrieve the n-th byte with the array indexing operator, &lt;code&gt;[]&lt;/code&gt;
+and an integer value:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;abcdef&amp;quot;[2] // == &#39;c&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note that the indexes are 0-based, like arrays.&lt;/p&gt;
+
+&lt;p&gt;To iterate through each byte of a String, a foreach can be used:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;Let&#39;s spell!&amp;quot; println()
+for (c in &amp;quot;violin&amp;quot;) {
+  &amp;quot;%c, &amp;quot; printfln(c)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Formatting and printing&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;format&lt;/code&gt; method can be used to format a string with various
+elements such as integers, floats, other strings, etc:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;%d&amp;quot; format(42) // == &amp;quot;42&amp;quot;
+&amp;quot;%.2f&amp;quot; format(3.1567) // == &amp;quot;3.16&amp;quot;
+&amp;quot;%s&amp;quot; format(&amp;quot;Hi!&amp;quot;) // == &amp;quot;Hi!&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;print&lt;/code&gt; method will print a string to the standard output.
+Since it is so convenient to print a string followed by a newline,
+&lt;code&gt;println&lt;/code&gt; does exactly that. And since formatting is often used,
+&lt;code&gt;printfln&lt;/code&gt; does formatting, then print the result followed by a newline.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;Hello world!\n&amp;quot; print()
+// is equivalent to:
+&amp;quot;Hello world!&amp;quot; println()
+// itself equivalent to:
+&amp;quot;Hello %s!&amp;quot; printfln(&amp;quot;world&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Concatenation&lt;/h2&gt;
+
+&lt;p&gt;One can use the &lt;code&gt;append&lt;/code&gt; and &lt;code&gt;prepend&lt;/code&gt; methods:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;light&amp;quot; prepend(&amp;quot;moon&amp;quot;) // == &amp;quot;moonlight&amp;quot;
+&amp;quot;storm&amp;quot; append(&amp;quot;born&amp;quot;) // == &amp;quot;stormborn&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or simply, the &lt;code&gt;+&lt;/code&gt; operator:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;not&amp;quot; + &amp;quot;with&amp;quot; + &amp;quot;standing&amp;quot; // == &amp;quot;notwithstanding&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;Finding and replacing&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;indexOf&lt;/code&gt; method returns the index of a character or string inside
+a string:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;abcdef&amp;quot; indexOf?(&#39;c&#39;) // 2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Using &lt;code&gt;replaceAll&lt;/code&gt;, one can replace all instances of a String with
+another String:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+// yields &amp;quot;Brother | father | lover.&amp;quot;
+&amp;quot;Brother, father, lover.&amp;quot; replaceAll(&amp;quot;,&amp;quot;, &amp;quot; |&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;Slicing&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;substring&lt;/code&gt; method allows one to get a slice of a String:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;observe&amp;quot; substring(2) // == &amp;quot;serve&amp;quot;
+&amp;quot;laminate&amp;quot; substring(2, 5) // == &amp;quot;min&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Alternatively, the array indexing operator, &lt;code&gt;[]&lt;/code&gt;, can be used
+with a range literal.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;observe&amp;quot;[2..-1] // == &amp;quot;serve&amp;quot;
+&amp;quot;laminate&amp;quot;[2..5] // == &amp;quot;min&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_8&#34;&gt;Trimming&lt;/h2&gt;
+
+&lt;p&gt;To get rid of extra whitespace, use the &lt;code&gt;trim&lt;/code&gt; method, or its variants,
+&lt;code&gt;trimLeft&lt;/code&gt; and &lt;code&gt;trimRight&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;  Hi!  &amp;quot; trim() // = &amp;quot;Hi!&amp;quot;
+&amp;quot;  Hi!  &amp;quot; trimLeft() // = &amp;quot;Hi!  &amp;quot;
+&amp;quot;  Hi!  &amp;quot; trimRight() // = &amp;quot;  Hi!&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;They also have versions that accept which characters to trim:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;[Hola.]&amp;quot; trim() // = &amp;quot;[Hola.]&amp;quot;
+&amp;quot;[Hola.]&amp;quot; trim(&amp;quot;[]()&amp;quot;) // = &amp;quot;Hola.&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;toc_9&#34;&gt;CString&lt;/h1&gt;
+
+&lt;p&gt;While a pure ooc program will want to deal mostyl with &lt;code&gt;String&lt;/code&gt;s,
+when dealing with C functions, one will want to convert back and forth
+with &lt;code&gt;toCString()&lt;/code&gt;, which gives a &lt;code&gt;CString&lt;/code&gt;, a cover of &lt;code&gt;char*&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Conversely, converting a CString to a String can be done with &lt;code&gt;toString()&lt;/code&gt;.&lt;/p&gt;
 </description>
     </item>
     

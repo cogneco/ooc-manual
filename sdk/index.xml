@@ -10,269 +10,852 @@
     <updated>Tue, 01 Jan 2008 00:00:00 UTC</updated>
     
     <item>
-      <title>lang</title>
-      <link>http://oocmanual.cogneco.com/sdk/lang</link>
+      <title>exception</title>
+      <link>http://oocmanual.cogneco.com/sdk/lang/exceptions</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/sdk/lang</guid>
+      <guid>http://oocmanual.cogneco.com/sdk/lang/exceptions</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;The lang package&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;Exception&lt;/h1&gt;
 
-&lt;p&gt;The lang package is considered built-in: it is imported by default in ooc
-modules. There is a reason for that, however - the SDK is distributed as
-an ooc library itself, and as such, it has a .use file that specifies which
-modules should be imported.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;Exception&lt;/code&gt; class is the super-type of anything that can be thrown
+and caught.&lt;/p&gt;
 
-&lt;p&gt;Some of the lang package is essential, like &lt;code&gt;Object&lt;/code&gt; and &lt;code&gt;Class&lt;/code&gt;, which
-means that the compiler, &lt;a href=&#34;../tools/rock/&#34;&gt;rock&lt;/a&gt;, will expect them to be present,
-have certain names, fields and methods. However, using a custom sdk is
-possible, where the implementation for these can be swapped to something
-lighter, for example.&lt;/p&gt;
+&lt;p&gt;There is no special keyword for throwing exceptions in ooc - instead, the
+mechanism is implemented transparently thanks to the &lt;code&gt;throw()&lt;/code&gt; method.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+e := Exception new(&amp;quot;Something bad happened&amp;quot;)
+e throw()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Message&lt;/h2&gt;
+
+&lt;p&gt;A good exception will have a descriptive message. It can be accessed
+via the &lt;code&gt;message&lt;/code&gt; field of the &lt;code&gt;Exception&lt;/code&gt; class.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+try {
+  attemptSomethingRisky()
+} catch (e: Exception) {
+  &amp;quot;Something bad happened, and here&#39;s what: %s&amp;quot; printfln(e message)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Origin&lt;/h2&gt;
+
+&lt;p&gt;It might be useful to know which class in particular has thrown an
+exception. For this purpose, the &lt;code&gt;origin&lt;/code&gt; field exists:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+try {
+} catch (e: Exception) {
+  &amp;quot;Something went wrong, and the culprit is: %s&amp;quot; \
+    printfln(e origin ? e origin name : &amp;quot;unknown&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To have a default representation of an exception, like it would be
+printed as if there was no try block to catch it, use &lt;code&gt;formatMessage()&lt;/code&gt;,
+or, to print it, use &lt;code&gt;print()&lt;/code&gt; directly.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Backtrace&lt;/h2&gt;
+
+&lt;p&gt;On platforms where it is implemented (currently, Linux with the &amp;ldquo;+-rdynamic&amp;rdquo;
+compiler option), a series of backtrace can be available, containing info
+about each stack frame leading up to the point the exception was thrown.&lt;/p&gt;
+
+&lt;p&gt;The backtrace can be printed with the &lt;code&gt;printBacktrace()&lt;/code&gt; method. It&amp;rsquo;ll get
+printed in the default representation, for example if there is no particular
+exception handler.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Custom exceptions&lt;/h2&gt;
+
+&lt;p&gt;To add a custom exception type, simply subclass &lt;code&gt;Exception&lt;/code&gt; and provide
+a constructor:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+FunnyException: class extends Exception {
+  init: func {
+    super(&amp;quot;Nothing happened, just thought it&#39;d be fun to interrupt the program!&amp;quot;)
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>mmap</title>
+      <link>http://oocmanual.cogneco.com/sdk/os/mmap</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/os/mmap</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The os/mmap module&lt;/h1&gt;
+
+&lt;p&gt;As it stands, the &lt;code&gt;os/mmap&lt;/code&gt; module just exposes the *nix functions for memory
+mapping: &lt;code&gt;mmap&lt;/code&gt;, &lt;code&gt;munmap&lt;/code&gt;, &lt;code&gt;mprotect&lt;/code&gt;, &lt;code&gt;madvise&lt;/code&gt;, &lt;code&gt;mincore&lt;/code&gt;, &lt;code&gt;minherit&lt;/code&gt;,
+&lt;code&gt;msync&lt;/code&gt;, &lt;code&gt;mlock&lt;/code&gt;, and &lt;code&gt;munlock&lt;/code&gt;, along with the associated constants.&lt;/p&gt;
+
+&lt;p&gt;It also contains prototypes / covers for the Windows equivalent,
+&lt;code&gt;VirtualProtect&lt;/code&gt;, and its constants as well.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Notes&lt;/h2&gt;
+
+&lt;p&gt;This module is not a high-level or cross-platform interface and is not
+documented extensively here.&lt;/p&gt;
+
+&lt;p&gt;However, to find more information on memory mapping for various platform
+see here:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://en.wikipedia.org/wiki/Mmap&#34;&gt;mmap on Wikipedia&lt;/a&gt; (for *nix platforms)&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://msdn.microsoft.com/en-us/windows/desktop/aa366898(v=vs.85).aspx&#34;&gt;VirtualProtect on MSDN&lt;/a&gt; (for Windows)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;On a historical note, this module was originally included in the SDK as support
+code for the closure implementation, which back then implied generating
+bytecode at runtime and thus marking some memory regions as executable.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>dynlib</title>
+      <link>http://oocmanual.cogneco.com/sdk/os/dynlib</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/os/dynlib</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The os/Dynlib module&lt;/h1&gt;
+
+&lt;p&gt;The &lt;code&gt;Dynlib&lt;/code&gt; module allows one to load dynamic libraries on all
+major platforms.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Basic usage&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;rsquo;s open a library:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import os/Dynlib
+
+lib := Dynlib load(&amp;quot;libm&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We don&amp;rsquo;t need to specify the &lt;code&gt;.so&lt;/code&gt;, &lt;code&gt;.dynlib&lt;/code&gt;, or &lt;code&gt;.dll&lt;/code&gt; extension here, it is
+set automatically by platform, although the original path will be tested first,
+in case of non-standard file extension.&lt;/p&gt;
+
+&lt;p&gt;If the lib returned is null, it wasn&amp;rsquo;t found or couldn&amp;rsquo;t be opened:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+if (!lib) {
+    raise(&amp;quot;Couldn&#39;t load library!&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can then retrieve a symbol:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+cosAddr := lib symbol(&amp;quot;cos&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And cast it to a more useful function. Since &lt;code&gt;Func&lt;/code&gt; is actually
+a function pointer and a context, we use a cover literal, passing
+null for the context:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+cos := (cosAddr, null) as Func (Double) -&amp;gt; Double
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Which we can then use!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;cos(PI / 4) = %.3f&amp;quot; printfln(cos(3.14 * 0.25))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This prints &lt;code&gt;cos(PI / 4) = 0.707&lt;/code&gt;, as expected.&lt;/p&gt;
+
+&lt;p&gt;When we&amp;rsquo;re done with the library we can just close it:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+lib close()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note: on Windows, failing to close a library may lead to a
+crash on application exit.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>string</title>
+      <link>http://oocmanual.cogneco.com/sdk/lang/string</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/lang/string</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;String&lt;/h1&gt;
+
+&lt;p&gt;A string in ooc is a chain of bytes with no particular property.
+In most cases, you&amp;rsquo;ll want to deal with UTF-8 encoded strings.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;String&lt;/code&gt; type is the full-blown ooc String - it is a pascal
+string in the sense that the length is stored with it. It is
+backed by the &lt;code&gt;Buffer&lt;/code&gt; type, which contains the actual bytes.&lt;/p&gt;
+
+&lt;p&gt;Buffers are mutable, whereas Strings are immutable. Therefore,
+to build up a long String from several elements, using &lt;code&gt;Buffer&lt;/code&gt;
+is preferable.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Basic usage&lt;/h2&gt;
+
+&lt;p&gt;The size of a String can be retrieved through the &lt;code&gt;size&lt;/code&gt; property.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;dumb luck&amp;quot; size == 9 // true
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Tests&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;startsWith?&lt;/code&gt; and &lt;code&gt;endsWith?&lt;/code&gt; do exactly what they sound like.
+&lt;code&gt;equals?&lt;/code&gt; tests for equality, and is aliased to the &lt;code&gt;==&lt;/code&gt; operator
+and, for non-equality, the &lt;code&gt;!=&lt;/code&gt; operator:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;moonlight&amp;quot; startsWith?(&amp;quot;moon&amp;quot;) // true
+&amp;quot;lightscape&amp;quot; endsWith?(&amp;quot;scape&amp;quot;) // true
+
+&amp;quot;moon&amp;quot; == &amp;quot;moon&amp;quot; // true
+&amp;quot;light&amp;quot; != &amp;quot;darkness&amp;quot; // true
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Indexing&lt;/h2&gt;
+
+&lt;p&gt;One can retrieve the n-th byte with the array indexing operator, &lt;code&gt;[]&lt;/code&gt;
+and an integer value:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;abcdef&amp;quot;[2] // == &#39;c&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note that the indexes are 0-based, like arrays.&lt;/p&gt;
+
+&lt;p&gt;To iterate through each byte of a String, a foreach can be used:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;Let&#39;s spell!&amp;quot; println()
+for (c in &amp;quot;violin&amp;quot;) {
+  &amp;quot;%c, &amp;quot; printfln(c)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Formatting and printing&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;format&lt;/code&gt; method can be used to format a string with various
+elements such as integers, floats, other strings, etc:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;%d&amp;quot; format(42) // == &amp;quot;42&amp;quot;
+&amp;quot;%.2f&amp;quot; format(3.1567) // == &amp;quot;3.16&amp;quot;
+&amp;quot;%s&amp;quot; format(&amp;quot;Hi!&amp;quot;) // == &amp;quot;Hi!&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;print&lt;/code&gt; method will print a string to the standard output.
+Since it is so convenient to print a string followed by a newline,
+&lt;code&gt;println&lt;/code&gt; does exactly that. And since formatting is often used,
+&lt;code&gt;printfln&lt;/code&gt; does formatting, then print the result followed by a newline.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;Hello world!\n&amp;quot; print()
+// is equivalent to:
+&amp;quot;Hello world!&amp;quot; println()
+// itself equivalent to:
+&amp;quot;Hello %s!&amp;quot; printfln(&amp;quot;world&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Concatenation&lt;/h2&gt;
+
+&lt;p&gt;One can use the &lt;code&gt;append&lt;/code&gt; and &lt;code&gt;prepend&lt;/code&gt; methods:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;light&amp;quot; prepend(&amp;quot;moon&amp;quot;) // == &amp;quot;moonlight&amp;quot;
+&amp;quot;storm&amp;quot; append(&amp;quot;born&amp;quot;) // == &amp;quot;stormborn&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or simply, the &lt;code&gt;+&lt;/code&gt; operator:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;not&amp;quot; + &amp;quot;with&amp;quot; + &amp;quot;standing&amp;quot; // == &amp;quot;notwithstanding&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;Finding and replacing&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;indexOf&lt;/code&gt; method returns the index of a character or string inside
+a string:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;abcdef&amp;quot; indexOf?(&#39;c&#39;) // 2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Using &lt;code&gt;replaceAll&lt;/code&gt;, one can replace all instances of a String with
+another String:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+// yields &amp;quot;Brother | father | lover.&amp;quot;
+&amp;quot;Brother, father, lover.&amp;quot; replaceAll(&amp;quot;,&amp;quot;, &amp;quot; |&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;Slicing&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;substring&lt;/code&gt; method allows one to get a slice of a String:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;observe&amp;quot; substring(2) // == &amp;quot;serve&amp;quot;
+&amp;quot;laminate&amp;quot; substring(2, 5) // == &amp;quot;min&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Alternatively, the array indexing operator, &lt;code&gt;[]&lt;/code&gt;, can be used
+with a range literal.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;observe&amp;quot;[2..-1] // == &amp;quot;serve&amp;quot;
+&amp;quot;laminate&amp;quot;[2..5] // == &amp;quot;min&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_8&#34;&gt;Trimming&lt;/h2&gt;
+
+&lt;p&gt;To get rid of extra whitespace, use the &lt;code&gt;trim&lt;/code&gt; method, or its variants,
+&lt;code&gt;trimLeft&lt;/code&gt; and &lt;code&gt;trimRight&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;  Hi!  &amp;quot; trim() // = &amp;quot;Hi!&amp;quot;
+&amp;quot;  Hi!  &amp;quot; trimLeft() // = &amp;quot;Hi!  &amp;quot;
+&amp;quot;  Hi!  &amp;quot; trimRight() // = &amp;quot;  Hi!&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;They also have versions that accept which characters to trim:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;[Hola.]&amp;quot; trim() // = &amp;quot;[Hola.]&amp;quot;
+&amp;quot;[Hola.]&amp;quot; trim(&amp;quot;[]()&amp;quot;) // = &amp;quot;Hola.&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;toc_9&#34;&gt;CString&lt;/h1&gt;
+
+&lt;p&gt;While a pure ooc program will want to deal mostyl with &lt;code&gt;String&lt;/code&gt;s,
+when dealing with C functions, one will want to convert back and forth
+with &lt;code&gt;toCString()&lt;/code&gt;, which gives a &lt;code&gt;CString&lt;/code&gt;, a cover of &lt;code&gt;char*&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Conversely, converting a CString to a String can be done with &lt;code&gt;toString()&lt;/code&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>terminal</title>
+      <link>http://oocmanual.cogneco.com/sdk/os/terminal</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/os/terminal</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The os/Terminal module&lt;/h1&gt;
+
+&lt;p&gt;Terminal is used to control the terminal output, mostly by setting colors and
+attributes on there.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;Colors&lt;/h1&gt;
+
+&lt;p&gt;The &lt;code&gt;Color&lt;/code&gt; enum contains colors that are possible to set on the terminal:&lt;/p&gt;
+
+&lt;p&gt;To change the foreground color, use &lt;code&gt;setFgColor&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+Terminal setFgColor(Color black)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To change the background color, use &lt;code&gt;setBgColor&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+Terminal setBgColor(Color white)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;List of colors&lt;/h2&gt;
+
+&lt;p&gt;Here are the colors defined in the Color enum:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;black&lt;/li&gt;
+&lt;li&gt;red&lt;/li&gt;
+&lt;li&gt;green&lt;/li&gt;
+&lt;li&gt;yellow&lt;/li&gt;
+&lt;li&gt;blue&lt;/li&gt;
+&lt;li&gt;magenta&lt;/li&gt;
+&lt;li&gt;cyan&lt;/li&gt;
+&lt;li&gt;grey&lt;/li&gt;
+&lt;li&gt;white&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Note that depending on your terminal emulator, these colors
+might not map to their actual names.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_3&#34;&gt;Attributes&lt;/h1&gt;
+
+&lt;p&gt;Attributes can be set using &lt;code&gt;setAttr&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+Terminal setAttr(Attr bright)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;List of attributes&lt;/h2&gt;
+
+&lt;p&gt;Here are the attributes defined in the &lt;code&gt;Attr&lt;/code&gt; enum:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;reset&lt;/li&gt;
+&lt;li&gt;bright&lt;/li&gt;
+&lt;li&gt;dim&lt;/li&gt;
+&lt;li&gt;under&lt;/li&gt;
+&lt;li&gt;blink&lt;/li&gt;
+&lt;li&gt;reverse&lt;/li&gt;
+&lt;li&gt;hidden&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;toc_5&#34;&gt;Resetting&lt;/h1&gt;
+
+&lt;p&gt;Reset all color and attribute settings to default by using the
+&lt;code&gt;reset&lt;/code&gt; method:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+Terminal reset()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;toc_6&#34;&gt;Cross-platform considerations&lt;/h1&gt;
+
+&lt;p&gt;On *nix platforms, all attributes are supposed. On Windows, only
+the &lt;code&gt;reset&lt;/code&gt; attribute is supported.&lt;/p&gt;
+
+&lt;p&gt;On *nix, the &lt;code&gt;Terminal&lt;/code&gt; module outputs ANSI escape sequences to
+stdout, whereas on Windows it uses the console text attribute API.&lt;/p&gt;
+
+&lt;p&gt;That&amp;rsquo;s why there is no cross-platform way to transform a string
+into a &amp;ldquo;colored string&amp;rdquo;, because it would make no sense on Windows.&lt;/p&gt;
+
+&lt;p&gt;Also, on *nix, color escapes will only be outputted if stdout is
+a terminal and not if it&amp;rsquo;s redirected to a file or a pipe.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>os</title>
+      <link>http://oocmanual.cogneco.com/sdk/os</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/os</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The os package&lt;/h1&gt;
+
+&lt;p&gt;The os packages contains various modules pertaining to Operating System functionality such as:&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Concurrency&lt;/h2&gt;
 
 &lt;ol&gt;
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;types&#34;&gt;Types&lt;/a&gt; section describes how Object,
- Class, and other types such as Void, Pointer, Bool, None,
- Cell are defined. It also discusses variable arguments.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;process&#34;&gt;Process&lt;/a&gt;, to launch child processes&lt;/p&gt;&lt;/li&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;string&#34;&gt;String&lt;/a&gt; section talks about string
- handling, the mutable variant Buffer, and formatting&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;jobpool&#34;&gt;JobPool&lt;/a&gt;, to easily control a pool of child processes&lt;/p&gt;&lt;/li&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;numbers&#34;&gt;Numbers&lt;/a&gt; section talks about number
- types, either integers or floats, and the various functions available.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;[Coro](coro, which provides a basic coroutine implementation&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;iterators&#34;&gt;Iterators&lt;/a&gt; section discusses
- how iterators are implemented, and what goes on behind a foreach.&lt;/p&gt;&lt;/li&gt;
+&lt;h2 id=&#34;toc_2&#34;&gt;I/O&lt;/h2&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;exceptions&#34;&gt;Exceptions&lt;/a&gt; section talks about
- default properties of exceptions, and how to extend them.&lt;/p&gt;&lt;/li&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;terminal&#34;&gt;Terminal&lt;/a&gt;, used to control terminal text output (color, etc.)&lt;/p&gt;&lt;/li&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;memory&#34;&gt;Memory&lt;/a&gt; section talks about memory
- management, mostly just how to deal with blocks of memory rather
- than more high-level data structures.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;pipe&#34;&gt;Pipe&lt;/a&gt;, to open, read from, and write to pipes&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;dynlib&#34;&gt;Dynlib&lt;/a&gt;, which deals with dynamic library loading&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;mmap&#34;&gt;mmap&lt;/a&gt;, which exposes memory mapping capabilities&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;channel&#34;&gt;Channel&lt;/a&gt;, which implements channels&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;System&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;system&#34;&gt;System&lt;/a&gt;, to get information such as the number of processors,
+the hostname, etc.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;env&#34;&gt;Env&lt;/a&gt;, to deal with environment variables&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;shellutils&#34;&gt;ShellUtils&lt;/a&gt;, used mostly to find executables&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;time&#34;&gt;Time&lt;/a&gt;, to get the current time and date, and sleep&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 </description>
     </item>
     
     <item>
-      <title>pipe</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/pipe</link>
+      <title>structs</title>
+      <link>http://oocmanual.cogneco.com/sdk/structs</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/sdk/os/pipe</guid>
+      <guid>http://oocmanual.cogneco.com/sdk/structs</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/Pipe module&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;The structs package&lt;/h1&gt;
 
-&lt;p&gt;The Pipe module allows one to deal with pipes. Pipes are basically a pair of
-read and write file descriptors.&lt;/p&gt;
+&lt;p&gt;A few frequently used data structures ship with the SDK.&lt;/p&gt;
 
-&lt;p&gt;The writer writes into the write file descriptor and the reader reads into the
-read file descriptor.&lt;/p&gt;
+&lt;h1 id=&#34;toc_1&#34;&gt;Lists&lt;/h1&gt;
 
-&lt;h2 id=&#34;toc_1&#34;&gt;Reading&lt;/h2&gt;
-
-&lt;p&gt;A read call may either:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;successfully read, if there&amp;rsquo;s data in the pipe&lt;/li&gt;
-&lt;li&gt;block to wait for some more data (in blocking mode)&lt;/li&gt;
-&lt;li&gt;return immediately with no data (in non-blocking mode)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;In non-blocking mode, one has to be careful to distinguish between the &amp;lsquo;no
-data&amp;rsquo; condition and the &amp;lsquo;end of pipe&amp;rsquo; condition. OS pipes don&amp;rsquo;t have a proper
-&amp;lsquo;eof&amp;rsquo; marker, but reading from a closed pipe will mark the Pipe class as eof
-anyway, accessible with &lt;code&gt;Pipe eof?()&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;The &lt;code&gt;os/Pipe&lt;/code&gt; package contains a &lt;code&gt;PipeReader&lt;/code&gt; class, which extends the
-&lt;code&gt;io/Reader&lt;/code&gt; class, for convenience.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Writing&lt;/h2&gt;
-
-&lt;p&gt;A write call may either:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;return immediately if there&amp;rsquo;s room in the pipe&lt;/li&gt;
-&lt;li&gt;block to wait for some data to be read, making room to write something (in
-blocking mode)&lt;/li&gt;
-&lt;li&gt;return immediately, having written as much as it can (in non-blocking mode)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The &lt;code&gt;os/Pipe&lt;/code&gt; package contains a &lt;code&gt;PipeWriter&lt;/code&gt; class, which extends the
-&lt;code&gt;io/Writer&lt;/code&gt; class, for convenience.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Buffering considerations&lt;/h2&gt;
-
-&lt;p&gt;Note that a pipe&amp;rsquo;s user has to do its own buffering when writing: in blocking
-mode, writing something too large will hang forever, and in non-blocking mode,
-only the part that fits will be written, leaving the rest unwritten.&lt;/p&gt;
-
-&lt;p&gt;As a result, using a &lt;code&gt;PipeReader&lt;/code&gt; or a &lt;code&gt;PipeReader&lt;/code&gt; in non-blocking mode is
-unreliable.  Instead, using blocking mode inside a thread is preferrable.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_4&#34;&gt;Basic usage&lt;/h1&gt;
-
-&lt;p&gt;Here&amp;rsquo;s a not so useful pipe:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;structs/List&lt;/code&gt; contains the generic interface for lists, which are ordered, indexed
+collections of elements of any type &lt;code&gt;T&lt;/code&gt;.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-pipe := Pipe new()
+list: List&amp;lt;String&amp;gt; = // something
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;We can write a string into it:&lt;/p&gt;
+&lt;p&gt;Elements can be added to or removed from anywhere in the list&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-pipe write(&amp;quot;Hello&amp;quot;)
+list add(&amp;quot;hi&amp;quot;) // append &amp;quot;hi&amp;quot; to the list
+list add(0, &amp;quot;hoe&amp;quot;) // prepend &amp;quot;ho&amp;quot; to the list
+list remove(&amp;quot;hi&amp;quot;) // remove the first element equal to &amp;quot;hi&amp;quot;
+list removeAt(0) // remove the first element
+
+list addAll(otherList) // append all elements from other list
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;And then read the result back:&lt;/p&gt;
+&lt;p&gt;They can also be retrieved from anywhere in the list:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-str := pipe read(128)
-str println()
+list get(24) == list[24] // get the 24th element
+list first() // get the first element
+list last() // get the last element
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Even though we requested 128 bytes from the pipe, only 5 bytes have been written,
-so we the call immediately returns with a String of size 5.&lt;/p&gt;
-
-&lt;p&gt;We could have also read into our own buffer:&lt;/p&gt;
+&lt;p&gt;The number of elements in a list is available as the &lt;code&gt;size&lt;/code&gt; property:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-b := Buffer new(128)
-pipe read(b)
-b println()
+&amp;quot;There are %d elements in this list.&amp;quot; printfln(list size)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Same here, the buffer has 128 bytes capacity, but only 5 bytes have been read, and
-the buffer&amp;rsquo;s length has been set accordingly. Using a buffer is more efficient
-because fewer allocations are being done.&lt;/p&gt;
-
-&lt;p&gt;Then, we shouldn&amp;rsquo;t forget to close both the reading and the writing end of the pipe&lt;/p&gt;
+&lt;p&gt;Going through each element is easy as well, either using a foreach:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-pipe close(&#39;r&#39;)
-pipe close(&#39;w&#39;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Or simply:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-pipe close()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_5&#34;&gt;Communication&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;Inter-thread communication&lt;/h2&gt;
-
-&lt;p&gt;Pipes can be used to communicate between threads.&lt;/p&gt;
-
-&lt;p&gt;Let&amp;rsquo;s create a pipe:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-pipe := Pipe new()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then a thread that is going to read out of it until it&amp;rsquo;s closed:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-reader := Thread new(||
-    while (!pipe eof?()) {
-        result := pipe read(128)
-        if (result) result print()
-    }
-    pipe close(&#39;r&#39;)
-)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then a writer path which is going to write ten hellos, one every 100
-milliseconds:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-writer := Thread new(||
-    for (i in 0..10) {
-        pipe write(&amp;quot;Hello %d\n&amp;quot; format(i))
-        Time sleepMilli(100)
-    }
-    pipe close(&#39;w&#39;)
-)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Let&amp;rsquo;s start them both:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-reader start(); writer start()
-reader wait();  writer wait()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;Inter-process communication&lt;/h2&gt;
-
-&lt;p&gt;Similarly, pipes can be (and are mostly) used to communicate with other
-processes. This is covered in the &lt;a href=&#34;/docs/sdk/os/process/&#34;&gt;Process&lt;/a&gt; section.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;Non-blocking I/O&lt;/h2&gt;
-
-&lt;p&gt;A pipe can be set to non-blocking mode to use non-blocking read operations.
-This is used in the streaming example in the &lt;a href=&#34;/docs/sdk/os/process/&#34;&gt;Process&lt;/a&gt; section.&lt;/p&gt;
-
-&lt;p&gt;Let&amp;rsquo;s create a pipe in non-blocking mode for reading only:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-pipe := Pipe new()
-pipe setNonBlocking(&#39;r&#39;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then a state variable that&amp;rsquo;ll be shared by both threads:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-done := false
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then we&amp;rsquo;ll make a writer thread that never closes the pipe itself (much like a
-process launched in the background that you never blockingly wait on):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-t := Thread new(||
-  for (i in 0..10) {
-    Time sleepSec(1)
-    pipe write(&amp;quot;Hello %d&amp;quot; format(i))
-  }
-  done = true
-)
-
-t start()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;It does set done to true after it&amp;rsquo;s done, though - much like you could know if
-a background process is still running with &lt;code&gt;waitNoHang&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Then we&amp;rsquo;ll read, from the main thread, as much as we can, and when we don&amp;rsquo;t receive
-anything, we&amp;rsquo;ll check if we&amp;rsquo;re done:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-while (true) {
-  res := pipe read(128)
-  if (res) {
-    &amp;quot;Received: %s&amp;quot; printfln(res)
-  } else if (done) break
+for (elem in list) {
+  elem println()
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;And let&amp;rsquo;s not forget to clean up:&lt;/p&gt;
+&lt;p&gt;Or by passing a closure:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-pipe close()
-t wait()
+list each(|elem|
+  elem println()
+)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;That behaves as expected. Note that in the main thread loop we could be doing anything
-really, without blocking on the read.&lt;/p&gt;
+&lt;p&gt;Removing all elements can be done via &lt;code&gt;clear&lt;/code&gt;:&lt;/p&gt;
 
-&lt;h1 id=&#34;toc_9&#34;&gt;Pipes disclaimer&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;#!ooc
+list clear()
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;If you have read all the way down, and you&amp;rsquo;re thinking of doing some complex
-stuff with pipes, you probably want some queuing library instead of using raw
-pipes, both for cross-platform support, performance, and ease of use.
-&lt;a href=&#34;http://zeromq.org/&#34;&gt;zeromq&lt;/a&gt; is an interesting library and it has &lt;a href=&#34;https://github.com/nddrylliog/ooc-zeromq&#34;&gt;ooc bindings&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;toc_2&#34;&gt;ArrayList&lt;/h2&gt;
+
+&lt;p&gt;An array list is backed by an array, which it grows or shrinks depending
+on how many elements are in there.&lt;/p&gt;
+
+&lt;p&gt;Removing or adding an element in the middle of an ArrayList is expensive, as
+it shifts all elements after it.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+// constructed through successive add() calls:
+a1 := ArrayList&amp;lt;Int&amp;gt; new()
+a1 add(1); a1 add(2); a2 add(3)
+
+// constructed from an array literal
+a1 := [1, 2, 3] as ArrayList&amp;lt;Int&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;An ArrayList can be easily converted to an array:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+printArray(list toArray())
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;LinkedList&lt;/h2&gt;
+
+&lt;p&gt;A &lt;code&gt;LinkedList&lt;/code&gt; is a doubly linked list, ie. each element points to the
+element after it and the element before it.&lt;/p&gt;
+
+&lt;p&gt;Unlike the ArrayList, removing or adding an element in the middle of a linked list
+is inexpensive.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_4&#34;&gt;Maps&lt;/h1&gt;
+
+&lt;p&gt;Maps are associative objects, ie. they associate keys to values.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;HashMap&lt;/h2&gt;
+
+&lt;p&gt;The most oftenly used map collection is &lt;code&gt;structs/HashMap&lt;/code&gt;. It can only associate
+a given key to one value. E.g. there cannot be duplicate keys.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+map := HashMap&amp;lt;String, Int&amp;gt; new()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Key-&amp;gt;value pairs are added to a HashMap using &lt;code&gt;put&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+map put(&amp;quot;one&amp;quot;, 1)
+map put(&amp;quot;two&amp;quot;, 2)
+map put(&amp;quot;three&amp;quot;, 3)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;..and retrieved using &lt;code&gt;get&lt;/code&gt;. Key presence is tested with &lt;code&gt;containsKey?&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+map get(&amp;quot;two&amp;quot;) == 2 // true
+map containsKey?(&amp;quot;two&amp;quot;) // true
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The whole point of a HashMap is that checking for presence or finding the
+value corresponding to a key is faster than storing values in a list and
+iterating through it entirely every time.&lt;/p&gt;
+
+&lt;p&gt;To remove pairs, one has to specify the key:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+map remove(&amp;quot;two&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A HashMap can be iterated through:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+map each(|key, value|
+  &amp;quot;%s =&amp;gt; %s&amp;quot; printfln(key, value)
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It&amp;rsquo;s possible to get a list of all keys contained in a map:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+map getKeys()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note that in a HashMap, iteration order is not guaranteed to be equivalent to
+insertion order - due to the hashing done, keys might get reordered for efficiency.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;MultiMap&lt;/h2&gt;
+
+&lt;p&gt;MultiMap is a HashMap variant that can contain multiple values for a given key.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;OrderedMultiMap&lt;/h2&gt;
+
+&lt;p&gt;OrderedMultiMap is a MultiMap variant that will maintain the order in which keys
+were inserted, for iteration.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_8&#34;&gt;Bag variants&lt;/h1&gt;
+
+&lt;p&gt;In the structures presenting above, all elements must have the same type in a given
+collection. Bags are different: each element can be a different type.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_9&#34;&gt;Cell&lt;/h2&gt;
+
+&lt;p&gt;Actually defined in &lt;code&gt;lang/types&lt;/code&gt;, Cell can contain anything:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+intCell := Cell new(42)
+stringCell := Cell new(&amp;quot;turtle&amp;quot;)
+// and so on
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Unwrapping a cell can be done via the indexing operator &lt;code&gt;[]&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+number := cell[Int]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note that unwrapping a cell with an incompatible type will throw an error.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_10&#34;&gt;Bag&lt;/h2&gt;
+
+&lt;p&gt;Technically, a Bag can be seen as a list of cells, with convenience methods to
+deal directly with the values contained inside the cells.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+bag := Bag new()
+bag add(93) // add an Int
+bag add(&amp;quot;seaside&amp;quot;) // add a String
+bag add(bag) // add itself! the fun never ends.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To retrieve elements from a bag, one has to specify the type:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+number := bag get(0, Int)
+title := bag get(1, String)
+// and so on
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_11&#34;&gt;HashBag&lt;/h2&gt;
+
+&lt;p&gt;A HashBag maps string values to any type of value.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+hash := HashBag new()
+hash put(&amp;quot;number&amp;quot;, 93)
+hash put(&amp;quot;title&amp;quot;, &amp;quot;seaside&amp;quot;)
+hash put(&amp;quot;ourselves&amp;quot;, hash)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To retrieve elements from a &lt;code&gt;HashBag&lt;/code&gt;, one has to specify both the string key
+and the type:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+number := hash get(&amp;quot;number&amp;quot;, Int)
+title := hash get(&amp;quot;title&amp;quot;, String)
+// etc.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;HashBags are particularly useful to represent a tree-like document, that was originally
+encoded as JSON or YAML, for example.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;getPath&lt;/code&gt; method allows one to retrieve an element of a tree of &lt;code&gt;HashBag&lt;/code&gt;s and &lt;code&gt;Bag&lt;/code&gt;s.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s say the original JSON looked like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!json
+{&amp;quot;elements&amp;quot;: {
+  &amp;quot;house&amp;quot;: {},
+  &amp;quot;car&amp;quot;: {
+    &amp;quot;wheels&amp;quot;: [
+      { &amp;quot;diameter&amp;quot;: 2 }
+    ]}}}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;One could use the following code to retrieve the diameter of the first wheel:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+data: HashBag = // read from JSON
+diameter := data getPath(&amp;quot;elements/car/wheels#0/diameter&amp;quot;, Int)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;toc_12&#34;&gt;Stacks&lt;/h1&gt;
+
+&lt;p&gt;Stacks are list-like data structures, except their primary purpose is to have elements
+pushed on top of them and popped from the top, in a LIFO (last-in, first-out) fashion.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+stack := Stack&amp;lt;Int&amp;gt; new()
+stack push(1). push(2). push(3)
+
+stack pop() == 3 // true
+stack pop() == 2 // also true
+stack pop() == 1 // left as an exercise to the reader
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_13&#34;&gt;Stick&lt;/h2&gt;
+
+&lt;p&gt;The ill-named &lt;code&gt;Stick&lt;/code&gt; data structure can be thought of as a bag stack - e.g. a Stack
+that can contain any type of element.&lt;/p&gt;
+
+&lt;p&gt;Example usage:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+stick := Stick new(Float size + Object size)
+stick push(1.23)
+stick push(&amp;quot;Hi!&amp;quot;)
+
+stick pop(String) == &amp;quot;Hi!&amp;quot; // true
+stick pop(Float) == 1.23 // truthful
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;Stick&lt;/code&gt; is quite low-level - it doesn&amp;rsquo;t resize automatically, it does no
+bounds checking, no type checking at all. To be used when you absolutely,
+positively need to squeeze bytes together as close as possible and don&amp;rsquo;t care
+about safety at all.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>native</title>
+      <link>http://oocmanual.cogneco.com/sdk/native</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/native</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The native package&lt;/h1&gt;
+
+&lt;p&gt;The &lt;code&gt;native&lt;/code&gt; package of the SDK contains nothing that should be
+directly imported in a cross-platform application. It&amp;rsquo;s all platform-specific
+support code for other parts of the SDK.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Windows&lt;/h2&gt;
+
+&lt;p&gt;For example, the &lt;code&gt;native/win32&lt;/code&gt; package contains covers for types defined
+in the Win32 API, along with a few error handling functions and other
+things that are useful in the Win32 implementation of the SDK.&lt;/p&gt;
+
+&lt;p&gt;Note that there exists &lt;code&gt;native&lt;/code&gt; sub packages elsewhere in the SDK, for example
+in the &lt;code&gt;io&lt;/code&gt; or in the &lt;code&gt;os&lt;/code&gt; packages.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>shellutils</title>
+      <link>http://oocmanual.cogneco.com/sdk/os/shellutils</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/os/shellutils</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The os/ShellUtils module&lt;/h1&gt;
+
+&lt;p&gt;The entire purpose of the &lt;code&gt;ShellUtils&lt;/code&gt; module is to find an
+executable in the PATH environment variable.&lt;/p&gt;
+
+&lt;p&gt;It can be used to implement functionality usually found in the
+*nix &lt;code&gt;which&lt;/code&gt; command-line utility.&lt;/p&gt;
+
+&lt;p&gt;For example, to know where &lt;code&gt;autoconf&lt;/code&gt; is hiding, one can do:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import os/ShellUtils
+file := ShellUtils findExecutable(&amp;quot;autoconf&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If the executable is not found, &lt;code&gt;file&lt;/code&gt; here will be null. Otherwise,
+it&amp;rsquo;ll correspond to the executable first found in the path:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+match file {
+    case null =&amp;gt; &amp;quot;autoconf not found&amp;quot;
+    case =&amp;gt; &amp;quot;found: %s&amp;quot; format(file path)
+} println()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Cross-platform&lt;/h2&gt;
+
+&lt;p&gt;Adding the &lt;code&gt;.exe&lt;/code&gt; suffix is not necessary on Windows - it&amp;rsquo;ll be
+added automatically on this platform when searching.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Crucial&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;findExecutable&lt;/code&gt; can be made to throw an exception in case an
+executable is not found, instead of returning null. For this, pass
+&lt;code&gt;true&lt;/code&gt; as its second argument:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+// if we can&#39;t find make, don&#39;t even bother
+make := ShellUtils findExecutable(&amp;quot;make&amp;quot;, true)
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
@@ -399,1064 +982,6 @@ socket send(&amp;quot;udp is fun&amp;quot;)
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;That&amp;rsquo;s about it for now.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>process</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/process</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/os/process</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/Process module&lt;/h1&gt;
-
-&lt;p&gt;The Process module deals with everything related to launching a child process, waiting for
-its status or signals, and communicating with it.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;Basic usage&lt;/h1&gt;
-
-&lt;p&gt;A process can be launched by providing an array or a list of arguments to the &lt;code&gt;Process&lt;/code&gt; constructor:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import os/Process
-
-p := Process new([&amp;quot;cat&amp;quot;, &amp;quot;/etc/hosts&amp;quot;])
-exitCode := p execute()
-
-// at this point, the process has ended
-// and &#39;exitCode&#39; contains the value returned by the program
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Instead of running execute, one might want to run &lt;code&gt;getOutput&lt;/code&gt; directly, to get
-the standard output of the process as a string&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-p := Process new([&amp;quot;cat&amp;quot;, &amp;quot;/etc/hosts&amp;quot;])
-out := p getOutput()
-// out now contains the contents of the /etc/hosts file
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Or getErrOutput to get the standard error output:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-p := Process new([&amp;quot;cat&amp;quot;, &amp;quot;/etc/hosts&amp;quot;])
-err := p getErrOutput()
-// err is empty
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;To retrieve the result of both stderr and stdout, see the &amp;lsquo;Redirecting&amp;rsquo; section
-below.&lt;/p&gt;
-
-&lt;p&gt;However, depending on your use case, that might not be the best way to do it.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Manual wait and pid&lt;/h2&gt;
-
-&lt;p&gt;&lt;code&gt;execute&lt;/code&gt; will start the child process, wait for it to finish, and print the output.&lt;/p&gt;
-
-&lt;p&gt;However, we can do things manually if we want:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-p := Process new([&amp;quot;curl&amp;quot;, &amp;quot;example.org&amp;quot;])
-p executeNoWait()
-p wait()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The &lt;code&gt;wait&lt;/code&gt; method will wait until the child process has exited or errored. If you
-just want to check if a process is still running, &lt;code&gt;waitNoHang&lt;/code&gt; can be used instead:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-p := Process new([&amp;quot;curl&amp;quot;, &amp;quot;example.org&amp;quot;])
-p executeNoWait()
-while (p waitNoHang() == -1) {
-    Time sleepMilli(20)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;To execute a bunch of processes in parallel, using a &lt;a href=&#34;/docs/sdk/os/jobpool&#34;&gt;JobPool&lt;/a&gt; is easier and
-more suitable.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_3&#34;&gt;Process settings&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Current working directory&lt;/h2&gt;
-
-&lt;p&gt;By default, a process will inherit from the current working directory. To make
-the child process run in a specified directory, use the &lt;code&gt;setCwd&lt;/code&gt; method&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-p := Process new([&amp;quot;cat&amp;quot;, &amp;quot;hosts&amp;quot;])
-p setCwd(&amp;quot;/etc&amp;quot;)
-p execute()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Environment&lt;/h2&gt;
-
-&lt;p&gt;To specify custom environment variables for a process, use the &lt;code&gt;setEnv&lt;/code&gt; method
-with a &lt;code&gt;HashMap&amp;lt;String, String&amp;gt;&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-p := Process new([&amp;quot;bash&amp;quot;, &amp;quot;-c&amp;quot;, &amp;quot;echo $MYVAR&amp;quot;])
-
-env := HashMap&amp;lt;String, String&amp;gt; new()
-env put(&amp;quot;MYVAR&amp;quot;, &amp;quot;42&amp;quot;)
-p setEnv(env)
-
-// prints 42
-p execute()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_6&#34;&gt;Communicating with a process&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;Redirecting stdin, stdout, stderr&lt;/h2&gt;
-
-&lt;p&gt;One may use &lt;a href=&#34;/docs/sdk/os/pipe/&#34;&gt;pipes&lt;/a&gt; to redirect the standard input, output, or error stream of
-a process.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import os/[Process, Pipe, PipeReader]
-
-p := Process new([&amp;quot;some&amp;quot;, &amp;quot;process&amp;quot;])
-
-(out, err) := (Pipe new(), Pipe new())
-p setStdout(out)
-p setStderr(err)
-
-exitCode := p execute()
-
-outString := PipeReader new(out) toString()
-errString := PipeReader new(err) toString()
-
-out close(&#39;r&#39;). close(&#39;w&#39;)
-err close(&#39;r&#39;). close(&#39;w&#39;)
-
-// we now have the exit code in exitCode, the
-// stdout in outString, and the stderr in errString
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;Streaming output&lt;/h2&gt;
-
-&lt;p&gt;This can be used to stream stdout to the output of our main program, if the launched
-process is interactive. If blinkenlights is still up and running when you try this, it
-should display star wars scene in ASCII art:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-p := Process new([&amp;quot;nc&amp;quot;, &amp;quot;towel.blinkenlights.nl&amp;quot;, &amp;quot;23&amp;quot;])
-
-out := Pipe new()
-out setNonBlocking()
-p setStdout(out)
-
-p executeNoWait()
-
-while (true) {
-    chr := out read()
-    if (chr != &#39;\0&#39;) {
-        chr print()
-    } else if(p waitNoHang() &amp;gt; 0) {
-        // process is done
-        break
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_9&#34;&gt;Terminate or kill a process&lt;/h1&gt;
-
-&lt;p&gt;The &lt;code&gt;terminate&lt;/code&gt; method will send a process the &lt;code&gt;SIGTERM&lt;/code&gt; message, while the &lt;code&gt;kill&lt;/code&gt; method
-will send a process the &lt;code&gt;SIGKILL&lt;/code&gt; message.&lt;/p&gt;
-
-&lt;p&gt;This can be used to gracefully end a process:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-p terminate()
-if (p waitNoHang() != -1) {
-    // give a few seconds of grace..
-    Time sleepSec(3)
-}
-
-if (p waitNoHang() != -1) {
-    // still not finished? alright, that&#39;s enough
-    p kill()
-}
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>iterators</title>
-      <link>http://oocmanual.cogneco.com/sdk/lang/iterators</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/lang/iterators</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Iterators&lt;/h1&gt;
-
-&lt;p&gt;Iterators are the magic that makes foreach loops work.&lt;/p&gt;
-
-&lt;p&gt;The basic premise is that to iterate through something, you have to
-be able to know if there&amp;rsquo;s anything left, via &lt;code&gt;hasNext?&lt;/code&gt;, and to
-retrieve the next element, via &lt;code&gt;next&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;As a bonus, for safe iteration, the &lt;code&gt;remove&lt;/code&gt; method may be implemented.
-If it isn&amp;rsquo;t, though, it will return false.&lt;/p&gt;
-
-&lt;p&gt;Since iterators may iterate on all kinds of data structures, they are
-generic, ie. &lt;code&gt;next&lt;/code&gt; will return a T.&lt;/p&gt;
-
-&lt;p&gt;Here&amp;rsquo;s a demonstration, iterating through characters of the word &lt;code&gt;hellfire&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-HellfireIterator: class extends Iterator&amp;lt;Char&amp;gt; {
-    content := &amp;quot;hellfire&amp;quot;
-    index := 0
-
-    init: func
-
-    hasNext?: func -&amp;gt; Bool {
-      index &amp;lt; content size
-    }
-
-    next: func -&amp;gt; Char {
-      val := content[index]
-      index += 1
-      val
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;For a foreach to work, one has to have an iterable type. Thankfully,
-an &lt;code&gt;Iterator&lt;/code&gt; itself extends &lt;code&gt;Iterable&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-for (letter in HellfireIterator new()) {
-  &amp;quot;%c&amp;quot; printfln(letter)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;each and eachUntil&lt;/h2&gt;
-
-&lt;p&gt;Apart from using foreach loops, one can use the each method:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-HellfireIterator new() each(|letter|
-  // do something with letter
-)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Or the eachUntil, which will break if the passed closure returns false:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-HellfireIterator new() eachUntil(|letter|
-  if (letter == &#39;f&#39;) {
-    return false // just hell, please
-  }
-
-  // do something with letter
-  true
-)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;reduce&lt;/h2&gt;
-
-&lt;p&gt;An iterable can be reduced using the &lt;code&gt;reduce&lt;/code&gt; method, accepting a
-closure. It&amp;rsquo;ll get called on each pair of two elements, until there
-is only one element left.&lt;/p&gt;
-
-&lt;p&gt;Example with a list of ints:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-list := [1, 2, 3] as ArrayList&amp;lt;Int&amp;gt;
-sum := list reduce(|a, b| a + b)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;toList&lt;/h2&gt;
-
-&lt;p&gt;Any &lt;code&gt;Iterable&amp;lt;T&amp;gt;&lt;/code&gt; can be transformed to a &lt;code&gt;List&amp;lt;T&amp;gt;&lt;/code&gt; via the &lt;code&gt;toList&lt;/code&gt;
-method. Let&amp;rsquo;s try it on a string, which is iterable:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;ABC&amp;quot; toList() // gives [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;]
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>coro</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/coro</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/os/coro</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/Coro module&lt;/h1&gt;
-
-&lt;p&gt;That module was originally an ooc port of Steve Dekorte&amp;rsquo;s &lt;a href=&#34;https://github.com/stevedekorte/coroutine&#34;&gt;libcoroutine&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Coroutines help achieve cooperative multi-tasking, as opposed to threads, which
-achieve preemptive multitasking. In cooperative multi-tasking, each task (or
-&amp;lsquo;coroutine&amp;rsquo;) is responsible for handing the control to another coroutine.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;Basic usage&lt;/h1&gt;
-
-&lt;p&gt;First, we have to create a main coroutine:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import os/Coro
-
-mainCoro := Coro new()
-mainCoro initializeMainCoro
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;We can then create another coroutine, which we&amp;rsquo;ll here use as a generator&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-letter: Char
-
-coro1 := Coro new()
-mainCoro startCoro(coro1, ||
-    for (c in &amp;quot;LLAMACORE&amp;quot;) {
-        letter = c
-        coro1 switchTo(mainCoro)
-    }
-    exit(0)
-)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then we can retrieve those letters one by one:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-while (true) {
-    &amp;quot;%c&amp;quot; printfln(letter)
-    mainCoro switchTo(coro1)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This example is quite simple, just printing each letter that
-&lt;code&gt;coro1&lt;/code&gt; gives us on separate lines, but complex tasks can be
-broken down in various coroutines and be achieved in a much
-more lightweight fashion than threads or processes.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>text</title>
-      <link>http://oocmanual.cogneco.com/sdk/text</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/text</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The text package&lt;/h1&gt;
-
-&lt;p&gt;This package contains various helper classes to work with text
-and JSON.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;Escape sequences&lt;/h1&gt;
-
-&lt;p&gt;The module &lt;code&gt;text/EscapeSequence&lt;/code&gt; contains a class &lt;code&gt;EscapeSequence&lt;/code&gt; which defines
-some methods to work with backslash escape sequences. In the real world, you probably
-just need the two following methods:&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;escape&lt;/code&gt; takes a string and converts all special characters to escape sequences.
-In this context, special characters are:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;non-printable characters&lt;/li&gt;
-&lt;li&gt;single and double quotes&lt;/li&gt;
-&lt;li&gt;backslashes&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Use it like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-escaped := EscapeSequence escape(&amp;quot;This is\na &#39;String&#39;&amp;quot;)
-// now, `escaped` looks like this:
-escaped == &amp;quot;This is \\n a \\&#39;String\\&#39;&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;But that is only one half of the truth: You can additionally pass a
-string of all characters that should not be escaped as the
-second argument:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-escaped := EscapeSequence escape(&amp;quot;This is\na &#39;String&#39;&amp;quot;, &amp;quot;&#39;\n&amp;quot;)
-// The method did not escape anything now.
-escaped == &amp;quot;This is\na &#39;String&#39;&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;unescape&lt;/code&gt; is useful if you have a string containing escape sequences
-and you need a string with these sequences converted to their real character
-counterparts. This method supports one-character escape sequences like
-&amp;ldquo;\n&amp;rdquo;, &amp;ldquo;\r&amp;rdquo; or &amp;ldquo;\t&amp;rdquo;, but also hexadecimal sequences like &amp;ldquo;\x34&amp;rdquo;.
-Usage is easy:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;\\x27\\163up\\t\\x62ro\\n\\x3f&amp;quot; println()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;which will print&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-&#39;sup    bro
-?
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_2&#34;&gt;StringTokenizer&lt;/h1&gt;
-
-&lt;p&gt;Sometimes, one needs to split a string at a special character and turn
-it into an array. In ooc, the &lt;code&gt;text/StringTokenizer&lt;/code&gt; module adds
-every desirable variation of the good old &lt;code&gt;split&lt;/code&gt; method to &lt;code&gt;Buffer&lt;/code&gt; and &lt;code&gt;String&lt;/code&gt;,
-each returning an &lt;code&gt;ArrayList&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import text/StringTokenizer
-import structs/ArrayList
-
-// split at a specific character
-&amp;quot;A|simple and stupid|example&amp;quot; split(&#39;|&#39;)
-// This creates an ArrayList:
-//  [&amp;quot;A&amp;quot;, &amp;quot;simple and stupid&amp;quot;, &amp;quot;example&amp;quot;]
-
-// split until a specific number of tokens is reached.
-// This will produce an ArrayList like
-//    [&amp;quot;A&amp;quot;, &amp;quot;simple and stupid|example&amp;quot;]
-&amp;quot;A|simple and stupid|example&amp;quot; split(&#39;|&#39;, 2)
-
-// There is also a function to split at delimiters longer
-// than one char:
-&amp;quot;:-)A case :-)of intimidating:-)smiley abuse :-)&amp;quot; split(&amp;quot;:-&amp;quot;)
-// ... produces
-//  [&amp;quot;&amp;quot;, &amp;quot;A case &amp;quot;, &amp;quot;of intimidating&amp;quot;, &amp;quot;smiley abuse &amp;quot;, &amp;quot;&amp;quot;]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_3&#34;&gt;StringTemplate&lt;/h1&gt;
-
-&lt;p&gt;The &lt;code&gt;io/StringTemplate&lt;/code&gt; module adds a lightweight &lt;code&gt;formatTemplate&lt;/code&gt; string interpolation
-function to strings, which can be used in cases where &lt;code&gt;format&lt;/code&gt; is not enough. This function
-uses a hashmap to access items by value:&lt;/p&gt;
-
-&lt;p&gt;{{=&amp;lt;% %&amp;gt;=}}&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import text/StringTemplate
-import structs/HashMap
-
-values := HashMap&amp;lt;String, String&amp;gt; new()
-values put(&amp;quot;day&amp;quot;, &amp;quot;Saturday&amp;quot;) \
-      .put(&amp;quot;weather&amp;quot;, &amp;quot;cloudy&amp;quot;)
-
-&amp;quot;Hi! Today&#39;s {{day}}, and it is a pretty {{  weather   }} {{ day }}!&amp;quot; formatTemplate(values) println()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&amp;lt;%={{ }}=%&amp;gt;&lt;/p&gt;
-
-&lt;p&gt;This will print:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Hi! Today&#39;s Saturday, and it is a pretty cloudy Saturday!
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;As you can see, you can access the values by their keys, order isn&amp;rsquo;t important
-and you can interpolate one value multiple times.&lt;br /&gt;
-However, this is still pretty basic, since it does not support filters or control
-structures, but this is often enough.&lt;/p&gt;
-
-&lt;p&gt;In case a key is referenced that does not exist in the hashmap, it will be
-replaced by an empty string.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_4&#34;&gt;Shell-like Lexer&lt;/h1&gt;
-
-&lt;p&gt;The &lt;code&gt;text/Shlex&lt;/code&gt; module implements a basic lexer for strings containing
-quoted strings and backslash escape sequences. Basically, it splits an input
-string into an Array, using whitespace characters as delimiters. Single and double
-quotes can be used to include whitespace in the string items.&lt;/p&gt;
-
-&lt;p&gt;The public API can be accessed like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import text/Shlex
-import structs/ArrayList
-Shlex split(&amp;quot;&#39;This is a \\&#39;quoted\\&#39; string&#39;     and I \&amp;quot;like \\x69\\x74.\&amp;quot;&amp;quot;)
-// This produces the following ArrayList:
-// [&amp;quot;This is a &#39;quoted&#39; string&amp;quot;, &amp;quot;and&amp;quot;, &amp;quot;I&amp;quot;, &amp;quot;like it.&amp;quot;]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This can be useful to parse command-line arguments. However, be careful, since
-this module was not designed with security in mind.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_5&#34;&gt;Regular Expressions&lt;/h1&gt;
-
-&lt;p&gt;The SDK provides a simple cover for the &lt;a href=&#34;http://www.pcre.org/&#34;&gt;Perl Compatible Regular Expressions&lt;/a&gt;
-library. Its use is pretty straightforward. First, you need to compile a regular
-expression pattern, passing some options as a bitmask if you want to:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import text/Regexp
-
-pattern := Regexp compile(&amp;quot;on (?P&amp;lt;year&amp;gt;[0-9]{4})-?P&amp;lt;month&amp;gt;[0-9]{1,2})-(?P&amp;lt;day&amp;gt;[0-9]{1,2})&amp;quot;, RegexOptions CASELESS)
-pattern matches(&amp;quot;foo&amp;quot;) // this will return null, since the pattern could not be matched
-
-someDate := pattern matches(&amp;quot;On 2013-08-07&amp;quot;)
-// `someDate` is now a `Match` object. You can access groups by index or by name:
-someDate group(1)
-someDate group(&amp;quot;year&amp;quot;)
-// ... both return &amp;quot;2013&amp;quot;.
-// Group zero is the whole matched string:
-someDate group(0) // is &amp;quot;On 2013-08-07&amp;quot;
-
-// You can also iterate over the matches. This will include
-// group 0 (the whole string), though.
-for(group in someDate) {
-    // `group` is now a String.
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;For more information about the Perl regular expression syntax, take a look
-at the &lt;a href=&#34;http://perldoc.perl.org/perlre.html&#34;&gt;Perl documentation&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_6&#34;&gt;JSON&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;Basic reading and writing&lt;/h2&gt;
-
-&lt;p&gt;The &lt;code&gt;text/json/&lt;/code&gt; package contains a JSON parser and generator, written in ooc
-without external dependencies, which is able to deal with basic JSON. However,
-if you care about speed or compliance (especially when dealing with numbers),
-you should check out &lt;a href=&#34;https://github.com/nddrylliog/ooc-yaml&#34;&gt;ooc-yaml&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;The JSON classes operate on nested &lt;a href=&#34;/docs/sdk/structs/#bag-variants&#34;&gt;HashBags and Bags&lt;/a&gt;,
-so if you parse JSON, you get some (Hash)Bags, and if you want to generate JSON, you need
-to pass the data as (Hash)Bags.&lt;/p&gt;
-
-&lt;p&gt;To parse or generate JSON, you can just use the convenience &lt;code&gt;text/json&lt;/code&gt; module.
-Every function exists in two flavours: Normally, you need to pass the class
-of your expected base value. So, for example, if you want to parse JSON like that:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!json
-[&amp;quot;Hi&amp;quot;, &amp;quot;World&amp;quot;]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You need to pass &lt;code&gt;Bag&lt;/code&gt; as the base value class. However, since most of the time
-you will parse JSON objects that will represented by a &lt;code&gt;HashBag&lt;/code&gt;, &lt;code&gt;HashBag&lt;/code&gt; is
-used by default if you do not pass a class explicitly.&lt;/p&gt;
-
-&lt;p&gt;Here are some examples:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import text/json
-import structs/HashBag
-
-// if you have a `Reader` (to read directly from a file, for example):
-import io/FileReader
-myObject := JSON parse(FileReader new(&amp;quot;package.json&amp;quot;))
-
-// ... and if your base value is not a JSON object:
-import structs/Bag
-myArray := JSON parse(FileReader new(&amp;quot;myarray.json&amp;quot;), Bag)
-
-// reading directly from strings is also supported:
-JSON parse(&amp;quot;{\&amp;quot;hello\&amp;quot;: \&amp;quot;world\&amp;quot;}&amp;quot;)
-JSON parse(&amp;quot;\&amp;quot;just a string\&amp;quot;&amp;quot;, String)
-
-// and to generate JSON, there is:
-myBag := HashBag new()
-myBag put(&amp;quot;integer&amp;quot;, 1234) \
-     .put(&amp;quot;string&amp;quot;, &amp;quot;Yes&amp;quot;)
-
-import io/FileWriter
-JSON generate(FileWriter new(&amp;quot;output.json&amp;quot;), myBag)
-
-myJSONString := JSON generateString(myBag)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;When dealing with the &lt;code&gt;HashBag&lt;/code&gt; class, you should take a look at its
-&lt;a href=&#34;/docs/sdk/structs/#hashbag&#34;&gt;getPath&lt;/a&gt; function, which will save you
-a lot of typing.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;A JSON generation DSL&lt;/h2&gt;
-
-&lt;p&gt;If you find yourself generating a lot of JSON, you might find
-the &lt;code&gt;HashBag&lt;/code&gt;/&lt;code&gt;Bag&lt;/code&gt; objects create a lot of syntactic noise. For this
-reason, the SDK contains another convenience module implementing
-a small DSL for JSON generation.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-// Let&#39;s import the module into a namespace, since `make`
-// is a bit ambiguous.
-import text/json/DSL into JSON
-
-data := JSON make(|j|
-    j object(
-        &amp;quot;some-key&amp;quot;,
-            &amp;quot;some-value&amp;quot;,
-        &amp;quot;here comes a list&amp;quot;,
-            j array(
-                1, 2, &amp;quot;three&amp;quot;, 4
-            ),
-        &amp;quot;and a nested object&amp;quot;,
-            j object(
-                &amp;quot;true&amp;quot;, true
-            )
-    )
-)
-data println()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;make&lt;/code&gt; creates a helper object with &lt;code&gt;object&lt;/code&gt; and &lt;code&gt;array&lt;/code&gt; functions and passes
-it to the function you provide; using a closure is the most convenient way here.
-You can use &lt;code&gt;object&lt;/code&gt; to create JSON objects, passing as many key-value pairs
-as you want, and &lt;code&gt;array&lt;/code&gt; for JSON arrays.&lt;/p&gt;
-
-&lt;p&gt;When it&amp;rsquo;s done, it returns the JSON data as a string.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>sdk</title>
-      <link>http://oocmanual.cogneco.com/sdk</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;An overview of the SDK&amp;rsquo;s packages&lt;/h1&gt;
-
-&lt;p&gt;These pages will give you an overview of what you can find in the SDK:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;lang&#34;&gt;lang&lt;/a&gt; package is imported by default in any ooc file.
-It contains essentials usable without further ado in any .ooc program.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;structs&#34;&gt;structs&lt;/a&gt; package contains useful containers like
-lists and hash maps, but also stacks, and more cornercase stuff like
-multimaps and bags.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;io&#34;&gt;io&lt;/a&gt; package has modules for reading files, writing
-to files, and other input/output related matters.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;math&#34;&gt;math&lt;/a&gt; package is the home to everything numbers.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;os&#34;&gt;os&lt;/a&gt; package contains lots of goodies, from time
-management to terminal handling, to launching processes, reading from
-pipes, getting hardware information, manipulating environment variables,
-creating a parallel job pool, and even coroutines and channels!&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;net&#34;&gt;net&lt;/a&gt; package has modules for relatively low-level
-network operations such as creating TCP and UDP sockets, and making DNS
-requests.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;text&#34;&gt;text&lt;/a&gt; package contains a Regexp class, a JSON encoder
-and decoder, a simple template engine, a string tokenizer, an option
-parser, and a helper classes for escape sequences.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;threading&#34;&gt;threading&lt;/a&gt; package contains all things threads.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;native&#34;&gt;native&lt;/a&gt; package should not be imported directly -
-it contains platform-specific specific implementations of certain features.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>memory</title>
-      <link>http://oocmanual.cogneco.com/sdk/lang/memory</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/lang/memory</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Memory&lt;/h1&gt;
-
-&lt;p&gt;Sometimes, you just have to handle memory yourself. None of that class
-or cover stuff, just give me a raw block of memory any day.&lt;/p&gt;
-
-&lt;p&gt;You&amp;rsquo;ll see the &lt;code&gt;gc_&lt;/code&gt; prefix being used in the following page: that stands
-for Garbage Collection, which is enabled by default in ooc. However, when
-the GC is disabled, those will point to non-GC version of the functions.&lt;/p&gt;
-
-&lt;p&gt;So that your code remains flexible, do yourself a favor and use the &lt;code&gt;gc_&lt;/code&gt;
-variants regardless.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;Allocating memory&lt;/h2&gt;
-
-&lt;p&gt;Use &lt;code&gt;gc_malloc&lt;/code&gt; to get a chunk of memory all to yourself.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-// get ourselves a slice of 4 bytes
-block := gc_malloc(4)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;However, you&amp;rsquo;ll get a &lt;code&gt;Pointer&lt;/code&gt; back - which is a little bit pointless.
-Plus you&amp;rsquo;ll probably want to determine how much you are allocating as
-a function of the size of some other type instead:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-// get ourselves room to store 4 doubles.
-doubles := gc_malloc(4 * Double size) as Double*
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;That&amp;rsquo;s better. Now you can index that, like any pointer:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-doubles[0] = 3.14
-doubles[1] = 6.28
-// etc.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Pointer arithmetic works:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-addressOfSecondDouble := doubles + 1
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then again, why not write it the explicit way:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-addressOfSecondDouble := doubles[1]&amp;amp;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Note that &lt;code&gt;gc_malloc&lt;/code&gt; returns zeroed memory (even when the GC is disabled),
-just like the C function &lt;code&gt;calloc&lt;/code&gt; does. While a small performance hit, a
-little additional safety can&amp;rsquo;t hurt.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Allocating in bulks&lt;/h2&gt;
-
-&lt;p&gt;&lt;code&gt;calloc&lt;/code&gt; is typically used in C to get zeroed memory (e.g. all null bytes).
-This is unnecessary in ooc, since &lt;code&gt;gc_malloc&lt;/code&gt; returns zeroed memory anyway.&lt;/p&gt;
-
-&lt;p&gt;In the rare cases where you do mean to allocate &lt;code&gt;num&lt;/code&gt; members of size &lt;code&gt;size&lt;/code&gt;,
-use &lt;code&gt;gc_calloc&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-members := gc_calloc(num, size)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Re-allocating memory&lt;/h2&gt;
-
-&lt;p&gt;Didn&amp;rsquo;t get enough the first time around? Misjudged your budget needs?&lt;/p&gt;
-
-&lt;p&gt;Fear not, &lt;code&gt;gc_realloc&lt;/code&gt; is here:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-// get ourselves 4 bytes
-block := gc_malloc(4)
-
-// woops, make that 8
-block = gc_realloc(block, 8)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Duplicating memory&lt;/h2&gt;
-
-&lt;p&gt;In our family of memory-related functions, &lt;code&gt;gc_strdup&lt;/code&gt;, nostalgically
-named as if it was only used with strings, is here. It&amp;rsquo;ll make a copy of
-a block of memory so that the original may be disposed of.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-someCallback: func (word: CString) {
-  // CString is a pointer to a memory block that will get
-  // overriden sometimes after this function returns - hence,
-  // we want to make a copy so that the data we got doesn&#39;t
-  // get tampered with.
-  storeString(String new(gc_strdup(word)))
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The block of code above shows the typical use case, anyway.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Freeing memory&lt;/h2&gt;
-
-&lt;p&gt;Technically, since we are using a garbage collector, you don&amp;rsquo;t need to
-free explicitly. Should you feel the need to do so, however, &lt;code&gt;gc_free&lt;/code&gt; is
-here to do the job:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-// you know what, I&#39;m good for now, thanks.
-gc_free(block)
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>io</title>
-      <link>http://oocmanual.cogneco.com/sdk/io</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/io</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The io package&lt;/h1&gt;
-
-&lt;p&gt;Whether you want to read from file, write to files,
-walk through directories, or build data in-memory, the
-io package contains everything you need&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;File&lt;/h1&gt;
-
-&lt;p&gt;The &lt;code&gt;io/File&lt;/code&gt; module is a good starting point to handle
-files. Instanciating one with a path will allow to test for
-various attributes:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-f := File new(&amp;quot;/etc/hosts&amp;quot;)
-
-f exists?()
-f dir?() // is a directory?
-f file?() // is a file?
-f link?() // is a symlink?
-
-f getSize() // size in bytes
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Paths&lt;/h2&gt;
-
-&lt;p&gt;For paths like &lt;code&gt;/path/to/somewhere&lt;/code&gt;, &lt;code&gt;getName()&lt;/code&gt; will return
-the &lt;code&gt;somewhere&lt;/code&gt; part, and &lt;code&gt;getParent&lt;/code&gt; will return an instance
-of &lt;code&gt;File&lt;/code&gt; corresponding to &lt;code&gt;/path/to&lt;/code&gt;, or null if the path is
-at the root of a file system.&lt;/p&gt;
-
-&lt;p&gt;The &lt;code&gt;getReducedPath&lt;/code&gt; method will resolve paths like &lt;code&gt;a/b/../../c&lt;/code&gt;
-to &lt;code&gt;c&lt;/code&gt;. It is a form of canonicalization, suitable for comparing
-paths.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Basic I/O&lt;/h2&gt;
-
-&lt;p&gt;The &lt;code&gt;copyTo&lt;/code&gt; method will copy a file to the given &lt;code&gt;dstFile&lt;/code&gt;.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-src := File new(&amp;quot;./conf/default.conf&amp;quot;)
-dst := File new(Env get(&amp;quot;HOME&amp;quot;), &amp;quot;.myapp&amp;quot;)
-src copyTo(dst)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The &lt;code&gt;remove&lt;/code&gt; method will remove a file, but will fail to remove
-a directory.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-tmpFile remove()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The &lt;code&gt;read&lt;/code&gt; and &lt;code&gt;write&lt;/code&gt; methods will read a whole file and replace the content
-of a file with the given string, respectively.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-respectify: func (file: File) {
-  text := file read()
-  file write(text replaceAll(&amp;quot;yes&amp;quot;, &amp;quot;yes, sir&amp;quot;))
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Walking through directories&lt;/h2&gt;
-
-&lt;p&gt;The &lt;code&gt;getChildren&lt;/code&gt; method will return a list of &lt;code&gt;File&lt;/code&gt; instances
-corresponding to the files in a directory, whereas the &lt;code&gt;getChildrenNames&lt;/code&gt;
-method will return a list of strings corresponding to the name of
-files in the given directory.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-f := File new(&amp;quot;/etc&amp;quot;)
-for (child in f getChildren()) {
-  // child might be a file or a directory with
-  // children of its own
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The &lt;code&gt;walk&lt;/code&gt; method allows a recursive walk on all the children
-of a given directory. When the callback returns false, the search
-is terminated.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-findFile: func (prefix: String) -&amp;gt; File {
-  result: File
-  baseDirectory walk(|f|
-    if (f startsWith?(prefix)) {
-      result = f
-      return false
-    }
-    true
-  )
-  result
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Permissions&lt;/h2&gt;
-
-&lt;p&gt;The methods &lt;code&gt;ownerPerm&lt;/code&gt;, &lt;code&gt;groupPerm&lt;/code&gt;, and &lt;code&gt;otherPerm&lt;/code&gt; return an int mask with
-permissions.&lt;/p&gt;
-
-&lt;p&gt;Note that using octal number literals might be a good idea to test against
-that. Unlike C, &lt;code&gt;0777&lt;/code&gt; is decimal in ooc. You want to write &lt;code&gt;0c777&lt;/code&gt; instead.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;Current directory&lt;/h2&gt;
-
-&lt;p&gt;The static method &lt;code&gt;File getCwd()&lt;/code&gt; will return the current working directory on
-any platform.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_7&#34;&gt;Reader / Writer&lt;/h1&gt;
-
-&lt;p&gt;The &lt;code&gt;io/Reader&lt;/code&gt; and &lt;code&gt;io/Writer&lt;/code&gt; modules contains interfaces used for input/output.&lt;/p&gt;
-
-&lt;p&gt;For files, use the &lt;code&gt;io/FileReader&lt;/code&gt; and &lt;code&gt;io/FileWriter&lt;/code&gt; implementations. To work in
-memory, use the &lt;code&gt;io/BufferReader&lt;/code&gt; and &lt;code&gt;io/BufferWriter&lt;/code&gt; implementations.&lt;/p&gt;
-
-&lt;p&gt;A reader or writer should be closed (by calling &lt;code&gt;reader close()&lt;/code&gt; or &lt;code&gt;writer close()&lt;/code&gt;)
-when done with it, so that the corresponding resources may be freed.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;Reader basics&lt;/h2&gt;
-
-&lt;p&gt;Some C libraries have an interface similar to &lt;code&gt;io/Reader&lt;/code&gt;. The main I/O loop might
-look like the following:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import io/Reader
-
-process: func (reader: Reader) {
-  buffer := Buffer new(1024)
-
-  while (reader hasNext?()) {
-    bytesRead := reader read(buffer)
-    // do something with buffer
-  }
-  reader close()
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;A reader can also work with raw memory chunks:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-onRead: func (reader: Reader, buffer: UInt8*, bufferSize: Int) {
-  // fill buffer from beginning, 0 is the offset
-  reader read(buffer, 0, bufferSize)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Or one character at a time:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-match (reader read()) {
-  case &#39;A&#39; =&amp;gt; &amp;quot;Good!&amp;quot;
-  case &#39;F&#39; =&amp;gt; &amp;quot;Also good.&amp;quot;
-  case =&amp;gt; &amp;quot;Meh.&amp;quot;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;An entire stream can be read to a String:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-fr := FileReader new(&amp;quot;file.txt&amp;quot;)
-contents := fr readAll()
-fr close()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;(Note that this would compactly be achieved by &lt;code&gt;File new(&amp;quot;file.txt&amp;quot;) read()&lt;/code&gt;)&lt;/p&gt;
-
-&lt;p&gt;For more details, refer to the oocdocs.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_9&#34;&gt;Writer basics&lt;/h2&gt;
-
-&lt;p&gt;Similarly, the writer interface works with buffers, raw memory chunks, single characters,
-or strings as needed:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-manipulate: func (w: Writer) {
-  // char
-  w write(&#39;a&#39;)
-
-  // string
-  w write(&amp;quot;abc&amp;quot;)
-
-  // buffer
-  chars := &amp;quot;moonlight&amp;quot; toCString()
-  w write(chars, 4) // only writes &amp;quot;moon&amp;quot;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;For more details, refer to the oocdocs.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_10&#34;&gt;BinarySequence&lt;/h1&gt;
-
-&lt;p&gt;The &lt;code&gt;io/BinarySequence&lt;/code&gt; module is meant to help deal with binary protocols, precise
-on the width and endianness of types being written to a stream.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_11&#34;&gt;BinarySequenceReader&lt;/h2&gt;
-
-&lt;p&gt;Here&amp;rsquo;s an example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-// read a file as binary
-file := File new(&amp;quot;assets&amp;quot;, &amp;quot;binary.dat&amp;quot;)
-seq := BinarySequenceReader new(FileReader new(file))
-
-// read an 16-bit unsigned int:
-numElements := seq u16()
-
-for (i in 0..numElements) {
-  // coordinates are two floats
-  x := seq float32()
-  y := seq float32()
-  // do something with x, y
-}
-
-// check magicn number at the end
-assert (seq s32() == 0xdeadbeef)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;For more details, refer to the oocdocs.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_12&#34;&gt;BinarySequenceWriter&lt;/h2&gt;
-
-&lt;p&gt;The corresponding module exists for writing binary sequences.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-// write a binary file
-file := File new(&amp;quot;assets&amp;quot;, &amp;quot;binary.dat&amp;quot;)
-seq := BinarySequenceWriter new(FileWriter new(file))
-
-seq u16(elements size)
-
-for (elem in elements) {
-  seq float32(elem x)
-  seq float32(elem y)
-}
-
-seq s32(0xdeadbeef)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;For more details, refer to the oocdocs.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>mmap</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/mmap</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/os/mmap</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/mmap module&lt;/h1&gt;
-
-&lt;p&gt;As it stands, the &lt;code&gt;os/mmap&lt;/code&gt; module just exposes the *nix functions for memory
-mapping: &lt;code&gt;mmap&lt;/code&gt;, &lt;code&gt;munmap&lt;/code&gt;, &lt;code&gt;mprotect&lt;/code&gt;, &lt;code&gt;madvise&lt;/code&gt;, &lt;code&gt;mincore&lt;/code&gt;, &lt;code&gt;minherit&lt;/code&gt;,
-&lt;code&gt;msync&lt;/code&gt;, &lt;code&gt;mlock&lt;/code&gt;, and &lt;code&gt;munlock&lt;/code&gt;, along with the associated constants.&lt;/p&gt;
-
-&lt;p&gt;It also contains prototypes / covers for the Windows equivalent,
-&lt;code&gt;VirtualProtect&lt;/code&gt;, and its constants as well.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;Notes&lt;/h2&gt;
-
-&lt;p&gt;This module is not a high-level or cross-platform interface and is not
-documented extensively here.&lt;/p&gt;
-
-&lt;p&gt;However, to find more information on memory mapping for various platform
-see here:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://en.wikipedia.org/wiki/Mmap&#34;&gt;mmap on Wikipedia&lt;/a&gt; (for *nix platforms)&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://msdn.microsoft.com/en-us/windows/desktop/aa366898(v=vs.85).aspx&#34;&gt;VirtualProtect on MSDN&lt;/a&gt; (for Windows)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;On a historical note, this module was originally included in the SDK as support
-code for the closure implementation, which back then implied generating
-bytecode at runtime and thus marking some memory regions as executable.&lt;/p&gt;
 </description>
     </item>
     
@@ -1681,27 +1206,240 @@ less even / repeat more easily.&lt;/p&gt;
     </item>
     
     <item>
-      <title>system</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/system</link>
+      <title>memory</title>
+      <link>http://oocmanual.cogneco.com/sdk/lang/memory</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/sdk/os/system</guid>
+      <guid>http://oocmanual.cogneco.com/sdk/lang/memory</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/System module&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;Memory&lt;/h1&gt;
 
-&lt;p&gt;The &lt;code&gt;System&lt;/code&gt; module allows to get information about the system, such
-as the number of processors, as an &lt;code&gt;Int&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;Sometimes, you just have to handle memory yourself. None of that class
+or cover stuff, just give me a raw block of memory any day.&lt;/p&gt;
+
+&lt;p&gt;You&amp;rsquo;ll see the &lt;code&gt;gc_&lt;/code&gt; prefix being used in the following page: that stands
+for Garbage Collection, which is enabled by default in ooc. However, when
+the GC is disabled, those will point to non-GC version of the functions.&lt;/p&gt;
+
+&lt;p&gt;So that your code remains flexible, do yourself a favor and use the &lt;code&gt;gc_&lt;/code&gt;
+variants regardless.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Allocating memory&lt;/h2&gt;
+
+&lt;p&gt;Use &lt;code&gt;gc_malloc&lt;/code&gt; to get a chunk of memory all to yourself.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-cores := System numProcessors()
+// get ourselves a slice of 4 bytes
+block := gc_malloc(4)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Or the hostname of the machine, as a &lt;code&gt;String&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;However, you&amp;rsquo;ll get a &lt;code&gt;Pointer&lt;/code&gt; back - which is a little bit pointless.
+Plus you&amp;rsquo;ll probably want to determine how much you are allocating as
+a function of the size of some other type instead:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-hostname := System hostname()
+// get ourselves room to store 4 doubles.
+doubles := gc_malloc(4 * Double size) as Double*
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That&amp;rsquo;s better. Now you can index that, like any pointer:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+doubles[0] = 3.14
+doubles[1] = 6.28
+// etc.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Pointer arithmetic works:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+addressOfSecondDouble := doubles + 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then again, why not write it the explicit way:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+addressOfSecondDouble := doubles[1]&amp;amp;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note that &lt;code&gt;gc_malloc&lt;/code&gt; returns zeroed memory (even when the GC is disabled),
+just like the C function &lt;code&gt;calloc&lt;/code&gt; does. While a small performance hit, a
+little additional safety can&amp;rsquo;t hurt.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Allocating in bulks&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;calloc&lt;/code&gt; is typically used in C to get zeroed memory (e.g. all null bytes).
+This is unnecessary in ooc, since &lt;code&gt;gc_malloc&lt;/code&gt; returns zeroed memory anyway.&lt;/p&gt;
+
+&lt;p&gt;In the rare cases where you do mean to allocate &lt;code&gt;num&lt;/code&gt; members of size &lt;code&gt;size&lt;/code&gt;,
+use &lt;code&gt;gc_calloc&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+members := gc_calloc(num, size)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Re-allocating memory&lt;/h2&gt;
+
+&lt;p&gt;Didn&amp;rsquo;t get enough the first time around? Misjudged your budget needs?&lt;/p&gt;
+
+&lt;p&gt;Fear not, &lt;code&gt;gc_realloc&lt;/code&gt; is here:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+// get ourselves 4 bytes
+block := gc_malloc(4)
+
+// woops, make that 8
+block = gc_realloc(block, 8)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Duplicating memory&lt;/h2&gt;
+
+&lt;p&gt;In our family of memory-related functions, &lt;code&gt;gc_strdup&lt;/code&gt;, nostalgically
+named as if it was only used with strings, is here. It&amp;rsquo;ll make a copy of
+a block of memory so that the original may be disposed of.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+someCallback: func (word: CString) {
+  // CString is a pointer to a memory block that will get
+  // overriden sometimes after this function returns - hence,
+  // we want to make a copy so that the data we got doesn&#39;t
+  // get tampered with.
+  storeString(String new(gc_strdup(word)))
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The block of code above shows the typical use case, anyway.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Freeing memory&lt;/h2&gt;
+
+&lt;p&gt;Technically, since we are using a garbage collector, you don&amp;rsquo;t need to
+free explicitly. Should you feel the need to do so, however, &lt;code&gt;gc_free&lt;/code&gt; is
+here to do the job:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+// you know what, I&#39;m good for now, thanks.
+gc_free(block)
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>channel</title>
+      <link>http://oocmanual.cogneco.com/sdk/os/channel</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/os/channel</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The os/Channel module&lt;/h1&gt;
+
+&lt;p&gt;Channels are another way to think about data flow in the program.
+Perhaps most famous in their Go implementation, &amp;lsquo;goroutines&amp;rsquo;, can
+communicate via channels.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;os/Channel&lt;/code&gt; module contains a trivial implementation of channels
+which may be used like so:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import os/Channel
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;By importing this module, a scheduler is set to run before the program
+exits. Let&amp;rsquo;s start by making a channel by which Ints can travel:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+chan := make(Int)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then let&amp;rsquo;s make a data producer coroutine:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+go(||
+    for (i in 0..5) {
+        chan &amp;lt;&amp;lt; i
+        yield()
+    }
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And another one:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+go(||
+    for (i in 5..10) {
+        chan &amp;lt;&amp;lt; i
+        yield()
+    }
+    chan &amp;lt;&amp;lt; -1
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;-1 will be used as a stopping signal here. &lt;code&gt;go&lt;/code&gt; create a new
+coroutine, and &lt;code&gt;chan &amp;lt;&amp;lt; value&lt;/code&gt; sends a value down a channel.
+&lt;code&gt;yield&lt;/code&gt; switches from the current coroutine back to the scheduler.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s now make a consumer channel:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+go(||
+    while (true) match (i := !chan) {
+        case -1 =&amp;gt; break
+        case =&amp;gt; &amp;quot;%d&amp;quot; printfln(i)
+    }
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We&amp;rsquo;re reading from the channel with the not operator: &lt;code&gt;!chan&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;This will print 0, 5, 1, 6, 2, 7, 3, 8, 4, 9, and then exit, as
+expected.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>sdk</title>
+      <link>http://oocmanual.cogneco.com/sdk</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;An overview of the SDK&amp;rsquo;s packages&lt;/h1&gt;
+
+&lt;p&gt;These pages will give you an overview of what you can find in the SDK:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;lang&#34;&gt;lang&lt;/a&gt; package is imported by default in any ooc file.
+It contains essentials usable without further ado in any .ooc program.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;structs&#34;&gt;structs&lt;/a&gt; package contains useful containers like
+lists and hash maps, but also stacks, and more cornercase stuff like
+multimaps and bags.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;io&#34;&gt;io&lt;/a&gt; package has modules for reading files, writing
+to files, and other input/output related matters.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;math&#34;&gt;math&lt;/a&gt; package is the home to everything numbers.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;os&#34;&gt;os&lt;/a&gt; package contains lots of goodies, from time
+management to terminal handling, to launching processes, reading from
+pipes, getting hardware information, manipulating environment variables,
+creating a parallel job pool, and even coroutines and channels!&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;net&#34;&gt;net&lt;/a&gt; package has modules for relatively low-level
+network operations such as creating TCP and UDP sockets, and making DNS
+requests.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;text&#34;&gt;text&lt;/a&gt; package contains a Regexp class, a JSON encoder
+and decoder, a simple template engine, a string tokenizer, an option
+parser, and a helper classes for escape sequences.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;threading&#34;&gt;threading&lt;/a&gt; package contains all things threads.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;native&#34;&gt;native&lt;/a&gt; package should not be imported directly -
+it contains platform-specific specific implementations of certain features.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
 </description>
     </item>
     
@@ -1995,44 +1733,6 @@ a recursive mutex, more funky behaviour could happen. For example, on OSX, the
 program enters an infinite waiting loop, as we are trying to lock an already
 locked non-recursive mutex acquired by the current thread, resulting in a
 deadlock.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>env</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/env</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/os/env</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/Env module&lt;/h1&gt;
-
-&lt;p&gt;The &lt;code&gt;Env&lt;/code&gt; module allows to get and set environment variables.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import os/Env
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Getting an environment variable:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-path := Env get(&amp;quot;PATH&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;get&lt;/code&gt; will return &lt;code&gt;null&lt;/code&gt; if the given environment variable is not set.&lt;/p&gt;
-
-&lt;p&gt;Setting an environment variable:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Env set(&amp;quot;CFLAGS&amp;quot;, &amp;quot;-Os&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Environment variables can be unset as well:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Env unset(&amp;quot;PKG_CONFIG_PATH&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
