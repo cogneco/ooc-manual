@@ -20,7 +20,7 @@ There you issue the following commands:
 sudo apt-get -y -qq install curl make libgc-dev binutils-dev libiberty-dev
 export PATH=$PATH:$PWD/rock/bin:$PWD/sam
 export OOC_LIBS=$PWD
-git clone --depth=1 -b 99x git://github.com/cogneco/rock.git
+git clone --depth=1 git://github.com/cogneco/rock.git
 git clone --depth=1 git://github.com/cogneco/sam.git
 (cd rock && make rescue && make && make extension)
 (cd sam && rock -v)
@@ -28,7 +28,7 @@ git clone --depth=1 git://github.com/cogneco/sam.git
 
 # Setting Environment Variables
 
-It is necessary to set the following environments variables for every terminal used:
+It is necessary to set the following environments variables for every terminal session used:
 
 {{% highlight bash %}}
 #!/bin/bash
