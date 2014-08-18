@@ -10,48 +10,239 @@
     <updated>Tue, 01 Jan 2008 00:00:00 UTC</updated>
     
     <item>
-      <title>sdk</title>
-      <link>http://oocmanual.cogneco.com/sdk</link>
+      <title>channel</title>
+      <link>http://oocmanual.cogneco.com/sdk/os/channel</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/sdk</guid>
+      <guid>http://oocmanual.cogneco.com/sdk/os/channel</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;An overview of the SDK&amp;rsquo;s packages&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;The os/Channel module&lt;/h1&gt;
 
-&lt;p&gt;These pages will give you an overview of what you can find in the SDK:&lt;/p&gt;
+&lt;p&gt;Channels are another way to think about data flow in the program.
+Perhaps most famous in their Go implementation, &amp;lsquo;goroutines&amp;rsquo;, can
+communicate via channels.&lt;/p&gt;
 
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;lang&#34;&gt;lang&lt;/a&gt; package is imported by default in any ooc file.
-It contains essentials usable without further ado in any .ooc program.&lt;/p&gt;&lt;/li&gt;
+&lt;p&gt;The &lt;code&gt;os/Channel&lt;/code&gt; module contains a trivial implementation of channels
+which may be used like so:&lt;/p&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;structs&#34;&gt;structs&lt;/a&gt; package contains useful containers like
-lists and hash maps, but also stacks, and more cornercase stuff like
-multimaps and bags.&lt;/p&gt;&lt;/li&gt;
+&lt;pre&gt;&lt;code&gt;#!ooc
+import os/Channel
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;io&#34;&gt;io&lt;/a&gt; package has modules for reading files, writing
-to files, and other input/output related matters.&lt;/p&gt;&lt;/li&gt;
+&lt;p&gt;By importing this module, a scheduler is set to run before the program
+exits. Let&amp;rsquo;s start by making a channel by which Ints can travel:&lt;/p&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;math&#34;&gt;math&lt;/a&gt; package is the home to everything numbers.&lt;/p&gt;&lt;/li&gt;
+&lt;pre&gt;&lt;code&gt;#!ooc
+chan := make(Int)
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;os&#34;&gt;os&lt;/a&gt; package contains lots of goodies, from time
-management to terminal handling, to launching processes, reading from
-pipes, getting hardware information, manipulating environment variables,
-creating a parallel job pool, and even coroutines and channels!&lt;/p&gt;&lt;/li&gt;
+&lt;p&gt;Then let&amp;rsquo;s make a data producer coroutine:&lt;/p&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;net&#34;&gt;net&lt;/a&gt; package has modules for relatively low-level
-network operations such as creating TCP and UDP sockets, and making DNS
-requests.&lt;/p&gt;&lt;/li&gt;
+&lt;pre&gt;&lt;code&gt;#!ooc
+go(||
+    for (i in 0..5) {
+        chan &amp;lt;&amp;lt; i
+        yield()
+    }
+)
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;text&#34;&gt;text&lt;/a&gt; package contains a Regexp class, a JSON encoder
-and decoder, a simple template engine, a string tokenizer, an option
-parser, and a helper classes for escape sequences.&lt;/p&gt;&lt;/li&gt;
+&lt;p&gt;And another one:&lt;/p&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;threading&#34;&gt;threading&lt;/a&gt; package contains all things threads.&lt;/p&gt;&lt;/li&gt;
+&lt;pre&gt;&lt;code&gt;#!ooc
+go(||
+    for (i in 5..10) {
+        chan &amp;lt;&amp;lt; i
+        yield()
+    }
+    chan &amp;lt;&amp;lt; -1
+)
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;native&#34;&gt;native&lt;/a&gt; package should not be imported directly -
-it contains platform-specific specific implementations of certain features.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;-1 will be used as a stopping signal here. &lt;code&gt;go&lt;/code&gt; create a new
+coroutine, and &lt;code&gt;chan &amp;lt;&amp;lt; value&lt;/code&gt; sends a value down a channel.
+&lt;code&gt;yield&lt;/code&gt; switches from the current coroutine back to the scheduler.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s now make a consumer channel:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+go(||
+    while (true) match (i := !chan) {
+        case -1 =&amp;gt; break
+        case =&amp;gt; &amp;quot;%d&amp;quot; printfln(i)
+    }
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We&amp;rsquo;re reading from the channel with the not operator: &lt;code&gt;!chan&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;This will print 0, 5, 1, 6, 2, 7, 3, 8, 4, 9, and then exit, as
+expected.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>net</title>
+      <link>http://oocmanual.cogneco.com/sdk/net</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/net</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The net package&lt;/h1&gt;
+
+&lt;p&gt;When you want to deal with TCP and UDP sockets directly, the &lt;code&gt;net&lt;/code&gt; package is
+here for you.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;TCP&lt;/h1&gt;
+
+&lt;p&gt;TCP guarantees that packets arrive eventually, and that they arrive in the
+order in which they were sent.&lt;/p&gt;
+
+&lt;p&gt;Usually, on the server side, sockets are bound to a port, and then listen.
+When clients attempt to connect, they accept connections (and can later
+close them if so they wish).&lt;/p&gt;
+
+&lt;p&gt;Accepting a connection via a server socket gives a TCPSocket - so, after
+a client has connected, the client and the server use the same data structure
+to communicate.&lt;/p&gt;
+
+&lt;p&gt;A Socket, like a &lt;code&gt;TCPSocket&lt;/code&gt;, has a reader / writer pair, since sockets
+are bidirectional communication channels. Which means they can write data
+to the writer, and read data from the reader.&lt;/p&gt;
+
+&lt;p&gt;For more info on readers and writers, go ahead and read (heh) the documentation
+on the &lt;a href=&#34;/docs/sdk/io/&#34;&gt;io package&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;ServerSocket&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;rsquo;s an example usage of ServerSocket serving as a makeshift HTTP
+server (don&amp;rsquo;t do that, though):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import net/[ServerSocket]
+
+socket := ServerSocket new(&amp;quot;0.0.0.0&amp;quot;, 8000)
+socket listen()
+&amp;quot;Listening...&amp;quot; println()
+
+while(true) {
+    conn := socket accept()
+    &amp;quot;Got a connection!&amp;quot; println()
+
+    while (conn in readLine() trim() != &amp;quot;&amp;quot;) {
+      // read the request
+    }
+
+    conn out write(&amp;quot;HTTP/1.1 200 OK\r\n&amp;quot;)
+    conn out write(&amp;quot;Content-Type: text/html\r\n&amp;quot;)
+    conn out write(&amp;quot;\r\n&amp;quot;)
+    conn out write(&amp;quot;&amp;lt;html&amp;gt;&amp;lt;body&amp;gt;\
+      Hello, from the ooc socket world!&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;&amp;quot;)
+    conn out write(&amp;quot;\r\n&amp;quot;)
+    conn close()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Don&amp;rsquo;t forget to call &lt;code&gt;listen()&lt;/code&gt; before trying to &lt;code&gt;accept()&lt;/code&gt; connections.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;TCPSocket&lt;/h2&gt;
+
+&lt;p&gt;Same as the ServerSocket, but on the client side. Make requests like
+that (or don&amp;rsquo;t - use a proper HTTP library):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import net/[TCPSocket]
+
+socket := TCPSocket new(&amp;quot;ooc-lang.org&amp;quot;, 80)
+socket connect()
+socket out write(&amp;quot;GET / HTTP/1.1\n&amp;quot;)
+socket out write(&amp;quot;Host: ooc-lang.org\n&amp;quot;)
+socket out write(&amp;quot;User-Agent: An anonymous admirer\n&amp;quot;)
+socket out write(&amp;quot;\n\n&amp;quot;)
+
+line := socket in readLine()
+&amp;quot;We got a response! %s&amp;quot; printfln(line)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Seriously. Use a proper HTTP library. But that&amp;rsquo;s an example.&lt;/p&gt;
+
+&lt;p&gt;Also, don&amp;rsquo;t forget to call &lt;code&gt;connect()&lt;/code&gt; before attempting to use &lt;code&gt;out&lt;/code&gt;
+or &lt;code&gt;in&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_4&#34;&gt;UDP&lt;/h1&gt;
+
+&lt;p&gt;Unlike TCP, UDP is unidirectional - some sockets bind and only get to
+receive, and some sockets don&amp;rsquo;t bind and can only send.&lt;/p&gt;
+
+&lt;p&gt;There&amp;rsquo;s also no guarantee that anything sent over UDP ever arrives, and
+order is not guaranteed either.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;UDPSocket&lt;/h2&gt;
+
+&lt;p&gt;When you create an &lt;code&gt;UDPSocket&lt;/code&gt;, always specify a hostname (or an ip) and a port, like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+socket := UDPSocket new(&amp;quot;localhost&amp;quot;, 5000)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you want to receive datagrams, call bind():&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+socket bind()
+
+while (true) {
+  buffer := socket receive(128)
+  buffer toString() println()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you want to send datagrams, just call send:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+socket send(&amp;quot;udp is fun&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That&amp;rsquo;s about it for now.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>env</title>
+      <link>http://oocmanual.cogneco.com/sdk/os/env</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/os/env</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The os/Env module&lt;/h1&gt;
+
+&lt;p&gt;The &lt;code&gt;Env&lt;/code&gt; module allows to get and set environment variables.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import os/Env
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Getting an environment variable:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+path := Env get(&amp;quot;PATH&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;get&lt;/code&gt; will return &lt;code&gt;null&lt;/code&gt; if the given environment variable is not set.&lt;/p&gt;
+
+&lt;p&gt;Setting an environment variable:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+Env set(&amp;quot;CFLAGS&amp;quot;, &amp;quot;-Os&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Environment variables can be unset as well:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+Env unset(&amp;quot;PKG_CONFIG_PATH&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
@@ -107,742 +298,182 @@ the hostname, etc.&lt;/p&gt;&lt;/li&gt;
     </item>
     
     <item>
-      <title>jobpool</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/jobpool</link>
+      <title>process</title>
+      <link>http://oocmanual.cogneco.com/sdk/os/process</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/sdk/os/jobpool</guid>
+      <guid>http://oocmanual.cogneco.com/sdk/os/process</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/JobPool module&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;The os/Process module&lt;/h1&gt;
 
-&lt;p&gt;JobPool is useful when several background tasks have to be launched in
-parallel. It allows to control how many tasks are run in parallel, and to wait
-until all tasks have ended.&lt;/p&gt;
-
-&lt;p&gt;A good example of JobPool usage would be a build system, where multiple
-instances of a compiler have to be ran on different files, and the number of
-instances running in parallel should be limited.&lt;/p&gt;
+&lt;p&gt;The Process module deals with everything related to launching a child process, waiting for
+its status or signals, and communicating with it.&lt;/p&gt;
 
 &lt;h1 id=&#34;toc_1&#34;&gt;Basic usage&lt;/h1&gt;
 
-&lt;p&gt;Creating a job pool is trivial:&lt;/p&gt;
+&lt;p&gt;A process can be launched by providing an array or a list of arguments to the &lt;code&gt;Process&lt;/code&gt; constructor:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-import os/JobPool
-pool := JobPool new()
+import os/Process
+
+p := Process new([&amp;quot;cat&amp;quot;, &amp;quot;/etc/hosts&amp;quot;])
+exitCode := p execute()
+
+// at this point, the process has ended
+// and &#39;exitCode&#39; contains the value returned by the program
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Then jobs should be added. Jobs are attached to processes, so the process
-must be launched beforehand.&lt;/p&gt;
+&lt;p&gt;Instead of running execute, one might want to run &lt;code&gt;getOutput&lt;/code&gt; directly, to get
+the standard output of the process as a string&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-p := Process new([&amp;quot;find&amp;quot;, &amp;quot;./&amp;quot;, &amp;quot;-name&amp;quot;, &amp;quot;*.log&amp;quot;])
+p := Process new([&amp;quot;cat&amp;quot;, &amp;quot;/etc/hosts&amp;quot;])
+out := p getOutput()
+// out now contains the contents of the /etc/hosts file
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or getErrOutput to get the standard error output:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+p := Process new([&amp;quot;cat&amp;quot;, &amp;quot;/etc/hosts&amp;quot;])
+err := p getErrOutput()
+// err is empty
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To retrieve the result of both stderr and stdout, see the &amp;lsquo;Redirecting&amp;rsquo; section
+below.&lt;/p&gt;
+
+&lt;p&gt;However, depending on your use case, that might not be the best way to do it.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Manual wait and pid&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;execute&lt;/code&gt; will start the child process, wait for it to finish, and print the output.&lt;/p&gt;
+
+&lt;p&gt;However, we can do things manually if we want:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+p := Process new([&amp;quot;curl&amp;quot;, &amp;quot;example.org&amp;quot;])
 p executeNoWait()
+p wait()
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Then an associated job can be created and added to the pool:&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;wait&lt;/code&gt; method will wait until the child process has exited or errored. If you
+just want to check if a process is still running, &lt;code&gt;waitNoHang&lt;/code&gt; can be used instead:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-job := Job new(p)
-pool add(job)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Note that the &lt;code&gt;pool add&lt;/code&gt; call might block, if there already is too many
-jobs running in parallel, waiting for at least one job to complete.&lt;/p&gt;
-
-&lt;p&gt;When all jobs have been added, one can wait for all jobs to finish.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-exitCode := pool waitAll()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;If at least one job failed (returned with a non-zero exit code),
-&lt;code&gt;waitAll&lt;/code&gt; will return its exit code. If they all succeeded, &lt;code&gt;waitAll&lt;/code&gt;
-will just return 0.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Proof of concept&lt;/h2&gt;
-
-&lt;p&gt;To demonstrate how it works, we can launch several &lt;code&gt;sleep&lt;/code&gt; commands
-in the background, and wait for them all to finish:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-pool := JobPool new()
-
-for (i in 0..pool parallelism) {
-    p := Process new([&amp;quot;sleep&amp;quot;, &amp;quot;1&amp;quot;])
-    p executeNoWait()
-    pool add(Job new(p))
-}
-
-pool waitAll()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This program wil take about 1 second to complete, no matter the level
-of parallelism. Instead of being executed sequentially (which would add
-up the time of execution), they&amp;rsquo;re being executed in parallel.&lt;/p&gt;
-
-&lt;p&gt;Note that this is a contrived example. In a real example, one would not
-adjust the total number of jobs from the &lt;code&gt;pool parallelism&lt;/code&gt; setting, but
-rather let the natural number of jobs be distributed by the job pool itself.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_3&#34;&gt;Customization&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Parallelism&lt;/h2&gt;
-
-&lt;p&gt;By default, &lt;code&gt;JobPool&lt;/code&gt; tries to have a level of parallelism (max jobs in
-parallel) equal to the number of cores on the machine it&amp;rsquo;s running on.&lt;/p&gt;
-
-&lt;p&gt;It can be adjusted by hand:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-// never run more that 2 jobs in parallel
-pool parallelism = 2
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Custom job&lt;/h2&gt;
-
-&lt;p&gt;In our examples above we&amp;rsquo;ve always used the default &lt;code&gt;Job&lt;/code&gt; class. But it can be
-extended as well. By making a subclass of it, we can override the &lt;code&gt;Job onExit&lt;/code&gt;
-method, allowing us to take action after each job is finished.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-CompilationJob: class extends Job {
-    init: func {
-        p := Process new([&amp;quot;gcc&amp;quot;, &amp;quot;-v&amp;quot;])
-        p executeNoWait()
-        super(p)
-    }
-
-    onExit: func (code: Int) {
-        if (code != 0) {
-            raise(&amp;quot;Compilation failed!&amp;quot;)
-        }
-    }
+p := Process new([&amp;quot;curl&amp;quot;, &amp;quot;example.org&amp;quot;])
+p executeNoWait()
+while (p waitNoHang() == -1) {
+    Time sleepMilli(20)
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Our new job type can then be used, like so:&lt;/p&gt;
+&lt;p&gt;To execute a bunch of processes in parallel, using a &lt;a href=&#34;/docs/sdk/os/jobpool&#34;&gt;JobPool&lt;/a&gt; is easier and
+more suitable.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_3&#34;&gt;Process settings&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Current working directory&lt;/h2&gt;
+
+&lt;p&gt;By default, a process will inherit from the current working directory. To make
+the child process run in a specified directory, use the &lt;code&gt;setCwd&lt;/code&gt; method&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-pool := Pool new()
-for (i in 0..10) {
-    pool add(CompilationJob new())
-}
-pool waitAll()
+p := Process new([&amp;quot;cat&amp;quot;, &amp;quot;hosts&amp;quot;])
+p setCwd(&amp;quot;/etc&amp;quot;)
+p execute()
 &lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>system</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/system</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/os/system</guid>
-      <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/System module&lt;/h1&gt;
+&lt;h2 id=&#34;toc_5&#34;&gt;Environment&lt;/h2&gt;
 
-&lt;p&gt;The &lt;code&gt;System&lt;/code&gt; module allows to get information about the system, such
-as the number of processors, as an &lt;code&gt;Int&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;To specify custom environment variables for a process, use the &lt;code&gt;setEnv&lt;/code&gt; method
+with a &lt;code&gt;HashMap&amp;lt;String, String&amp;gt;&lt;/code&gt;:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-cores := System numProcessors()
+p := Process new([&amp;quot;bash&amp;quot;, &amp;quot;-c&amp;quot;, &amp;quot;echo $MYVAR&amp;quot;])
+
+env := HashMap&amp;lt;String, String&amp;gt; new()
+env put(&amp;quot;MYVAR&amp;quot;, &amp;quot;42&amp;quot;)
+p setEnv(env)
+
+// prints 42
+p execute()
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Or the hostname of the machine, as a &lt;code&gt;String&lt;/code&gt;&lt;/p&gt;
+&lt;h1 id=&#34;toc_6&#34;&gt;Communicating with a process&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;Redirecting stdin, stdout, stderr&lt;/h2&gt;
+
+&lt;p&gt;One may use &lt;a href=&#34;/docs/sdk/os/pipe/&#34;&gt;pipes&lt;/a&gt; to redirect the standard input, output, or error stream of
+a process.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-hostname := System hostname()
+import os/[Process, Pipe, PipeReader]
+
+p := Process new([&amp;quot;some&amp;quot;, &amp;quot;process&amp;quot;])
+
+(out, err) := (Pipe new(), Pipe new())
+p setStdout(out)
+p setStderr(err)
+
+exitCode := p execute()
+
+outString := PipeReader new(out) toString()
+errString := PipeReader new(err) toString()
+
+out close(&#39;r&#39;). close(&#39;w&#39;)
+err close(&#39;r&#39;). close(&#39;w&#39;)
+
+// we now have the exit code in exitCode, the
+// stdout in outString, and the stderr in errString
 &lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>time</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/time</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/os/time</guid>
-      <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/Time module&lt;/h1&gt;
+&lt;h2 id=&#34;toc_8&#34;&gt;Streaming output&lt;/h2&gt;
 
-&lt;p&gt;The &lt;code&gt;Time&lt;/code&gt; module allows for both time measurement and sleeping.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;Sleep&lt;/h2&gt;
-
-&lt;p&gt;There are three granularities for sleep: second, milli, and microseconds.
-Note that each system has different guarantees as to the actual clock
-granularity, but the SDK will use the most precise method available.&lt;/p&gt;
+&lt;p&gt;This can be used to stream stdout to the output of our main program, if the launched
+process is interactive. If blinkenlights is still up and running when you try this, it
+should display star wars scene in ASCII art:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-// sleep for one second
-Time sleepSec(1)
+p := Process new([&amp;quot;nc&amp;quot;, &amp;quot;towel.blinkenlights.nl&amp;quot;, &amp;quot;23&amp;quot;])
 
-// then for 12 milliseconds
-Time sleepMilli(12)
+out := Pipe new()
+out setNonBlocking()
+p setStdout(out)
 
-// then for 300 microseconds
-Time sleepMicro(300)
-&lt;/code&gt;&lt;/pre&gt;
+p executeNoWait()
 
-&lt;h2 id=&#34;toc_2&#34;&gt;Date and time&lt;/h2&gt;
-
-&lt;p&gt;&lt;code&gt;dateTime&lt;/code&gt; will return the current time date and time formatted as a
-human-readable string. The exact format might depend on the locale and
-operating system.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;Today is: %s&amp;quot; printfln(Time dateTime())
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;hour&lt;/code&gt;, &lt;code&gt;min&lt;/code&gt;, and &lt;code&gt;sec&lt;/code&gt; return the current hour, minute, and second.&lt;/p&gt;
-
-&lt;p&gt;Executed at 12h34 and 56 seconds, the following will print 123456:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;%d%d%d&amp;quot; printfln(Time hour(), Time min(), Time sec())
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;microtime&lt;/code&gt; returns the microseconds that have elapsed in the current
-minute, whereas &lt;code&gt;microsec&lt;/code&gt; returns the microseconds that have elapsed
-int he current second.&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;runTime&lt;/code&gt; returns the number of milliseconds elapsed since program start.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;Uptime: %d seconds.&amp;quot; printfln(Time runTime() / 1_000)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Measure&lt;/h2&gt;
-
-&lt;p&gt;The &lt;code&gt;measure&lt;/code&gt; function accepts a block and returns the number of milliseconds
-spent elapsing it. It might be used as a poor humanoid&amp;rsquo;s profiler:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-duration := Time measure(||
-    // some time-consuming task
-)
-&amp;quot;Huge task done in %d ms&amp;quot; printfln(duration)
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>types</title>
-      <link>http://oocmanual.cogneco.com/sdk/lang/types</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/lang/types</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Base types in the lang package&lt;/h1&gt;
-
-&lt;p&gt;Some types are useful enough that they are imported into every ooc
-module out there. For example, &lt;code&gt;Object&lt;/code&gt;, which is the default super type
-of all objects.&lt;/p&gt;
-
-&lt;p&gt;Integer types, both fixed-width (&lt;code&gt;Int32&lt;/code&gt;, &lt;code&gt;Int64&lt;/code&gt;) and variable-width
-(&lt;code&gt;Long&lt;/code&gt;, &lt;code&gt;LLong&lt;/code&gt;) are also in &lt;code&gt;lang/types&lt;/code&gt;, along with the boolean type
-&lt;code&gt;Bool&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;Object / Class&lt;/h1&gt;
-
-&lt;p&gt;The &lt;code&gt;Object&lt;/code&gt; and &lt;code&gt;Class&lt;/code&gt; classes are written in ooc itself, and not part
-of some separate C runtime.&lt;/p&gt;
-
-&lt;p&gt;Anytime a type is referred to, you have something of type &lt;code&gt;Class&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-type := Int
-type name // &amp;quot;Int&amp;quot;
-type size // 4
-type instanceSize // 4
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Actually, in this case, it&amp;rsquo;s an instance of &lt;code&gt;IntClass&lt;/code&gt;, as demonstrated
-by this chunk of code:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-type class name // &amp;quot;IntClass&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Even base types have classes, although they aren&amp;rsquo;t available via the
-&lt;code&gt;class&lt;/code&gt; property, unlike objects.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-dog := Dog new()
-dog class == Dog // true
-
-a := 42
-a class // invalid, not an object, it doesn&#39;t have fields
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This is especially useful for generics, where classes are passed
-along with actual arguments:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-acceptAnything: func &amp;lt;T&amp;gt; (t: T) {
-  T // is a subtype of Class, can access &#39;name&#39;, etc.
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;size vs instanceSize&lt;/h2&gt;
-
-&lt;p&gt;For basic types such as Int, Float, Char - there is no difference between size
-and instanceSize. For complex types, e.g. objects, there is a difference between
-size and instanceSize.&lt;/p&gt;
-
-&lt;p&gt;For objects, &lt;code&gt;size&lt;/code&gt; is always equal to the size of a pointer - since objects are
-references. However, &lt;code&gt;instanceSize&lt;/code&gt; is equal to the amount of memory an object
-takes in memory.&lt;/p&gt;
-
-&lt;p&gt;For more information on the subject, read about &lt;a href=&#34;/docs/lang/classes/&#34;&gt;ooc classes&lt;/a&gt;&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_3&#34;&gt;Various types&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Bool&lt;/h2&gt;
-
-&lt;p&gt;Booleans in ooc, equal to either the boolean literal &lt;code&gt;true&lt;/code&gt;, or &lt;code&gt;false&lt;/code&gt;,
-are of type &lt;code&gt;Bool&lt;/code&gt;.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-b := true
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Void&lt;/h2&gt;
-
-&lt;p&gt;&lt;code&gt;Void&lt;/code&gt; is the type of nothing. A function that doesn&amp;rsquo;t return anything
-has a return type of &lt;code&gt;Void&lt;/code&gt;, implicitly.&lt;/p&gt;
-
-&lt;p&gt;It is never used explicitly throughout the SDK, it is mostly there so
-that compiler iternals work fine.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;Pointer&lt;/h2&gt;
-
-&lt;p&gt;&lt;code&gt;Pointer&lt;/code&gt; is the umbrella term for any type of pointer. When possible,
-using a more precise type such as &lt;code&gt;Int*&lt;/code&gt; is desirable.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;None&lt;/h2&gt;
-
-&lt;p&gt;None can be used as an object representing nothing. It has a single
-no-argument constructor:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-nothing := None new()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;It can be used in place of null when adopting a pattern-matching approach.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;Cell&lt;/h2&gt;
-
-&lt;p&gt;Cell is documented in the &lt;a href=&#34;/docs/sdk/structs/&#34;&gt;structs package&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_9&#34;&gt;VarArgs&lt;/h1&gt;
-
-&lt;p&gt;This is the sdk-side implementation of variable arguments. Basically,
-it allows packing different values in the &lt;code&gt;VarArgs&lt;/code&gt; structure with
-&lt;code&gt;_addValue&lt;/code&gt; - although the compiler will typically write those out
-with a static initializer for efficiency.&lt;/p&gt;
-
-&lt;p&gt;They can be iterated through thanks to &lt;code&gt;VarArgsIterator&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-something: func (args: ...) {
-  iter := args iterator()
-  while (iter hasNext?()) {
-    T := iter getNextType()
-    match T {
-      case Int =&amp;gt;
-        value := iter next(Int)
-        // do something with value
-      case =&amp;gt;
-        raise(&amp;quot;Unsupported argument type: %s&amp;quot; format(T name))
-    }
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Or, more simply, with &lt;code&gt;each&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-something: func (args: ...) {
-  args each(|arg|
-    match arg {
-      case value: Int =&amp;gt;
-        // do something with value
-      case =&amp;gt;
-        raise(&amp;quot;Unsupported argument type&amp;quot;)
-    }
-  )
-}
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>iterators</title>
-      <link>http://oocmanual.cogneco.com/sdk/lang/iterators</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/lang/iterators</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Iterators&lt;/h1&gt;
-
-&lt;p&gt;Iterators are the magic that makes foreach loops work.&lt;/p&gt;
-
-&lt;p&gt;The basic premise is that to iterate through something, you have to
-be able to know if there&amp;rsquo;s anything left, via &lt;code&gt;hasNext?&lt;/code&gt;, and to
-retrieve the next element, via &lt;code&gt;next&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;As a bonus, for safe iteration, the &lt;code&gt;remove&lt;/code&gt; method may be implemented.
-If it isn&amp;rsquo;t, though, it will return false.&lt;/p&gt;
-
-&lt;p&gt;Since iterators may iterate on all kinds of data structures, they are
-generic, ie. &lt;code&gt;next&lt;/code&gt; will return a T.&lt;/p&gt;
-
-&lt;p&gt;Here&amp;rsquo;s a demonstration, iterating through characters of the word &lt;code&gt;hellfire&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-HellfireIterator: class extends Iterator&amp;lt;Char&amp;gt; {
-    content := &amp;quot;hellfire&amp;quot;
-    index := 0
-
-    init: func
-
-    hasNext?: func -&amp;gt; Bool {
-      index &amp;lt; content size
-    }
-
-    next: func -&amp;gt; Char {
-      val := content[index]
-      index += 1
-      val
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;For a foreach to work, one has to have an iterable type. Thankfully,
-an &lt;code&gt;Iterator&lt;/code&gt; itself extends &lt;code&gt;Iterable&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-for (letter in HellfireIterator new()) {
-  &amp;quot;%c&amp;quot; printfln(letter)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;each and eachUntil&lt;/h2&gt;
-
-&lt;p&gt;Apart from using foreach loops, one can use the each method:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-HellfireIterator new() each(|letter|
-  // do something with letter
-)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Or the eachUntil, which will break if the passed closure returns false:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-HellfireIterator new() eachUntil(|letter|
-  if (letter == &#39;f&#39;) {
-    return false // just hell, please
-  }
-
-  // do something with letter
-  true
-)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;reduce&lt;/h2&gt;
-
-&lt;p&gt;An iterable can be reduced using the &lt;code&gt;reduce&lt;/code&gt; method, accepting a
-closure. It&amp;rsquo;ll get called on each pair of two elements, until there
-is only one element left.&lt;/p&gt;
-
-&lt;p&gt;Example with a list of ints:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-list := [1, 2, 3] as ArrayList&amp;lt;Int&amp;gt;
-sum := list reduce(|a, b| a + b)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;toList&lt;/h2&gt;
-
-&lt;p&gt;Any &lt;code&gt;Iterable&amp;lt;T&amp;gt;&lt;/code&gt; can be transformed to a &lt;code&gt;List&amp;lt;T&amp;gt;&lt;/code&gt; via the &lt;code&gt;toList&lt;/code&gt;
-method. Let&amp;rsquo;s try it on a string, which is iterable:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;ABC&amp;quot; toList() // gives [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;]
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>string</title>
-      <link>http://oocmanual.cogneco.com/sdk/lang/string</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/lang/string</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;String&lt;/h1&gt;
-
-&lt;p&gt;A string in ooc is a chain of bytes with no particular property.
-In most cases, you&amp;rsquo;ll want to deal with UTF-8 encoded strings.&lt;/p&gt;
-
-&lt;p&gt;The &lt;code&gt;String&lt;/code&gt; type is the full-blown ooc String - it is a pascal
-string in the sense that the length is stored with it. It is
-backed by the &lt;code&gt;Buffer&lt;/code&gt; type, which contains the actual bytes.&lt;/p&gt;
-
-&lt;p&gt;Buffers are mutable, whereas Strings are immutable. Therefore,
-to build up a long String from several elements, using &lt;code&gt;Buffer&lt;/code&gt;
-is preferable.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;Basic usage&lt;/h2&gt;
-
-&lt;p&gt;The size of a String can be retrieved through the &lt;code&gt;size&lt;/code&gt; property.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;dumb luck&amp;quot; size == 9 // true
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Tests&lt;/h2&gt;
-
-&lt;p&gt;&lt;code&gt;startsWith?&lt;/code&gt; and &lt;code&gt;endsWith?&lt;/code&gt; do exactly what they sound like.
-&lt;code&gt;equals?&lt;/code&gt; tests for equality, and is aliased to the &lt;code&gt;==&lt;/code&gt; operator
-and, for non-equality, the &lt;code&gt;!=&lt;/code&gt; operator:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;moonlight&amp;quot; startsWith?(&amp;quot;moon&amp;quot;) // true
-&amp;quot;lightscape&amp;quot; endsWith?(&amp;quot;scape&amp;quot;) // true
-
-&amp;quot;moon&amp;quot; == &amp;quot;moon&amp;quot; // true
-&amp;quot;light&amp;quot; != &amp;quot;darkness&amp;quot; // true
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Indexing&lt;/h2&gt;
-
-&lt;p&gt;One can retrieve the n-th byte with the array indexing operator, &lt;code&gt;[]&lt;/code&gt;
-and an integer value:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;abcdef&amp;quot;[2] // == &#39;c&#39;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Note that the indexes are 0-based, like arrays.&lt;/p&gt;
-
-&lt;p&gt;To iterate through each byte of a String, a foreach can be used:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;Let&#39;s spell!&amp;quot; println()
-for (c in &amp;quot;violin&amp;quot;) {
-  &amp;quot;%c, &amp;quot; printfln(c)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Formatting and printing&lt;/h2&gt;
-
-&lt;p&gt;The &lt;code&gt;format&lt;/code&gt; method can be used to format a string with various
-elements such as integers, floats, other strings, etc:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;%d&amp;quot; format(42) // == &amp;quot;42&amp;quot;
-&amp;quot;%.2f&amp;quot; format(3.1567) // == &amp;quot;3.16&amp;quot;
-&amp;quot;%s&amp;quot; format(&amp;quot;Hi!&amp;quot;) // == &amp;quot;Hi!&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The &lt;code&gt;print&lt;/code&gt; method will print a string to the standard output.
-Since it is so convenient to print a string followed by a newline,
-&lt;code&gt;println&lt;/code&gt; does exactly that. And since formatting is often used,
-&lt;code&gt;printfln&lt;/code&gt; does formatting, then print the result followed by a newline.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;Hello world!\n&amp;quot; print()
-// is equivalent to:
-&amp;quot;Hello world!&amp;quot; println()
-// itself equivalent to:
-&amp;quot;Hello %s!&amp;quot; printfln(&amp;quot;world&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Concatenation&lt;/h2&gt;
-
-&lt;p&gt;One can use the &lt;code&gt;append&lt;/code&gt; and &lt;code&gt;prepend&lt;/code&gt; methods:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;light&amp;quot; prepend(&amp;quot;moon&amp;quot;) // == &amp;quot;moonlight&amp;quot;
-&amp;quot;storm&amp;quot; append(&amp;quot;born&amp;quot;) // == &amp;quot;stormborn&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Or simply, the &lt;code&gt;+&lt;/code&gt; operator:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;not&amp;quot; + &amp;quot;with&amp;quot; + &amp;quot;standing&amp;quot; // == &amp;quot;notwithstanding&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;Finding and replacing&lt;/h2&gt;
-
-&lt;p&gt;The &lt;code&gt;indexOf&lt;/code&gt; method returns the index of a character or string inside
-a string:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;abcdef&amp;quot; indexOf?(&#39;c&#39;) // 2
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Using &lt;code&gt;replaceAll&lt;/code&gt;, one can replace all instances of a String with
-another String:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-// yields &amp;quot;Brother | father | lover.&amp;quot;
-&amp;quot;Brother, father, lover.&amp;quot; replaceAll(&amp;quot;,&amp;quot;, &amp;quot; |&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;Slicing&lt;/h2&gt;
-
-&lt;p&gt;The &lt;code&gt;substring&lt;/code&gt; method allows one to get a slice of a String:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;observe&amp;quot; substring(2) // == &amp;quot;serve&amp;quot;
-&amp;quot;laminate&amp;quot; substring(2, 5) // == &amp;quot;min&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Alternatively, the array indexing operator, &lt;code&gt;[]&lt;/code&gt;, can be used
-with a range literal.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;observe&amp;quot;[2..-1] // == &amp;quot;serve&amp;quot;
-&amp;quot;laminate&amp;quot;[2..5] // == &amp;quot;min&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;Trimming&lt;/h2&gt;
-
-&lt;p&gt;To get rid of extra whitespace, use the &lt;code&gt;trim&lt;/code&gt; method, or its variants,
-&lt;code&gt;trimLeft&lt;/code&gt; and &lt;code&gt;trimRight&lt;/code&gt;.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;quot;  Hi!  &amp;quot; trim() // = &amp;quot;Hi!&amp;quot;
-&amp;quot;  Hi!  &amp;quot; trimLeft() // = &amp;quot;Hi!  &amp;quot;
-&amp;quot;  Hi!  &amp;quot; trimRight() // = &amp;quot;  Hi!&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;They also have versions that accept which characters to trim:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;quot;[Hola.]&amp;quot; trim() // = &amp;quot;[Hola.]&amp;quot;
-&amp;quot;[Hola.]&amp;quot; trim(&amp;quot;[]()&amp;quot;) // = &amp;quot;Hola.&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_9&#34;&gt;CString&lt;/h1&gt;
-
-&lt;p&gt;While a pure ooc program will want to deal mostyl with &lt;code&gt;String&lt;/code&gt;s,
-when dealing with C functions, one will want to convert back and forth
-with &lt;code&gt;toCString()&lt;/code&gt;, which gives a &lt;code&gt;CString&lt;/code&gt;, a cover of &lt;code&gt;char*&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Conversely, converting a CString to a String can be done with &lt;code&gt;toString()&lt;/code&gt;.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>lang</title>
-      <link>http://oocmanual.cogneco.com/sdk/lang</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/lang</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The lang package&lt;/h1&gt;
-
-&lt;p&gt;The lang package is considered built-in: it is imported by default in ooc
-modules. There is a reason for that, however - the SDK is distributed as
-an ooc library itself, and as such, it has a .use file that specifies which
-modules should be imported.&lt;/p&gt;
-
-&lt;p&gt;Some of the lang package is essential, like &lt;code&gt;Object&lt;/code&gt; and &lt;code&gt;Class&lt;/code&gt;, which
-means that the compiler, &lt;a href=&#34;../tools/rock/&#34;&gt;rock&lt;/a&gt;, will expect them to be present,
-have certain names, fields and methods. However, using a custom sdk is
-possible, where the implementation for these can be swapped to something
-lighter, for example.&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;types&#34;&gt;Types&lt;/a&gt; section describes how Object,
- Class, and other types such as Void, Pointer, Bool, None,
- Cell are defined. It also discusses variable arguments.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;string&#34;&gt;String&lt;/a&gt; section talks about string
- handling, the mutable variant Buffer, and formatting&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;numbers&#34;&gt;Numbers&lt;/a&gt; section talks about number
- types, either integers or floats, and the various functions available.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;iterators&#34;&gt;Iterators&lt;/a&gt; section discusses
- how iterators are implemented, and what goes on behind a foreach.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;exceptions&#34;&gt;Exceptions&lt;/a&gt; section talks about
- default properties of exceptions, and how to extend them.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;memory&#34;&gt;Memory&lt;/a&gt; section talks about memory
- management, mostly just how to deal with blocks of memory rather
- than more high-level data structures.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>coro</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/coro</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/os/coro</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/Coro module&lt;/h1&gt;
-
-&lt;p&gt;That module was originally an ooc port of Steve Dekorte&amp;rsquo;s &lt;a href=&#34;https://github.com/stevedekorte/coroutine&#34;&gt;libcoroutine&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Coroutines help achieve cooperative multi-tasking, as opposed to threads, which
-achieve preemptive multitasking. In cooperative multi-tasking, each task (or
-&amp;lsquo;coroutine&amp;rsquo;) is responsible for handing the control to another coroutine.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;Basic usage&lt;/h1&gt;
-
-&lt;p&gt;First, we have to create a main coroutine:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import os/Coro
-
-mainCoro := Coro new()
-mainCoro initializeMainCoro
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;We can then create another coroutine, which we&amp;rsquo;ll here use as a generator&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-letter: Char
-
-coro1 := Coro new()
-mainCoro startCoro(coro1, ||
-    for (c in &amp;quot;LLAMACORE&amp;quot;) {
-        letter = c
-        coro1 switchTo(mainCoro)
-    }
-    exit(0)
-)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then we can retrieve those letters one by one:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
 while (true) {
-    &amp;quot;%c&amp;quot; printfln(letter)
-    mainCoro switchTo(coro1)
+    chr := out read()
+    if (chr != &#39;\0&#39;) {
+        chr print()
+    } else if(p waitNoHang() &amp;gt; 0) {
+        // process is done
+        break
+    }
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;This example is quite simple, just printing each letter that
-&lt;code&gt;coro1&lt;/code&gt; gives us on separate lines, but complex tasks can be
-broken down in various coroutines and be achieved in a much
-more lightweight fashion than threads or processes.&lt;/p&gt;
+&lt;h1 id=&#34;toc_9&#34;&gt;Terminate or kill a process&lt;/h1&gt;
+
+&lt;p&gt;The &lt;code&gt;terminate&lt;/code&gt; method will send a process the &lt;code&gt;SIGTERM&lt;/code&gt; message, while the &lt;code&gt;kill&lt;/code&gt; method
+will send a process the &lt;code&gt;SIGKILL&lt;/code&gt; message.&lt;/p&gt;
+
+&lt;p&gt;This can be used to gracefully end a process:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+p terminate()
+if (p waitNoHang() != -1) {
+    // give a few seconds of grace..
+    Time sleepSec(3)
+}
+
+if (p waitNoHang() != -1) {
+    // still not finished? alright, that&#39;s enough
+    p kill()
+}
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
@@ -1069,455 +700,1017 @@ pipes, both for cross-platform support, performance, and ease of use.
     </item>
     
     <item>
-      <title>memory</title>
-      <link>http://oocmanual.cogneco.com/sdk/lang/memory</link>
+      <title>terminal</title>
+      <link>http://oocmanual.cogneco.com/sdk/os/terminal</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/sdk/lang/memory</guid>
+      <guid>http://oocmanual.cogneco.com/sdk/os/terminal</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;Memory&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;The os/Terminal module&lt;/h1&gt;
 
-&lt;p&gt;Sometimes, you just have to handle memory yourself. None of that class
-or cover stuff, just give me a raw block of memory any day.&lt;/p&gt;
+&lt;p&gt;Terminal is used to control the terminal output, mostly by setting colors and
+attributes on there.&lt;/p&gt;
 
-&lt;p&gt;You&amp;rsquo;ll see the &lt;code&gt;gc_&lt;/code&gt; prefix being used in the following page: that stands
-for Garbage Collection, which is enabled by default in ooc. However, when
-the GC is disabled, those will point to non-GC version of the functions.&lt;/p&gt;
+&lt;h1 id=&#34;toc_1&#34;&gt;Colors&lt;/h1&gt;
 
-&lt;p&gt;So that your code remains flexible, do yourself a favor and use the &lt;code&gt;gc_&lt;/code&gt;
-variants regardless.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;Color&lt;/code&gt; enum contains colors that are possible to set on the terminal:&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_1&#34;&gt;Allocating memory&lt;/h2&gt;
-
-&lt;p&gt;Use &lt;code&gt;gc_malloc&lt;/code&gt; to get a chunk of memory all to yourself.&lt;/p&gt;
+&lt;p&gt;To change the foreground color, use &lt;code&gt;setFgColor&lt;/code&gt;:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-// get ourselves a slice of 4 bytes
-block := gc_malloc(4)
+Terminal setFgColor(Color black)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;However, you&amp;rsquo;ll get a &lt;code&gt;Pointer&lt;/code&gt; back - which is a little bit pointless.
-Plus you&amp;rsquo;ll probably want to determine how much you are allocating as
-a function of the size of some other type instead:&lt;/p&gt;
+&lt;p&gt;To change the background color, use &lt;code&gt;setBgColor&lt;/code&gt;:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-// get ourselves room to store 4 doubles.
-doubles := gc_malloc(4 * Double size) as Double*
+Terminal setBgColor(Color white)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;That&amp;rsquo;s better. Now you can index that, like any pointer:&lt;/p&gt;
+&lt;h2 id=&#34;toc_2&#34;&gt;List of colors&lt;/h2&gt;
+
+&lt;p&gt;Here are the colors defined in the Color enum:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;black&lt;/li&gt;
+&lt;li&gt;red&lt;/li&gt;
+&lt;li&gt;green&lt;/li&gt;
+&lt;li&gt;yellow&lt;/li&gt;
+&lt;li&gt;blue&lt;/li&gt;
+&lt;li&gt;magenta&lt;/li&gt;
+&lt;li&gt;cyan&lt;/li&gt;
+&lt;li&gt;grey&lt;/li&gt;
+&lt;li&gt;white&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Note that depending on your terminal emulator, these colors
+might not map to their actual names.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_3&#34;&gt;Attributes&lt;/h1&gt;
+
+&lt;p&gt;Attributes can be set using &lt;code&gt;setAttr&lt;/code&gt;:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-doubles[0] = 3.14
-doubles[1] = 6.28
+Terminal setAttr(Attr bright)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;List of attributes&lt;/h2&gt;
+
+&lt;p&gt;Here are the attributes defined in the &lt;code&gt;Attr&lt;/code&gt; enum:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;reset&lt;/li&gt;
+&lt;li&gt;bright&lt;/li&gt;
+&lt;li&gt;dim&lt;/li&gt;
+&lt;li&gt;under&lt;/li&gt;
+&lt;li&gt;blink&lt;/li&gt;
+&lt;li&gt;reverse&lt;/li&gt;
+&lt;li&gt;hidden&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;toc_5&#34;&gt;Resetting&lt;/h1&gt;
+
+&lt;p&gt;Reset all color and attribute settings to default by using the
+&lt;code&gt;reset&lt;/code&gt; method:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+Terminal reset()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;toc_6&#34;&gt;Cross-platform considerations&lt;/h1&gt;
+
+&lt;p&gt;On *nix platforms, all attributes are supposed. On Windows, only
+the &lt;code&gt;reset&lt;/code&gt; attribute is supported.&lt;/p&gt;
+
+&lt;p&gt;On *nix, the &lt;code&gt;Terminal&lt;/code&gt; module outputs ANSI escape sequences to
+stdout, whereas on Windows it uses the console text attribute API.&lt;/p&gt;
+
+&lt;p&gt;That&amp;rsquo;s why there is no cross-platform way to transform a string
+into a &amp;ldquo;colored string&amp;rdquo;, because it would make no sense on Windows.&lt;/p&gt;
+
+&lt;p&gt;Also, on *nix, color escapes will only be outputted if stdout is
+a terminal and not if it&amp;rsquo;s redirected to a file or a pipe.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>time</title>
+      <link>http://oocmanual.cogneco.com/sdk/os/time</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/os/time</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The os/Time module&lt;/h1&gt;
+
+&lt;p&gt;The &lt;code&gt;Time&lt;/code&gt; module allows for both time measurement and sleeping.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Sleep&lt;/h2&gt;
+
+&lt;p&gt;There are three granularities for sleep: second, milli, and microseconds.
+Note that each system has different guarantees as to the actual clock
+granularity, but the SDK will use the most precise method available.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+// sleep for one second
+Time sleepSec(1)
+
+// then for 12 milliseconds
+Time sleepMilli(12)
+
+// then for 300 microseconds
+Time sleepMicro(300)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Date and time&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;dateTime&lt;/code&gt; will return the current time date and time formatted as a
+human-readable string. The exact format might depend on the locale and
+operating system.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;Today is: %s&amp;quot; printfln(Time dateTime())
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;hour&lt;/code&gt;, &lt;code&gt;min&lt;/code&gt;, and &lt;code&gt;sec&lt;/code&gt; return the current hour, minute, and second.&lt;/p&gt;
+
+&lt;p&gt;Executed at 12h34 and 56 seconds, the following will print 123456:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;%d%d%d&amp;quot; printfln(Time hour(), Time min(), Time sec())
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;microtime&lt;/code&gt; returns the microseconds that have elapsed in the current
+minute, whereas &lt;code&gt;microsec&lt;/code&gt; returns the microseconds that have elapsed
+int he current second.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;runTime&lt;/code&gt; returns the number of milliseconds elapsed since program start.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;Uptime: %d seconds.&amp;quot; printfln(Time runTime() / 1_000)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Measure&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;measure&lt;/code&gt; function accepts a block and returns the number of milliseconds
+spent elapsing it. It might be used as a poor humanoid&amp;rsquo;s profiler:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+duration := Time measure(||
+    // some time-consuming task
+)
+&amp;quot;Huge task done in %d ms&amp;quot; printfln(duration)
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>sdk</title>
+      <link>http://oocmanual.cogneco.com/sdk</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;An overview of the SDK&amp;rsquo;s packages&lt;/h1&gt;
+
+&lt;p&gt;These pages will give you an overview of what you can find in the SDK:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;lang&#34;&gt;lang&lt;/a&gt; package is imported by default in any ooc file.
+It contains essentials usable without further ado in any .ooc program.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;structs&#34;&gt;structs&lt;/a&gt; package contains useful containers like
+lists and hash maps, but also stacks, and more cornercase stuff like
+multimaps and bags.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;io&#34;&gt;io&lt;/a&gt; package has modules for reading files, writing
+to files, and other input/output related matters.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;math&#34;&gt;math&lt;/a&gt; package is the home to everything numbers.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;os&#34;&gt;os&lt;/a&gt; package contains lots of goodies, from time
+management to terminal handling, to launching processes, reading from
+pipes, getting hardware information, manipulating environment variables,
+creating a parallel job pool, and even coroutines and channels!&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;net&#34;&gt;net&lt;/a&gt; package has modules for relatively low-level
+network operations such as creating TCP and UDP sockets, and making DNS
+requests.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;text&#34;&gt;text&lt;/a&gt; package contains a Regexp class, a JSON encoder
+and decoder, a simple template engine, a string tokenizer, an option
+parser, and a helper classes for escape sequences.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;threading&#34;&gt;threading&lt;/a&gt; package contains all things threads.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;native&#34;&gt;native&lt;/a&gt; package should not be imported directly -
+it contains platform-specific specific implementations of certain features.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>jobpool</title>
+      <link>http://oocmanual.cogneco.com/sdk/os/jobpool</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/os/jobpool</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The os/JobPool module&lt;/h1&gt;
+
+&lt;p&gt;JobPool is useful when several background tasks have to be launched in
+parallel. It allows to control how many tasks are run in parallel, and to wait
+until all tasks have ended.&lt;/p&gt;
+
+&lt;p&gt;A good example of JobPool usage would be a build system, where multiple
+instances of a compiler have to be ran on different files, and the number of
+instances running in parallel should be limited.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;Basic usage&lt;/h1&gt;
+
+&lt;p&gt;Creating a job pool is trivial:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import os/JobPool
+pool := JobPool new()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then jobs should be added. Jobs are attached to processes, so the process
+must be launched beforehand.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+p := Process new([&amp;quot;find&amp;quot;, &amp;quot;./&amp;quot;, &amp;quot;-name&amp;quot;, &amp;quot;*.log&amp;quot;])
+p executeNoWait()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then an associated job can be created and added to the pool:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+job := Job new(p)
+pool add(job)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note that the &lt;code&gt;pool add&lt;/code&gt; call might block, if there already is too many
+jobs running in parallel, waiting for at least one job to complete.&lt;/p&gt;
+
+&lt;p&gt;When all jobs have been added, one can wait for all jobs to finish.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+exitCode := pool waitAll()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If at least one job failed (returned with a non-zero exit code),
+&lt;code&gt;waitAll&lt;/code&gt; will return its exit code. If they all succeeded, &lt;code&gt;waitAll&lt;/code&gt;
+will just return 0.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Proof of concept&lt;/h2&gt;
+
+&lt;p&gt;To demonstrate how it works, we can launch several &lt;code&gt;sleep&lt;/code&gt; commands
+in the background, and wait for them all to finish:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+pool := JobPool new()
+
+for (i in 0..pool parallelism) {
+    p := Process new([&amp;quot;sleep&amp;quot;, &amp;quot;1&amp;quot;])
+    p executeNoWait()
+    pool add(Job new(p))
+}
+
+pool waitAll()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This program wil take about 1 second to complete, no matter the level
+of parallelism. Instead of being executed sequentially (which would add
+up the time of execution), they&amp;rsquo;re being executed in parallel.&lt;/p&gt;
+
+&lt;p&gt;Note that this is a contrived example. In a real example, one would not
+adjust the total number of jobs from the &lt;code&gt;pool parallelism&lt;/code&gt; setting, but
+rather let the natural number of jobs be distributed by the job pool itself.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_3&#34;&gt;Customization&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Parallelism&lt;/h2&gt;
+
+&lt;p&gt;By default, &lt;code&gt;JobPool&lt;/code&gt; tries to have a level of parallelism (max jobs in
+parallel) equal to the number of cores on the machine it&amp;rsquo;s running on.&lt;/p&gt;
+
+&lt;p&gt;It can be adjusted by hand:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+// never run more that 2 jobs in parallel
+pool parallelism = 2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Custom job&lt;/h2&gt;
+
+&lt;p&gt;In our examples above we&amp;rsquo;ve always used the default &lt;code&gt;Job&lt;/code&gt; class. But it can be
+extended as well. By making a subclass of it, we can override the &lt;code&gt;Job onExit&lt;/code&gt;
+method, allowing us to take action after each job is finished.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+CompilationJob: class extends Job {
+    init: func {
+        p := Process new([&amp;quot;gcc&amp;quot;, &amp;quot;-v&amp;quot;])
+        p executeNoWait()
+        super(p)
+    }
+
+    onExit: func (code: Int) {
+        if (code != 0) {
+            raise(&amp;quot;Compilation failed!&amp;quot;)
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Our new job type can then be used, like so:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+pool := Pool new()
+for (i in 0..10) {
+    pool add(CompilationJob new())
+}
+pool waitAll()
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>system</title>
+      <link>http://oocmanual.cogneco.com/sdk/os/system</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/os/system</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The os/System module&lt;/h1&gt;
+
+&lt;p&gt;The &lt;code&gt;System&lt;/code&gt; module allows to get information about the system, such
+as the number of processors, as an &lt;code&gt;Int&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+cores := System numProcessors()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or the hostname of the machine, as a &lt;code&gt;String&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+hostname := System hostname()
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>iterators</title>
+      <link>http://oocmanual.cogneco.com/sdk/lang/iterators</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/lang/iterators</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Iterators&lt;/h1&gt;
+
+&lt;p&gt;Iterators are the magic that makes foreach loops work.&lt;/p&gt;
+
+&lt;p&gt;The basic premise is that to iterate through something, you have to
+be able to know if there&amp;rsquo;s anything left, via &lt;code&gt;hasNext?&lt;/code&gt;, and to
+retrieve the next element, via &lt;code&gt;next&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;As a bonus, for safe iteration, the &lt;code&gt;remove&lt;/code&gt; method may be implemented.
+If it isn&amp;rsquo;t, though, it will return false.&lt;/p&gt;
+
+&lt;p&gt;Since iterators may iterate on all kinds of data structures, they are
+generic, ie. &lt;code&gt;next&lt;/code&gt; will return a T.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s a demonstration, iterating through characters of the word &lt;code&gt;hellfire&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+HellfireIterator: class extends Iterator&amp;lt;Char&amp;gt; {
+    content := &amp;quot;hellfire&amp;quot;
+    index := 0
+
+    init: func
+
+    hasNext?: func -&amp;gt; Bool {
+      index &amp;lt; content size
+    }
+
+    next: func -&amp;gt; Char {
+      val := content[index]
+      index += 1
+      val
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For a foreach to work, one has to have an iterable type. Thankfully,
+an &lt;code&gt;Iterator&lt;/code&gt; itself extends &lt;code&gt;Iterable&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+for (letter in HellfireIterator new()) {
+  &amp;quot;%c&amp;quot; printfln(letter)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;each and eachUntil&lt;/h2&gt;
+
+&lt;p&gt;Apart from using foreach loops, one can use the each method:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+HellfireIterator new() each(|letter|
+  // do something with letter
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or the eachUntil, which will break if the passed closure returns false:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+HellfireIterator new() eachUntil(|letter|
+  if (letter == &#39;f&#39;) {
+    return false // just hell, please
+  }
+
+  // do something with letter
+  true
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;reduce&lt;/h2&gt;
+
+&lt;p&gt;An iterable can be reduced using the &lt;code&gt;reduce&lt;/code&gt; method, accepting a
+closure. It&amp;rsquo;ll get called on each pair of two elements, until there
+is only one element left.&lt;/p&gt;
+
+&lt;p&gt;Example with a list of ints:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+list := [1, 2, 3] as ArrayList&amp;lt;Int&amp;gt;
+sum := list reduce(|a, b| a + b)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;toList&lt;/h2&gt;
+
+&lt;p&gt;Any &lt;code&gt;Iterable&amp;lt;T&amp;gt;&lt;/code&gt; can be transformed to a &lt;code&gt;List&amp;lt;T&amp;gt;&lt;/code&gt; via the &lt;code&gt;toList&lt;/code&gt;
+method. Let&amp;rsquo;s try it on a string, which is iterable:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;ABC&amp;quot; toList() // gives [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;]
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>structs</title>
+      <link>http://oocmanual.cogneco.com/sdk/structs</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/structs</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The structs package&lt;/h1&gt;
+
+&lt;p&gt;A few frequently used data structures ship with the SDK.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;Lists&lt;/h1&gt;
+
+&lt;p&gt;&lt;code&gt;structs/List&lt;/code&gt; contains the generic interface for lists, which are ordered, indexed
+collections of elements of any type &lt;code&gt;T&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+list: List&amp;lt;String&amp;gt; = // something
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Elements can be added to or removed from anywhere in the list&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+list add(&amp;quot;hi&amp;quot;) // append &amp;quot;hi&amp;quot; to the list
+list add(0, &amp;quot;hoe&amp;quot;) // prepend &amp;quot;ho&amp;quot; to the list
+list remove(&amp;quot;hi&amp;quot;) // remove the first element equal to &amp;quot;hi&amp;quot;
+list removeAt(0) // remove the first element
+
+list addAll(otherList) // append all elements from other list
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;They can also be retrieved from anywhere in the list:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+list get(24) == list[24] // get the 24th element
+list first() // get the first element
+list last() // get the last element
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The number of elements in a list is available as the &lt;code&gt;size&lt;/code&gt; property:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;There are %d elements in this list.&amp;quot; printfln(list size)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Going through each element is easy as well, either using a foreach:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+for (elem in list) {
+  elem println()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or by passing a closure:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+list each(|elem|
+  elem println()
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Removing all elements can be done via &lt;code&gt;clear&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+list clear()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;ArrayList&lt;/h2&gt;
+
+&lt;p&gt;An array list is backed by an array, which it grows or shrinks depending
+on how many elements are in there.&lt;/p&gt;
+
+&lt;p&gt;Removing or adding an element in the middle of an ArrayList is expensive, as
+it shifts all elements after it.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+// constructed through successive add() calls:
+a1 := ArrayList&amp;lt;Int&amp;gt; new()
+a1 add(1); a1 add(2); a2 add(3)
+
+// constructed from an array literal
+a1 := [1, 2, 3] as ArrayList&amp;lt;Int&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;An ArrayList can be easily converted to an array:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+printArray(list toArray())
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;LinkedList&lt;/h2&gt;
+
+&lt;p&gt;A &lt;code&gt;LinkedList&lt;/code&gt; is a doubly linked list, ie. each element points to the
+element after it and the element before it.&lt;/p&gt;
+
+&lt;p&gt;Unlike the ArrayList, removing or adding an element in the middle of a linked list
+is inexpensive.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_4&#34;&gt;Maps&lt;/h1&gt;
+
+&lt;p&gt;Maps are associative objects, ie. they associate keys to values.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;HashMap&lt;/h2&gt;
+
+&lt;p&gt;The most oftenly used map collection is &lt;code&gt;structs/HashMap&lt;/code&gt;. It can only associate
+a given key to one value. E.g. there cannot be duplicate keys.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+map := HashMap&amp;lt;String, Int&amp;gt; new()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Key-&amp;gt;value pairs are added to a HashMap using &lt;code&gt;put&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+map put(&amp;quot;one&amp;quot;, 1)
+map put(&amp;quot;two&amp;quot;, 2)
+map put(&amp;quot;three&amp;quot;, 3)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;..and retrieved using &lt;code&gt;get&lt;/code&gt;. Key presence is tested with &lt;code&gt;containsKey?&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+map get(&amp;quot;two&amp;quot;) == 2 // true
+map containsKey?(&amp;quot;two&amp;quot;) // true
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The whole point of a HashMap is that checking for presence or finding the
+value corresponding to a key is faster than storing values in a list and
+iterating through it entirely every time.&lt;/p&gt;
+
+&lt;p&gt;To remove pairs, one has to specify the key:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+map remove(&amp;quot;two&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A HashMap can be iterated through:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+map each(|key, value|
+  &amp;quot;%s =&amp;gt; %s&amp;quot; printfln(key, value)
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It&amp;rsquo;s possible to get a list of all keys contained in a map:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+map getKeys()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note that in a HashMap, iteration order is not guaranteed to be equivalent to
+insertion order - due to the hashing done, keys might get reordered for efficiency.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;MultiMap&lt;/h2&gt;
+
+&lt;p&gt;MultiMap is a HashMap variant that can contain multiple values for a given key.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;OrderedMultiMap&lt;/h2&gt;
+
+&lt;p&gt;OrderedMultiMap is a MultiMap variant that will maintain the order in which keys
+were inserted, for iteration.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_8&#34;&gt;Bag variants&lt;/h1&gt;
+
+&lt;p&gt;In the structures presenting above, all elements must have the same type in a given
+collection. Bags are different: each element can be a different type.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_9&#34;&gt;Cell&lt;/h2&gt;
+
+&lt;p&gt;Actually defined in &lt;code&gt;lang/types&lt;/code&gt;, Cell can contain anything:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+intCell := Cell new(42)
+stringCell := Cell new(&amp;quot;turtle&amp;quot;)
+// and so on
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Unwrapping a cell can be done via the indexing operator &lt;code&gt;[]&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+number := cell[Int]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note that unwrapping a cell with an incompatible type will throw an error.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_10&#34;&gt;Bag&lt;/h2&gt;
+
+&lt;p&gt;Technically, a Bag can be seen as a list of cells, with convenience methods to
+deal directly with the values contained inside the cells.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+bag := Bag new()
+bag add(93) // add an Int
+bag add(&amp;quot;seaside&amp;quot;) // add a String
+bag add(bag) // add itself! the fun never ends.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To retrieve elements from a bag, one has to specify the type:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+number := bag get(0, Int)
+title := bag get(1, String)
+// and so on
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_11&#34;&gt;HashBag&lt;/h2&gt;
+
+&lt;p&gt;A HashBag maps string values to any type of value.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+hash := HashBag new()
+hash put(&amp;quot;number&amp;quot;, 93)
+hash put(&amp;quot;title&amp;quot;, &amp;quot;seaside&amp;quot;)
+hash put(&amp;quot;ourselves&amp;quot;, hash)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To retrieve elements from a &lt;code&gt;HashBag&lt;/code&gt;, one has to specify both the string key
+and the type:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+number := hash get(&amp;quot;number&amp;quot;, Int)
+title := hash get(&amp;quot;title&amp;quot;, String)
 // etc.
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Pointer arithmetic works:&lt;/p&gt;
+&lt;p&gt;HashBags are particularly useful to represent a tree-like document, that was originally
+encoded as JSON or YAML, for example.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;#!ooc
-addressOfSecondDouble := doubles + 1
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The &lt;code&gt;getPath&lt;/code&gt; method allows one to retrieve an element of a tree of &lt;code&gt;HashBag&lt;/code&gt;s and &lt;code&gt;Bag&lt;/code&gt;s.&lt;/p&gt;
 
-&lt;p&gt;Then again, why not write it the explicit way:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-addressOfSecondDouble := doubles[1]&amp;amp;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Note that &lt;code&gt;gc_malloc&lt;/code&gt; returns zeroed memory (even when the GC is disabled),
-just like the C function &lt;code&gt;calloc&lt;/code&gt; does. While a small performance hit, a
-little additional safety can&amp;rsquo;t hurt.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Allocating in bulks&lt;/h2&gt;
-
-&lt;p&gt;&lt;code&gt;calloc&lt;/code&gt; is typically used in C to get zeroed memory (e.g. all null bytes).
-This is unnecessary in ooc, since &lt;code&gt;gc_malloc&lt;/code&gt; returns zeroed memory anyway.&lt;/p&gt;
-
-&lt;p&gt;In the rare cases where you do mean to allocate &lt;code&gt;num&lt;/code&gt; members of size &lt;code&gt;size&lt;/code&gt;,
-use &lt;code&gt;gc_calloc&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-members := gc_calloc(num, size)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Re-allocating memory&lt;/h2&gt;
-
-&lt;p&gt;Didn&amp;rsquo;t get enough the first time around? Misjudged your budget needs?&lt;/p&gt;
-
-&lt;p&gt;Fear not, &lt;code&gt;gc_realloc&lt;/code&gt; is here:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-// get ourselves 4 bytes
-block := gc_malloc(4)
-
-// woops, make that 8
-block = gc_realloc(block, 8)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Duplicating memory&lt;/h2&gt;
-
-&lt;p&gt;In our family of memory-related functions, &lt;code&gt;gc_strdup&lt;/code&gt;, nostalgically
-named as if it was only used with strings, is here. It&amp;rsquo;ll make a copy of
-a block of memory so that the original may be disposed of.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-someCallback: func (word: CString) {
-  // CString is a pointer to a memory block that will get
-  // overriden sometimes after this function returns - hence,
-  // we want to make a copy so that the data we got doesn&#39;t
-  // get tampered with.
-  storeString(String new(gc_strdup(word)))
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The block of code above shows the typical use case, anyway.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Freeing memory&lt;/h2&gt;
-
-&lt;p&gt;Technically, since we are using a garbage collector, you don&amp;rsquo;t need to
-free explicitly. Should you feel the need to do so, however, &lt;code&gt;gc_free&lt;/code&gt; is
-here to do the job:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-// you know what, I&#39;m good for now, thanks.
-gc_free(block)
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>env</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/env</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/os/env</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/Env module&lt;/h1&gt;
-
-&lt;p&gt;The &lt;code&gt;Env&lt;/code&gt; module allows to get and set environment variables.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import os/Env
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Getting an environment variable:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-path := Env get(&amp;quot;PATH&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;get&lt;/code&gt; will return &lt;code&gt;null&lt;/code&gt; if the given environment variable is not set.&lt;/p&gt;
-
-&lt;p&gt;Setting an environment variable:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Env set(&amp;quot;CFLAGS&amp;quot;, &amp;quot;-Os&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Environment variables can be unset as well:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-Env unset(&amp;quot;PKG_CONFIG_PATH&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>text</title>
-      <link>http://oocmanual.cogneco.com/sdk/text</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/text</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The text package&lt;/h1&gt;
-
-&lt;p&gt;This package contains various helper classes to work with text
-and JSON.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;Escape sequences&lt;/h1&gt;
-
-&lt;p&gt;The module &lt;code&gt;text/EscapeSequence&lt;/code&gt; contains a class &lt;code&gt;EscapeSequence&lt;/code&gt; which defines
-some methods to work with backslash escape sequences. In the real world, you probably
-just need the two following methods:&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;escape&lt;/code&gt; takes a string and converts all special characters to escape sequences.
-In this context, special characters are:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;non-printable characters&lt;/li&gt;
-&lt;li&gt;single and double quotes&lt;/li&gt;
-&lt;li&gt;backslashes&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Use it like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-escaped := EscapeSequence escape(&amp;quot;This is\na &#39;String&#39;&amp;quot;)
-// now, `escaped` looks like this:
-escaped == &amp;quot;This is \\n a \\&#39;String\\&#39;&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;But that is only one half of the truth: You can additionally pass a
-string of all characters that should not be escaped as the
-second argument:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-escaped := EscapeSequence escape(&amp;quot;This is\na &#39;String&#39;&amp;quot;, &amp;quot;&#39;\n&amp;quot;)
-// The method did not escape anything now.
-escaped == &amp;quot;This is\na &#39;String&#39;&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;unescape&lt;/code&gt; is useful if you have a string containing escape sequences
-and you need a string with these sequences converted to their real character
-counterparts. This method supports one-character escape sequences like
-&amp;ldquo;\n&amp;rdquo;, &amp;ldquo;\r&amp;rdquo; or &amp;ldquo;\t&amp;rdquo;, but also hexadecimal sequences like &amp;ldquo;\x34&amp;rdquo;.
-Usage is easy:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;\\x27\\163up\\t\\x62ro\\n\\x3f&amp;quot; println()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;which will print&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-&#39;sup    bro
-?
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_2&#34;&gt;StringTokenizer&lt;/h1&gt;
-
-&lt;p&gt;Sometimes, one needs to split a string at a special character and turn
-it into an array. In ooc, the &lt;code&gt;text/StringTokenizer&lt;/code&gt; module adds
-every desirable variation of the good old &lt;code&gt;split&lt;/code&gt; method to &lt;code&gt;Buffer&lt;/code&gt; and &lt;code&gt;String&lt;/code&gt;,
-each returning an &lt;code&gt;ArrayList&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import text/StringTokenizer
-import structs/ArrayList
-
-// split at a specific character
-&amp;quot;A|simple and stupid|example&amp;quot; split(&#39;|&#39;)
-// This creates an ArrayList:
-//  [&amp;quot;A&amp;quot;, &amp;quot;simple and stupid&amp;quot;, &amp;quot;example&amp;quot;]
-
-// split until a specific number of tokens is reached.
-// This will produce an ArrayList like
-//    [&amp;quot;A&amp;quot;, &amp;quot;simple and stupid|example&amp;quot;]
-&amp;quot;A|simple and stupid|example&amp;quot; split(&#39;|&#39;, 2)
-
-// There is also a function to split at delimiters longer
-// than one char:
-&amp;quot;:-)A case :-)of intimidating:-)smiley abuse :-)&amp;quot; split(&amp;quot;:-&amp;quot;)
-// ... produces
-//  [&amp;quot;&amp;quot;, &amp;quot;A case &amp;quot;, &amp;quot;of intimidating&amp;quot;, &amp;quot;smiley abuse &amp;quot;, &amp;quot;&amp;quot;]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_3&#34;&gt;StringTemplate&lt;/h1&gt;
-
-&lt;p&gt;The &lt;code&gt;io/StringTemplate&lt;/code&gt; module adds a lightweight &lt;code&gt;formatTemplate&lt;/code&gt; string interpolation
-function to strings, which can be used in cases where &lt;code&gt;format&lt;/code&gt; is not enough. This function
-uses a hashmap to access items by value:&lt;/p&gt;
-
-&lt;p&gt;{{=&amp;lt;% %&amp;gt;=}}&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import text/StringTemplate
-import structs/HashMap
-
-values := HashMap&amp;lt;String, String&amp;gt; new()
-values put(&amp;quot;day&amp;quot;, &amp;quot;Saturday&amp;quot;) \
-      .put(&amp;quot;weather&amp;quot;, &amp;quot;cloudy&amp;quot;)
-
-&amp;quot;Hi! Today&#39;s {{day}}, and it is a pretty {{  weather   }} {{ day }}!&amp;quot; formatTemplate(values) println()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&amp;lt;%={{ }}=%&amp;gt;&lt;/p&gt;
-
-&lt;p&gt;This will print:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Hi! Today&#39;s Saturday, and it is a pretty cloudy Saturday!
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;As you can see, you can access the values by their keys, order isn&amp;rsquo;t important
-and you can interpolate one value multiple times.&lt;br /&gt;
-However, this is still pretty basic, since it does not support filters or control
-structures, but this is often enough.&lt;/p&gt;
-
-&lt;p&gt;In case a key is referenced that does not exist in the hashmap, it will be
-replaced by an empty string.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_4&#34;&gt;Shell-like Lexer&lt;/h1&gt;
-
-&lt;p&gt;The &lt;code&gt;text/Shlex&lt;/code&gt; module implements a basic lexer for strings containing
-quoted strings and backslash escape sequences. Basically, it splits an input
-string into an Array, using whitespace characters as delimiters. Single and double
-quotes can be used to include whitespace in the string items.&lt;/p&gt;
-
-&lt;p&gt;The public API can be accessed like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import text/Shlex
-import structs/ArrayList
-Shlex split(&amp;quot;&#39;This is a \\&#39;quoted\\&#39; string&#39;     and I \&amp;quot;like \\x69\\x74.\&amp;quot;&amp;quot;)
-// This produces the following ArrayList:
-// [&amp;quot;This is a &#39;quoted&#39; string&amp;quot;, &amp;quot;and&amp;quot;, &amp;quot;I&amp;quot;, &amp;quot;like it.&amp;quot;]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This can be useful to parse command-line arguments. However, be careful, since
-this module was not designed with security in mind.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_5&#34;&gt;Regular Expressions&lt;/h1&gt;
-
-&lt;p&gt;The SDK provides a simple cover for the &lt;a href=&#34;http://www.pcre.org/&#34;&gt;Perl Compatible Regular Expressions&lt;/a&gt;
-library. Its use is pretty straightforward. First, you need to compile a regular
-expression pattern, passing some options as a bitmask if you want to:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import text/Regexp
-
-pattern := Regexp compile(&amp;quot;on (?P&amp;lt;year&amp;gt;[0-9]{4})-?P&amp;lt;month&amp;gt;[0-9]{1,2})-(?P&amp;lt;day&amp;gt;[0-9]{1,2})&amp;quot;, RegexOptions CASELESS)
-pattern matches(&amp;quot;foo&amp;quot;) // this will return null, since the pattern could not be matched
-
-someDate := pattern matches(&amp;quot;On 2013-08-07&amp;quot;)
-// `someDate` is now a `Match` object. You can access groups by index or by name:
-someDate group(1)
-someDate group(&amp;quot;year&amp;quot;)
-// ... both return &amp;quot;2013&amp;quot;.
-// Group zero is the whole matched string:
-someDate group(0) // is &amp;quot;On 2013-08-07&amp;quot;
-
-// You can also iterate over the matches. This will include
-// group 0 (the whole string), though.
-for(group in someDate) {
-    // `group` is now a String.
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;For more information about the Perl regular expression syntax, take a look
-at the &lt;a href=&#34;http://perldoc.perl.org/perlre.html&#34;&gt;Perl documentation&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_6&#34;&gt;JSON&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;Basic reading and writing&lt;/h2&gt;
-
-&lt;p&gt;The &lt;code&gt;text/json/&lt;/code&gt; package contains a JSON parser and generator, written in ooc
-without external dependencies, which is able to deal with basic JSON. However,
-if you care about speed or compliance (especially when dealing with numbers),
-you should check out &lt;a href=&#34;https://github.com/nddrylliog/ooc-yaml&#34;&gt;ooc-yaml&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;The JSON classes operate on nested &lt;a href=&#34;/docs/sdk/structs/#bag-variants&#34;&gt;HashBags and Bags&lt;/a&gt;,
-so if you parse JSON, you get some (Hash)Bags, and if you want to generate JSON, you need
-to pass the data as (Hash)Bags.&lt;/p&gt;
-
-&lt;p&gt;To parse or generate JSON, you can just use the convenience &lt;code&gt;text/json&lt;/code&gt; module.
-Every function exists in two flavours: Normally, you need to pass the class
-of your expected base value. So, for example, if you want to parse JSON like that:&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s say the original JSON looked like this:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!json
-[&amp;quot;Hi&amp;quot;, &amp;quot;World&amp;quot;]
+{&amp;quot;elements&amp;quot;: {
+  &amp;quot;house&amp;quot;: {},
+  &amp;quot;car&amp;quot;: {
+    &amp;quot;wheels&amp;quot;: [
+      { &amp;quot;diameter&amp;quot;: 2 }
+    ]}}}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;You need to pass &lt;code&gt;Bag&lt;/code&gt; as the base value class. However, since most of the time
-you will parse JSON objects that will represented by a &lt;code&gt;HashBag&lt;/code&gt;, &lt;code&gt;HashBag&lt;/code&gt; is
-used by default if you do not pass a class explicitly.&lt;/p&gt;
-
-&lt;p&gt;Here are some examples:&lt;/p&gt;
+&lt;p&gt;One could use the following code to retrieve the diameter of the first wheel:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-import text/json
-import structs/HashBag
-
-// if you have a `Reader` (to read directly from a file, for example):
-import io/FileReader
-myObject := JSON parse(FileReader new(&amp;quot;package.json&amp;quot;))
-
-// ... and if your base value is not a JSON object:
-import structs/Bag
-myArray := JSON parse(FileReader new(&amp;quot;myarray.json&amp;quot;), Bag)
-
-// reading directly from strings is also supported:
-JSON parse(&amp;quot;{\&amp;quot;hello\&amp;quot;: \&amp;quot;world\&amp;quot;}&amp;quot;)
-JSON parse(&amp;quot;\&amp;quot;just a string\&amp;quot;&amp;quot;, String)
-
-// and to generate JSON, there is:
-myBag := HashBag new()
-myBag put(&amp;quot;integer&amp;quot;, 1234) \
-     .put(&amp;quot;string&amp;quot;, &amp;quot;Yes&amp;quot;)
-
-import io/FileWriter
-JSON generate(FileWriter new(&amp;quot;output.json&amp;quot;), myBag)
-
-myJSONString := JSON generateString(myBag)
+data: HashBag = // read from JSON
+diameter := data getPath(&amp;quot;elements/car/wheels#0/diameter&amp;quot;, Int)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;When dealing with the &lt;code&gt;HashBag&lt;/code&gt; class, you should take a look at its
-&lt;a href=&#34;/docs/sdk/structs/#hashbag&#34;&gt;getPath&lt;/a&gt; function, which will save you
-a lot of typing.&lt;/p&gt;
+&lt;h1 id=&#34;toc_12&#34;&gt;Stacks&lt;/h1&gt;
 
-&lt;h2 id=&#34;toc_8&#34;&gt;A JSON generation DSL&lt;/h2&gt;
-
-&lt;p&gt;If you find yourself generating a lot of JSON, you might find
-the &lt;code&gt;HashBag&lt;/code&gt;/&lt;code&gt;Bag&lt;/code&gt; objects create a lot of syntactic noise. For this
-reason, the SDK contains another convenience module implementing
-a small DSL for JSON generation.&lt;/p&gt;
+&lt;p&gt;Stacks are list-like data structures, except their primary purpose is to have elements
+pushed on top of them and popped from the top, in a LIFO (last-in, first-out) fashion.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!ooc
-// Let&#39;s import the module into a namespace, since `make`
-// is a bit ambiguous.
-import text/json/DSL into JSON
+stack := Stack&amp;lt;Int&amp;gt; new()
+stack push(1). push(2). push(3)
 
-data := JSON make(|j|
-    j object(
-        &amp;quot;some-key&amp;quot;,
-            &amp;quot;some-value&amp;quot;,
-        &amp;quot;here comes a list&amp;quot;,
-            j array(
-                1, 2, &amp;quot;three&amp;quot;, 4
-            ),
-        &amp;quot;and a nested object&amp;quot;,
-            j object(
-                &amp;quot;true&amp;quot;, true
-            )
-    )
-)
-data println()
+stack pop() == 3 // true
+stack pop() == 2 // also true
+stack pop() == 1 // left as an exercise to the reader
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;code&gt;make&lt;/code&gt; creates a helper object with &lt;code&gt;object&lt;/code&gt; and &lt;code&gt;array&lt;/code&gt; functions and passes
-it to the function you provide; using a closure is the most convenient way here.
-You can use &lt;code&gt;object&lt;/code&gt; to create JSON objects, passing as many key-value pairs
-as you want, and &lt;code&gt;array&lt;/code&gt; for JSON arrays.&lt;/p&gt;
+&lt;h2 id=&#34;toc_13&#34;&gt;Stick&lt;/h2&gt;
 
-&lt;p&gt;When it&amp;rsquo;s done, it returns the JSON data as a string.&lt;/p&gt;
+&lt;p&gt;The ill-named &lt;code&gt;Stick&lt;/code&gt; data structure can be thought of as a bag stack - e.g. a Stack
+that can contain any type of element.&lt;/p&gt;
+
+&lt;p&gt;Example usage:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+stick := Stick new(Float size + Object size)
+stick push(1.23)
+stick push(&amp;quot;Hi!&amp;quot;)
+
+stick pop(String) == &amp;quot;Hi!&amp;quot; // true
+stick pop(Float) == 1.23 // truthful
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;Stick&lt;/code&gt; is quite low-level - it doesn&amp;rsquo;t resize automatically, it does no
+bounds checking, no type checking at all. To be used when you absolutely,
+positively need to squeeze bytes together as close as possible and don&amp;rsquo;t care
+about safety at all.&lt;/p&gt;
 </description>
     </item>
     
     <item>
-      <title>native</title>
-      <link>http://oocmanual.cogneco.com/sdk/native</link>
+      <title>math</title>
+      <link>http://oocmanual.cogneco.com/sdk/math</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/sdk/native</guid>
+      <guid>http://oocmanual.cogneco.com/sdk/math</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;The native package&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;The math package&lt;/h1&gt;
 
-&lt;p&gt;The &lt;code&gt;native&lt;/code&gt; package of the SDK contains nothing that should be
-directly imported in a cross-platform application. It&amp;rsquo;s all platform-specific
-support code for other parts of the SDK.&lt;/p&gt;
+&lt;p&gt;The math package piggybacks on libc for basic mathematical operations with
+standard integer and floating point types.&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_1&#34;&gt;Windows&lt;/h2&gt;
+&lt;h1 id=&#34;toc_1&#34;&gt;math&lt;/h1&gt;
 
-&lt;p&gt;For example, the &lt;code&gt;native/win32&lt;/code&gt; package contains covers for types defined
-in the Win32 API, along with a few error handling functions and other
-things that are useful in the Win32 implementation of the SDK.&lt;/p&gt;
+&lt;p&gt;By simply importing &lt;code&gt;math&lt;/code&gt;, a most of the math functions from libc will get
+imported.&lt;/p&gt;
 
-&lt;p&gt;Note that there exists &lt;code&gt;native&lt;/code&gt; sub packages elsewhere in the SDK, for example
-in the &lt;code&gt;io&lt;/code&gt; or in the &lt;code&gt;os&lt;/code&gt; packages.&lt;/p&gt;
+&lt;p&gt;Often, math operations are available both in function form and in method form.
+The function form would be similar to C, e.g.:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+sin(2 * PI)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Whereas the method form would be more.. object-oriented-ish:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+2 pow(16)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Powers and roots&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;pow&lt;/code&gt; elevates the first argument to the power of the second:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+2 pow(8) // 256
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;exp&lt;/code&gt; returns the value of e (the base of natural logarithms) raised to the
+power of x:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+exp(2) // approx. 7.389
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;sqrt&lt;/code&gt; returns the square root of a number:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+144 sqrt() // 12
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;cbrt&lt;/code&gt; returns the cube root of a number:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+8 cbrt() // 2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Trigonometry&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;PI&lt;/code&gt; is a constant defined in math as:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+PI := 3.14159_26535_89793_23846_26433_83279
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;sin&lt;/code&gt;, &lt;code&gt;cos&lt;/code&gt;, and &lt;code&gt;tan&lt;/code&gt;, are available, both in method and function form:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+sin(2 * PI) // 0
+cos(- (3 / 4) * PI) // -0.707, etc.
+tan(PI / 4) // 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As are their arc equivalents, &lt;code&gt;asin&lt;/code&gt;, &lt;code&gt;acos&lt;/code&gt;, &lt;code&gt;atan&lt;/code&gt;, their hyperbolic
+variants, &lt;code&gt;sinh&lt;/code&gt;, &lt;code&gt;cosh&lt;/code&gt;, &lt;code&gt;tanh&lt;/code&gt;, and their arc hyperbolic tandems,
+&lt;code&gt;asinh&lt;/code&gt;, &lt;code&gt;acosh&lt;/code&gt;, &lt;code&gt;atanh&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;As for &lt;code&gt;atan2&lt;/code&gt;, straight from Wikipedia:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;In a variety of computer languages, the function atan2 is the arctangent
+function with two arguments. The purpose of using two arguments instead of
+one, is to gather information of the signs of the inputs in order to return
+the appropriate quadrant of the computed angle, which is not possible for
+the single-argument arctangent function.
+
+For any real number (e.g., floating point) arguments x and y not both equal
+to zero, atan2(y, x) is the angle in radians between the positive x-axis of
+a plane and the point given by the coordinates (x, y) on it. The angle is
+positive for counter-clockwise angles (upper half-plane, y &amp;gt; 0), and
+negative for clockwise angles (lower half-plane, y &amp;lt; 0).
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Source: &lt;a href=&#34;http://en.wikipedia.org/wiki/Atan2&#34;&gt;http://en.wikipedia.org/wiki/Atan2&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Logarithms&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;log&lt;/code&gt; function returns the natural logarithm of x:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+log(2) // about 0.69
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;log10&lt;/code&gt; function returns the base 10 logarithm of x:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+log10(4000) // about 3.6
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Rounding and truncation&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;round&lt;/code&gt;, &lt;code&gt;roundLong&lt;/code&gt; and &lt;code&gt;roundLLong&lt;/code&gt; are methods that will round to the
+nearest integer:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;3.14 round() // 3.00
+4.78 roundLong() // 5
+0.92 roundLLong() // 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;ceil&lt;/code&gt; and &lt;code&gt;floor&lt;/code&gt; methods will round to the nearest upper and lower
+integer, respectively:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;3.14 ceil() // 4.00
+8.92 floor() // 8.00
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;Floating-point remainder&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;mod&lt;/code&gt; function computes the floating-point remainder of dividing x by y.
+The return value is x - n * y, where n is the quotient of x / y, rounded toward
+zero to an integer.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;12 mod(5) // 2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;Various&lt;/h2&gt;
+
+&lt;p&gt;To get the absolute value of a number, use &lt;code&gt;abs()&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+(-4) abs() // 4
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;toc_8&#34;&gt;Random&lt;/h1&gt;
+
+&lt;p&gt;By importing &lt;code&gt;math/Random&lt;/code&gt;, one can generate random numbers.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Disclaimer: neither the libc random number generator or the fast prng
+exposed by math/Random are suitable for cryptographic usage. Find a library
+that does it right, this was not planned for it.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;When the module is loaded (probably at program start-up), the libc random
+number generator will be seeded with the current time in microseconds.&lt;/p&gt;
+
+&lt;p&gt;Then, various functions can be used to get random numbers.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_9&#34;&gt;libc generator&lt;/h2&gt;
+
+&lt;p&gt;To get any number between &lt;code&gt;INT_MIN&lt;/code&gt; and &lt;code&gt;INT_MAX&lt;/code&gt;, call:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+number := Random random()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To get any number within a range, use either:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+// gives a number between 0 (included) and 10 (included)
+number := Random randInt(0, 10)
+
+// gives a number between 0 (included) and 9 (included)
+number = Random randRange(0, 10)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Those both have variants to get a number in a range, excluding any
+number already contained in a list:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+// get 10 unique numbers between 0 and 100
+list := ArrayList&amp;lt;Int&amp;gt; new()
+
+10 times(||
+    list add(Random randInt(0, 100, list))
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To pick out a random element ouf ot a list, use &lt;code&gt;choice&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+// get one of those 10 unique numbers we just generated:
+num := Random choice(list)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note that &lt;code&gt;choice&lt;/code&gt; is generic, so it will work with lists of any
+type of element.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_10&#34;&gt;fast prng&lt;/h2&gt;
+
+&lt;p&gt;Most of the methods above have a &lt;code&gt;fast&lt;/code&gt; variant, working from a PRNG (&lt;a href=&#34;http://en.wikipedia.org/wiki/Pseudorandom_number_generator&#34;&gt;pseudorandom
+number generator&lt;/a&gt;) coded directly into the Random class.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+// all these are documented above, they work in a similar fashion
+Random fastRandom()
+
+Random fastRandInt(0, 10)
+Random fastRandRange(0, 10)
+
+Random fastRandInt(0, 10, list)
+Random fastRandRange(0, 10, list)
+
+Random fastChoice(list)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;fast&lt;/code&gt; variants are meant to be faster, as the name implies, but they&amp;rsquo;re even
+less guaranteed to have good random qualities - the numbers it generates might be
+less even / repeat more easily.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>lang</title>
+      <link>http://oocmanual.cogneco.com/sdk/lang</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/lang</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The lang package&lt;/h1&gt;
+
+&lt;p&gt;The lang package is considered built-in: it is imported by default in ooc
+modules. There is a reason for that, however - the SDK is distributed as
+an ooc library itself, and as such, it has a .use file that specifies which
+modules should be imported.&lt;/p&gt;
+
+&lt;p&gt;Some of the lang package is essential, like &lt;code&gt;Object&lt;/code&gt; and &lt;code&gt;Class&lt;/code&gt;, which
+means that the compiler, &lt;a href=&#34;../tools/rock/&#34;&gt;rock&lt;/a&gt;, will expect them to be present,
+have certain names, fields and methods. However, using a custom sdk is
+possible, where the implementation for these can be swapped to something
+lighter, for example.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;types&#34;&gt;Types&lt;/a&gt; section describes how Object,
+ Class, and other types such as Void, Pointer, Bool, None,
+ Cell are defined. It also discusses variable arguments.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;string&#34;&gt;String&lt;/a&gt; section talks about string
+ handling, the mutable variant Buffer, and formatting&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;numbers&#34;&gt;Numbers&lt;/a&gt; section talks about number
+ types, either integers or floats, and the various functions available.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;iterators&#34;&gt;Iterators&lt;/a&gt; section discusses
+ how iterators are implemented, and what goes on behind a foreach.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;exceptions&#34;&gt;Exceptions&lt;/a&gt; section talks about
+ default properties of exceptions, and how to extend them.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;memory&#34;&gt;Memory&lt;/a&gt; section talks about memory
+ management, mostly just how to deal with blocks of memory rather
+ than more high-level data structures.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
 </description>
     </item>
     
