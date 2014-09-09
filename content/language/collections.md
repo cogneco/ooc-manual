@@ -75,6 +75,16 @@ The syntax is as follows:
         "%d" printfln(arr[i])
       }
     }
+    
+Multidimensional arrays can be declared and used like this:
+    
+    #!ooc
+    sixInts := Int[3][2] new()
+    for (i in 0..3) {
+      for (j in 0..2) {
+        sixInts[i][j] = i*2 + j
+      }
+    }
 
 # ArrayList
 
