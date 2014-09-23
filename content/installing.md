@@ -17,12 +17,12 @@ There you issue the following commands:
 
 {{% highlight bash %}}
 #!/bin/bash
-sudo apt-get -y -qq install curl make libgc-dev binutils-dev libiberty-dev
+sudo apt-get -y -qq install curl make libgc-dev binutils-dev libiberty-dev zlib1g-dev
 export PATH=$PATH:$PWD/rock/bin:$PWD/sam
 export OOC_LIBS=$PWD
-git clone --depth=1 git://github.com/cogneco/rock.git
+git clone --depth=1 -b master git://github.com/cogneco/rock.git
 git clone --depth=1 git://github.com/cogneco/sam.git
-(cd rock && make rescue && make && make extension)
+(cd rock && make rescue && make && cd extensions && make)
 (cd sam && rock -v)
 {{% /highlight %}}
 
