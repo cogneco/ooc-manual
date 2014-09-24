@@ -20,6 +20,42 @@
     </item>
     
     <item>
+      <title>Installing</title>
+      <link>http://oocmanual.cogneco.com/installing/</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/installing/</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Bootstrapping&lt;/h1&gt;
+
+&lt;p&gt;The OOC compiler Rock is not currently installed but rather bootstrapped from sources.&lt;/p&gt;
+
+&lt;p&gt;Start by creating a folder for all OOC projects and move to that folder.
+There you issue the following commands:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/bin/bash
+sudo apt-get -y -qq install curl make libgc-dev binutils-dev libiberty-dev zlib1g-dev
+export PATH=$PATH:$PWD/rock/bin:$PWD/sam
+export OOC_LIBS=$PWD
+git clone --depth=1 -b master git://github.com/cogneco/rock.git
+git clone --depth=1 git://github.com/cogneco/sam.git
+(cd rock &amp;amp;&amp;amp; make rescue &amp;amp;&amp;amp; make &amp;amp;&amp;amp; cd extensions &amp;amp;&amp;amp; make)
+(cd sam &amp;amp;&amp;amp; rock -v)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;Setting Environment Variables&lt;/h1&gt;
+
+&lt;p&gt;It is necessary to set the following environments variables for every terminal session used:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/bin/bash
+export PATH=$PATH:$PWD/rock/bin:$PWD/sam
+export OOC_LIBS=$PWD
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Manual</title>
       <link>http://oocmanual.cogneco.com/</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
@@ -643,742 +679,6 @@ for ((index, element) in list) {
     </item>
     
     <item>
-      <title>Covers vs Classes</title>
-      <link>http://oocmanual.cogneco.com/language/covers-vs-classes/</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/language/covers-vs-classes/</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;When to use covers and classes&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;Intro&lt;/h2&gt;
-
-&lt;p&gt;Whenever possible, use classes.&lt;/p&gt;
-
-&lt;p&gt;If you&amp;rsquo;re new to ooc, don&amp;rsquo;t use covers because you&amp;rsquo;ve heard they
-are &amp;ldquo;faster&amp;rdquo;. Covers are powerful. Great power comes with great responsibility.
-The sword cut both ways&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;By-reference, by-value&lt;/h2&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Classes&lt;/h2&gt;
-
-&lt;p&gt;Classes are by-references. Which means every object is a reference. Doing that:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Number: class {
-        value: Int
-        init: func (=value) {}
-    }
-
-    modifyRef: func (n: Number) {
-        n = Number new(-1)
-    }
-
-    modifyInside: func (n: Number) {
-        n value = -1
-    }
-
-    answer := Number new(42)
-    modifyRef(answer) // does nothing
-    modifyInside(answer)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;What happens in &amp;lsquo;modifyRef&amp;rsquo; is that we change the value of the parameter &amp;lsquo;n&amp;rsquo;.
-The code does not modify what &amp;lsquo;n&amp;rsquo; was a reference to in the first place.
-In the example above the variable &amp;lsquo;answer&amp;rsquo; is given as the argument and &amp;lsquo;modifyRef&amp;rsquo; has
-no effect at all on &amp;lsquo;answer&amp;rsquo;.&lt;/p&gt;
-
-&lt;p&gt;However, in &amp;lsquo;modifyInside&amp;rsquo;, we actually modify the content of what &amp;lsquo;n&amp;rsquo; refers to.
-Since &amp;lsquo;n&amp;rsquo; refers to &amp;lsquo;answer&amp;rsquo;, the code will modify its member &amp;lsquo;value&amp;rsquo; and set it to -1.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Covers&lt;/h2&gt;
-
-&lt;p&gt;Covers are trickier. There are two types of covers: primitive covers and compound covers&lt;/p&gt;
-
-&lt;p&gt;Primitive covers allow to us to add methods to an existing underlying type. For implementations
-of ooc on top of C this means you can do stuff like:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Int: cover from int
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This is actually the way all C types are used within ooc.&lt;/p&gt;
-
-&lt;p&gt;As a consequence, covers are by-value. Which means that&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    modify: func (i: Int) {
-        i = -1
-    }
-
-    answer := 42
-    modify(answer)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Doesn&amp;rsquo;t modify answer.&lt;/p&gt;
-
-&lt;p&gt;But compound covers (you can think of them as structs) are also by value,
-which means that:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Number: cover {
-        value: Int
-    }
-
-    modifyInside: func (n: Number) {
-        n value = -1
-    }
-
-    answer: Number
-    answer value = 42
-
-    modifyInside(answer)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Won&amp;rsquo;t modify &amp;lsquo;answer&amp;rsquo; at all, but a &lt;em&gt;copy&lt;/em&gt; of it that has been
-passed to &amp;lsquo;modifyInside&amp;rsquo;.&lt;/p&gt;
-
-&lt;p&gt;As an interesting side effect, a &amp;lsquo;clone&amp;rsquo; method is futile for covers.&lt;/p&gt;
-
-&lt;p&gt;It also means that this won&amp;rsquo;t work:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Number: cover {
-        value: Int
-        init: func (=value) {}
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Because init will be working on a &lt;em&gt;copy&lt;/em&gt; of the object, thus leaving
-the original object unmodified. That&amp;rsquo;s why func@ exists, ie.:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Number: cover {
-        value: Int
-        init: func@ (=value) {}
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Where &amp;lsquo;this&amp;rsquo; will be passed by reference. Same goes for any cover method
-that modifies its content.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Heap allocation, stack allocation&lt;/h2&gt;
-
-&lt;p&gt;When you do&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    NumberClass: class {}
-    n := NumberClass new()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;n may be allocated on the heap or on the stack, however the compiler sees fit.&lt;/p&gt;
-
-&lt;p&gt;However, with:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    NumberCover: cover {}
-    n: NumberCover
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;n is allocated on the stack.&lt;/p&gt;
-
-&lt;p&gt;Choosing whether to allocate an object on the stack or on the heap is a
-non-trivial decision. In C++ for example, it is the role of the programmer
-to decide whether to allocate on the stack or on the heap.&lt;/p&gt;
-
-&lt;p&gt;In ooc, it&amp;rsquo;s the role of the compiler. Until the language is properly
-standardized and annotations are added for extern functions to allow
-escape analysis, the compiler may choose to only allocate on the heap.&lt;/p&gt;
-
-&lt;p&gt;Allocating on the stack is much faster (since it only involves moving
-the stack pointer), and the stack is always hot, the memory you get when
-allocating is much more likely to be in cache than any far heap allocated
-memory.&lt;/p&gt;
-
-&lt;p&gt;So why don&amp;rsquo;t we always allocate on the stack? Why do we even bother about
-heap allocation, which involves all kinds of housekeeping to know which
-memory blocks are reserved and which are free?&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;Why stack allocation isn&amp;rsquo;t a silver bullet&lt;/h2&gt;
-
-&lt;p&gt;A typical stack size for C programs on desktop OSes is between 1MB and 2MB.
-Therefore, if you need to allocate big objects, you may run out of stack space.&lt;/p&gt;
-
-&lt;p&gt;Running out of stack space is really something to be avoided. It&amp;rsquo;s a lot
-harder to debug than heap allocation failures. When heap allocation fails,
-you usually get back a null pointer, and tools (GDB, Valgrind) help figuring
-out the cause.&lt;/p&gt;
-
-&lt;p&gt;However, when you run out of stack space, the program usually crashes violently
-with very little information about the situation that lead to the crash.
-Even worse, it could corrupt data without crashing.&lt;/p&gt;
-
-&lt;p&gt;What&amp;rsquo;s more, often, when a program crashes because of a stack allocation failure,
-the call stack is overwritten with random data, making it impossible to trace back
-the origin of the problem.&lt;/p&gt;
-
-&lt;p&gt;To add insult to injury, as far as I know, there is no reliable and portable way
-to know how much free memory is left on the stack.&lt;/p&gt;
-
-&lt;p&gt;For all those reasons, stack allocation is sometimes entirely avoided,
-because it&amp;rsquo;s tricky to deal with manually.&lt;/p&gt;
-
-&lt;p&gt;The following IBM DeveloperWorks article goes more in-depth into the issue:
-&lt;a href=&#34;http://www.ibm.com/developerworks/java/library/j-jtp09275.html&#34;&gt;http://www.ibm.com/developerworks/java/library/j-jtp09275.html&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;Stack and scope&lt;/h2&gt;
-
-&lt;p&gt;But wait, there&amp;rsquo;s more! (assuming you&amp;rsquo;re still reading at that point)&lt;/p&gt;
-
-&lt;p&gt;Stack-allocated variables are deallocated when they go out of scope.&lt;/p&gt;
-
-&lt;p&gt;What does that mean? It means that this code is wrong.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    getAnswer: func -&amp;gt; Int* {
-        // answer is allocated on the stack
-        answer := 42
-        // we&#39;re returning the address of a local variable
-        // this is WRONG, don&#39;t do it.
-        answer&amp;amp;
-        // when the function returns, &#39;answer&#39; goes out of scope
-        // and is deallocated
-    }
-
-    answerPtr := getAnswer()
-    &amp;quot;answer = %d&amp;quot; printfln(answerPtr@)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Whereas this one will work perfectly:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    getAnswer: func -&amp;gt; Int* {
-        // answer is allocated on the heap
-        answer := gc_malloc(Int size)
-        answer@ = 42
-        // we&#39;re returning the address of a heap-allocated variable
-        // no problem with that. the memory will be freed on a garbage
-        // collector sweep phase, when it will have detected that
-        // it&#39;s unused
-        answer
-    }
-
-    answerPtr := getAnswer()
-    &amp;quot;answer = %d&amp;quot; printfln(answerPtr@)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;However, the first version (returning the address of a local variable)
-might work sometimes: don&amp;rsquo;t be surprised. If the memory address (on the stack
-or in a register) where the local variable was stored isn&amp;rsquo;t overwritten
-between the return from the function and the time when it&amp;rsquo;s used, it might
-still contain the original value. But, again - it&amp;rsquo;s wrong and unreliable.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;When to use stack allocation&lt;/h2&gt;
-
-&lt;p&gt;For small objects for which you need by-value behavior and of which you use
-gazillions in your application.&lt;/p&gt;
-
-&lt;p&gt;Each project is a unique situation - as a rule, I&amp;rsquo;d always advise to begin
-with a class, and turn it into a cover later if the situation requires it.&lt;/p&gt;
-
-&lt;p&gt;However, keep in mind that allocation is often not the first place to look
-if you want to optimize your application. Remember to always use a profiler
-(I find that valgrind + KCachegrind work particularly well with ooc code)
-to figure out where the hotspots are in your code.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Introduction</title>
-      <link>http://oocmanual.cogneco.com/introduction/</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/introduction/</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Once Upon A Time&amp;hellip;&lt;/h1&gt;
-
-&lt;p&gt;Once upon a time, there was a sysadmin who wanted to make sure her website
-was always online. However, she figured that she was pretty good at compiling,
-installing, and configuring software, but that her programming skills were a bit
-rusty.&lt;/p&gt;
-
-&lt;p&gt;Oh, sure, she remembered her days at university where she learned a bit of Java,
-and C++, and the cool mind-bending exercises in LISP, but today she felt like trying
-something new. She followed the &lt;a href=&#34;/install/&#34;&gt;installation instructions&lt;/a&gt; carefully, and then
-jumped in without waiting.&lt;/p&gt;
-
-&lt;p&gt;After fishing online for information, she decided to start with the following
-program:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-&amp;quot;The website may or may not be online.&amp;quot; println()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Saving it as &lt;code&gt;watchcorgi.ooc&lt;/code&gt; and running &lt;code&gt;rock -v watchcorgi&lt;/code&gt; sure produced a lot
-of output. And - as a token of its appreciation, the compiler even left an executable
-on the hard drive. What a promising relationship, she thought.&lt;/p&gt;
-
-&lt;p&gt;However, not one to be overly chatty, she decided that instead of having to type
-&lt;code&gt;rock watchcorgi&lt;/code&gt; every time she wanted to compile her new program, she was going
-to write a &lt;a href=&#34;/docs/tools/rock/usefiles&#34;&gt;usefile&lt;/a&gt; for it, and put them both together in a directory.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!yaml
-Name: Watch Corgi
-Description: Tells on the bad websites that go down
-Version: 0.1.0
-SourcePath: source
-Main: watchcorgi
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Saving it as &lt;code&gt;watchcorgi.use&lt;/code&gt;, she realized that, if she wanted her usefile to be
-valid, she needed to move her ooc module into &lt;code&gt;source/watchcorgi.ooc&lt;/code&gt;. So then, her
-folder hierarchy now looked like:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;.
-├── source
-│   └── watchcorgi.ooc
-└── watchcorgi.use
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now, all she had to do was type &lt;code&gt;rock&lt;/code&gt; to have her program compiled. If she felt
-like reading a bit, all she had to do was &lt;code&gt;rock -v&lt;/code&gt; - it reminded her of the countless
-hours spent installing packages on Gentoo.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;The Great Illusion&lt;/h1&gt;
-
-&lt;p&gt;However, that program was not quite as useful as she had hoped so far. While it was
-technically correct — the best kind of correct — it did not, in fact, bring any new
-information to the table.&lt;/p&gt;
-
-&lt;p&gt;That was not meant to last, though, as she quickly devised a devious scheme. Before
-the era of watchcorgi, she was using &lt;code&gt;curl&lt;/code&gt;, a command-line utility, to check if the
-website was still online. It looked a little something like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-curl -I http://example.org/
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;(Of course, that wasn&amp;rsquo;t her website&amp;rsquo;s actual URL, which we have sneakingly substituted
-with something a tad more common, in order to protect our heroine&amp;rsquo;s privacy.)&lt;/p&gt;
-
-&lt;p&gt;Running that simple command was enough to let her know, with a simple look, whether
-the website was up and running or down in the ground — in which case prompt maintenance
-was needed as soon as humanly possible.&lt;/p&gt;
-
-&lt;p&gt;She decided that if she could run that command herself, there was no reason why her
-program couldn&amp;rsquo;t do so as well. After a second documentation hunt, she quickly jotted
-down a few more lines, replacing the contents of &lt;code&gt;source/watchcorgi.ooc&lt;/code&gt; with this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import os/Process
-
-exitCode := Process new([&amp;quot;curl&amp;quot;, &amp;quot;-I&amp;quot;, &amp;quot;http://example.org/&amp;quot;]) execute()
-&amp;quot;Sir Curl exited with: %d&amp;quot; printfln(exitCode)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And sure enough, after a quick recompilation, she saw the expected result: &lt;code&gt;Sir Curl
-exited with: 0&lt;/code&gt;. Curious, she disconnected from the internet, and tried launching
-&lt;code&gt;./watchcorgi&lt;/code&gt; again. This time, she saw: &lt;code&gt;Sir Curl exited with: 6&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;&amp;ldquo;It&amp;rsquo;s just like it always is with Unix-like tools&amp;rdquo; she thought. &amp;ldquo;An exit code of 0
-is a good sign, anything else&amp;hellip; not so much. It sure is convenient to be able
-to import another ooc module for almost everything. Apparently, this &lt;code&gt;Process&lt;/code&gt; class
-takes an array with the command arguments. And this &lt;code&gt;execute&lt;/code&gt; method returns the
-exit code. Neato!&amp;rdquo; And so it was.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_2&#34;&gt;Form Follows Function&lt;/h1&gt;
-
-&lt;p&gt;She was starting to be happy with her program. For all intents and purposes, was doing
-its job, and it was doing its job well. However, she could not deny that her program
-could have put a little more effort in the presentation. Just because a program does
-not have a will of its own, doesn&amp;rsquo;t mean it&amp;rsquo;s okay for it to be rude.&lt;/p&gt;
-
-&lt;p&gt;&amp;ldquo;Time to get to work&amp;rdquo;, she said out loud, forgetting that it was past 2 in the morning,
-and that nobody could probably hear her - and even if they could, there was no
-certainty that they would agree. While she thought about that, her fingers had kept
-tapping on the keyboard. Her program now looked a little bit like that:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import os/[Process, Terminal]
-
-exitCode := Process new([&amp;quot;curl&amp;quot;, &amp;quot;-I&amp;quot;, &amp;quot;http://example.org/&amp;quot;]) execute()
-
-match (exitCode) {
-  case 0 =&amp;gt;
-    &amp;quot;Everything is fine.&amp;quot; println()
-
-  case =&amp;gt;
-    Terminal setFgColor(Color red)
-    &amp;quot;[ERROR] The website is down!&amp;quot; println()
-    Terminal reset()
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;It didn&amp;rsquo;t blink, and there were no 3D effects: disappointing maybe for a sci-fi
-fan like her little brother, but having alerts in red, and a human-readable message
-was fine enough for her.&lt;/p&gt;
-
-&lt;p&gt;While carefully proofreading her code to check if she hadn&amp;rsquo;t missed anything, she
-thought about the syntax of the &lt;code&gt;match&lt;/code&gt; construct. &amp;ldquo;It&amp;rsquo;s pretty smart, in fact.
-Cases are tested from top to bottom - the first that matches, wins. And a case with
-no value simply matches everything&amp;rdquo;. It just made sense.&lt;/p&gt;
-
-&lt;p&gt;She was also particularly happy with the way she was able to import both &lt;code&gt;os/Process&lt;/code&gt;
-and &lt;code&gt;os/Terminal&lt;/code&gt; from the same line. Sure, she could have written two different
-&lt;code&gt;import&lt;/code&gt; directives, but she had been promised a concise programming language and it
-was about time it delivered.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_3&#34;&gt;Corgi Ever Watching&lt;/h1&gt;
-
-&lt;p&gt;Now that the program was polite, our programmer felt good enough to take a
-small break. As she was looking out the window, waiting for her 3rd cup of
-nocturnal coffee to brew, it came to her: &amp;ldquo;Wait a minute&amp;hellip; what good is my
-program if I have to keep running it manually?&amp;rdquo;&lt;/p&gt;
-
-&lt;p&gt;A quick sip out of her coffee cup finished to clear her mind completely.
-&amp;ldquo;I am going to need some sort of loop. And I think watchcorgi should shut
-up if everything is fine, and only complain if something goes wrong.&amp;rdquo;&lt;/p&gt;
-
-&lt;p&gt;As she looked at her timer, waiting for it to run out and allow her to go back
-to hacking (self-discipline is important, after all), she came to a second
-realization: that there were two main tasks in her program - the checking, and
-the notifying. Surely there must be some way to write that in a more modular
-way?&lt;/p&gt;
-
-&lt;p&gt;She decided to go for broke, and split her program into three different ooc
-modules. She started with &lt;code&gt;source/watchcorgi/checker.ooc&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import os/[Process]
-
-Checker: class {
-  url: String
-
-  init: func (=url)
-
-  /**
-   * @return true if the url is reachable, false otherwise
-   */
-  check: func -&amp;gt; Bool {
-    0 == Process new([&amp;quot;curl&amp;quot;, &amp;quot;-I&amp;quot;, url]) execute()
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then went on with &lt;code&gt;source/watchcorgi/notifier.ooc&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import os/[Terminal]
-
-Notifier: class {
-  quiet: Bool
-
-  init: func
-
-  notify: func (online: Bool, url: String) {
-    if (online) {
-      if (quiet) return
-
-      Terminal setFgColor(Color green)
-      &amp;quot;[ OK  ] %s is online.&amp;quot; printfln(url)
-      Terminal reset()
-    } else {
-      Terminal setFgColor(Color red)
-      &amp;quot;[ERROR] %s is not reachable! You may panic now.&amp;quot; printfln(url)
-      Terminal reset()
-    }
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And finally, thought it was better to rewrite &lt;code&gt;source/watchcorgi.ooc&lt;/code&gt; from
-scratch using those new modules:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import watchcorgi/[checker, notifier]
-import os/Time
-
-notifier := Notifier new()
-notifier quiet = true // only bother me if something goes wrong
-checker := Checker new(&amp;quot;http://example.org/&amp;quot;)
-
-while (true) {
-  notifier notify(checker check(), checker url)
-  Time sleepSec(5)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;There. All good. Not only was her program now constantly vigilant, checking
-for potential problems every five seconds, she felt that the various components
-were just as flexible as needed, small enough, and that it made the main program
-file short and sweet.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_4&#34;&gt;The Littlest Things&lt;/h1&gt;
-
-&lt;p&gt;There was one area of the code she wasn&amp;rsquo;t entirely happy with - in the
-notifier, she was using the same pattern twice. First &lt;code&gt;Terminal setFgColor&lt;/code&gt;,
-then &lt;code&gt;String printfln&lt;/code&gt;, then &lt;code&gt;Terminal reset&lt;/code&gt;.  She decided to extract that
-pattern into a function instead, and added it to the end of the the &lt;code&gt;Notifier&lt;/code&gt;
-class definition:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-say: func (color: Color, message: String) {
-  Terminal setFgColor(color)
-  message println()
-  Terminal reset()
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;With that new neighbor, the notify function was happy to be reduced to:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-notify: (online: Bool, url: String) {
-  if (online) {
-    if (quiet) return
-    say(Color green, &amp;quot;[ OK  ] %s is online&amp;quot; format(url))
-  } else {
-    say(Color red, &amp;quot;[ERROR] %s is not reachable! You may panic now.&amp;quot; \
-      format(url))
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;While this was better, she wasn&amp;rsquo;t satisfied yet - calling &lt;code&gt;format&lt;/code&gt; like this
-(she thought of it as a version of &lt;code&gt;printfln&lt;/code&gt; that returned the formatted string
-instead of printing it) wasn&amp;rsquo;t particularly pretty.&lt;/p&gt;
-
-&lt;p&gt;Like with everything that bothered her, she decided to do something about it:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-say: func (color: Color, message: String, args: ...) {
-  Terminal setFgColor(color)
-  message printfln(args)
-  Terminal reset()
-}
-
-notify: func (online: Bool, url: String) {
-  if (online) {
-    if (quiet) return
-    say(Color green, &amp;quot;[ OK  ] %s is online&amp;quot;, url)
-  } else {
-    say(Color red, &amp;quot;[ERROR] %s is not reachable! You may panic now.&amp;quot;, url)
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;It was subtle, but for her, it made all the difference. Being able to relay
-any number of arguments like that? This language might actually be comfortable
-after all.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_5&#34;&gt;All Together Now&lt;/h1&gt;
-
-&lt;p&gt;&amp;ldquo;So, that was nice. For the life of me, I can&amp;rsquo;t think of a single thing my program
-is missing.&amp;rdquo; Her eyes closed gently, and she leaned back, as if overwhelmed by bliss.&lt;/p&gt;
-
-&lt;p&gt;Wait. Her eyes, suddenly inquisitive, were perfectly open now. &amp;ldquo;What if I want
-to monitor several websites? Then I would need a config file so that I could modify
-the list of websites to monitor&amp;hellip; and it would need to check them in parallel, so
-it doesn&amp;rsquo;t get stuck on any one of them.&amp;rdquo;&lt;/p&gt;
-
-&lt;p&gt;She decided she needed one more module: &lt;code&gt;source/watchcorgi/config.ooc&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import io/File
-import os/Env
-import structs/List
-import text/StringTokenizer
-
-DEFAULT_PATH := Env get(&amp;quot;HOME&amp;quot;) + &amp;quot;/.config/corgirc&amp;quot;
-
-Config: class {
-  websites: List&amp;lt;String&amp;gt;
-
-  init: func (path := DEFAULT_PATH) {
-    content := File new(path) read()
-    websites = content split(&#39;\n&#39;) \
-               map(|line| line trim(&amp;quot;\t &amp;quot;)) \
-               filter(|line| !line empty?())
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Armed with that new weapon, checking multiple websites in parallel was just a
-matter of making threads behave. Since she didn&amp;rsquo;t have much experience in the
-domain, and the documentation seemed a little bit obscure, she decided to ask
-for help in the &lt;a href=&#34;https://groups.google.com/group/ooc-lang&#34;&gt;ooc discussion group&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Almost immediately, a response sprung with numerous code examples she could use
-as inspiration for her own endeavor. And so she embarked courageously,
-rewriting &lt;code&gt;source/watchcorgi.ooc&lt;/code&gt; once again:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import watchcorgi/[config, checker, notifier]
-import os/Time
-import threading/Thread
-import structs/[ArrayList]
-
-threads := ArrayList&amp;lt;Thread&amp;gt; new()
-config := Config new()
-
-for (url in config websites) {
-  threads add(Thread new(||
-    guard := Guard new(url, 5)
-    guard run()
-  ))
-}
-
-// start all the threads
-for (thread in threads) {
-  thread start()
-}
-
-// wait for all threads to complete
-threads each(|thread| thread wait())
-
-Guard: class {
-    delay: Int
-    checker: Checker
-    notifier: Notifier
-
-    init: func (url: String, =delay) {
-      checker = Checker new(url)
-      notifier = Notifier new()
-      notifier quiet = true
-    }
-
-    run: func {
-      while (true) {
-        notifier notify(checker check(), checker url)
-        Time sleepSec(delay)
-      }
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;As she began to write down a list of websites to check in &lt;code&gt;~/.config/corgirc&lt;/code&gt;,
-she started to list the new things she had learned during that last refactoring:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;That classes can be used before they are defined - in order word, the order
-in which classes are defined does not matter!&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;That threads, while really old fashioned, were quite easy to use - all you
-had to do was create a new &lt;code&gt;Thread&lt;/code&gt; object and pass a function that takes
-zero arguments.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;That some functions are anonymous - and that they can be defined as an
-argument to a function call like this: &lt;code&gt;[1, 2, 3] reduce(|a, b| a + b)&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;That using a foreach, such as &lt;code&gt;for (element in iterable) { /* code */ }&lt;/code&gt; or
-using the each method, like so &lt;code&gt;iterable each(|element| /* code */ )&lt;/code&gt;, where
-pretty much equivalent.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&#34;toc_6&#34;&gt;When Features Creep&lt;/h1&gt;
-
-&lt;p&gt;As magnificent as the program was, she couldn&amp;rsquo;t shake an eerie feeling. It
-seemed so perfect, so concise, so damn practical - what could possibly go
-wrong?&lt;/p&gt;
-
-&lt;p&gt;&amp;ldquo;Oh, right!&amp;rdquo; she whispered. The program assumes that the &lt;code&gt;curl&lt;/code&gt; command-line
-utility is installed and in the &lt;code&gt;$PATH&lt;/code&gt;. While on most Linux distributions,
-that&amp;rsquo;s a safe bet, it might not be there on OSX. Or, god forbid, on Windows.&lt;/p&gt;
-
-&lt;p&gt;But it was almost 6AM, and rays of sunlight would soon come and disturb the
-oh so peaceful (yet eventful) night of coding. Obviously, she could not afford
-to write her own HTTP library.&lt;/p&gt;
-
-&lt;p&gt;Sure, in theory, a simple usage of &lt;code&gt;net/TCPSocket&lt;/code&gt; from the SDK, writing
-something like&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;HEAD / HTTP/1.0\r\n\r\n
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;..and seeing if you get a non-empty response, would suffice. But what about
-parsing empty, yet worrying responses, like an HTTP 404, or an HTTP 502? What
-about HTTP 1.1 and the Host header, essential when several websites are running
-on the same IP address? And most importantly, what about HTTPS, which runs on a
-different port, and what&amp;rsquo;s more, over SSL?&lt;/p&gt;
-
-&lt;p&gt;No, definitely, writing an HTTP library was not part of the plan. But maybe
-there was something she could use&amp;hellip; maybe curl existed also as a library. A
-quick search for &lt;code&gt;ooc curl&lt;/code&gt; revealed the existence of
-&lt;a href=&#34;https://github.com/nddrylliog/ooc-curl&#34;&gt;nddrylliog/ooc-curl&lt;/a&gt;. Jackpot!&lt;/p&gt;
-
-&lt;p&gt;A quick clone and.. wait. She knew better. Why not use &lt;a href=&#34;/docs/tools/sam/&#34;&gt;sam&lt;/a&gt; instead?
-A simple &lt;code&gt;sam clone curl&lt;/code&gt; would suffice. Or, better yet, she could add the
-dependency in the .use file, and run &lt;code&gt;sam get&lt;/code&gt; from the watchcorgi folder
-afterwards.&lt;/p&gt;
-
-&lt;p&gt;Her .use file now looked a little bit like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!yaml
-Name: Watch Corgi
-Description: Multi-threaded website monitoring system
-Version: 0.2.0
-
-SourcePath: source
-Main: watchcorgi
-Requires: curl
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And sure enough, after &lt;code&gt;sam get&lt;/code&gt;, she saw the &lt;code&gt;ooc-curl&lt;/code&gt; folder appear in her
-&lt;code&gt;$OOC_LIBS&lt;/code&gt; directory. It was time to rewrite &lt;code&gt;source/watchcorgi/checker.ooc&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-use curl
-import curl/Highlevel
-
-Checker: class {
-    url: String
-
-    init: func (=url)
-
-    /**
-     * @return true if the url is reachable, false otherwise
-     */
-    check: func -&amp;gt; Bool {
-      200 == (HTTPRequest new(url). perform(). getResponseCode())
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This piece of code was one of her favorites yet. She had used one of the
-features she had just learned about - call chaining. &amp;ldquo;In fact&amp;rdquo;, she would
-later explain to a colleague, &amp;ldquo;you can think of the dot as a comma - it
-separates several method calls, but they all happen on the same object,
-sequentially&amp;rdquo;.&lt;/p&gt;
-
-&lt;p&gt;Recompiling the program after this change was exciting. There was no
-configuration dialog to fill out. No complicated command-line option to add
-when compiling. As a matter of fact, the single line added to the use file was
-enough to make sam happy - and rock itself seemed pretty content with the &lt;code&gt;use
-curl&lt;/code&gt; directive now sitting at the top of the checker module.&lt;/p&gt;
-
-&lt;p&gt;A simple &lt;code&gt;rock -v&lt;/code&gt; did the trick. And there she had it. The perfect website
-monitoring system. At last. Oh, sure, part of her brain fully realized that
-the impression of perfectness would fade out over the days, but as far as
-discovering a new language goes, she thought this was a pretty good run.&lt;/p&gt;
-
-&lt;p&gt;There was just one thing left to do&amp;hellip;&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_7&#34;&gt;To Give Back&lt;/h1&gt;
-
-&lt;p&gt;At this point, she felt that watchcorgi it was worth it to publish her program
-somewhere. Of course, all along, she had been keeping track of it using
-&lt;a href=&#34;http://git-scm.org/&#34;&gt;git&lt;/a&gt;. In this case, she was using &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; as a host.&lt;/p&gt;
-
-&lt;p&gt;She decided to make it easy for other people who might want to use
-&lt;code&gt;watchcorgi&lt;/code&gt;, to get it. After a quick search, it quickly became evident that
-the process itself was trivial. She just had to send a pull request to the
-&lt;a href=&#34;https://github.com/nddrylliog/sam&#34;&gt;sam repository&lt;/a&gt; that added a formula for her new pet project.&lt;/p&gt;
-
-&lt;p&gt;So, after forking sam on GitHub, changing the origin of her sam repository,
-she opened a new file in &lt;code&gt;$OOC_LIBS/sam/library/watchcorgi.yml&lt;/code&gt;, and wrote:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!yaml
-Origin: https://github.com/example/watchcorgi.git
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And then, she &lt;a href=&#34;https://help.github.com/articles/creating-a-pull-request&#34;&gt;submitted the pull request&lt;/a&gt;. The sun was rising.
-It felt warm. I think - she thought - I just might like it here.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Covers</title>
       <link>http://oocmanual.cogneco.com/language/covers/</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
@@ -1639,6 +939,244 @@ ShutdownParam: extern enum {
   extern(SHUT_RDWR) readWrite
 }
 &lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Covers vs Classes</title>
+      <link>http://oocmanual.cogneco.com/language/covers-vs-classes/</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/language/covers-vs-classes/</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;When to use covers and classes&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;Whenever possible, use classes.&lt;/p&gt;
+
+&lt;p&gt;If you&amp;rsquo;re new to ooc, don&amp;rsquo;t use covers because you&amp;rsquo;ve heard they
+are &amp;ldquo;faster&amp;rdquo;. Covers are powerful. Great power comes with great responsibility.
+The sword cut both ways&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;By-reference, by-value&lt;/h2&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Classes&lt;/h2&gt;
+
+&lt;p&gt;Classes are by-references. Which means every object is a reference. Doing that:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Number: class {
+        value: Int
+        init: func (=value) {}
+    }
+
+    modifyRef: func (n: Number) {
+        n = Number new(-1)
+    }
+
+    modifyInside: func (n: Number) {
+        n value = -1
+    }
+
+    answer := Number new(42)
+    modifyRef(answer) // does nothing
+    modifyInside(answer)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;What happens in &amp;lsquo;modifyRef&amp;rsquo; is that we change the value of the parameter &amp;lsquo;n&amp;rsquo;.
+The code does not modify what &amp;lsquo;n&amp;rsquo; was a reference to in the first place.
+In the example above the variable &amp;lsquo;answer&amp;rsquo; is given as the argument and &amp;lsquo;modifyRef&amp;rsquo; has
+no effect at all on &amp;lsquo;answer&amp;rsquo;.&lt;/p&gt;
+
+&lt;p&gt;However, in &amp;lsquo;modifyInside&amp;rsquo;, we actually modify the content of what &amp;lsquo;n&amp;rsquo; refers to.
+Since &amp;lsquo;n&amp;rsquo; refers to &amp;lsquo;answer&amp;rsquo;, the code will modify its member &amp;lsquo;value&amp;rsquo; and set it to -1.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Covers&lt;/h2&gt;
+
+&lt;p&gt;Covers are trickier. There are two types of covers: primitive covers and compound covers&lt;/p&gt;
+
+&lt;p&gt;Primitive covers allow to us to add methods to an existing underlying type. For implementations
+of ooc on top of C this means you can do stuff like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Int: cover from int
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is actually the way all C types are used within ooc.&lt;/p&gt;
+
+&lt;p&gt;As a consequence, covers are by-value. Which means that&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    modify: func (i: Int) {
+        i = -1
+    }
+
+    answer := 42
+    modify(answer)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Doesn&amp;rsquo;t modify answer.&lt;/p&gt;
+
+&lt;p&gt;But compound covers (you can think of them as structs) are also by value,
+which means that:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Number: cover {
+        value: Int
+    }
+
+    modifyInside: func (n: Number) {
+        n value = -1
+    }
+
+    answer: Number
+    answer value = 42
+
+    modifyInside(answer)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Won&amp;rsquo;t modify &amp;lsquo;answer&amp;rsquo; at all, but a &lt;em&gt;copy&lt;/em&gt; of it that has been
+passed to &amp;lsquo;modifyInside&amp;rsquo;.&lt;/p&gt;
+
+&lt;p&gt;As an interesting side effect, a &amp;lsquo;clone&amp;rsquo; method is futile for covers.&lt;/p&gt;
+
+&lt;p&gt;It also means that this won&amp;rsquo;t work:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Number: cover {
+        value: Int
+        init: func (=value) {}
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Because init will be working on a &lt;em&gt;copy&lt;/em&gt; of the object, thus leaving
+the original object unmodified. That&amp;rsquo;s why func@ exists, ie.:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Number: cover {
+        value: Int
+        init: func@ (=value) {}
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Where &amp;lsquo;this&amp;rsquo; will be passed by reference. Same goes for any cover method
+that modifies its content.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Heap allocation, stack allocation&lt;/h2&gt;
+
+&lt;p&gt;When you do&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    NumberClass: class {}
+    n := NumberClass new()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;n may be allocated on the heap or on the stack, however the compiler sees fit.&lt;/p&gt;
+
+&lt;p&gt;However, with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    NumberCover: cover {}
+    n: NumberCover
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;n is allocated on the stack.&lt;/p&gt;
+
+&lt;p&gt;Choosing whether to allocate an object on the stack or on the heap is a
+non-trivial decision. In C++ for example, it is the role of the programmer
+to decide whether to allocate on the stack or on the heap.&lt;/p&gt;
+
+&lt;p&gt;In ooc, it&amp;rsquo;s the role of the compiler. Until the language is properly
+standardized and annotations are added for extern functions to allow
+escape analysis, the compiler may choose to only allocate on the heap.&lt;/p&gt;
+
+&lt;p&gt;Allocating on the stack is much faster (since it only involves moving
+the stack pointer), and the stack is always hot, the memory you get when
+allocating is much more likely to be in cache than any far heap allocated
+memory.&lt;/p&gt;
+
+&lt;p&gt;So why don&amp;rsquo;t we always allocate on the stack? Why do we even bother about
+heap allocation, which involves all kinds of housekeeping to know which
+memory blocks are reserved and which are free?&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;Why stack allocation isn&amp;rsquo;t a silver bullet&lt;/h2&gt;
+
+&lt;p&gt;A typical stack size for C programs on desktop OSes is between 1MB and 2MB.
+Therefore, if you need to allocate big objects, you may run out of stack space.&lt;/p&gt;
+
+&lt;p&gt;Running out of stack space is really something to be avoided. It&amp;rsquo;s a lot
+harder to debug than heap allocation failures. When heap allocation fails,
+you usually get back a null pointer, and tools (GDB, Valgrind) help figuring
+out the cause.&lt;/p&gt;
+
+&lt;p&gt;However, when you run out of stack space, the program usually crashes violently
+with very little information about the situation that lead to the crash.
+Even worse, it could corrupt data without crashing.&lt;/p&gt;
+
+&lt;p&gt;What&amp;rsquo;s more, often, when a program crashes because of a stack allocation failure,
+the call stack is overwritten with random data, making it impossible to trace back
+the origin of the problem.&lt;/p&gt;
+
+&lt;p&gt;To add insult to injury, as far as I know, there is no reliable and portable way
+to know how much free memory is left on the stack.&lt;/p&gt;
+
+&lt;p&gt;For all those reasons, stack allocation is sometimes entirely avoided,
+because it&amp;rsquo;s tricky to deal with manually.&lt;/p&gt;
+
+&lt;p&gt;The following IBM DeveloperWorks article goes more in-depth into the issue:
+&lt;a href=&#34;http://www.ibm.com/developerworks/java/library/j-jtp09275.html&#34;&gt;http://www.ibm.com/developerworks/java/library/j-jtp09275.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;Stack and scope&lt;/h2&gt;
+
+&lt;p&gt;But wait, there&amp;rsquo;s more! (assuming you&amp;rsquo;re still reading at that point)&lt;/p&gt;
+
+&lt;p&gt;Stack-allocated variables are deallocated when they go out of scope.&lt;/p&gt;
+
+&lt;p&gt;What does that mean? It means that this code is wrong.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    getAnswer: func -&amp;gt; Int* {
+        // answer is allocated on the stack
+        answer := 42
+        // we&#39;re returning the address of a local variable
+        // this is WRONG, don&#39;t do it.
+        answer&amp;amp;
+        // when the function returns, &#39;answer&#39; goes out of scope
+        // and is deallocated
+    }
+
+    answerPtr := getAnswer()
+    &amp;quot;answer = %d&amp;quot; printfln(answerPtr@)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Whereas this one will work perfectly:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    getAnswer: func -&amp;gt; Int* {
+        // answer is allocated on the heap
+        answer := gc_malloc(Int size)
+        answer@ = 42
+        // we&#39;re returning the address of a heap-allocated variable
+        // no problem with that. the memory will be freed on a garbage
+        // collector sweep phase, when it will have detected that
+        // it&#39;s unused
+        answer
+    }
+
+    answerPtr := getAnswer()
+    &amp;quot;answer = %d&amp;quot; printfln(answerPtr@)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;However, the first version (returning the address of a local variable)
+might work sometimes: don&amp;rsquo;t be surprised. If the memory address (on the stack
+or in a register) where the local variable was stored isn&amp;rsquo;t overwritten
+between the return from the function and the time when it&amp;rsquo;s used, it might
+still contain the original value. But, again - it&amp;rsquo;s wrong and unreliable.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_8&#34;&gt;When to use stack allocation&lt;/h2&gt;
+
+&lt;p&gt;For small objects for which you need by-value behavior and of which you use
+gazillions in your application.&lt;/p&gt;
+
+&lt;p&gt;Each project is a unique situation - as a rule, I&amp;rsquo;d always advise to begin
+with a class, and turn it into a cover later if the situation requires it.&lt;/p&gt;
+
+&lt;p&gt;However, keep in mind that allocation is often not the first place to look
+if you want to optimize your application. Remember to always use a profiler
+(I find that valgrind + KCachegrind work particularly well with ooc code)
+to figure out where the hotspots are in your code.&lt;/p&gt;
 </description>
     </item>
     
@@ -2476,398 +2014,500 @@ the code before it is even compiled.&lt;/p&gt;&lt;/li&gt;
     </item>
     
     <item>
-      <title>Generics 2</title>
-      <link>http://oocmanual.cogneco.com/language/generics2/</link>
+      <title>Introduction</title>
+      <link>http://oocmanual.cogneco.com/introduction/</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       
-      <guid>http://oocmanual.cogneco.com/language/generics2/</guid>
+      <guid>http://oocmanual.cogneco.com/introduction/</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;Generics&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;Once Upon A Time&amp;hellip;&lt;/h1&gt;
 
-&lt;h2 id=&#34;toc_1&#34;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;Once upon a time, there was a sysadmin who wanted to make sure her website
+was always online. However, she figured that she was pretty good at compiling,
+installing, and configuring software, but that her programming skills were a bit
+rusty.&lt;/p&gt;
 
-&lt;p&gt;Generics are one of the most commonly misunderstood features of ooc.&lt;/p&gt;
+&lt;p&gt;Oh, sure, she remembered her days at university where she learned a bit of Java,
+and C++, and the cool mind-bending exercises in LISP, but today she felt like trying
+something new. She followed the &lt;a href=&#34;/install/&#34;&gt;installation instructions&lt;/a&gt; carefully, and then
+jumped in without waiting.&lt;/p&gt;
 
-&lt;p&gt;Many people attempt confuse them with templates (like in C++ or D) and are
-surprised when things like this don&amp;rsquo;t work:&lt;/p&gt;
+&lt;p&gt;After fishing online for information, she decided to start with the following
+program:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;    Vector2: class &amp;lt;T&amp;gt; {
-        x, y: T
-	init: func(=x, =y) {}
-        add: func (r: This&amp;lt;T&amp;gt;) {
-            new(x + r x, y + r y)
-        }
+&lt;pre&gt;&lt;code&gt;#!ooc
+&amp;quot;The website may or may not be online.&amp;quot; println()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Saving it as &lt;code&gt;watchcorgi.ooc&lt;/code&gt; and running &lt;code&gt;rock -v watchcorgi&lt;/code&gt; sure produced a lot
+of output. And - as a token of its appreciation, the compiler even left an executable
+on the hard drive. What a promising relationship, she thought.&lt;/p&gt;
+
+&lt;p&gt;However, not one to be overly chatty, she decided that instead of having to type
+&lt;code&gt;rock watchcorgi&lt;/code&gt; every time she wanted to compile her new program, she was going
+to write a &lt;a href=&#34;/docs/tools/rock/usefiles&#34;&gt;usefile&lt;/a&gt; for it, and put them both together in a directory.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!yaml
+Name: Watch Corgi
+Description: Tells on the bad websites that go down
+Version: 0.1.0
+SourcePath: source
+Main: watchcorgi
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Saving it as &lt;code&gt;watchcorgi.use&lt;/code&gt;, she realized that, if she wanted her usefile to be
+valid, she needed to move her ooc module into &lt;code&gt;source/watchcorgi.ooc&lt;/code&gt;. So then, her
+folder hierarchy now looked like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.
+├── source
+│   └── watchcorgi.ooc
+└── watchcorgi.use
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, all she had to do was type &lt;code&gt;rock&lt;/code&gt; to have her program compiled. If she felt
+like reading a bit, all she had to do was &lt;code&gt;rock -v&lt;/code&gt; - it reminded her of the countless
+hours spent installing packages on Gentoo.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;The Great Illusion&lt;/h1&gt;
+
+&lt;p&gt;However, that program was not quite as useful as she had hoped so far. While it was
+technically correct — the best kind of correct — it did not, in fact, bring any new
+information to the table.&lt;/p&gt;
+
+&lt;p&gt;That was not meant to last, though, as she quickly devised a devious scheme. Before
+the era of watchcorgi, she was using &lt;code&gt;curl&lt;/code&gt;, a command-line utility, to check if the
+website was still online. It looked a little something like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+curl -I http://example.org/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;(Of course, that wasn&amp;rsquo;t her website&amp;rsquo;s actual URL, which we have sneakingly substituted
+with something a tad more common, in order to protect our heroine&amp;rsquo;s privacy.)&lt;/p&gt;
+
+&lt;p&gt;Running that simple command was enough to let her know, with a simple look, whether
+the website was up and running or down in the ground — in which case prompt maintenance
+was needed as soon as humanly possible.&lt;/p&gt;
+
+&lt;p&gt;She decided that if she could run that command herself, there was no reason why her
+program couldn&amp;rsquo;t do so as well. After a second documentation hunt, she quickly jotted
+down a few more lines, replacing the contents of &lt;code&gt;source/watchcorgi.ooc&lt;/code&gt; with this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import os/Process
+
+exitCode := Process new([&amp;quot;curl&amp;quot;, &amp;quot;-I&amp;quot;, &amp;quot;http://example.org/&amp;quot;]) execute()
+&amp;quot;Sir Curl exited with: %d&amp;quot; printfln(exitCode)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And sure enough, after a quick recompilation, she saw the expected result: &lt;code&gt;Sir Curl
+exited with: 0&lt;/code&gt;. Curious, she disconnected from the internet, and tried launching
+&lt;code&gt;./watchcorgi&lt;/code&gt; again. This time, she saw: &lt;code&gt;Sir Curl exited with: 6&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&amp;ldquo;It&amp;rsquo;s just like it always is with Unix-like tools&amp;rdquo; she thought. &amp;ldquo;An exit code of 0
+is a good sign, anything else&amp;hellip; not so much. It sure is convenient to be able
+to import another ooc module for almost everything. Apparently, this &lt;code&gt;Process&lt;/code&gt; class
+takes an array with the command arguments. And this &lt;code&gt;execute&lt;/code&gt; method returns the
+exit code. Neato!&amp;rdquo; And so it was.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_2&#34;&gt;Form Follows Function&lt;/h1&gt;
+
+&lt;p&gt;She was starting to be happy with her program. For all intents and purposes, was doing
+its job, and it was doing its job well. However, she could not deny that her program
+could have put a little more effort in the presentation. Just because a program does
+not have a will of its own, doesn&amp;rsquo;t mean it&amp;rsquo;s okay for it to be rude.&lt;/p&gt;
+
+&lt;p&gt;&amp;ldquo;Time to get to work&amp;rdquo;, she said out loud, forgetting that it was past 2 in the morning,
+and that nobody could probably hear her - and even if they could, there was no
+certainty that they would agree. While she thought about that, her fingers had kept
+tapping on the keyboard. Her program now looked a little bit like that:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import os/[Process, Terminal]
+
+exitCode := Process new([&amp;quot;curl&amp;quot;, &amp;quot;-I&amp;quot;, &amp;quot;http://example.org/&amp;quot;]) execute()
+
+match (exitCode) {
+  case 0 =&amp;gt;
+    &amp;quot;Everything is fine.&amp;quot; println()
+
+  case =&amp;gt;
+    Terminal setFgColor(Color red)
+    &amp;quot;[ERROR] The website is down!&amp;quot; println()
+    Terminal reset()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It didn&amp;rsquo;t blink, and there were no 3D effects: disappointing maybe for a sci-fi
+fan like her little brother, but having alerts in red, and a human-readable message
+was fine enough for her.&lt;/p&gt;
+
+&lt;p&gt;While carefully proofreading her code to check if she hadn&amp;rsquo;t missed anything, she
+thought about the syntax of the &lt;code&gt;match&lt;/code&gt; construct. &amp;ldquo;It&amp;rsquo;s pretty smart, in fact.
+Cases are tested from top to bottom - the first that matches, wins. And a case with
+no value simply matches everything&amp;rdquo;. It just made sense.&lt;/p&gt;
+
+&lt;p&gt;She was also particularly happy with the way she was able to import both &lt;code&gt;os/Process&lt;/code&gt;
+and &lt;code&gt;os/Terminal&lt;/code&gt; from the same line. Sure, she could have written two different
+&lt;code&gt;import&lt;/code&gt; directives, but she had been promised a concise programming language and it
+was about time it delivered.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_3&#34;&gt;Corgi Ever Watching&lt;/h1&gt;
+
+&lt;p&gt;Now that the program was polite, our programmer felt good enough to take a
+small break. As she was looking out the window, waiting for her 3rd cup of
+nocturnal coffee to brew, it came to her: &amp;ldquo;Wait a minute&amp;hellip; what good is my
+program if I have to keep running it manually?&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;A quick sip out of her coffee cup finished to clear her mind completely.
+&amp;ldquo;I am going to need some sort of loop. And I think watchcorgi should shut
+up if everything is fine, and only complain if something goes wrong.&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;As she looked at her timer, waiting for it to run out and allow her to go back
+to hacking (self-discipline is important, after all), she came to a second
+realization: that there were two main tasks in her program - the checking, and
+the notifying. Surely there must be some way to write that in a more modular
+way?&lt;/p&gt;
+
+&lt;p&gt;She decided to go for broke, and split her program into three different ooc
+modules. She started with &lt;code&gt;source/watchcorgi/checker.ooc&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import os/[Process]
+
+Checker: class {
+  url: String
+
+  init: func (=url)
+
+  /**
+   * @return true if the url is reachable, false otherwise
+   */
+  check: func -&amp;gt; Bool {
+    0 == Process new([&amp;quot;curl&amp;quot;, &amp;quot;-I&amp;quot;, url]) execute()
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then went on with &lt;code&gt;source/watchcorgi/notifier.ooc&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import os/[Terminal]
+
+Notifier: class {
+  quiet: Bool
+
+  init: func
+
+  notify: func (online: Bool, url: String) {
+    if (online) {
+      if (quiet) return
+
+      Terminal setFgColor(Color green)
+      &amp;quot;[ OK  ] %s is online.&amp;quot; printfln(url)
+      Terminal reset()
+    } else {
+      Terminal setFgColor(Color red)
+      &amp;quot;[ERROR] %s is not reachable! You may panic now.&amp;quot; printfln(url)
+      Terminal reset()
     }
+  }
+}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;(Don&amp;rsquo;t worry about the syntax for now, I&amp;rsquo;ll get to it later)&lt;/p&gt;
+&lt;p&gt;And finally, thought it was better to rewrite &lt;code&gt;source/watchcorgi.ooc&lt;/code&gt; from
+scratch using those new modules:&lt;/p&gt;
 
-&lt;p&gt;Why doesn&amp;rsquo;t this work? It&amp;rsquo;s because you can&amp;rsquo;t do much with generic variables.
-The whole point is that &lt;em&gt;we don&amp;rsquo;t know which type they are&lt;/em&gt; until we run the
-program.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#!ooc
+import watchcorgi/[checker, notifier]
+import os/Time
 
-&lt;p&gt;One might instanciate a Vector2&amp;lt;Int&amp;gt; - in which case the + operator
-makes sense - but they could also instanciate a Vector2&amp;lt;Carrot&amp;gt;, where Carrot
-wouldn&amp;rsquo;t necessarily have a + operator.&lt;/p&gt;
+notifier := Notifier new()
+notifier quiet = true // only bother me if something goes wrong
+checker := Checker new(&amp;quot;http://example.org/&amp;quot;)
 
-&lt;p&gt;Besides, since ooc is statically typed, we wouldn&amp;rsquo;t know which + operator
-to use - they&amp;rsquo;re not all the same! We don&amp;rsquo;t add two ints the same manner that
-we add two floats, and so on.&lt;/p&gt;
+while (true) {
+  notifier notify(checker check(), checker url)
+  Time sleepSec(5)
+}
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;toc_2&#34;&gt;Generic functions and type parameters&lt;/h2&gt;
+&lt;p&gt;There. All good. Not only was her program now constantly vigilant, checking
+for potential problems every five seconds, she felt that the various components
+were just as flexible as needed, small enough, and that it made the main program
+file short and sweet.&lt;/p&gt;
 
-&lt;p&gt;So, if we can&amp;rsquo;t use any operator on generic variables - nor can we call
-methods on them, then what are they good for? Sure looks useless from here.&lt;/p&gt;
+&lt;h1 id=&#34;toc_4&#34;&gt;The Littlest Things&lt;/h1&gt;
 
-&lt;p&gt;Well, here&amp;rsquo;s one thing we can do, for example:&lt;/p&gt;
+&lt;p&gt;There was one area of the code she wasn&amp;rsquo;t entirely happy with - in the
+notifier, she was using the same pattern twice. First &lt;code&gt;Terminal setFgColor&lt;/code&gt;,
+then &lt;code&gt;String printfln&lt;/code&gt;, then &lt;code&gt;Terminal reset&lt;/code&gt;.  She decided to extract that
+pattern into a function instead, and added it to the end of the the &lt;code&gt;Notifier&lt;/code&gt;
+class definition:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;    identity: func &amp;lt;T&amp;gt; (val: T) -&amp;gt; T {
-        val
+&lt;pre&gt;&lt;code&gt;#!ooc
+say: func (color: Color, message: String) {
+  Terminal setFgColor(color)
+  message println()
+  Terminal reset()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With that new neighbor, the notify function was happy to be reduced to:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+notify: (online: Bool, url: String) {
+  if (online) {
+    if (quiet) return
+    say(Color green, &amp;quot;[ OK  ] %s is online&amp;quot; format(url))
+  } else {
+    say(Color red, &amp;quot;[ERROR] %s is not reachable! You may panic now.&amp;quot; \
+      format(url))
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;While this was better, she wasn&amp;rsquo;t satisfied yet - calling &lt;code&gt;format&lt;/code&gt; like this
+(she thought of it as a version of &lt;code&gt;printfln&lt;/code&gt; that returned the formatted string
+instead of printing it) wasn&amp;rsquo;t particularly pretty.&lt;/p&gt;
+
+&lt;p&gt;Like with everything that bothered her, she decided to do something about it:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+say: func (color: Color, message: String, args: ...) {
+  Terminal setFgColor(color)
+  message printfln(args)
+  Terminal reset()
+}
+
+notify: func (online: Bool, url: String) {
+  if (online) {
+    if (quiet) return
+    say(Color green, &amp;quot;[ OK  ] %s is online&amp;quot;, url)
+  } else {
+    say(Color red, &amp;quot;[ERROR] %s is not reachable! You may panic now.&amp;quot;, url)
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It was subtle, but for her, it made all the difference. Being able to relay
+any number of arguments like that? This language might actually be comfortable
+after all.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_5&#34;&gt;All Together Now&lt;/h1&gt;
+
+&lt;p&gt;&amp;ldquo;So, that was nice. For the life of me, I can&amp;rsquo;t think of a single thing my program
+is missing.&amp;rdquo; Her eyes closed gently, and she leaned back, as if overwhelmed by bliss.&lt;/p&gt;
+
+&lt;p&gt;Wait. Her eyes, suddenly inquisitive, were perfectly open now. &amp;ldquo;What if I want
+to monitor several websites? Then I would need a config file so that I could modify
+the list of websites to monitor&amp;hellip; and it would need to check them in parallel, so
+it doesn&amp;rsquo;t get stuck on any one of them.&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;She decided she needed one more module: &lt;code&gt;source/watchcorgi/config.ooc&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import io/File
+import os/Env
+import structs/List
+import text/StringTokenizer
+
+DEFAULT_PATH := Env get(&amp;quot;HOME&amp;quot;) + &amp;quot;/.config/corgirc&amp;quot;
+
+Config: class {
+  websites: List&amp;lt;String&amp;gt;
+
+  init: func (path := DEFAULT_PATH) {
+    content := File new(path) read()
+    websites = content split(&#39;\n&#39;) \
+               map(|line| line trim(&amp;quot;\t &amp;quot;)) \
+               filter(|line| !line empty?())
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Armed with that new weapon, checking multiple websites in parallel was just a
+matter of making threads behave. Since she didn&amp;rsquo;t have much experience in the
+domain, and the documentation seemed a little bit obscure, she decided to ask
+for help in the &lt;a href=&#34;https://groups.google.com/group/ooc-lang&#34;&gt;ooc discussion group&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Almost immediately, a response sprung with numerous code examples she could use
+as inspiration for her own endeavor. And so she embarked courageously,
+rewriting &lt;code&gt;source/watchcorgi.ooc&lt;/code&gt; once again:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import watchcorgi/[config, checker, notifier]
+import os/Time
+import threading/Thread
+import structs/[ArrayList]
+
+threads := ArrayList&amp;lt;Thread&amp;gt; new()
+config := Config new()
+
+for (url in config websites) {
+  threads add(Thread new(||
+    guard := Guard new(url, 5)
+    guard run()
+  ))
+}
+
+// start all the threads
+for (thread in threads) {
+  thread start()
+}
+
+// wait for all threads to complete
+threads each(|thread| thread wait())
+
+Guard: class {
+    delay: Int
+    checker: Checker
+    notifier: Notifier
+
+    init: func (url: String, =delay) {
+      checker = Checker new(url)
+      notifier = Notifier new()
+      notifier quiet = true
     }
-&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Woha. What just happened here? Let&amp;rsquo;s recap line by line.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    identity: func &amp;lt;T&amp;gt; (val: T) -&amp;gt; T
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Here, we declare a function named &amp;lsquo;identity&amp;rsquo;, with one type parameter named T,
-taking one parameter named &amp;lsquo;val&amp;rsquo;, and returning a value of type T.&lt;/p&gt;
-
-&lt;p&gt;Type parameters are the names listed between the angular brackets &amp;lt; and &amp;gt;. You
-can have as many as you want (although if you have more than few of them,
-you&amp;rsquo;re probably doing it wrong)&lt;/p&gt;
-
-&lt;p&gt;When you declare a type parameter, it tells the compiler about a new type,
-that we know nothing about at compile-time. Well, not nothing. Remember
-classes? Here&amp;rsquo;s how we access the class of an object:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    object class
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And if object was of type Carrot, that amounts exactly to doing just:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Carrot
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;What is that, exactly? It&amp;rsquo;s an access to a class. What is a class? An instance
-of Class, which is declared in lang/CoreTypes.ooc If you actually go on and open
-CoreTypes, here is a simplified version of what you will find:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Class: class {
-        name: String
-        size, instanceSize: SizeT
+    run: func {
+      while (true) {
+        notifier notify(checker check(), checker url)
+        Time sleepSec(delay)
+      }
     }
+}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;(Reminder: SizeT can be used to store the size of something. On 32-bits
-platforms, it&amp;rsquo;s 32-bits wide. On 64-bits platforms, it&amp;rsquo;s 64-bits wide, and so
-on. Basically, it&amp;rsquo;s an integer type that is as wide as a Pointer)&lt;/p&gt;
-
-&lt;p&gt;So back to our generic stuff. I said we knew nothing about generic types. And
-in fact, it was a downright lie. Please accept my apologies. The reality is -
-we know all that matters! If you try to execute the following piece of code:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    test: func &amp;lt;T&amp;gt; (t: T) { T class name println() }
-    test(42)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You&amp;rsquo;ll find out something very strange and puzzling.. it prints &amp;ldquo;Class&amp;rdquo; !&lt;/p&gt;
-
-&lt;p&gt;We just discovered that we can access type parameters just like any other
-variable. And since T is a class, and we can access various fields of a class,
-here&amp;rsquo;s what we can do:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    test2: func &amp;lt;T&amp;gt; (t: T) {
-        &amp;quot;name = %s, size = %zd, instanceSize = %zd&amp;quot; printfln(
-        T name, T size, T instanceSize)
-    }
-    test2(42)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This will likely print something like &amp;ldquo;name = Int, size = 4, instanceSize =
-4&amp;rdquo;.&lt;/p&gt;
-
-&lt;p&gt;Then you must wonder why is there &amp;lsquo;size&amp;rsquo; and &amp;lsquo;instanceSize&amp;rsquo;, if they&amp;rsquo;re equal?
-Well, they&amp;rsquo;re not equal in all cases. Most importantly, for objects (which are
-references, remember), &amp;lsquo;object class size&amp;rsquo; is equal to &amp;lsquo;Pointer size&amp;rsquo;, but
-&amp;lsquo;object class instanceSize&amp;rsquo; is equal to the actual number of bytes we should
-allocate when we create an object of this class.&lt;/p&gt;
-
-&lt;p&gt;But I digress. (Then again, you&amp;rsquo;re the curious one - not me.)&lt;/p&gt;
-
-&lt;p&gt;So let&amp;rsquo;s analyze the second line of our &amp;lsquo;identity&amp;rsquo; function above:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    val
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Let&amp;rsquo;s see. It&amp;rsquo;s the last line of a non-void function, so it means it&amp;rsquo;s
-returned. &amp;lsquo;val&amp;rsquo; refers to a variable declaration which happens to be a
-function argument, of a generic type. (&lt;em&gt;phew&lt;/em&gt; - at this point, repeat that
-last line to yourself two or three times to impreign it into your brain)&lt;/p&gt;
-
-&lt;p&gt;So basically what our function does is&amp;hellip; just pass through what we give it as
-an argument! Let&amp;rsquo;s try that&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    42 toString() println() // just to be sure
-    identity(42) toString() println() // still a little trivial
-    identity(identity(identity(identity(42)))) toString() println() // whoa.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Yup, it prints 42 alright.&lt;/p&gt;
-
-&lt;p&gt;But wait! I just said above that the compiler &lt;em&gt;couldn&amp;rsquo;t do anything useful
-with a generic variable&lt;/em&gt;, that is, either use an operator on it or call a
-function on it, because it doesn&amp;rsquo;t know its type. And in our example, we
-clearly see that the &amp;lsquo;identity&amp;rsquo; function has return type T, which is a generic
-type! (Because it&amp;rsquo;s between the &amp;lt; and &amp;gt;, remember?)&lt;/p&gt;
-
-&lt;p&gt;Have I lied again? Let&amp;rsquo;s find out.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Generic type inference&lt;/h2&gt;
-
-&lt;p&gt;Let&amp;rsquo;s do a little experiment:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    a := 42
-    b := identity(42)
-    &amp;quot;%s and %s&amp;quot; printfln(a class name, b class name)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;What did you get? Int and Int, right? But - but the return type of &amp;lsquo;identity&amp;rsquo;
-is T! Shouldn&amp;rsquo;t b&amp;rsquo;s type be T too?&lt;/p&gt;
-
-&lt;p&gt;Well, no.&lt;/p&gt;
-
-&lt;p&gt;And thank God for that.&lt;/p&gt;
-
-&lt;p&gt;In fact, if it was so, generics would be pretty much useless (heh, they&amp;rsquo;re limited enough already!)&lt;/p&gt;
-
-&lt;p&gt;So what kind of magic is going on? White magic. Which really isn&amp;rsquo;t magic at
-all.&lt;/p&gt;
-
-&lt;p&gt;You see, when you call:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    identity(42)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And the definition of identity is&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    identity: func &amp;lt;T&amp;gt; (val: T) -&amp;gt; T
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Here&amp;rsquo;s what the compiler figures out: well, we have one unknown type (that
-is, generic type), called &amp;rsquo;T&amp;rsquo;. Also, the first (and only) argument is of that
-type. Hey - let&amp;rsquo;s infer what &amp;rsquo;T&amp;rsquo; is from the type of this argument!&lt;/p&gt;
-
-&lt;p&gt;And that&amp;rsquo;s exactly what it does. As a result, it figures the type of b to be
-Int - since we can know all that at compile-time. It makes b easier to use,
-avoid tons of cast, and is good for your karma.&lt;/p&gt;
-
-&lt;p&gt;Here&amp;rsquo;s another example.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    printTypeName: func &amp;lt;T&amp;gt; (T: Class) { T name println() }
-    printTypeName(Object)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then it prints &amp;ldquo;Object&amp;rdquo;. Did we find a way to print strings without having to
-enclose them between quotes? Hopefully not. That would be messy, man. Talk
-about Perl :/&lt;/p&gt;
-
-&lt;p&gt;However, we have just discovered that we can pass types as arguments to
-functions. Of course, because types are just instances of &amp;lsquo;Class&amp;rsquo;, right? So
-they&amp;rsquo;re objects. So they&amp;rsquo;re values. So we can pass them around.&lt;/p&gt;
-
-&lt;p&gt;So here, the compiler figures that, well - we give it the solution to &amp;lsquo;what is
-T&amp;rsquo;. It is then not too big a challenge for the compiler to go from here.&lt;/p&gt;
-
-&lt;p&gt;Then again, we could have done:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    dumbPrintTypeName: func (T: Class) { T name println() }
-    dumbPrintTypeName(Object)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Since we don&amp;rsquo;t use T as a type anywhere. So why even bother with this &amp;lt;T&amp;gt;
-thing, hmm? Why does the compiler even allow it? Read on if you want to find out.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Generic return types&lt;/h2&gt;
-
-&lt;p&gt;Here&amp;rsquo;s a little riddle for you. How does the compiler figure out the real return
-type of this function:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    sackOfUnknown: func &amp;lt;T&amp;gt; -&amp;gt; T { 42 }
-    sackOfUnknown()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Anyone? Ah, I see a hand in the back. What do you say? The type of the return
-expression? WRONG. But that was an honest try. One point for effort.&lt;/p&gt;
-
-&lt;p&gt;So what&amp;rsquo;s the solution? &amp;ldquo;It doesn&amp;rsquo;t.&amp;rdquo; That&amp;rsquo;s right. The compiler doesn&amp;rsquo;t even
-bother. We give absolutely no clue as to the type of T when we&amp;rsquo;re calling it -
-and the compiler never tries to infer a generic type from the return
-expression (that&amp;rsquo;s useless, I mean - why even make a generic function in the
-first place? Too lazy to type out &amp;lsquo;Int&amp;rsquo;? Yeah. Call me back when you have ABI
-incompatibilities because you changed a return expression. Or rather - don&amp;rsquo;t.)&lt;/p&gt;
-
-&lt;p&gt;So how do we make a function that&lt;/p&gt;
+&lt;p&gt;As she began to write down a list of websites to check in &lt;code&gt;~/.config/corgirc&lt;/code&gt;,
+she started to list the new things she had learned during that last refactoring:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;has a generic return type, let&amp;rsquo;s say &amp;rsquo;T&amp;rsquo;&lt;/li&gt;
-&lt;li&gt;doesn&amp;rsquo;t take an argument of type T ?&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;That classes can be used before they are defined - in order word, the order
+in which classes are defined does not matter!&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;That threads, while really old fashioned, were quite easy to use - all you
+had to do was create a new &lt;code&gt;Thread&lt;/code&gt; object and pass a function that takes
+zero arguments.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;That some functions are anonymous - and that they can be defined as an
+argument to a function call like this: &lt;code&gt;[1, 2, 3] reduce(|a, b| a + b)&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;That using a foreach, such as &lt;code&gt;for (element in iterable) { /* code */ }&lt;/code&gt; or
+using the each method, like so &lt;code&gt;iterable each(|element| /* code */ )&lt;/code&gt;, where
+pretty much equivalent.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Well, that&amp;rsquo;s precisely where that useless thing presented in the previous
-section comes in very handy:&lt;/p&gt;
+&lt;h1 id=&#34;toc_6&#34;&gt;When Features Creep&lt;/h1&gt;
 
-&lt;pre&gt;&lt;code&gt;    theAnswer: func &amp;lt;T&amp;gt; (T: Class) -&amp;gt; T {
-        match T {
-            case Int    =&amp;gt; 42
-            case Float  =&amp;gt; 42.0
-            case String =&amp;gt; &amp;quot;forty-two&amp;quot;
-            case        =&amp;gt; Exception new(&amp;quot;You&#39;re not worthy.&amp;quot;) throw(); 0
-        }
+&lt;p&gt;As magnificent as the program was, she couldn&amp;rsquo;t shake an eerie feeling. It
+seemed so perfect, so concise, so damn practical - what could possibly go
+wrong?&lt;/p&gt;
+
+&lt;p&gt;&amp;ldquo;Oh, right!&amp;rdquo; she whispered. The program assumes that the &lt;code&gt;curl&lt;/code&gt; command-line
+utility is installed and in the &lt;code&gt;$PATH&lt;/code&gt;. While on most Linux distributions,
+that&amp;rsquo;s a safe bet, it might not be there on OSX. Or, god forbid, on Windows.&lt;/p&gt;
+
+&lt;p&gt;But it was almost 6AM, and rays of sunlight would soon come and disturb the
+oh so peaceful (yet eventful) night of coding. Obviously, she could not afford
+to write her own HTTP library.&lt;/p&gt;
+
+&lt;p&gt;Sure, in theory, a simple usage of &lt;code&gt;net/TCPSocket&lt;/code&gt; from the SDK, writing
+something like&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;HEAD / HTTP/1.0\r\n\r\n
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;..and seeing if you get a non-empty response, would suffice. But what about
+parsing empty, yet worrying responses, like an HTTP 404, or an HTTP 502? What
+about HTTP 1.1 and the Host header, essential when several websites are running
+on the same IP address? And most importantly, what about HTTPS, which runs on a
+different port, and what&amp;rsquo;s more, over SSL?&lt;/p&gt;
+
+&lt;p&gt;No, definitely, writing an HTTP library was not part of the plan. But maybe
+there was something she could use&amp;hellip; maybe curl existed also as a library. A
+quick search for &lt;code&gt;ooc curl&lt;/code&gt; revealed the existence of
+&lt;a href=&#34;https://github.com/nddrylliog/ooc-curl&#34;&gt;nddrylliog/ooc-curl&lt;/a&gt;. Jackpot!&lt;/p&gt;
+
+&lt;p&gt;A quick clone and.. wait. She knew better. Why not use &lt;a href=&#34;/docs/tools/sam/&#34;&gt;sam&lt;/a&gt; instead?
+A simple &lt;code&gt;sam clone curl&lt;/code&gt; would suffice. Or, better yet, she could add the
+dependency in the .use file, and run &lt;code&gt;sam get&lt;/code&gt; from the watchcorgi folder
+afterwards.&lt;/p&gt;
+
+&lt;p&gt;Her .use file now looked a little bit like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!yaml
+Name: Watch Corgi
+Description: Multi-threaded website monitoring system
+Version: 0.2.0
+
+SourcePath: source
+Main: watchcorgi
+Requires: curl
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And sure enough, after &lt;code&gt;sam get&lt;/code&gt;, she saw the &lt;code&gt;ooc-curl&lt;/code&gt; folder appear in her
+&lt;code&gt;$OOC_LIBS&lt;/code&gt; directory. It was time to rewrite &lt;code&gt;source/watchcorgi/checker.ooc&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+use curl
+import curl/Highlevel
+
+Checker: class {
+    url: String
+
+    init: func (=url)
+
+    /**
+     * @return true if the url is reachable, false otherwise
+     */
+    check: func -&amp;gt; Bool {
+      200 == (HTTPRequest new(url). perform(). getResponseCode())
     }
-   rational := theAnswer(Int)
-   real     := theAnswer(Float)
-   text     := theAnswer(String)
-   theAnswer(Object) // ka-boom!
+}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;What just happened? We used a match on &amp;rsquo;T&amp;rsquo;, which means we&amp;rsquo;re comparing it.
-We&amp;rsquo;re comparing it with the types &amp;lsquo;Int&amp;rsquo;, &amp;lsquo;Float&amp;rsquo;, &amp;lsquo;String&amp;rsquo;, trying to return
-expressions. And if it&amp;rsquo;s none of these types, it just blows up.&lt;/p&gt;
+&lt;p&gt;This piece of code was one of her favorites yet. She had used one of the
+features she had just learned about - call chaining. &amp;ldquo;In fact&amp;rdquo;, she would
+later explain to a colleague, &amp;ldquo;you can think of the dot as a comma - it
+separates several method calls, but they all happen on the same object,
+sequentially&amp;rdquo;.&lt;/p&gt;
 
-&lt;p&gt;Note: in that case, our theAnswer function is pretty useless&lt;/p&gt;
+&lt;p&gt;Recompiling the program after this change was exciting. There was no
+configuration dialog to fill out. No complicated command-line option to add
+when compiling. As a matter of fact, the single line added to the use file was
+enough to make sam happy - and rock itself seemed pretty content with the &lt;code&gt;use
+curl&lt;/code&gt; directive now sitting at the top of the checker module.&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_5&#34;&gt;Generic classes&lt;/h2&gt;
+&lt;p&gt;A simple &lt;code&gt;rock -v&lt;/code&gt; did the trick. And there she had it. The perfect website
+monitoring system. At last. Oh, sure, part of her brain fully realized that
+the impression of perfectness would fade out over the days, but as far as
+discovering a new language goes, she thought this was a pretty good run.&lt;/p&gt;
 
-&lt;p&gt;Now that&amp;rsquo;s all good and fancy - but generic functions aren&amp;rsquo;t actually that
-useful. If we can&amp;rsquo;t use operators nor functions on generic types, what can we
-do? Well - store them! That&amp;rsquo;s the way all collections work.&lt;/p&gt;
+&lt;p&gt;There was just one thing left to do&amp;hellip;&lt;/p&gt;
 
-&lt;p&gt;Let&amp;rsquo;s start with a simple one:&lt;/p&gt;
+&lt;h1 id=&#34;toc_7&#34;&gt;To Give Back&lt;/h1&gt;
 
-&lt;pre&gt;&lt;code&gt;    Slot: class &amp;lt;T&amp;gt; {
-        element: T
-        init: func (.element) { set(element) }
-        set: func (=element) {}
-        get: func -&amp;gt; T { element }
-    }
+&lt;p&gt;At this point, she felt that watchcorgi it was worth it to publish her program
+somewhere. Of course, all along, she had been keeping track of it using
+&lt;a href=&#34;http://git-scm.org/&#34;&gt;git&lt;/a&gt;. In this case, she was using &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; as a host.&lt;/p&gt;
 
-    s := Slot new(3.14)
-    s get() toString() println()
-    s T name println()
+&lt;p&gt;She decided to make it easy for other people who might want to use
+&lt;code&gt;watchcorgi&lt;/code&gt;, to get it. After a quick search, it quickly became evident that
+the process itself was trivial. She just had to send a pull request to the
+&lt;a href=&#34;https://github.com/nddrylliog/sam&#34;&gt;sam repository&lt;/a&gt; that added a formula for her new pet project.&lt;/p&gt;
+
+&lt;p&gt;So, after forking sam on GitHub, changing the origin of her sam repository,
+she opened a new file in &lt;code&gt;$OOC_LIBS/sam/library/watchcorgi.yml&lt;/code&gt;, and wrote:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!yaml
+Origin: https://github.com/example/watchcorgi.git
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Not that bad, eh? (It should print 3.14 and Float - or some other type, if
-you&amp;rsquo;re in the future and ooc has a proper number tower)&lt;/p&gt;
-
-&lt;p&gt;But wait - get is defined like that:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    get: func -&amp;gt; T { element }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And clearly T is a generic type, ie. it could be anything at runtime, and
-&lt;em&gt;yet&lt;/em&gt; the compiler figures it out right.&lt;/p&gt;
-
-&lt;p&gt;So what happens here? Let&amp;rsquo;s look at the call, since it&amp;rsquo;s the info from which
-the compiler works to infer generic types:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    s get()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Hmmph. Not many types there - except maybe.. the type of s. Which is what
-exactly?&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    s := Slot new(3.14)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Well it turns out that Slot new is just a regular method call, the generic
-type T is inferred to &amp;lsquo;Float&amp;rsquo;, and so &amp;rsquo;s&amp;rsquo; becomes a Slot&amp;lt;Float&amp;gt;&lt;/p&gt;
-
-&lt;p&gt;Hence, the compiler sees the get() call as:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Slot&amp;lt;Float&amp;gt; get()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And it sees the get definition as&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Sloat&amp;lt;T&amp;gt; get: func {}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;From here, inferring that T = Float is trivial.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;Advanced type inference&lt;/h2&gt;
-
-&lt;p&gt;One of the most advanced example of type inference in the whole SDK
-is probably the List map() function. Here is its signature (ie.
-definition without the body) :&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    map: func &amp;lt;K&amp;gt; (f: Func (T) -&amp;gt; K) -&amp;gt; This&amp;lt;K&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;So basically it turns a List&amp;lt;T&amp;gt; into a List&amp;lt;K&amp;gt;, by calling f to turn
-every T into a K. Makes sense.&lt;/p&gt;
-
-&lt;p&gt;The question is now - how does the compiler infer K? The only info we have
-about it, is that it&amp;rsquo;s the return type of function we pass as an argument
-to the function.&lt;/p&gt;
-
-&lt;p&gt;Well - no big deal then, if we do:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    intToString: func (i: Int) -&amp;gt; String { i toString() }
-    strings := numbers map(intToString)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then we know that K = String from the definition of intToString.&lt;/p&gt;
-
-&lt;p&gt;But wait, there&amp;rsquo;s a nice infers-everything syntax for closures, ie.:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    stringsToo := numbers map(|x| x toString())
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And here, we&amp;rsquo;re doomed. The closure insides attempts to infers its whole
-signature (argument types, return type, etc.) from the type of the
-corresponding argmuent in the map definition. But map doesn&amp;rsquo;t provide
-a definitive answer, since the return type is generic.&lt;/p&gt;
-
-&lt;p&gt;Hence, the compiler falls back to the only possible resolution of this
-madness: it infers K from the return expression inside the closure.&lt;/p&gt;
-
-&lt;p&gt;This case is the &lt;em&gt;only case&lt;/em&gt; where rock considers the return expression
-inside functions to infer any type at all.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;Under the hood&lt;/h2&gt;
-
-&lt;p&gt;How does it work under the hood?&lt;/p&gt;
-
-&lt;p&gt;Here is the naive implementation: generic type arguments as passed
-as function arguments, ie a call to:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    ArrayList&amp;lt;Int&amp;gt; new()
-    identity(42)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;becomes (without mangling):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    ArrayList_new(Int_class());
-    identity()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Type arguments in classes become variables:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    ArrayList: class &amp;lt;T&amp;gt; {}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;is&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    ArrayList: class {
-        T: Class
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Class type arguments are assigned in the constructor to the appropriate
-values.&lt;/p&gt;
+&lt;p&gt;And then, she &lt;a href=&#34;https://help.github.com/articles/creating-a-pull-request&#34;&gt;submitted the pull request&lt;/a&gt;. The sun was rising.
+It felt warm. I think - she thought - I just might like it here.&lt;/p&gt;
 </description>
     </item>
     

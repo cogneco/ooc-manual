@@ -587,244 +587,6 @@ for ((index, element) in list) {
     </item>
     
     <item>
-      <title>Covers vs Classes</title>
-      <link>http://oocmanual.cogneco.com/language/covers-vs-classes/</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/language/covers-vs-classes/</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;When to use covers and classes&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;Intro&lt;/h2&gt;
-
-&lt;p&gt;Whenever possible, use classes.&lt;/p&gt;
-
-&lt;p&gt;If you&amp;rsquo;re new to ooc, don&amp;rsquo;t use covers because you&amp;rsquo;ve heard they
-are &amp;ldquo;faster&amp;rdquo;. Covers are powerful. Great power comes with great responsibility.
-The sword cut both ways&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;By-reference, by-value&lt;/h2&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Classes&lt;/h2&gt;
-
-&lt;p&gt;Classes are by-references. Which means every object is a reference. Doing that:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Number: class {
-        value: Int
-        init: func (=value) {}
-    }
-
-    modifyRef: func (n: Number) {
-        n = Number new(-1)
-    }
-
-    modifyInside: func (n: Number) {
-        n value = -1
-    }
-
-    answer := Number new(42)
-    modifyRef(answer) // does nothing
-    modifyInside(answer)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;What happens in &amp;lsquo;modifyRef&amp;rsquo; is that we change the value of the parameter &amp;lsquo;n&amp;rsquo;.
-The code does not modify what &amp;lsquo;n&amp;rsquo; was a reference to in the first place.
-In the example above the variable &amp;lsquo;answer&amp;rsquo; is given as the argument and &amp;lsquo;modifyRef&amp;rsquo; has
-no effect at all on &amp;lsquo;answer&amp;rsquo;.&lt;/p&gt;
-
-&lt;p&gt;However, in &amp;lsquo;modifyInside&amp;rsquo;, we actually modify the content of what &amp;lsquo;n&amp;rsquo; refers to.
-Since &amp;lsquo;n&amp;rsquo; refers to &amp;lsquo;answer&amp;rsquo;, the code will modify its member &amp;lsquo;value&amp;rsquo; and set it to -1.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Covers&lt;/h2&gt;
-
-&lt;p&gt;Covers are trickier. There are two types of covers: primitive covers and compound covers&lt;/p&gt;
-
-&lt;p&gt;Primitive covers allow to us to add methods to an existing underlying type. For implementations
-of ooc on top of C this means you can do stuff like:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Int: cover from int
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This is actually the way all C types are used within ooc.&lt;/p&gt;
-
-&lt;p&gt;As a consequence, covers are by-value. Which means that&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    modify: func (i: Int) {
-        i = -1
-    }
-
-    answer := 42
-    modify(answer)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Doesn&amp;rsquo;t modify answer.&lt;/p&gt;
-
-&lt;p&gt;But compound covers (you can think of them as structs) are also by value,
-which means that:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Number: cover {
-        value: Int
-    }
-
-    modifyInside: func (n: Number) {
-        n value = -1
-    }
-
-    answer: Number
-    answer value = 42
-
-    modifyInside(answer)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Won&amp;rsquo;t modify &amp;lsquo;answer&amp;rsquo; at all, but a &lt;em&gt;copy&lt;/em&gt; of it that has been
-passed to &amp;lsquo;modifyInside&amp;rsquo;.&lt;/p&gt;
-
-&lt;p&gt;As an interesting side effect, a &amp;lsquo;clone&amp;rsquo; method is futile for covers.&lt;/p&gt;
-
-&lt;p&gt;It also means that this won&amp;rsquo;t work:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Number: cover {
-        value: Int
-        init: func (=value) {}
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Because init will be working on a &lt;em&gt;copy&lt;/em&gt; of the object, thus leaving
-the original object unmodified. That&amp;rsquo;s why func@ exists, ie.:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    Number: cover {
-        value: Int
-        init: func@ (=value) {}
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Where &amp;lsquo;this&amp;rsquo; will be passed by reference. Same goes for any cover method
-that modifies its content.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Heap allocation, stack allocation&lt;/h2&gt;
-
-&lt;p&gt;When you do&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    NumberClass: class {}
-    n := NumberClass new()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;n may be allocated on the heap or on the stack, however the compiler sees fit.&lt;/p&gt;
-
-&lt;p&gt;However, with:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    NumberCover: cover {}
-    n: NumberCover
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;n is allocated on the stack.&lt;/p&gt;
-
-&lt;p&gt;Choosing whether to allocate an object on the stack or on the heap is a
-non-trivial decision. In C++ for example, it is the role of the programmer
-to decide whether to allocate on the stack or on the heap.&lt;/p&gt;
-
-&lt;p&gt;In ooc, it&amp;rsquo;s the role of the compiler. Until the language is properly
-standardized and annotations are added for extern functions to allow
-escape analysis, the compiler may choose to only allocate on the heap.&lt;/p&gt;
-
-&lt;p&gt;Allocating on the stack is much faster (since it only involves moving
-the stack pointer), and the stack is always hot, the memory you get when
-allocating is much more likely to be in cache than any far heap allocated
-memory.&lt;/p&gt;
-
-&lt;p&gt;So why don&amp;rsquo;t we always allocate on the stack? Why do we even bother about
-heap allocation, which involves all kinds of housekeeping to know which
-memory blocks are reserved and which are free?&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;Why stack allocation isn&amp;rsquo;t a silver bullet&lt;/h2&gt;
-
-&lt;p&gt;A typical stack size for C programs on desktop OSes is between 1MB and 2MB.
-Therefore, if you need to allocate big objects, you may run out of stack space.&lt;/p&gt;
-
-&lt;p&gt;Running out of stack space is really something to be avoided. It&amp;rsquo;s a lot
-harder to debug than heap allocation failures. When heap allocation fails,
-you usually get back a null pointer, and tools (GDB, Valgrind) help figuring
-out the cause.&lt;/p&gt;
-
-&lt;p&gt;However, when you run out of stack space, the program usually crashes violently
-with very little information about the situation that lead to the crash.
-Even worse, it could corrupt data without crashing.&lt;/p&gt;
-
-&lt;p&gt;What&amp;rsquo;s more, often, when a program crashes because of a stack allocation failure,
-the call stack is overwritten with random data, making it impossible to trace back
-the origin of the problem.&lt;/p&gt;
-
-&lt;p&gt;To add insult to injury, as far as I know, there is no reliable and portable way
-to know how much free memory is left on the stack.&lt;/p&gt;
-
-&lt;p&gt;For all those reasons, stack allocation is sometimes entirely avoided,
-because it&amp;rsquo;s tricky to deal with manually.&lt;/p&gt;
-
-&lt;p&gt;The following IBM DeveloperWorks article goes more in-depth into the issue:
-&lt;a href=&#34;http://www.ibm.com/developerworks/java/library/j-jtp09275.html&#34;&gt;http://www.ibm.com/developerworks/java/library/j-jtp09275.html&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;Stack and scope&lt;/h2&gt;
-
-&lt;p&gt;But wait, there&amp;rsquo;s more! (assuming you&amp;rsquo;re still reading at that point)&lt;/p&gt;
-
-&lt;p&gt;Stack-allocated variables are deallocated when they go out of scope.&lt;/p&gt;
-
-&lt;p&gt;What does that mean? It means that this code is wrong.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    getAnswer: func -&amp;gt; Int* {
-        // answer is allocated on the stack
-        answer := 42
-        // we&#39;re returning the address of a local variable
-        // this is WRONG, don&#39;t do it.
-        answer&amp;amp;
-        // when the function returns, &#39;answer&#39; goes out of scope
-        // and is deallocated
-    }
-
-    answerPtr := getAnswer()
-    &amp;quot;answer = %d&amp;quot; printfln(answerPtr@)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Whereas this one will work perfectly:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    getAnswer: func -&amp;gt; Int* {
-        // answer is allocated on the heap
-        answer := gc_malloc(Int size)
-        answer@ = 42
-        // we&#39;re returning the address of a heap-allocated variable
-        // no problem with that. the memory will be freed on a garbage
-        // collector sweep phase, when it will have detected that
-        // it&#39;s unused
-        answer
-    }
-
-    answerPtr := getAnswer()
-    &amp;quot;answer = %d&amp;quot; printfln(answerPtr@)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;However, the first version (returning the address of a local variable)
-might work sometimes: don&amp;rsquo;t be surprised. If the memory address (on the stack
-or in a register) where the local variable was stored isn&amp;rsquo;t overwritten
-between the return from the function and the time when it&amp;rsquo;s used, it might
-still contain the original value. But, again - it&amp;rsquo;s wrong and unreliable.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;When to use stack allocation&lt;/h2&gt;
-
-&lt;p&gt;For small objects for which you need by-value behavior and of which you use
-gazillions in your application.&lt;/p&gt;
-
-&lt;p&gt;Each project is a unique situation - as a rule, I&amp;rsquo;d always advise to begin
-with a class, and turn it into a cover later if the situation requires it.&lt;/p&gt;
-
-&lt;p&gt;However, keep in mind that allocation is often not the first place to look
-if you want to optimize your application. Remember to always use a profiler
-(I find that valgrind + KCachegrind work particularly well with ooc code)
-to figure out where the hotspots are in your code.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Covers</title>
       <link>http://oocmanual.cogneco.com/language/covers/</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
@@ -1085,6 +847,244 @@ ShutdownParam: extern enum {
   extern(SHUT_RDWR) readWrite
 }
 &lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Covers vs Classes</title>
+      <link>http://oocmanual.cogneco.com/language/covers-vs-classes/</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/language/covers-vs-classes/</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;When to use covers and classes&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;Whenever possible, use classes.&lt;/p&gt;
+
+&lt;p&gt;If you&amp;rsquo;re new to ooc, don&amp;rsquo;t use covers because you&amp;rsquo;ve heard they
+are &amp;ldquo;faster&amp;rdquo;. Covers are powerful. Great power comes with great responsibility.
+The sword cut both ways&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;By-reference, by-value&lt;/h2&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Classes&lt;/h2&gt;
+
+&lt;p&gt;Classes are by-references. Which means every object is a reference. Doing that:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Number: class {
+        value: Int
+        init: func (=value) {}
+    }
+
+    modifyRef: func (n: Number) {
+        n = Number new(-1)
+    }
+
+    modifyInside: func (n: Number) {
+        n value = -1
+    }
+
+    answer := Number new(42)
+    modifyRef(answer) // does nothing
+    modifyInside(answer)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;What happens in &amp;lsquo;modifyRef&amp;rsquo; is that we change the value of the parameter &amp;lsquo;n&amp;rsquo;.
+The code does not modify what &amp;lsquo;n&amp;rsquo; was a reference to in the first place.
+In the example above the variable &amp;lsquo;answer&amp;rsquo; is given as the argument and &amp;lsquo;modifyRef&amp;rsquo; has
+no effect at all on &amp;lsquo;answer&amp;rsquo;.&lt;/p&gt;
+
+&lt;p&gt;However, in &amp;lsquo;modifyInside&amp;rsquo;, we actually modify the content of what &amp;lsquo;n&amp;rsquo; refers to.
+Since &amp;lsquo;n&amp;rsquo; refers to &amp;lsquo;answer&amp;rsquo;, the code will modify its member &amp;lsquo;value&amp;rsquo; and set it to -1.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Covers&lt;/h2&gt;
+
+&lt;p&gt;Covers are trickier. There are two types of covers: primitive covers and compound covers&lt;/p&gt;
+
+&lt;p&gt;Primitive covers allow to us to add methods to an existing underlying type. For implementations
+of ooc on top of C this means you can do stuff like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Int: cover from int
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is actually the way all C types are used within ooc.&lt;/p&gt;
+
+&lt;p&gt;As a consequence, covers are by-value. Which means that&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    modify: func (i: Int) {
+        i = -1
+    }
+
+    answer := 42
+    modify(answer)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Doesn&amp;rsquo;t modify answer.&lt;/p&gt;
+
+&lt;p&gt;But compound covers (you can think of them as structs) are also by value,
+which means that:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Number: cover {
+        value: Int
+    }
+
+    modifyInside: func (n: Number) {
+        n value = -1
+    }
+
+    answer: Number
+    answer value = 42
+
+    modifyInside(answer)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Won&amp;rsquo;t modify &amp;lsquo;answer&amp;rsquo; at all, but a &lt;em&gt;copy&lt;/em&gt; of it that has been
+passed to &amp;lsquo;modifyInside&amp;rsquo;.&lt;/p&gt;
+
+&lt;p&gt;As an interesting side effect, a &amp;lsquo;clone&amp;rsquo; method is futile for covers.&lt;/p&gt;
+
+&lt;p&gt;It also means that this won&amp;rsquo;t work:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Number: cover {
+        value: Int
+        init: func (=value) {}
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Because init will be working on a &lt;em&gt;copy&lt;/em&gt; of the object, thus leaving
+the original object unmodified. That&amp;rsquo;s why func@ exists, ie.:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Number: cover {
+        value: Int
+        init: func@ (=value) {}
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Where &amp;lsquo;this&amp;rsquo; will be passed by reference. Same goes for any cover method
+that modifies its content.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Heap allocation, stack allocation&lt;/h2&gt;
+
+&lt;p&gt;When you do&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    NumberClass: class {}
+    n := NumberClass new()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;n may be allocated on the heap or on the stack, however the compiler sees fit.&lt;/p&gt;
+
+&lt;p&gt;However, with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    NumberCover: cover {}
+    n: NumberCover
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;n is allocated on the stack.&lt;/p&gt;
+
+&lt;p&gt;Choosing whether to allocate an object on the stack or on the heap is a
+non-trivial decision. In C++ for example, it is the role of the programmer
+to decide whether to allocate on the stack or on the heap.&lt;/p&gt;
+
+&lt;p&gt;In ooc, it&amp;rsquo;s the role of the compiler. Until the language is properly
+standardized and annotations are added for extern functions to allow
+escape analysis, the compiler may choose to only allocate on the heap.&lt;/p&gt;
+
+&lt;p&gt;Allocating on the stack is much faster (since it only involves moving
+the stack pointer), and the stack is always hot, the memory you get when
+allocating is much more likely to be in cache than any far heap allocated
+memory.&lt;/p&gt;
+
+&lt;p&gt;So why don&amp;rsquo;t we always allocate on the stack? Why do we even bother about
+heap allocation, which involves all kinds of housekeeping to know which
+memory blocks are reserved and which are free?&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;Why stack allocation isn&amp;rsquo;t a silver bullet&lt;/h2&gt;
+
+&lt;p&gt;A typical stack size for C programs on desktop OSes is between 1MB and 2MB.
+Therefore, if you need to allocate big objects, you may run out of stack space.&lt;/p&gt;
+
+&lt;p&gt;Running out of stack space is really something to be avoided. It&amp;rsquo;s a lot
+harder to debug than heap allocation failures. When heap allocation fails,
+you usually get back a null pointer, and tools (GDB, Valgrind) help figuring
+out the cause.&lt;/p&gt;
+
+&lt;p&gt;However, when you run out of stack space, the program usually crashes violently
+with very little information about the situation that lead to the crash.
+Even worse, it could corrupt data without crashing.&lt;/p&gt;
+
+&lt;p&gt;What&amp;rsquo;s more, often, when a program crashes because of a stack allocation failure,
+the call stack is overwritten with random data, making it impossible to trace back
+the origin of the problem.&lt;/p&gt;
+
+&lt;p&gt;To add insult to injury, as far as I know, there is no reliable and portable way
+to know how much free memory is left on the stack.&lt;/p&gt;
+
+&lt;p&gt;For all those reasons, stack allocation is sometimes entirely avoided,
+because it&amp;rsquo;s tricky to deal with manually.&lt;/p&gt;
+
+&lt;p&gt;The following IBM DeveloperWorks article goes more in-depth into the issue:
+&lt;a href=&#34;http://www.ibm.com/developerworks/java/library/j-jtp09275.html&#34;&gt;http://www.ibm.com/developerworks/java/library/j-jtp09275.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;Stack and scope&lt;/h2&gt;
+
+&lt;p&gt;But wait, there&amp;rsquo;s more! (assuming you&amp;rsquo;re still reading at that point)&lt;/p&gt;
+
+&lt;p&gt;Stack-allocated variables are deallocated when they go out of scope.&lt;/p&gt;
+
+&lt;p&gt;What does that mean? It means that this code is wrong.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    getAnswer: func -&amp;gt; Int* {
+        // answer is allocated on the stack
+        answer := 42
+        // we&#39;re returning the address of a local variable
+        // this is WRONG, don&#39;t do it.
+        answer&amp;amp;
+        // when the function returns, &#39;answer&#39; goes out of scope
+        // and is deallocated
+    }
+
+    answerPtr := getAnswer()
+    &amp;quot;answer = %d&amp;quot; printfln(answerPtr@)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Whereas this one will work perfectly:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    getAnswer: func -&amp;gt; Int* {
+        // answer is allocated on the heap
+        answer := gc_malloc(Int size)
+        answer@ = 42
+        // we&#39;re returning the address of a heap-allocated variable
+        // no problem with that. the memory will be freed on a garbage
+        // collector sweep phase, when it will have detected that
+        // it&#39;s unused
+        answer
+    }
+
+    answerPtr := getAnswer()
+    &amp;quot;answer = %d&amp;quot; printfln(answerPtr@)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;However, the first version (returning the address of a local variable)
+might work sometimes: don&amp;rsquo;t be surprised. If the memory address (on the stack
+or in a register) where the local variable was stored isn&amp;rsquo;t overwritten
+between the return from the function and the time when it&amp;rsquo;s used, it might
+still contain the original value. But, again - it&amp;rsquo;s wrong and unreliable.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_8&#34;&gt;When to use stack allocation&lt;/h2&gt;
+
+&lt;p&gt;For small objects for which you need by-value behavior and of which you use
+gazillions in your application.&lt;/p&gt;
+
+&lt;p&gt;Each project is a unique situation - as a rule, I&amp;rsquo;d always advise to begin
+with a class, and turn it into a cover later if the situation requires it.&lt;/p&gt;
+
+&lt;p&gt;However, keep in mind that allocation is often not the first place to look
+if you want to optimize your application. Remember to always use a profiler
+(I find that valgrind + KCachegrind work particularly well with ooc code)
+to figure out where the hotspots are in your code.&lt;/p&gt;
 </description>
     </item>
     
@@ -1922,6 +1922,111 @@ the code before it is even compiled.&lt;/p&gt;&lt;/li&gt;
     </item>
     
     <item>
+      <title>Modules</title>
+      <link>http://oocmanual.cogneco.com/language/modules/</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/language/modules/</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Modules&lt;/h1&gt;
+
+&lt;p&gt;Any &lt;code&gt;.ooc&lt;/code&gt; file is a module. Modules are organized in packages, relative
+to source path elements.&lt;/p&gt;
+
+&lt;p&gt;For example, for the following directory structure:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;source
+|-- czmq
+|   `-- extras
+|       `-- PipeSink.ooc
+`-- czmq.ooc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We have two modules, and their fully qualified names are &lt;code&gt;czmq&lt;/code&gt; and &lt;code&gt;czmq/extras/PipeSink&lt;/code&gt;.
+We&amp;rsquo;ll say that the &lt;code&gt;czmq&lt;/code&gt; module is in the root package, and that the &lt;code&gt;PipeSink&lt;/code&gt; module is
+in the &lt;code&gt;czmq/extras&lt;/code&gt; package.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Import&lt;/h2&gt;
+
+&lt;p&gt;The example modules above can be imported like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import czmq
+import czmq/extras/PipeSink
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or, on one single line:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import czmq, czmq/extras/PipeSink
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Import paths can be relative, so when in the &lt;code&gt;czmq.ooc&lt;/code&gt; module, one can import
+with the full path, &lt;code&gt;czmq/extras/PipeSink&lt;/code&gt;, or with the relative path, &lt;code&gt;extras/PipeSink&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Similarly, inside PipeSink, one could import another extra via &lt;code&gt;../KitchenSink&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;When importing several modules from the same package, one can use the multi-import
+syntax:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import os/[Process, Terminal, Env]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;By default, symbols imported another module are available in the global scope.  To import the symbols into a namespace, use &lt;code&gt;into&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import czmq/extras/PipeSink into PipeSink
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;toc_2&#34;&gt;Non-modules&lt;/h1&gt;
+
+&lt;p&gt;Other files may be involved in the compilation process, especially when using
+C libraries. Dynamic libraries and header paths will typically be specified
+in a &lt;a href=&#34;/docs/tools/rock/usefiles/&#34;&gt;usefile&lt;/a&gt;, whereas C headers can be directly included in .ooc files&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Include&lt;/h2&gt;
+
+&lt;p&gt;To include a standard header ssuch as &lt;code&gt;stdio.h&lt;/code&gt;, one can do:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+include stdio, stdlib
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note the absence of &lt;code&gt;.h&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Include with defines&lt;/h2&gt;
+
+&lt;p&gt;Some C header files&amp;rsquo; behaviour vary depending on what&amp;rsquo;s defined when including
+them. For example, to use functions such as &lt;code&gt;GetSystemInfo&lt;/code&gt; or &lt;code&gt;GetComputerNameEx&lt;/code&gt;
+from the Windows API, one needs to define a &lt;code&gt;_WIN32_WINNT&lt;/code&gt; constant to be equal
+or greater than &lt;code&gt;0x0500&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The following syntax achieves exactly this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+include windows | (_WIN32_WINNT=0x0500)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Relative include&lt;/h2&gt;
+
+&lt;p&gt;It might also be useful to include a header file bundled with an ooc library.
+Prefixing the path with &lt;code&gt;./&lt;/code&gt; will do just that:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+include ./stb-image
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The header file will get copied in the output directory with the other
+generated C files.&lt;/p&gt;
+
+&lt;p&gt;For a good example of relative import, and using additionals in &lt;a href=&#34;/docs/tools/rock/usefiles/&#34;&gt;usefiles&lt;/a&gt;,
+see the &lt;a href=&#34;https://github.com/nddrylliog/ooc-stb-image&#34;&gt;ooc-stb-image&lt;/a&gt; library.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Generics 2</title>
       <link>http://oocmanual.cogneco.com/language/generics2/</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
@@ -2314,111 +2419,6 @@ as function arguments, ie a call to:&lt;/p&gt;
 
 &lt;p&gt;Class type arguments are assigned in the constructor to the appropriate
 values.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Modules</title>
-      <link>http://oocmanual.cogneco.com/language/modules/</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/language/modules/</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Modules&lt;/h1&gt;
-
-&lt;p&gt;Any &lt;code&gt;.ooc&lt;/code&gt; file is a module. Modules are organized in packages, relative
-to source path elements.&lt;/p&gt;
-
-&lt;p&gt;For example, for the following directory structure:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;source
-|-- czmq
-|   `-- extras
-|       `-- PipeSink.ooc
-`-- czmq.ooc
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;We have two modules, and their fully qualified names are &lt;code&gt;czmq&lt;/code&gt; and &lt;code&gt;czmq/extras/PipeSink&lt;/code&gt;.
-We&amp;rsquo;ll say that the &lt;code&gt;czmq&lt;/code&gt; module is in the root package, and that the &lt;code&gt;PipeSink&lt;/code&gt; module is
-in the &lt;code&gt;czmq/extras&lt;/code&gt; package.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;Import&lt;/h2&gt;
-
-&lt;p&gt;The example modules above can be imported like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import czmq
-import czmq/extras/PipeSink
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Or, on one single line:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import czmq, czmq/extras/PipeSink
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Import paths can be relative, so when in the &lt;code&gt;czmq.ooc&lt;/code&gt; module, one can import
-with the full path, &lt;code&gt;czmq/extras/PipeSink&lt;/code&gt;, or with the relative path, &lt;code&gt;extras/PipeSink&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Similarly, inside PipeSink, one could import another extra via &lt;code&gt;../KitchenSink&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;When importing several modules from the same package, one can use the multi-import
-syntax:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import os/[Process, Terminal, Env]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;By default, symbols imported another module are available in the global scope.  To import the symbols into a namespace, use &lt;code&gt;into&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import czmq/extras/PipeSink into PipeSink
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_2&#34;&gt;Non-modules&lt;/h1&gt;
-
-&lt;p&gt;Other files may be involved in the compilation process, especially when using
-C libraries. Dynamic libraries and header paths will typically be specified
-in a &lt;a href=&#34;/docs/tools/rock/usefiles/&#34;&gt;usefile&lt;/a&gt;, whereas C headers can be directly included in .ooc files&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Include&lt;/h2&gt;
-
-&lt;p&gt;To include a standard header ssuch as &lt;code&gt;stdio.h&lt;/code&gt;, one can do:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-include stdio, stdlib
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Note the absence of &lt;code&gt;.h&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Include with defines&lt;/h2&gt;
-
-&lt;p&gt;Some C header files&amp;rsquo; behaviour vary depending on what&amp;rsquo;s defined when including
-them. For example, to use functions such as &lt;code&gt;GetSystemInfo&lt;/code&gt; or &lt;code&gt;GetComputerNameEx&lt;/code&gt;
-from the Windows API, one needs to define a &lt;code&gt;_WIN32_WINNT&lt;/code&gt; constant to be equal
-or greater than &lt;code&gt;0x0500&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;The following syntax achieves exactly this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-include windows | (_WIN32_WINNT=0x0500)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Relative include&lt;/h2&gt;
-
-&lt;p&gt;It might also be useful to include a header file bundled with an ooc library.
-Prefixing the path with &lt;code&gt;./&lt;/code&gt; will do just that:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-include ./stb-image
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The header file will get copied in the output directory with the other
-generated C files.&lt;/p&gt;
-
-&lt;p&gt;For a good example of relative import, and using additionals in &lt;a href=&#34;/docs/tools/rock/usefiles/&#34;&gt;usefiles&lt;/a&gt;,
-see the &lt;a href=&#34;https://github.com/nddrylliog/ooc-stb-image&#34;&gt;ooc-stb-image&lt;/a&gt; library.&lt;/p&gt;
 </description>
     </item>
     

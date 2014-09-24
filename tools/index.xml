@@ -221,6 +221,212 @@ rock -x
     </item>
     
     <item>
+      <title>Drivers</title>
+      <link>http://oocmanual.cogneco.com/tools/rock/drivers/</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/tools/rock/drivers/</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Compilation strategy&lt;/h1&gt;
+
+&lt;p&gt;Unlike other compilers, rock takes care of building whole projects at
+a time, not just single modules. However, how much you want to let up
+to rock is your choice, thanks to different &lt;code&gt;drivers&lt;/code&gt;, or compilation strategies.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;Sequence driver&lt;/h1&gt;
+
+&lt;p&gt;This is the default driver. It&amp;rsquo;ll parse all relevant .ooc files, generate
+C files, and call the C compiler to produce object files, then link the result.&lt;/p&gt;
+
+&lt;p&gt;It can be customized using the following options:&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Parsing only&lt;/h2&gt;
+
+&lt;p&gt;If you only want rock to make sure there are no syntax errors, using
+the &lt;code&gt;--onlyparse&lt;/code&gt; option will work.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Checking only&lt;/h2&gt;
+
+&lt;p&gt;If you want rock to parse and make sure that the code is correct ooc
+(e.g. types correspond, all functions calls have corresponding definitions,
+etc.), the &lt;code&gt;--onlycheck&lt;/code&gt; option will do that.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Generation only&lt;/h2&gt;
+
+&lt;p&gt;If you just want rock to generate C files to look at what is being done
+under the hood, the &lt;code&gt;--onlygen&lt;/code&gt; option can be used. They will be output
+in the &lt;code&gt;rock_tmp&lt;/code&gt; (for .c files) and &lt;code&gt;.libs&lt;/code&gt; (for header files) folders by default.&lt;/p&gt;
+
+&lt;p&gt;If the goal is to tinker with the&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Parallelism&lt;/h2&gt;
+
+&lt;p&gt;By default, rock will attempt to max out your processors by launching C
+compiler jobs in parallel. One can adjust the level of parallelism by
+specifying &lt;code&gt;-jN&lt;/code&gt; to rock, where &lt;code&gt;N&lt;/code&gt; is an int. To completely disable
+parallelism (ie. behave in a purely sequential way), pass &lt;code&gt;-j0&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;Lib-caching&lt;/h2&gt;
+
+&lt;p&gt;Lib-caching is very convenient, yet at the same time it can cause unforeseen
+issues. The basic idea is that, between two compilations, only a portion of
+generated C code is affected by the changes, there is no reason to recompile
+what hasn&amp;rsquo;t changed.&lt;/p&gt;
+
+&lt;p&gt;It is active by default, which means that even though the first compilation
+might take some time, subsequent compilations will be shorter. If a compilation
+seems to fail because of the remainder of previous compilations, running &lt;code&gt;rock -x&lt;/code&gt;
+should fix it up.&lt;/p&gt;
+
+&lt;p&gt;To temporarily disable lib-caching, one can use the &lt;code&gt;--nolibcache&lt;/code&gt; compiler
+option.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_7&#34;&gt;Make driver&lt;/h1&gt;
+
+&lt;p&gt;The make driver is particularly useful when an ooc project is to be compiled
+on another platform lacking the ooc toolchain (for example, when bootstrapping
+rock), or when one wants to modify the C output of rock and recompile afterwards.&lt;/p&gt;
+
+&lt;p&gt;By using &lt;code&gt;--driver=make&lt;/code&gt;, the compile process looks something like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+# In project directory
+rock --driver=make
+cd build/
+make
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;build&lt;/code&gt; directory which is generated and populated with C files and a
+stand-alone Makefile, can be packaged and distributed on other platforms.&lt;/p&gt;
+
+&lt;p&gt;Note that the &lt;code&gt;$GC_PATH&lt;/code&gt; environment variable might need to be adjusted for
+the exported sources to build somewhere else. It could be as simple as
+installing the Boehm GC in &lt;code&gt;/usr&lt;/code&gt; and setting &lt;code&gt;GC_PATH&lt;/code&gt; to &lt;code&gt;-lgc&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;One can use &lt;code&gt;make clean&lt;/code&gt; to clean the produced objects and binaries. Modifying
+sources and partial recompilation is possible. Make accepts parallelism options
+similar to rock, e.g. with 8 cores, one might want to use &lt;code&gt;make -j7&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_8&#34;&gt;Android driver&lt;/h1&gt;
+
+&lt;p&gt;In spirit, the Android driver (invoked with &lt;code&gt;--driver=android&lt;/code&gt;) is similar to
+the make driver, excepts that instead of generating Makefiles, it will generate
+&lt;code&gt;Android.mk&lt;/code&gt; files, suitable for usage with the &lt;code&gt;ndk-build&lt;/code&gt; utility from the
+Android NDK toolchain.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Garbage Collection</title>
+      <link>http://oocmanual.cogneco.com/tools/rock/gc/</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/tools/rock/gc/</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Garbage Collection in rock&lt;/h1&gt;
+
+&lt;p&gt;rock uses the &lt;a href=&#34;http://www.hpl.hp.com/personal/Hans_Boehm/gc/&#34;&gt;Boehm GC&lt;/a&gt;. It is a conservative garbage collector that
+tends to play well with C libraries, hence the choice for a &amp;ldquo;compile-to-C&amp;rdquo;
+implementation of ooc.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Distribution&lt;/h2&gt;
+
+&lt;p&gt;The Boehm GC (along with &lt;code&gt;lib_atomic_ops&lt;/code&gt;) is vendored in rock&amp;rsquo;s repository,
+under &lt;code&gt;libs/&lt;/code&gt;. When building the compiler, rock&amp;rsquo;s Makefile will check for an
+installed GC version and, if absent, it will compile its own.&lt;/p&gt;
+
+&lt;p&gt;Depending on your platform, the static version of the library compiled when
+building rock might be in the following places:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;* Linux: `rock/libs/linux32` or `rock/libs/linux64`, as `libgc.a`
+* OSX: `rock/libs/osx`
+* Windows: `rock/libs/win32`
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;By default, rock links statically with the GC. However, for multithreaded
+applications on Windows, that might not be such a good idea. Read on for
+more details.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Threads&lt;/h2&gt;
+
+&lt;p&gt;On Windows, for the GC to work correctly, it has to be linked dynamically,
+not statically. At some point, rock should handle that case itself, but for
+now here&amp;rsquo;s what you have to do.&lt;/p&gt;
+
+&lt;p&gt;The first step is to build your own copy of the GC. Thanks to &lt;a href=&#34;https://github.com/nddrylliog/winbrew&#34;&gt;winbrew&lt;/a&gt;,
+that is as easy as doing &lt;code&gt;brew install bdw-gc&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;You should now have Boehm-GC-related files in both &lt;code&gt;/usr/local/lib&lt;/code&gt; and
+&lt;code&gt;/usr/local/bin&lt;/code&gt; (&lt;code&gt;/usr/local&lt;/code&gt; being mapped to a Windows path like &lt;code&gt;C:\MinGW\msys\1.0\local&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;To make rock use that version, simply do:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rock --gc=dynamic -I/usr/local/include -L/usr/local/lib
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;hellip;and when distributing applications, include &lt;code&gt;libgc-1.dll&lt;/code&gt; with it. See the &lt;a href=&#34;/docs/tools/rock/packaging/&#34;&gt;Packaging&lt;/a&gt;
+chapter for more details.&lt;/p&gt;
+
+&lt;p&gt;Linking dynamically with the GC on other platforms is as simple as using &lt;code&gt;--gc=dynamic&lt;/code&gt; - the
+&lt;code&gt;-I&lt;/code&gt; and &lt;code&gt;-L&lt;/code&gt; options above are just to add include paths and library paths, since homebrew installs
+libraries in its own prefix.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Disabling the GC&lt;/h2&gt;
+
+&lt;p&gt;One can prevent rock from linking with the GC with the command line option &lt;code&gt;--gc=off&lt;/code&gt;. Keep in mind
+that the SDK was written with the GC in mind though.&lt;/p&gt;
+
+&lt;p&gt;When the GC is disabled, &lt;code&gt;version(gc)&lt;/code&gt; block will get discarded, and &lt;code&gt;version(!gc)&lt;/code&gt; blocks will be
+used. You can use this to write both GC and non-GC friendly code.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Rock</title>
+      <link>http://oocmanual.cogneco.com/tools/rock/</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/tools/rock/</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;About Rock&lt;/h1&gt;
+
+&lt;p&gt;Rock is the main ooc compiler. It parses ooc files using nagaqueen, does some
+checking and inference, produces .c files, and then drives the C compilation process
+to produce either an executable or a library.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/basic/&#34;&gt;Basic usage&lt;/a&gt; section explains how to quickly get
+up and running, using rock to compile ooc projects.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/drivers/&#34;&gt;Drivers&lt;/a&gt; section gives an overview of rock&amp;rsquo;s various
+drivers, akin to compiling strategies, like the sequence driver (default), the make
+driver, and the android driver.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/advanced/&#34;&gt;Advanced usage&lt;/a&gt; section covers some less-often used
+options like using a different C compiler, keeping source files, etc.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/usefiles/&#34;&gt;Usefiles&lt;/a&gt; section describes the format of &lt;code&gt;.use&lt;/code&gt; files,
+which define the characteristics of an ooc app or library.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/gc/&#34;&gt;Garbage Collection&lt;/a&gt; section talks about the Garbage Collection
+strategy in rock, how to make sure things work well on different plaforms, how the
+Boehm GC is bundled, etc.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/debug/&#34;&gt;Debugging&lt;/a&gt; section talks about what to do when a program
+doesn&amp;rsquo;t behave correctly. Debug symbols, stack traces, debugging on particularly painful
+platforms like Windows.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/packaging/&#34;&gt;Packaging&lt;/a&gt; section talks about releasing standalone
+applications coded in ooc, such as games — when you don&amp;rsquo;t want to have users install
+dependencies on their own, but would rather bundle everything together.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Debugging</title>
       <link>http://oocmanual.cogneco.com/tools/rock/debug/</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
@@ -691,212 +897,6 @@ above. This behavior can be disabled with:&lt;/p&gt;
 &lt;p&gt;In which case gdb will fall back to displaying C line numbers (corresponding to the files
 generated by rock). This can be useful if you suspect that rock is generating invalid code,
 or if the ooc line numbers are messed up for some reason.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Drivers</title>
-      <link>http://oocmanual.cogneco.com/tools/rock/drivers/</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/tools/rock/drivers/</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Compilation strategy&lt;/h1&gt;
-
-&lt;p&gt;Unlike other compilers, rock takes care of building whole projects at
-a time, not just single modules. However, how much you want to let up
-to rock is your choice, thanks to different &lt;code&gt;drivers&lt;/code&gt;, or compilation strategies.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;Sequence driver&lt;/h1&gt;
-
-&lt;p&gt;This is the default driver. It&amp;rsquo;ll parse all relevant .ooc files, generate
-C files, and call the C compiler to produce object files, then link the result.&lt;/p&gt;
-
-&lt;p&gt;It can be customized using the following options:&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Parsing only&lt;/h2&gt;
-
-&lt;p&gt;If you only want rock to make sure there are no syntax errors, using
-the &lt;code&gt;--onlyparse&lt;/code&gt; option will work.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Checking only&lt;/h2&gt;
-
-&lt;p&gt;If you want rock to parse and make sure that the code is correct ooc
-(e.g. types correspond, all functions calls have corresponding definitions,
-etc.), the &lt;code&gt;--onlycheck&lt;/code&gt; option will do that.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Generation only&lt;/h2&gt;
-
-&lt;p&gt;If you just want rock to generate C files to look at what is being done
-under the hood, the &lt;code&gt;--onlygen&lt;/code&gt; option can be used. They will be output
-in the &lt;code&gt;rock_tmp&lt;/code&gt; (for .c files) and &lt;code&gt;.libs&lt;/code&gt; (for header files) folders by default.&lt;/p&gt;
-
-&lt;p&gt;If the goal is to tinker with the&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Parallelism&lt;/h2&gt;
-
-&lt;p&gt;By default, rock will attempt to max out your processors by launching C
-compiler jobs in parallel. One can adjust the level of parallelism by
-specifying &lt;code&gt;-jN&lt;/code&gt; to rock, where &lt;code&gt;N&lt;/code&gt; is an int. To completely disable
-parallelism (ie. behave in a purely sequential way), pass &lt;code&gt;-j0&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;Lib-caching&lt;/h2&gt;
-
-&lt;p&gt;Lib-caching is very convenient, yet at the same time it can cause unforeseen
-issues. The basic idea is that, between two compilations, only a portion of
-generated C code is affected by the changes, there is no reason to recompile
-what hasn&amp;rsquo;t changed.&lt;/p&gt;
-
-&lt;p&gt;It is active by default, which means that even though the first compilation
-might take some time, subsequent compilations will be shorter. If a compilation
-seems to fail because of the remainder of previous compilations, running &lt;code&gt;rock -x&lt;/code&gt;
-should fix it up.&lt;/p&gt;
-
-&lt;p&gt;To temporarily disable lib-caching, one can use the &lt;code&gt;--nolibcache&lt;/code&gt; compiler
-option.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_7&#34;&gt;Make driver&lt;/h1&gt;
-
-&lt;p&gt;The make driver is particularly useful when an ooc project is to be compiled
-on another platform lacking the ooc toolchain (for example, when bootstrapping
-rock), or when one wants to modify the C output of rock and recompile afterwards.&lt;/p&gt;
-
-&lt;p&gt;By using &lt;code&gt;--driver=make&lt;/code&gt;, the compile process looks something like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!bash
-# In project directory
-rock --driver=make
-cd build/
-make
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The &lt;code&gt;build&lt;/code&gt; directory which is generated and populated with C files and a
-stand-alone Makefile, can be packaged and distributed on other platforms.&lt;/p&gt;
-
-&lt;p&gt;Note that the &lt;code&gt;$GC_PATH&lt;/code&gt; environment variable might need to be adjusted for
-the exported sources to build somewhere else. It could be as simple as
-installing the Boehm GC in &lt;code&gt;/usr&lt;/code&gt; and setting &lt;code&gt;GC_PATH&lt;/code&gt; to &lt;code&gt;-lgc&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;One can use &lt;code&gt;make clean&lt;/code&gt; to clean the produced objects and binaries. Modifying
-sources and partial recompilation is possible. Make accepts parallelism options
-similar to rock, e.g. with 8 cores, one might want to use &lt;code&gt;make -j7&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_8&#34;&gt;Android driver&lt;/h1&gt;
-
-&lt;p&gt;In spirit, the Android driver (invoked with &lt;code&gt;--driver=android&lt;/code&gt;) is similar to
-the make driver, excepts that instead of generating Makefiles, it will generate
-&lt;code&gt;Android.mk&lt;/code&gt; files, suitable for usage with the &lt;code&gt;ndk-build&lt;/code&gt; utility from the
-Android NDK toolchain.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Garbage Collection</title>
-      <link>http://oocmanual.cogneco.com/tools/rock/gc/</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/tools/rock/gc/</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Garbage Collection in rock&lt;/h1&gt;
-
-&lt;p&gt;rock uses the &lt;a href=&#34;http://www.hpl.hp.com/personal/Hans_Boehm/gc/&#34;&gt;Boehm GC&lt;/a&gt;. It is a conservative garbage collector that
-tends to play well with C libraries, hence the choice for a &amp;ldquo;compile-to-C&amp;rdquo;
-implementation of ooc.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;Distribution&lt;/h2&gt;
-
-&lt;p&gt;The Boehm GC (along with &lt;code&gt;lib_atomic_ops&lt;/code&gt;) is vendored in rock&amp;rsquo;s repository,
-under &lt;code&gt;libs/&lt;/code&gt;. When building the compiler, rock&amp;rsquo;s Makefile will check for an
-installed GC version and, if absent, it will compile its own.&lt;/p&gt;
-
-&lt;p&gt;Depending on your platform, the static version of the library compiled when
-building rock might be in the following places:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;* Linux: `rock/libs/linux32` or `rock/libs/linux64`, as `libgc.a`
-* OSX: `rock/libs/osx`
-* Windows: `rock/libs/win32`
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;By default, rock links statically with the GC. However, for multithreaded
-applications on Windows, that might not be such a good idea. Read on for
-more details.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Threads&lt;/h2&gt;
-
-&lt;p&gt;On Windows, for the GC to work correctly, it has to be linked dynamically,
-not statically. At some point, rock should handle that case itself, but for
-now here&amp;rsquo;s what you have to do.&lt;/p&gt;
-
-&lt;p&gt;The first step is to build your own copy of the GC. Thanks to &lt;a href=&#34;https://github.com/nddrylliog/winbrew&#34;&gt;winbrew&lt;/a&gt;,
-that is as easy as doing &lt;code&gt;brew install bdw-gc&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;You should now have Boehm-GC-related files in both &lt;code&gt;/usr/local/lib&lt;/code&gt; and
-&lt;code&gt;/usr/local/bin&lt;/code&gt; (&lt;code&gt;/usr/local&lt;/code&gt; being mapped to a Windows path like &lt;code&gt;C:\MinGW\msys\1.0\local&lt;/code&gt;).&lt;/p&gt;
-
-&lt;p&gt;To make rock use that version, simply do:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;rock --gc=dynamic -I/usr/local/include -L/usr/local/lib
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&amp;hellip;and when distributing applications, include &lt;code&gt;libgc-1.dll&lt;/code&gt; with it. See the &lt;a href=&#34;/docs/tools/rock/packaging/&#34;&gt;Packaging&lt;/a&gt;
-chapter for more details.&lt;/p&gt;
-
-&lt;p&gt;Linking dynamically with the GC on other platforms is as simple as using &lt;code&gt;--gc=dynamic&lt;/code&gt; - the
-&lt;code&gt;-I&lt;/code&gt; and &lt;code&gt;-L&lt;/code&gt; options above are just to add include paths and library paths, since homebrew installs
-libraries in its own prefix.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Disabling the GC&lt;/h2&gt;
-
-&lt;p&gt;One can prevent rock from linking with the GC with the command line option &lt;code&gt;--gc=off&lt;/code&gt;. Keep in mind
-that the SDK was written with the GC in mind though.&lt;/p&gt;
-
-&lt;p&gt;When the GC is disabled, &lt;code&gt;version(gc)&lt;/code&gt; block will get discarded, and &lt;code&gt;version(!gc)&lt;/code&gt; blocks will be
-used. You can use this to write both GC and non-GC friendly code.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Rock</title>
-      <link>http://oocmanual.cogneco.com/tools/rock/</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/tools/rock/</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;About Rock&lt;/h1&gt;
-
-&lt;p&gt;Rock is the main ooc compiler. It parses ooc files using nagaqueen, does some
-checking and inference, produces .c files, and then drives the C compilation process
-to produce either an executable or a library.&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/basic/&#34;&gt;Basic usage&lt;/a&gt; section explains how to quickly get
-up and running, using rock to compile ooc projects.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/drivers/&#34;&gt;Drivers&lt;/a&gt; section gives an overview of rock&amp;rsquo;s various
-drivers, akin to compiling strategies, like the sequence driver (default), the make
-driver, and the android driver.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/advanced/&#34;&gt;Advanced usage&lt;/a&gt; section covers some less-often used
-options like using a different C compiler, keeping source files, etc.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/usefiles/&#34;&gt;Usefiles&lt;/a&gt; section describes the format of &lt;code&gt;.use&lt;/code&gt; files,
-which define the characteristics of an ooc app or library.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/gc/&#34;&gt;Garbage Collection&lt;/a&gt; section talks about the Garbage Collection
-strategy in rock, how to make sure things work well on different plaforms, how the
-Boehm GC is bundled, etc.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/debug/&#34;&gt;Debugging&lt;/a&gt; section talks about what to do when a program
-doesn&amp;rsquo;t behave correctly. Debug symbols, stack traces, debugging on particularly painful
-platforms like Windows.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The &lt;a href=&#34;/docs/tools/rock/packaging/&#34;&gt;Packaging&lt;/a&gt; section talks about releasing standalone
-applications coded in ooc, such as games — when you don&amp;rsquo;t want to have users install
-dependencies on their own, but would rather bundle everything together.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
 </description>
     </item>
     

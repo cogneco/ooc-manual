@@ -56,6 +56,82 @@ it contains platform-specific specific implementations of certain features.&lt;/
     </item>
     
     <item>
+      <title>exception</title>
+      <link>http://oocmanual.cogneco.com/sdk/lang/exceptions/</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/lang/exceptions/</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Exception&lt;/h1&gt;
+
+&lt;p&gt;The &lt;code&gt;Exception&lt;/code&gt; class is the super-type of anything that can be thrown
+and caught.&lt;/p&gt;
+
+&lt;p&gt;There is no special keyword for throwing exceptions in ooc - instead, the
+mechanism is implemented transparently thanks to the &lt;code&gt;throw()&lt;/code&gt; method.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+e := Exception new(&amp;quot;Something bad happened&amp;quot;)
+e throw()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Message&lt;/h2&gt;
+
+&lt;p&gt;A good exception will have a descriptive message. It can be accessed
+via the &lt;code&gt;message&lt;/code&gt; field of the &lt;code&gt;Exception&lt;/code&gt; class.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+try {
+  attemptSomethingRisky()
+} catch (e: Exception) {
+  &amp;quot;Something bad happened, and here&#39;s what: %s&amp;quot; printfln(e message)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Origin&lt;/h2&gt;
+
+&lt;p&gt;It might be useful to know which class in particular has thrown an
+exception. For this purpose, the &lt;code&gt;origin&lt;/code&gt; field exists:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+try {
+} catch (e: Exception) {
+  &amp;quot;Something went wrong, and the culprit is: %s&amp;quot; \
+    printfln(e origin ? e origin name : &amp;quot;unknown&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To have a default representation of an exception, like it would be
+printed as if there was no try block to catch it, use &lt;code&gt;formatMessage()&lt;/code&gt;,
+or, to print it, use &lt;code&gt;print()&lt;/code&gt; directly.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Backtrace&lt;/h2&gt;
+
+&lt;p&gt;On platforms where it is implemented (currently, Linux with the &amp;ldquo;+-rdynamic&amp;rdquo;
+compiler option), a series of backtrace can be available, containing info
+about each stack frame leading up to the point the exception was thrown.&lt;/p&gt;
+
+&lt;p&gt;The backtrace can be printed with the &lt;code&gt;printBacktrace()&lt;/code&gt; method. It&amp;rsquo;ll get
+printed in the default representation, for example if there is no particular
+exception handler.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Custom exceptions&lt;/h2&gt;
+
+&lt;p&gt;To add a custom exception type, simply subclass &lt;code&gt;Exception&lt;/code&gt; and provide
+a constructor:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+FunnyException: class extends Exception {
+  init: func {
+    super(&amp;quot;Nothing happened, just thought it&#39;d be fun to interrupt the program!&amp;quot;)
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
       <title>io</title>
       <link>http://oocmanual.cogneco.com/sdk/io/</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
@@ -305,82 +381,6 @@ seq s32(0xdeadbeef)
     </item>
     
     <item>
-      <title>exception</title>
-      <link>http://oocmanual.cogneco.com/sdk/lang/exceptions/</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/lang/exceptions/</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Exception&lt;/h1&gt;
-
-&lt;p&gt;The &lt;code&gt;Exception&lt;/code&gt; class is the super-type of anything that can be thrown
-and caught.&lt;/p&gt;
-
-&lt;p&gt;There is no special keyword for throwing exceptions in ooc - instead, the
-mechanism is implemented transparently thanks to the &lt;code&gt;throw()&lt;/code&gt; method.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-e := Exception new(&amp;quot;Something bad happened&amp;quot;)
-e throw()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;Message&lt;/h2&gt;
-
-&lt;p&gt;A good exception will have a descriptive message. It can be accessed
-via the &lt;code&gt;message&lt;/code&gt; field of the &lt;code&gt;Exception&lt;/code&gt; class.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-try {
-  attemptSomethingRisky()
-} catch (e: Exception) {
-  &amp;quot;Something bad happened, and here&#39;s what: %s&amp;quot; printfln(e message)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Origin&lt;/h2&gt;
-
-&lt;p&gt;It might be useful to know which class in particular has thrown an
-exception. For this purpose, the &lt;code&gt;origin&lt;/code&gt; field exists:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-try {
-} catch (e: Exception) {
-  &amp;quot;Something went wrong, and the culprit is: %s&amp;quot; \
-    printfln(e origin ? e origin name : &amp;quot;unknown&amp;quot;)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;To have a default representation of an exception, like it would be
-printed as if there was no try block to catch it, use &lt;code&gt;formatMessage()&lt;/code&gt;,
-or, to print it, use &lt;code&gt;print()&lt;/code&gt; directly.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Backtrace&lt;/h2&gt;
-
-&lt;p&gt;On platforms where it is implemented (currently, Linux with the &amp;ldquo;+-rdynamic&amp;rdquo;
-compiler option), a series of backtrace can be available, containing info
-about each stack frame leading up to the point the exception was thrown.&lt;/p&gt;
-
-&lt;p&gt;The backtrace can be printed with the &lt;code&gt;printBacktrace()&lt;/code&gt; method. It&amp;rsquo;ll get
-printed in the default representation, for example if there is no particular
-exception handler.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Custom exceptions&lt;/h2&gt;
-
-&lt;p&gt;To add a custom exception type, simply subclass &lt;code&gt;Exception&lt;/code&gt; and provide
-a constructor:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-FunnyException: class extends Exception {
-  init: func {
-    super(&amp;quot;Nothing happened, just thought it&#39;d be fun to interrupt the program!&amp;quot;)
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
       <title>lang</title>
       <link>http://oocmanual.cogneco.com/sdk/lang/</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
@@ -525,6 +525,111 @@ method. Let&amp;rsquo;s try it on a string, which is iterable:&lt;/p&gt;
     </item>
     
     <item>
+      <title>numbers</title>
+      <link>http://oocmanual.cogneco.com/sdk/lang/numbers/</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/lang/numbers/</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Numbers&lt;/h1&gt;
+
+&lt;p&gt;Numbers come in various shapes and forms. There is no bignum implementation
+in ooc&amp;rsquo;s sdk - which means that you are pretty much stuck with C&amp;rsquo;s types,
+either varying width (Int, Long, LLong) or fixed-width (Int16, UInt32, Int64,
+etc.)&lt;/p&gt;
+
+&lt;p&gt;However, they share common methods that come in handy from time to time.
+This page summarizes these methods.&lt;/p&gt;
+
+&lt;h1 id=&#34;toc_1&#34;&gt;Integers&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;String representation&lt;/h2&gt;
+
+&lt;p&gt;Calling &lt;code&gt;toString()&lt;/code&gt; will return a default, decimal representation of an
+integer.  The &lt;code&gt;toHexString()&lt;/code&gt; method returns a base 16 representation.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+0c24222570 toString() // &amp;quot;5318008&amp;quot;
+3_735_928_559 toHexString() // &amp;quot;deadbeef&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;Divisors&lt;/h2&gt;
+
+&lt;p&gt;Test if a number is odd with &lt;code&gt;odd?()&lt;/code&gt;, if it&amp;rsquo;s even with &lt;code&gt;even?()&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+3 odd?() // true
+3 even?() // false
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Also, to check if a number b is a divisor of a number a, use &lt;code&gt;divisor?()&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+9 divisor?(3) // true
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Don&amp;rsquo;t use this naive prime algorithm:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+n := 40_960_001
+for (i in 0..n) if (n divisor?(i)) {
+  raise(&amp;quot;Not a prime.&amp;quot;)
+}
+&amp;quot;Alright, it&#39;s a prime.&amp;quot; println()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Find something smarter instead.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Range inclusion&lt;/h2&gt;
+
+&lt;p&gt;To test if a number is within a range, use &lt;code&gt;in?(Range)&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+9 in?(0..10) // true
+3 in?(5..15) // false
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;Absolute value&lt;/h2&gt;
+
+&lt;p&gt;Use the &lt;code&gt;abs()&lt;/code&gt; to get the a positive value no matter what:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+9 abs()  // 9
+-9 abs() // 9
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;Times&lt;/h2&gt;
+
+&lt;p&gt;While not technically number-related, repeating an action &lt;code&gt;n&lt;/code&gt; times
+can be done with the &lt;code&gt;times&lt;/code&gt; method:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+3 times(|| knock())
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Alternatively, the closure can take the current (0-based) index as an argument&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+99 times(|i|
+  takeDownBottle(i)
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;toc_7&#34;&gt;Floats&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_8&#34;&gt;String representation&lt;/h2&gt;
+
+&lt;p&gt;Calling &lt;code&gt;toString()&lt;/code&gt; will return a default, base 10 representation of a
+floating point number, with a precision of 2 after the decimal point.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+3.14 toString() // &amp;quot;3.14&amp;quot;, conveniently
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
       <title>memory</title>
       <link>http://oocmanual.cogneco.com/sdk/lang/memory/</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
@@ -639,111 +744,6 @@ here to do the job:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;#!ooc
 // you know what, I&#39;m good for now, thanks.
 gc_free(block)
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>numbers</title>
-      <link>http://oocmanual.cogneco.com/sdk/lang/numbers/</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/lang/numbers/</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Numbers&lt;/h1&gt;
-
-&lt;p&gt;Numbers come in various shapes and forms. There is no bignum implementation
-in ooc&amp;rsquo;s sdk - which means that you are pretty much stuck with C&amp;rsquo;s types,
-either varying width (Int, Long, LLong) or fixed-width (Int16, UInt32, Int64,
-etc.)&lt;/p&gt;
-
-&lt;p&gt;However, they share common methods that come in handy from time to time.
-This page summarizes these methods.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;Integers&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;String representation&lt;/h2&gt;
-
-&lt;p&gt;Calling &lt;code&gt;toString()&lt;/code&gt; will return a default, decimal representation of an
-integer.  The &lt;code&gt;toHexString()&lt;/code&gt; method returns a base 16 representation.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-0c24222570 toString() // &amp;quot;5318008&amp;quot;
-3_735_928_559 toHexString() // &amp;quot;deadbeef&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_3&#34;&gt;Divisors&lt;/h2&gt;
-
-&lt;p&gt;Test if a number is odd with &lt;code&gt;odd?()&lt;/code&gt;, if it&amp;rsquo;s even with &lt;code&gt;even?()&lt;/code&gt;.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-3 odd?() // true
-3 even?() // false
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Also, to check if a number b is a divisor of a number a, use &lt;code&gt;divisor?()&lt;/code&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-9 divisor?(3) // true
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Don&amp;rsquo;t use this naive prime algorithm:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-n := 40_960_001
-for (i in 0..n) if (n divisor?(i)) {
-  raise(&amp;quot;Not a prime.&amp;quot;)
-}
-&amp;quot;Alright, it&#39;s a prime.&amp;quot; println()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Find something smarter instead.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Range inclusion&lt;/h2&gt;
-
-&lt;p&gt;To test if a number is within a range, use &lt;code&gt;in?(Range)&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-9 in?(0..10) // true
-3 in?(5..15) // false
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Absolute value&lt;/h2&gt;
-
-&lt;p&gt;Use the &lt;code&gt;abs()&lt;/code&gt; to get the a positive value no matter what:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-9 abs()  // 9
--9 abs() // 9
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;Times&lt;/h2&gt;
-
-&lt;p&gt;While not technically number-related, repeating an action &lt;code&gt;n&lt;/code&gt; times
-can be done with the &lt;code&gt;times&lt;/code&gt; method:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-3 times(|| knock())
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Alternatively, the closure can take the current (0-based) index as an argument&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-99 times(|i|
-  takeDownBottle(i)
-)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;toc_7&#34;&gt;Floats&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;String representation&lt;/h2&gt;
-
-&lt;p&gt;Calling &lt;code&gt;toString()&lt;/code&gt; will return a default, base 10 representation of a
-floating point number, with a precision of 2 after the decimal point.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-3.14 toString() // &amp;quot;3.14&amp;quot;, conveniently
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
@@ -1063,6 +1063,31 @@ something: func (args: ...) {
     </item>
     
     <item>
+      <title>native</title>
+      <link>http://oocmanual.cogneco.com/sdk/native/</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/native/</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The native package&lt;/h1&gt;
+
+&lt;p&gt;The &lt;code&gt;native&lt;/code&gt; package of the SDK contains nothing that should be
+directly imported in a cross-platform application. It&amp;rsquo;s all platform-specific
+support code for other parts of the SDK.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;Windows&lt;/h2&gt;
+
+&lt;p&gt;For example, the &lt;code&gt;native/win32&lt;/code&gt; package contains covers for types defined
+in the Win32 API, along with a few error handling functions and other
+things that are useful in the Win32 implementation of the SDK.&lt;/p&gt;
+
+&lt;p&gt;Note that there exists &lt;code&gt;native&lt;/code&gt; sub packages elsewhere in the SDK, for example
+in the &lt;code&gt;io&lt;/code&gt; or in the &lt;code&gt;os&lt;/code&gt; packages.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>math</title>
       <link>http://oocmanual.cogneco.com/sdk/math/</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
@@ -1283,31 +1308,6 @@ less even / repeat more easily.&lt;/p&gt;
     </item>
     
     <item>
-      <title>native</title>
-      <link>http://oocmanual.cogneco.com/sdk/native/</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/native/</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The native package&lt;/h1&gt;
-
-&lt;p&gt;The &lt;code&gt;native&lt;/code&gt; package of the SDK contains nothing that should be
-directly imported in a cross-platform application. It&amp;rsquo;s all platform-specific
-support code for other parts of the SDK.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;Windows&lt;/h2&gt;
-
-&lt;p&gt;For example, the &lt;code&gt;native/win32&lt;/code&gt; package contains covers for types defined
-in the Win32 API, along with a few error handling functions and other
-things that are useful in the Win32 implementation of the SDK.&lt;/p&gt;
-
-&lt;p&gt;Note that there exists &lt;code&gt;native&lt;/code&gt; sub packages elsewhere in the SDK, for example
-in the &lt;code&gt;io&lt;/code&gt; or in the &lt;code&gt;os&lt;/code&gt; packages.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
       <title>net</title>
       <link>http://oocmanual.cogneco.com/sdk/net/</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
@@ -1507,64 +1507,6 @@ expected.&lt;/p&gt;
     </item>
     
     <item>
-      <title>coro</title>
-      <link>http://oocmanual.cogneco.com/sdk/os/coro/</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      
-      <guid>http://oocmanual.cogneco.com/sdk/os/coro/</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;The os/Coro module&lt;/h1&gt;
-
-&lt;p&gt;That module was originally an ooc port of Steve Dekorte&amp;rsquo;s &lt;a href=&#34;https://github.com/stevedekorte/coroutine&#34;&gt;libcoroutine&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Coroutines help achieve cooperative multi-tasking, as opposed to threads, which
-achieve preemptive multitasking. In cooperative multi-tasking, each task (or
-&amp;lsquo;coroutine&amp;rsquo;) is responsible for handing the control to another coroutine.&lt;/p&gt;
-
-&lt;h1 id=&#34;toc_1&#34;&gt;Basic usage&lt;/h1&gt;
-
-&lt;p&gt;First, we have to create a main coroutine:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-import os/Coro
-
-mainCoro := Coro new()
-mainCoro initializeMainCoro
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;We can then create another coroutine, which we&amp;rsquo;ll here use as a generator&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-letter: Char
-
-coro1 := Coro new()
-mainCoro startCoro(coro1, ||
-    for (c in &amp;quot;LLAMACORE&amp;quot;) {
-        letter = c
-        coro1 switchTo(mainCoro)
-    }
-    exit(0)
-)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then we can retrieve those letters one by one:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!ooc
-while (true) {
-    &amp;quot;%c&amp;quot; printfln(letter)
-    mainCoro switchTo(coro1)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This example is quite simple, just printing each letter that
-&lt;code&gt;coro1&lt;/code&gt; gives us on separate lines, but complex tasks can be
-broken down in various coroutines and be achieved in a much
-more lightweight fashion than threads or processes.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
       <title>dynlib</title>
       <link>http://oocmanual.cogneco.com/sdk/os/dynlib/</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
@@ -1629,6 +1571,44 @@ lib close()
 
 &lt;p&gt;Note: on Windows, failing to close a library may lead to a
 crash on application exit.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>env</title>
+      <link>http://oocmanual.cogneco.com/sdk/os/env/</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      
+      <guid>http://oocmanual.cogneco.com/sdk/os/env/</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;The os/Env module&lt;/h1&gt;
+
+&lt;p&gt;The &lt;code&gt;Env&lt;/code&gt; module allows to get and set environment variables.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+import os/Env
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Getting an environment variable:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+path := Env get(&amp;quot;PATH&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;get&lt;/code&gt; will return &lt;code&gt;null&lt;/code&gt; if the given environment variable is not set.&lt;/p&gt;
+
+&lt;p&gt;Setting an environment variable:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+Env set(&amp;quot;CFLAGS&amp;quot;, &amp;quot;-Os&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Environment variables can be unset as well:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!ooc
+Env unset(&amp;quot;PKG_CONFIG_PATH&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
