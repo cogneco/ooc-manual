@@ -1,4 +1,4 @@
 ooc-manual
 ==========
 
-Manual for the OOC programming language.
+Manual for the ooc programming language.
